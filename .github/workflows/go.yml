@@ -1,0 +1,61 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: "0 0/4 ? * *"
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Install ginkgo
+      run:  |
+        sudo apt-get update
+        sudo apt-get install -y golang-ginkgo-dev
+
+    - name: Test
+      run:  |
+        echo "will run test for every project here"
+
+    - name: Install Helm
+      uses: engineerd/configurator@v0.0.1
+      with:
+        name: helm
+        url: https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+        pathInArchive: linux-amd64/helm
+
+    - name: Setup Kind Cluster
+      uses: engineerd/setup-kind@v0.4.0
+      with:
+        version: "v0.7.0"
+
+    - name: Kubernetes E2E
+      run: |
+        kind get kubeconfig > kubeconfig
+        export KUBECONFIG="$PWD/kubeconfig"
+        kubectl wait -n kube-system --for=condition=Ready -l k8s-app=kube-dns pods --timeout=300s
+        echo "will run e2e for every project here"
