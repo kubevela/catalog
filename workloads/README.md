@@ -8,4 +8,4 @@ Currently we have OAM workloads as below:
 
 ## Experimental Workloads
 
-- [StatefulSetWorkload](https://github.com/My-pleasure/statefulsetworkload)
+- [StatefulSetWorkload](statefulsetworkload)
