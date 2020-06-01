@@ -4,7 +4,7 @@ Currently we have OAM traits as below:
 
 ## Core Traits
 
-- [ManualScaler](https://github.com/crossplane/addon-oam-kubernetes-local) can enable manually scale replica to workload.
+- [ManualScaler](https://github.com/crossplane/addon-oam-kubernetes-local) can enable replicas of workloads to be manually scaled.
 
 ## Standard Traits
 
