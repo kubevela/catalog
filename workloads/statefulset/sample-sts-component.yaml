@@ -19,8 +19,8 @@ spec:
             app: test
         spec:
           containers:
-            - name: wordpress
-              image: wordpress:4.6.1-apache
+            - name: nginx
+              image: nginx:1.17
               ports:
                 - containerPort: 80
                   name: web
