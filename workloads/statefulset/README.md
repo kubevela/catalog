@@ -17,7 +17,7 @@ rules:
   resources:
   - statefulsets
   verbs:
-  - *
+  - "*"
 ```
 
 ## Install Component
