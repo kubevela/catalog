@@ -4,7 +4,7 @@ oam-kubernetes-runtime also supports K8s native resource, this section will intr
 
 ## Update RBAC for OAM AppConfig Controller
 
-Make sure your cluster-role has following rules:
+Make sure your cluster-role bound has following rules:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
