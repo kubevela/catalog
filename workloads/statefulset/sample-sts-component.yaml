@@ -1,0 +1,26 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-sts
+spec:
+  workload:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: web
+    spec:
+      serviceName: "test"
+      selector:
+        matchLabels:
+          app: test
+      template:
+        metadata:
+          labels:
+            app: test
+        spec:
+          containers:
+            - name: wordpress
+              image: wordpress:4.6.1-apache
+              ports:
+                - containerPort: 80
+                  name: web
