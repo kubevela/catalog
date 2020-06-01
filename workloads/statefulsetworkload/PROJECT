@@ -1,7 +1,0 @@
-domain: oam.dev
-repo: statefulsetworkload
-resources:
-- group: core
-  kind: StatefulSetWorkload
-  version: v1alpha2
-version: "2"

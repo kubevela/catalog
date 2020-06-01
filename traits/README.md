@@ -8,6 +8,4 @@ Currently we have OAM traits as below:
 
 ## Experimental Traits
 
-- [ServiceTrait](servicetrait)
-
-- [IngressTrait](ingresstrait)
+- [ServiceTrait](experimental/servicetrait)
