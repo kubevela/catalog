@@ -1,6 +1,6 @@
 # StatefulSet Workload
 
-oam-kubernetes-runtime also support K8s native resource, this section will introduce how to use K8s StatefulSet.
+oam-kubernetes-runtime also supports K8s native resource, this section will introduce how to use K8s StatefulSet.
 
 ## Update RBAC for OAM AppConfig Controller
 
