@@ -24,22 +24,18 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-
     - name: Install ginkgo
       run:  |
         sudo apt-get update
         sudo apt-get install -y golang-ginkgo-dev
 
+    - name: Build
+      run:  |
+        make build
+
     - name: Test
       run:  |
-        echo "will run test for every project here"
+        make test
 
     - name: Install Helm
       uses: engineerd/configurator@v0.0.1
