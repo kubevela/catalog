@@ -26,9 +26,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	corev1alpha2 "catalog/traits/experimental/servicetrait/api/v1alpha2"
 	"github.com/crossplane/oam-kubernetes-runtime/apis/core"
-	"servicetrait/controllers"
+	corev1alpha2 "github.com/oam-dev/catalog/traits/experimental/servicetrait/api/v1alpha2"
+	"github.com/oam-dev/catalog/traits/experimental/servicetrait/controllers"
 	// +kubebuilder:scaffold:imports
 )
 
