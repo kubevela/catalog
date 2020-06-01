@@ -8,7 +8,7 @@ Refer to [OAM Workloads](workloads/README.md) to see currently supported workloa
 
 ## Traits
 
-Refer to [OAM Traits](trais/README.md) to see currently supported traits.
+Refer to [OAM Traits](traits/README.md) to see currently supported traits.
 
 ## Scopes
 

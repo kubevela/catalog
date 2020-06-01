@@ -7,3 +7,5 @@ Currently we have OAM traits as below:
 - [ManualScaler](https://github.com/crossplane/addon-oam-kubernetes-local)
 
 ## Experimental Traits
+
+- [ServiceTrait](experimental/servicetrait)
