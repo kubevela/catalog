@@ -68,16 +68,16 @@ Events:
 
 ## About WorkloadDefinition
 
-By applying `workloadDefinition.yaml`, WorkloadDefinition `deployments.mycompany.com` will be generated and you can see it from all CRDs of OAM.
+By applying `workloadDefinition.yaml`, WorkloadDefinition `deployments.apps` will be generated and you can see it from all CRDs of OAM.
 
 ```shell script
 $ kubectl apply -f workloadDefinition.yaml
-workloaddefinition.core.oam.dev/deployments.mycompany.com created
+workloaddefinition.core.oam.dev/deployments.apps created
 
 $ kubectl get oam
 NAME                                                                  DEFINITION-NAME
 workloaddefinition.core.oam.dev/containerizedworkloads.core.oam.dev   containerizedworkloads.core.oam.dev
-workloaddefinition.core.oam.dev/deployments.mycompany.com             deployments.apps
+workloaddefinition.core.oam.dev/deployments.apps                      deployments.apps
 
 NAME                                        WORKLOAD-KIND
 component.core.oam.dev/example-component    ContainerizedWorkload
