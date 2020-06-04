@@ -4,4 +4,4 @@ metadata:
   name: deployments.mycompany.com
 spec:
   definitionRef:
-    name: ddeployments.mycompany.com
+    name: example-deployment
