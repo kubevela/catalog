@@ -4,4 +4,4 @@ metadata:
   name: deployments.mycompany.com
 spec:
   definitionRef:
-    name: deployments.apps
+    name: ddeployments.mycompany.com

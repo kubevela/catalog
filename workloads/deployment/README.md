@@ -68,7 +68,7 @@ Events:
 
 ## About WorkloadDefinition
 
-By applying `workloadDefinition.yaml`, workloadDefinition `deployments.mycompany.com` will be generated and you can see it from all CRDs of OAM.
+By applying `workloadDefinition.yaml`, WorkloadDefinition `deployments.mycompany.com` will be generated and you can see it from all CRDs of OAM.
 
 ```shell script
 $ kubectl apply -f workloadDefinition.yaml
