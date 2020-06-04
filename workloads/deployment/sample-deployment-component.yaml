@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-deployment
+spec:
+  workload:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-deployment
+      labels:
+        app: nginx
+    spec:
+      # replicas: 3 # This parameter will be taken over by upper scaler traint of OAM.
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.17
+            ports:
+            - containerPort: 80
