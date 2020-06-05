@@ -131,7 +131,7 @@ func (r *ServiceTraitReconciler) createService(ctx context.Context, serviceTr co
 	for _, res := range resources {
 		// Determine whether APIVersion is "appsv1"
 		if res.GetAPIVersion() == appsv1.SchemeGroupVersion.String() {
-			r.Log.Info("Get the resources the trait is going to create a service for it",
+			r.Log.Info("Get the resource that the app is going to create.",
 				"resources name", res.GetName(), "UID", res.GetUID())
 
 			// Create a service for the workload which this trait is referring to
