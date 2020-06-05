@@ -1,5 +1,5 @@
 # ServiceTrait
-You can use ServiceTrait to create a k8s service for workload on a Kubernetes cluster
+You can use ServiceTrait to create a k8s service for workload on a Kubernetes cluster.
 
 Supported resources:
 - ContainerizedWorkload
