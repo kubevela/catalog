@@ -4,7 +4,7 @@ metadata:
   name: example-cls
 spec:
   workload:
-    apiVersion: apps.kruise.io/v1alpha1
+    apiVersion: apps.kruise.io/v1alpha1 # the kruise group version
     kind: CloneSet
     metadata:
       name: nginx

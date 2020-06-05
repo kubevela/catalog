@@ -3,7 +3,7 @@
 oam-kubernetes-runtime supports existing third-party Kubernetes resources, this section will introduce how to use [CloneSet](https://github.com/openkruise/kruise/tree/master/docs/concepts/cloneset) workload of [OpenKruise/Kruise](https://github.com/openkruise/kruise) in oam-kubernetes-runtime.
 
 ## (Prerequisite) Install Kruise Controllers
-Make sure Kruise is already installed in your Kubernetes cluster. More details refer to [Kruise Get Start](https://github.com/openkruise/kruise/tree/master/docs).
+Make sure Kruise is already installed in your Kubernetes cluster. More details refer to [Kruise Get Start](https://github.com/openkruise/kruise).
 
 Verify Kruise-manager is running:
 
@@ -38,4 +38,4 @@ nginx               1          1           1            1       1      11m
 
 ## Default value of `spec.replicas` 
 
-As [kruise/cloneset CRD](https://github.com/openkruise/kruise/blob/eb63c9b2aa9fa52ba7eb2e14f9dd140d9cfa4bb2/config/crds/apps_v1alpha1_cloneset.yaml#L227) states, `spec.replicas` is a required field for cloneset, but in OAM specification this field is considered as operator-concerned characteristic which should be handled by trait, e.g. [ManualScaler trait](https://github.com/crossplane/addon-oam-kubernetes-local/tree/79a8c2e5695a757aa06247058912b4354e1c6d09/pkg/controller/core/traits/manualscalertrait).  Therefore, `spec.replicas` is invisible from component's perspective and currently set 1 as default value.
+As [kruise/cloneset CRD](https://github.com/openkruise/kruise/blob/eb63c9b2aa9fa52ba7eb2e14f9dd140d9cfa4bb2/config/crds/apps_v1alpha1_cloneset.yaml#L227) states, `spec.replicas` is a required field for cloneset, but in OAM specification this field is considered as operator-concerned characteristic which should be handled by trait, e.g. [ManualScaler trait](https://github.com/crossplane/addon-oam-kubernetes-local/tree/79a8c2e5695a757aa06247058912b4354e1c6d09/pkg/controller/core/traits/manualscalertrait).  Therefore, `spec.replicas` is invisible from component's perspective and currently [set 1 as default value](https://github.com/captainroy-hy/catalog/blob/d05e29c6f928d6b9134c7c11d709f0fc3fc6f33c/workloads/cloneset/sample-cls-component.yaml#L12).
