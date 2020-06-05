@@ -4,12 +4,7 @@ metadata:
   name: example-appconfig
 spec:
   components:
-    - componentName: example-component
-      parameterValues:
-        - name: instance-name
-          value: example-appconfig-workload
-        - name: image
-          value: wordpress:php7.2
+    - componentName: example-sts
       traits:
         - trait:
             apiVersion: core.oam.dev/v1alpha2
@@ -17,4 +12,10 @@ spec:
             metadata:
               name:  example-appconfig-trait
             spec:
-              type: ClusterIP
+              # Under template you can define all fields of K8S native service which you want
+              template:
+                type: NodePort
+                ports:
+                  - port: 80
+                    name: nginx
+                    targetPort: 80
