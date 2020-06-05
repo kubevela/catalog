@@ -3,7 +3,7 @@
 oam-kubernetes-runtime supports existing third-party Kubernetes resources, this section will introduce how to use [AdvancedStatefulSet](https://github.com/openkruise/kruise/tree/master/docs/concepts/astatefulset) workload of [OpenKruise/Kruise](https://github.com/openkruise/kruise) in oam-kubernetes-runtime.
 
 ## (Prerequisite) Install Kruise Controllers
-Make sure Kruise is already installed in your Kubernetes cluster. More details refer to [Kruise Get Start](https://github.com/openkruise/kruise).
+Make sure Kruise is already installed in your Kubernetes cluster. More details refer to [Kruise Getting started](https://github.com/openkruise/kruise#getting-started).
 
 Verify Kruise-manager is running:
 
