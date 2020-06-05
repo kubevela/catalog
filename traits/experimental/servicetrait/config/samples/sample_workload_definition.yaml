@@ -1,10 +1,7 @@
 apiVersion: core.oam.dev/v1alpha2
 kind: WorkloadDefinition
 metadata:
-  name: statefulsetworkloads.core.oam.dev
+  name: statefulsets.apps
 spec:
   definitionRef:
-    name: statefulsetworkloads.core.oam.dev
-  childResourceKinds:
-    - apiVersion: apps/v1
-      kind: StatefulSet
+    name: statefulsets.apps

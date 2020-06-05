@@ -1,23 +1,26 @@
 apiVersion: core.oam.dev/v1alpha2
 kind: Component
 metadata:
-  name: example-component
+  name: example-sts
 spec:
   workload:
-    apiVersion: core.oam.dev/v1alpha2
-    kind: StatefulSetWorkload
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: web
     spec:
-      containers:
-        - name: wordpress
-          image: wordpress:4.6.1-apache
-          ports:
-            - containerPort: 80
-              name: wordpress
-  parameters:
-    - name: instance-name
-      required: true
-      fieldPaths:
-        - metadata.name
-    - name: image
-      fieldPaths:
-        - spec.containers[0].image
+      serviceName: "test"
+      selector:
+        matchLabels:
+          app: test
+      template:
+        metadata:
+          labels:
+            app: test
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:1.17
+              ports:
+                - containerPort: 80
+                  name: web

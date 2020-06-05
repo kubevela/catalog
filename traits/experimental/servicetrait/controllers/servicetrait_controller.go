@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/oam-controllers/pkg/oam/util"
@@ -59,8 +58,11 @@ type ServiceTraitReconciler struct {
 // +kubebuilder:rbac:groups=core.oam.dev,resources=servicetraits/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=core.oam.dev,resources=statefulsetworkloads,verbs=get;list;
 // +kubebuilder:rbac:groups=core.oam.dev,resources=statefulsetworkloads/status,verbs=get;
+// +kubebuilder:rbac:groups=core.oam.dev,resources=containerizedworkloads,verbs=get;list;
+// +kubebuilder:rbac:groups=core.oam.dev,resources=containerizedworkloads/status,verbs=get;
 // +kubebuilder:rbac:groups=core.oam.dev,resources=workloaddefinitions,verbs=get;list;watch
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 
 func (r *ServiceTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
@@ -80,8 +82,8 @@ func (r *ServiceTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		return result, err
 	}
 
-	// Fetch the child resources list from the corresponding workload
-	resources, err := util.FetchWorkloadDefinition(ctx, log, r, workload)
+	// Determine the workload type
+	resources, err := DetermineWorkloadType(ctx, log, r, workload)
 	if err != nil {
 		r.Log.Error(err, "Cannot find the workload child resources", "workload", workload.UnstructuredContent())
 		return util.ReconcileWaitResult,
@@ -125,22 +127,15 @@ func (r *ServiceTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	return ctrl.Result{}, util.PatchCondition(ctx, r, &trait, cpv1alpha1.ReconcileSuccess())
 }
 
-func (r *ServiceTraitReconciler) createService(ctx context.Context, serviceTr corev1alpha2.ServiceTrait,
-	resources []*unstructured.Unstructured) (*corev1.Service, error) {
-	// Change unstructured to object
+func (r *ServiceTraitReconciler) createService(ctx context.Context, serviceTr corev1alpha2.ServiceTrait, resources []*unstructured.Unstructured) (*corev1.Service, error) {
 	for _, res := range resources {
-		if res.GetKind() == KindStatefulSet && res.GetAPIVersion() == appsv1.SchemeGroupVersion.String() {
-			r.Log.Info("Get the statefulset the trait is going to create a service for it",
-				"statefulset name", res.GetName(), "UID", res.GetUID())
-			// convert the unstructured to statefulset and create a service
-			var ss appsv1.StatefulSet
-			bts, _ := json.Marshal(res)
-			if err := json.Unmarshal(bts, &ss); err != nil {
-				r.Log.Error(err, "Failed to convert an unstructured obj to a statefulset")
-				continue
-			}
+		// Determine whether APIVersion is "appsv1"
+		if res.GetAPIVersion() == appsv1.SchemeGroupVersion.String() {
+			r.Log.Info("Get the resource that the app is going to create.",
+				"resources name", res.GetName(), "UID", res.GetUID())
+
 			// Create a service for the workload which this trait is referring to
-			svc, err := r.renderService(ctx, &serviceTr, &ss)
+			svc, err := r.renderService(ctx, &serviceTr, res)
 			if err != nil {
 				r.Log.Error(err, "Failed to render a service")
 				return nil, util.PatchCondition(ctx, r, &serviceTr, cpv1alpha1.ReconcileError(errors.Wrap(err, errRenderService)))

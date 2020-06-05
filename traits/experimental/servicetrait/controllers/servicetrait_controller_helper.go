@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	corev1alpha2 "github.com/oam-dev/catalog/traits/experimental/servicetrait/api/v1alpha2"
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
@@ -14,17 +13,16 @@ import (
 )
 
 const (
-	KindService     = "Service"
-	KindStatefulSet = "StatefulSet"
+	KindService = "Service"
 )
 
 // TODO:ServiceTrait can more than create services for the statefulset
 // create a service for the statefulset
 func (r *ServiceTraitReconciler) renderService(ctx context.Context,
-	trait *corev1alpha2.ServiceTrait, set *appsv1.StatefulSet) (*corev1.Service, error) {
+	trait *corev1alpha2.ServiceTrait, obj oam.Object) (*corev1.Service, error) {
 
 	// create a service for the servicetrait
-	resources, err := ServiceInjector(ctx, trait, []oam.Object{set})
+	resources, err := ServiceInjector(ctx, trait, []oam.Object{obj})
 	if err != nil {
 		return nil, err
 	}
