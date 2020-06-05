@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-cls
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: CloneSet
+    metadata:
+      name: nginx
+    spec:
+      # replicas: 1 (TODO: scaler-related trait will handle replicas field)
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+          app: test
+        spec:
+          containers:
+            - name: nginx
+              image: nginx:alpine

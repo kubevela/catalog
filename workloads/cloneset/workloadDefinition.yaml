@@ -1,0 +1,7 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: WorkloadDefinition
+metadata:
+  name: clonesetworkloads.openkruise.io
+spec:
+  definitionRef:
+    name: clonesetworkloads.openkruise.io
