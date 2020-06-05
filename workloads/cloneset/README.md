@@ -30,7 +30,7 @@ applicationconfiguration.core.oam.dev/example-appconfig created
 ```
 Then `cloneset.apps.kruise.io` or shortname `clone` is created.
 
-```bash
+```shell script
 $ kubectl get clone
 NAME              DESIRED   UPDATED   UPDATED_READY   READY   TOTAL   AGE
 nginx               1          1           1            1       1      11m

@@ -1,15 +1,15 @@
 apiVersion: core.oam.dev/v1alpha2
 kind: Component
 metadata:
-  name: example-cls
+  name: example-asts
 spec:
   workload:
-    apiVersion: apps.kruise.io/v1alpha1
-    kind: CloneSet
+    apiVersion: apps.kruise.io/v1alpha1 # the kruise group version
+    kind: StatefulSet
     metadata:
       name: nginx
     spec:
-      # replicas: 1 (TODO: scaler-related trait will handle replicas field)
+      serviceName: nginx-example-asts
       selector:
         matchLabels:
           app: nginx

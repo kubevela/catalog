@@ -4,4 +4,4 @@ metadata:
   name: example-appconfig
 spec:
   components:
-    - componentName: example-cls
+    - componentName: example-asts

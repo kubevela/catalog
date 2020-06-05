@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1alpha2
 kind: WorkloadDefinition
 metadata:
-  name: clonesetworkloads.apps.kruise.io
+  name: statefulsetworkloads.apps.kruise.io
 spec:
   definitionRef:
-    name: clonesetworkloads.apps.kruise.io
+    name: statefulsetworkloads.apps.kruise.io
