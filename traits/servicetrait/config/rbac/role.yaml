@@ -9,6 +9,17 @@ rules:
 - apiGroups:
   - apps
   resources:
+  - deployments
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
   - statefulsets
   verbs:
   - delete
@@ -29,6 +40,19 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads/status
+  verbs:
+  - get
 - apiGroups:
   - core.oam.dev
   resources:

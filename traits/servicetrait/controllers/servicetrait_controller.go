@@ -34,7 +34,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	corev1alpha2 "github.com/oam-dev/catalog/traits/experimental/servicetrait/api/v1alpha2"
+	corev1alpha2 "github.com/oam-dev/catalog/traits/servicetrait/api/v1alpha2"
 )
 
 // Reconcile error strings.
