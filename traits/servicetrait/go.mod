@@ -1,4 +1,4 @@
-module github.com/oam-dev/catalog/traits/experimental/servicetrait
+module github.com/oam-dev/catalog/traits/servicetrait
 
 go 1.13
 

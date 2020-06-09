@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
-	corev1alpha2 "github.com/oam-dev/catalog/traits/experimental/servicetrait/api/v1alpha2"
+	corev1alpha2 "github.com/oam-dev/catalog/traits/servicetrait/api/v1alpha2"
 	"github.com/pkg/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
