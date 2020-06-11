@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: ingresstrait
+resources:
+- group: core
+  kind: IngressTrait
+  version: v1alpha2
+version: "2"

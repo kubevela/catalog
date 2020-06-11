@@ -17,7 +17,7 @@ docker pull chienwong/servicetrait:v1.6
 ```
 - Deploy the servicetrait controller.
 ```
-cd catalog/traits/experimental/servicetrait
+cd catalog/traits/servicetrait
 
 make deploy IMG=chienwong/servicetrait:v1.6
 ```
