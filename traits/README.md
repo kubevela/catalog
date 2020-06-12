@@ -14,3 +14,4 @@ Currently we have OAM traits as below:
 ## Extended Traits
 
 - [ServiceTrait](servicetrait) can help create k8s service for workload.
+- [IngressTrait](ingresstrait) can help create k8s ingress for workload.
