@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: serviceexpose
+resources:
+- group: core
+  kind: ServiceExpose
+  version: v1alpha2
+version: "2"

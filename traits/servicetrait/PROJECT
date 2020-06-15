@@ -1,7 +1,0 @@
-domain: oam.dev
-repo: servicetrait
-resources:
-- group: core
-  kind: ServiceTrait
-  version: v1alpha2
-version: "2"

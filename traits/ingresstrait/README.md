@@ -8,7 +8,7 @@ Supported workloads:
 
 # Getting started
 - At first, you should follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-oam-kubernetes-local). And install OAM Application Controller and OAM Core workload and trait controller.
-- Then you should deploy ServiceTrait controller by following [ServiceTrait](../servicetrait).
+- Then you should deploy ServiceExpose controller by following [ServiceExpose](../serviceexpose).
 - Get the IngressTrait project to your GOPATH
 ```
 git clone https://github.com/oam-dev/catalog.git

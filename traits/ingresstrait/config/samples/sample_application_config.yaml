@@ -8,7 +8,7 @@ spec:
       traits:
         - trait:
             apiVersion: core.oam.dev/v1alpha2
-            kind: ServiceTrait
+            kind: ServiceExpose
             metadata:
               name: example-service-trait
             spec:
