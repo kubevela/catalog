@@ -51,11 +51,9 @@ var scheme = runtime.NewScheme()
 var namespace = "hpatrait-controller-test"
 var ctx = context.Background()
 
-// lablel := map[string]string{"app": "test"}
 var ns = corev1.Namespace{
 	ObjectMeta: metav1.ObjectMeta{
 		Name: namespace,
-		// Labels: lablel,
 	},
 }
 

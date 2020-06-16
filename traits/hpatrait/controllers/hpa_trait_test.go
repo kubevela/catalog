@@ -22,65 +22,12 @@ import (
 )
 
 var _ = Describe("HPA Trait", func() {
-	// ctx := context.Background()
-	// // lablel := map[string]string{"app": "test"}
-	// ns := corev1.Namespace{
-	//     ObjectMeta: metav1.ObjectMeta{
-	//         Name: namespace,
-	//         // Labels: lablel,
-	//     },
-	// }
-	// BeforeEach(func() {
-	//     logf.Log.Info("Start to run a test, clean up previous resources")
-	//     // delete the namespace with all its resources
-	//     Expect(k8sClient.Delete(ctx, &ns, client.PropagationPolicy(metav1.DeletePropagationForeground))).
-	//         Should(SatisfyAny(BeNil(), &util.NotFoundMatcher{}))
-	//     logf.Log.Info("make sure all the resources are removed")
-	//     objectKey := client.ObjectKey{
-	//         Name: namespace,
-	//     }
-	//     res := &corev1.Namespace{}
-	//     Eventually(
-	//         // gomega has a bug that can't take nil as the actual input, so has to make it a func
-	//         func() error {
-	//             return k8sClient.Get(ctx, objectKey, res)
-	//         },
-	//         time.Second*30, time.Millisecond*500).Should(&util.NotFoundMatcher{})
-	//     logf.Log.Info(fmt.Sprintf("namespace %v", res))
-	//     // recreate it
-	//     Eventually(
-	//         func() error {
-	//             return k8sClient.Create(ctx, &ns)
-	//         },
-	//         time.Second*3, time.Millisecond*300).Should(SatisfyAny(BeNil(), &util.AlreadyExistMatcher{}))
-	//
-	//     // Create HPA trait definition
-	//     mt := oamv1alpha2.TraitDefinition{
-	//         ObjectMeta: metav1.ObjectMeta{
-	//             Name: "horizontalpodautoscalertraits.core.oam.dev",
-	//         },
-	//         Spec: oamv1alpha2.TraitDefinitionSpec{
-	//             Reference: oamv1alpha2.DefinitionReference{
-	//                 Name: "horizontalpodautoscalertraits.core.oam.dev",
-	//             },
-	//         },
-	//     }
-	//     logf.Log.Info("Creating trait definition")
-	//     // For some reason, traitDefinition is created as a Cluster scope object
-	//     Expect(k8sClient.Create(ctx, &mt)).Should(SatisfyAny(BeNil(), &util.AlreadyExistMatcher{}))
-	// })
-	// AfterEach(func() {
-	//     logf.Log.Info("Clean up resources")
-	//     // delete the namespace with all its resources
-	//     Expect(k8sClient.Delete(ctx, &ns, client.PropagationPolicy(metav1.DeletePropagationForeground))).Should(BeNil())
-	// })
 
 	It("apply an application config with ContainerizedWorkload component", func() {
 		// create a workload definition
 		wd := oamv1alpha2.WorkloadDefinition{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "containerizedworkloads.core.oam.dev",
-				// Labels: lablel,
 			},
 			Spec: oamv1alpha2.WorkloadDefinitionSpec{
 				Reference: oamv1alpha2.DefinitionReference{
@@ -193,7 +140,6 @@ var _ = Describe("HPA Trait", func() {
 		wd := oamv1alpha2.WorkloadDefinition{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "deployments.apps",
-				// Labels: lablel,
 			},
 			Spec: oamv1alpha2.WorkloadDefinitionSpec{
 				Reference: oamv1alpha2.DefinitionReference{
@@ -307,7 +253,6 @@ var _ = Describe("HPA Trait", func() {
 		wd := oamv1alpha2.WorkloadDefinition{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "statefulsets.apps",
-				// Labels: lablel,
 			},
 			Spec: oamv1alpha2.WorkloadDefinitionSpec{
 				Reference: oamv1alpha2.DefinitionReference{
