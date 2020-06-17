@@ -16,8 +16,22 @@ rules:
   - apps
   resources:
   - statefulsets
+  # - deployments
   verbs:
   - "*"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: oam-example-catalog
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: <your-cluster-role>
+subjects:
+  - kind: ServiceAccount
+    name: <crossplane-name>
+    namespace: <crossplane-namsepace>
 ```
 
 ## Install Component
