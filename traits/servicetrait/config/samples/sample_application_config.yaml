@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-sts
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha2
+            kind: ServiceTrait
+            metadata:
+              name:  example-appconfig-trait
+            spec:
+              # Under template you can define all fields of K8S native service which you want
+              template:
+                type: NodePort
+                ports:
+                  - port: 80
+                    name: nginx
+                    targetPort: 80

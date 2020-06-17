@@ -1,0 +1,25 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-hpa-component
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: ContainerizedWorkload
+    spec:
+      containers:
+        - name: php-apache
+          image: k8s.gcr.io/hpa-example
+          ports:
+            - containerPort: 80
+              name: pa
+          resources:
+            cpu: 
+              required: 100m
+            memory:
+              required: 200m
+  parameters:
+    - name: instance-name
+      required: true
+      fieldPaths:
+        - metadata.name

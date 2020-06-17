@@ -1,0 +1,7 @@
+domain: core.oam.dev
+repo: hpatrait
+resources:
+- group: core.oam.dev
+  kind: HorizontalPodAutoscalerTrait
+  version: v1alpha2
+version: "2"

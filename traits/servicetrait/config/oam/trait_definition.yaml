@@ -1,0 +1,11 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: TraitDefinition
+metadata:
+  name: servicetraits.core.oam.dev
+spec:
+  appliesToWorkloads:
+    - core.oam.dev/v1alpha2.ContainerizedWorkload
+    - deployments.apps
+    - statefulsets.apps
+  definitionRef:
+    name: servicetraits.core.oam.dev

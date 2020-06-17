@@ -1,0 +1,20 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-hpa-component
+      parameterValues:
+        - name: instance-name
+          value: php-apache
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha2
+            kind: HorizontalPodAutoscalerTrait
+            metadata:
+              name:  example-hpatrait
+            spec:
+              minReplicas: 1
+              maxReplicas: 10
+              targetCPUUtilizationPercentage: 30

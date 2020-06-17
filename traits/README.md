@@ -11,6 +11,8 @@ Currently we have OAM traits as below:
 - [trait-injector](https://github.com/oam-dev/trait-injector) can help do service binding which can inject
   resource from one to another.
 
-## Experimental Traits
+## Extended Traits
 
-- [ServiceTrait](experimental/servicetrait) can help create k8s service for workload.
+- [ServiceTrait](servicetrait) can help create k8s service for workload.
+- [IngressTrait](ingresstrait) can help create k8s ingress for workload.
+- [HPATrait](hpatrait) can help create k8s HorizontalPodAutoscaler for workload.

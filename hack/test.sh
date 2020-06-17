@@ -1,14 +1,16 @@
 #!/bin/bash
-for x in traits/experimental/*
+for x in traits/*/
 do
-  [[ -e "$x" ]] || break  # handle the case of no *.wav files
+  [[ -d "$x" ]] || break
+  [[ -f "$x"/Makefile ]] || break
   echo "run test for $x"
   cd $x && make test
 done
 
-for x in workloads/experimental/*
+for x in workloads/*/
 do
-  [[ -e "$x" ]] || break  # handle the case of no *.wav files
+  [[ -d "$x" ]] || break
+  [[ -f "$x"/Makefile ]] || break
   echo "run test for $x"
   cd $x && make test
 done
