@@ -1,0 +1,24 @@
+# permissions for end users to edit simplerollouttraits.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: simplerollouttrait-editor-role
+rules:
+- apiGroups:
+  - extend.oam.dev
+  resources:
+  - simplerollouttraits
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - extend.oam.dev
+  resources:
+  - simplerollouttraits/status
+  verbs:
+  - get

@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-component
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: ContainerizedWorkload
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.13.2
+          # image: nginx:1.14.2
+          # image: nginx:latest
+          # TODO(negz): Allow environment variables to be set from a secret? OAM
+          # doesn't have a concept of Kubernetes secrets, so we will likely need
+          # to abstract this somehow.
+          ports:
+            - containerPort: 80
+              name: nginx
+          # env:
+          #   - name: TEST_ENV
+          #     value: test

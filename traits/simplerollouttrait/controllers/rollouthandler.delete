@@ -1,0 +1,51 @@
+package controllers
+
+import (
+	"github.com/crossplane/oam-kubernetes-runtime/apis/core/v1alpha2"
+	"github.com/go-logr/logr"
+	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
+	clientappv1 "k8s.io/client-go/kubernetes/typed/apps/v1"
+	"k8s.io/client-go/util/workqueue"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+)
+
+var (
+	codecs = serializer.NewCodecFactory(runtime.NewScheme())
+)
+
+type RolloutHandler struct {
+	client     client.Client
+	appsClient clientappv1.AppsV1Interface
+	l          logr.Logger
+}
+
+func (rh *RolloutHandler) Create(event event.CreateEvent, q workqueue.RateLimitingInterface) {
+	rh.l.Info("Get ControllerRevision created!")
+	newCR := event.Object.(*appsv1.ControllerRevision)
+	var comp v1alpha2.Component
+	decoder := codecs.UniversalDeserializer()
+	if _, _, err := decoder.Decode(newCR.Data.Raw, nil, &comp); err != nil {
+		rh.l.Info("This ControllerRevision is not for Component updating")
+		return
+	}
+	rh.l.Info("New ControllerRevision", "New Name", newCR.GetName(), "Component Data", comp, "New WorkloadInstance name", newCR.GetName(), "Old WorkloadInstance name", comp.Status.LatestRevision)
+}
+
+// Update is called in response to an update event -  e.g. Pod Updated.
+func (rh *RolloutHandler) Update(_ event.UpdateEvent, _ workqueue.RateLimitingInterface) {
+	panic("not implemented") // TODO: Implement
+}
+
+// Delete is called in response to a delete event - e.g. Pod Deleted.
+func (rh *RolloutHandler) Delete(_ event.DeleteEvent, _ workqueue.RateLimitingInterface) {
+	panic("not implemented") // TODO: Implement
+}
+
+// Generic is called in response to an event of an unknown type or a synthetic event triggered as a cron or
+// external trigger request - e.g. reconcile Autoscaling, or a Webhook.
+func (rh *RolloutHandler) Generic(_ event.GenericEvent, _ workqueue.RateLimitingInterface) {
+	panic("not implemented") // TODO: Implement
+}

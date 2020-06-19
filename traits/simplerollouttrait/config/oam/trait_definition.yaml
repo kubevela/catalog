@@ -1,0 +1,11 @@
+apiVersion: extend.oam.dev/v1alpha2
+kind: TraitDefinition
+metadata:
+  name: simplerollouttraits.extend.oam.dev
+spec:
+  appliesToWorkloads:
+    - core.oam.dev/v1alpha2.ContainerizedWorkload
+    - deployments.apps
+    # - statefulsets.apps
+  definitionRef:
+    name: simplerollouttraits.extend.oam.dev
