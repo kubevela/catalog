@@ -1,0 +1,24 @@
+# permissions for end users to edit serviceexposes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: serviceexpose-editor-role
+rules:
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - serviceexposes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - serviceexposes/status
+  verbs:
+  - get
