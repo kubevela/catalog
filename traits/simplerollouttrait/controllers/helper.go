@@ -29,14 +29,11 @@ var (
 )
 
 const (
-	KindHPA         = "HorizontalPodAutoscaler"
 	KindDeployment  = "Deployment"
 	KindStatefulSet = "StatefulSet"
 
 	GVKDeployment  = "apps/v1, Kind=Deployment"
 	GVKStatefulSet = "apps/v1, Kind=StatefulSet"
-
-	LabelKey = "simplerollouttrait.oam.crossplane.io"
 )
 
 const (
@@ -153,7 +150,7 @@ func (r *SimpleRolloutTraitReconciler) scaleDownGradually(ctx context.Context, l
 		} else {
 			*(deployment.Spec.Replicas) -= batch
 		}
-		//TODO update deployment
+		// update deployment
 		if err := r.Update(ctx, deployment); err != nil {
 			log.Error(err, "Failed to upate deployment for scaling down")
 			return err

@@ -39,8 +39,7 @@ const (
 	errLocateResources         = "cannot find resources"
 	errLocateAvailableResouces = "cannot find available resources"
 	errMarshalDeployment       = "cannot unmarshal deployment"
-	errApplyHPA                = "cannot apply the HPA"
-	errGCHPA                   = "cannot clean up HPA"
+	errFailUpdateDeployment    = "failed to update deployment"
 )
 
 // SimpleRolloutTraitReconciler reconciles a SimpleRolloutTrait object
@@ -53,7 +52,6 @@ type SimpleRolloutTraitReconciler struct {
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;update;patch;delete
-// +kubebuilder:rbac:groups=apps,resources=controllerrevisions,verbs=get;list;watch;update;patch;delete
 
 func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
@@ -72,7 +70,7 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 	batch := rollouttrait.Spec.Batch
 	maxUnavailable := rollouttrait.Spec.MaxUnavailable
 
-	//TODO check whether it's newly created
+	// check whether it's newly created
 	if isNewleCreatedRolloutTrait(&rollouttrait) {
 		//if it's new, set rollingupdate for deployment & update rollouttrait status
 		workload, _, err := r.fetchWorkload(ctx, log, &rollouttrait)
@@ -83,7 +81,6 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		//TODO set RollingUpdateDeployment to Deployment resources
 
 		for _, deployment := range underlyingDeployments {
 			if deployment.Status.AvailableReplicas != *deployment.Spec.Replicas {
@@ -91,14 +88,14 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 				return reconcile.Result{Requeue: true}, nil
 			}
 			deployment.Spec.Replicas = targetReplica
-			// TODO gradually increase replicas for newly created rollout
+			// gradually increase replicas for newly created rollout
 
 			log.Info("Going to update Deployment", "deployment detail", deployment)
 			applyOpts := []client.UpdateOption{client.FieldOwner(rollouttrait.Spec.WorkloadReference.UID)}
 			if err := r.Update(ctx, deployment, applyOpts...); err != nil {
 				r.Log.Error(err, "Failed to apply a deployment", "deployment spec", deployment.Spec)
 				return util.ReconcileWaitResult,
-					util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errApplyHPA)))
+					util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateDeployment)))
 			}
 		}
 		//update rollouttrait status
@@ -138,33 +135,33 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 
 			oldUnderlyingDeployments, err := r.getUnderlyingDeployment(ctx, log, &oldWorkload)
 
-			//TODO check whether both scale are ready
+			// check whether both scale are ready
 			if isScaleUpReady(newUnderlyingDeployments[0], *targetReplica) && isScaleDownReady(oldUnderlyingDeployments[0]) {
-				//TODO if both are ready
-				//TODO delete old workload instance
+				// if both are ready
+				// delete old workload instance
 				if err := r.Delete(ctx, &oldWorkload); err != nil {
 					log.Error(err, "Failed to delete old workload instance", "kind", oldWorkload.GetKind())
 					return ctrl.Result{}, err
 				}
 				log.Info("Deleted old workload instance successfully", "kind", oldWorkload.GetKind())
 
-				//TODO update rollouttrait.status.currentWorkloadRef to new one
+				// update rollouttrait.status.currentWorkloadRef to new one
 				rollouttrait.Status.CurrentWorkloadReference = rollouttrait.Spec.WorkloadReference
 				if err := r.Status().Update(ctx, &rollouttrait); err != nil {
 					r.Log.Error(err, "Failed to update rollouttrait status")
 					return util.ReconcileWaitResult,
 						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateStatus)))
 				}
-				//TODO rollouttrait turn out Stable status, no more requeue
+				// rollouttrait turn out Stable status, no more requeue
 				return ctrl.Result{}, nil
 
 			} else {
-				//TODO if anyone is not ready
-				//TODO gradually scale up/down
+				// if anyone is not ready
+				// gradually scale up/down
 				r.scaleUpGradually(ctx, log, newUnderlyingDeployments[0], *targetReplica, batch.IntVal)
 				r.scaleDownGradually(ctx, log, oldUnderlyingDeployments[0], 0, maxUnavailable.IntVal)
-				//TODO no status update
-				//TODO reconcile after 5 seconds
+				// no status update
+				// reconcile after 5 seconds
 				// requeue after 5s to observe status transition
 				return reconcile.Result{RequeueAfter: 5 * time.Second}, nil
 			}
@@ -179,10 +176,5 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 func (r *SimpleRolloutTraitReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&extendoamdevv1alpha2.SimpleRolloutTrait{}).
-		// Watches(&source.Kind{Type: &appsv1.ControllerRevision{}}, &RolloutHandler{
-		//     client:     mgr.GetClient(),
-		//     l:          ctrl.Log.WithName("ControllerRevision"),
-		//     appsClient: clientappv1.NewForConfigOrDie(mgr.GetConfig()),
-		// }).
 		Complete(r)
 }
