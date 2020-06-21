@@ -20,15 +20,16 @@ import (
 	"context"
 	"fmt"
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
+	"github.com/crossplane/oam-controllers/pkg/oam/util"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
+	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/api/networking/v1beta1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-
-	"github.com/crossplane/oam-controllers/pkg/oam/util"
-	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -39,6 +40,7 @@ import (
 const (
 	errLocateWorkload  = "cannot find workload"
 	errLocateResources = "cannot find resources"
+	errApplyService    = "cannot apply the service"
 	errApplyIngress    = "cannot apply the ingress"
 	errRenderIngress   = "cannot render ingress"
 	errGCIngress       = "cannot clean up stale ingress"
@@ -89,7 +91,7 @@ func (r *IngressTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	}
 
 	// Create a ingress for the resources we know
-	ingress, err := r.createIngress(ctx, trait, resources)
+	service, ingress, err := r.createIngress(ctx, trait, resources)
 	if err != nil {
 		return result, err
 	}
@@ -103,8 +105,24 @@ func (r *IngressTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	}
 	r.Log.Info("Successfully applied a ingress", "UID", ingress.UID)
 
+	// if the workload has no service, we create one and return non-nil
+	if service != nil {
+		// server side apply the service
+		if err := r.Patch(ctx, service, client.Apply, applyOpts...); err != nil {
+			log.Error(err, "Failed to apply a service")
+			return util.ReconcileWaitResult,
+				util.PatchCondition(ctx, r, &trait, cpv1alpha1.ReconcileError(errors.Wrap(err, errApplyService)))
+		}
+		log.Info("Successfully applied a service", "UID", service.UID)
+	} else {
+		// If we don't need to create a service, service.UID must have a value or the cleanupResources will panic
+		service = &corev1.Service{}
+		service.UID = types.UID(0)
+		r.Log.Info("We don't need to create a service", "UID", service.UID)
+	}
+
 	// garbage collect the ingress that we created but not needed
-	if err := r.cleanupResources(ctx, &trait, &ingress.UID); err != nil {
+	if err := r.cleanupResources(ctx, &trait, &ingress.UID, &service.UID); err != nil {
 		r.Log.Error(err, "Failed to clean up resources")
 		return util.ReconcileWaitResult,
 			util.PatchCondition(ctx, r, &trait, cpv1alpha1.ReconcileError(errors.Wrap(err, errGCIngress)))
@@ -118,6 +136,16 @@ func (r *IngressTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		UID:        ingress.GetUID(),
 	})
 
+	// record the new service
+	if service.UID != types.UID(0) {
+		trait.Status.Resources = append(trait.Status.Resources, cpv1alpha1.TypedReference{
+			APIVersion: service.GetObjectKind().GroupVersionKind().GroupVersion().String(),
+			Kind:       service.GetObjectKind().GroupVersionKind().Kind,
+			Name:       service.GetName(),
+			UID:        service.GetUID(),
+		})
+	}
+
 	if err := r.Status().Update(ctx, &trait); err != nil {
 		return util.ReconcileWaitResult, err
 	}
@@ -126,7 +154,13 @@ func (r *IngressTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 }
 
 func (r *IngressTraitReconciler) createIngress(ctx context.Context, ingressTr corev1alpha2.IngressTrait,
-	resources []*unstructured.Unstructured) (*v1beta1.Ingress, error) {
+	resources []*unstructured.Unstructured) (*corev1.Service, *v1beta1.Ingress, error) {
+	// To get the service information
+	serviceInfo, err := r.getServiceInfo(ctx, resources)
+	if err != nil {
+		r.Log.Error(err, "Failed to get the service information")
+		return nil, nil, err
+	}
 	for _, res := range resources {
 		// Determine whether APIVersion is "appsv1"
 		if res.GetAPIVersion() == appsv1.SchemeGroupVersion.String() {
@@ -134,16 +168,16 @@ func (r *IngressTraitReconciler) createIngress(ctx context.Context, ingressTr co
 				"resources name", res.GetName(), "UID", res.GetUID())
 
 			// Create a ingress for the workload which this trait is referring to
-			ingress, err := r.renderIngress(ctx, &ingressTr, res)
+			service, ingress, err := r.renderIngress(ctx, &ingressTr, res, serviceInfo)
 			if err != nil {
 				r.Log.Error(err, "Failed to render a ingress")
-				return nil, util.PatchCondition(ctx, r, &ingressTr, cpv1alpha1.ReconcileError(errors.Wrap(err, errRenderIngress)))
+				return nil, nil, util.PatchCondition(ctx, r, &ingressTr, cpv1alpha1.ReconcileError(errors.Wrap(err, errRenderIngress)))
 			}
-			return ingress, nil
+			return service, ingress, nil
 		}
 	}
 	r.Log.Info("Cannot locate any resources", "total resources", len(resources))
-	return nil, util.PatchCondition(ctx, r, &ingressTr, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
+	return nil, nil, util.PatchCondition(ctx, r, &ingressTr, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
 }
 
 func (r *IngressTraitReconciler) fetchWorkload(ctx context.Context,
