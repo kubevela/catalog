@@ -1,8 +1,9 @@
-apiVersion: extend.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1alpha2
 kind: TraitDefinition
 metadata:
   name: simplerollouttraits.extend.oam.dev
 spec:
+  revisionEnabled: true
   appliesToWorkloads:
     - core.oam.dev/v1alpha2.ContainerizedWorkload
     - deployments.apps
