@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
@@ -35,11 +36,19 @@ import (
 
 // Reconcile error strings.
 const (
-	errLocateWorkload          = "cannot find workload"
-	errLocateResources         = "cannot find resources"
-	errLocateAvailableResouces = "cannot find available resources"
-	errMarshalDeployment       = "cannot unmarshal deployment"
-	errFailUpdateDeployment    = "failed to update deployment"
+	errLocateWorkload           = "cannot find workload"
+	errLocateResources          = "cannot find resources"
+	errLocateAvailableResouces  = "cannot find available resources"
+	errMarshalDeployment        = "cannot unmarshal deployment"
+	errFailUpdateDeployment     = "failed to update deployment"
+	errFailDeleteLegacyWorkload = "failed to delete wrokload"
+	errFailScaleUp              = "failed to scale up new workload"
+	errFailScaleDown            = "failed to scale down new workload"
+)
+
+var (
+	ReconcileWaitWorkloadInit  = reconcile.Result{RequeueAfter: 5 * time.Second}
+	ReconcileWaitWorkloadScale = reconcile.Result{RequeueAfter: 5 * time.Second}
 )
 
 // SimpleRolloutTraitReconciler reconciles a SimpleRolloutTrait object
@@ -71,7 +80,7 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 	maxUnavailable := rollouttrait.Spec.MaxUnavailable
 
 	// check whether it's newly created
-	if isNewleCreatedRolloutTrait(&rollouttrait) {
+	if isNewlyCreatedRolloutTrait(&rollouttrait) {
 		//if it's new, set rollingupdate for deployment & update rollouttrait status
 		workload, _, err := r.fetchWorkload(ctx, log, &rollouttrait)
 		if err != nil {
@@ -79,7 +88,12 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 		}
 		underlyingDeployments, err := r.getUnderlyingDeployment(ctx, log, workload)
 		if err != nil {
-			return ctrl.Result{}, err
+			log.Error(err, "Cannot find the workload child resources", "workload", workload.UnstructuredContent())
+			return util.ReconcileWaitResult, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
+		}
+
+		if len(underlyingDeployments) == 0 {
+			return ReconcileWaitWorkloadInit, nil
 		}
 
 		for _, deployment := range underlyingDeployments {
@@ -87,8 +101,9 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 				// initial setup is not ready, requeue to wait
 				return reconcile.Result{Requeue: true}, nil
 			}
+			//TODO is it necessary to make the initial create gradually?
+			//TODO or just set the replicas and leave it swarm?
 			deployment.Spec.Replicas = targetReplica
-			// gradually increase replicas for newly created rollout
 
 			log.Info("Going to update Deployment", "deployment detail", deployment)
 			applyOpts := []client.UpdateOption{client.FieldOwner(rollouttrait.Spec.WorkloadReference.UID)}
@@ -105,20 +120,28 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 			return util.ReconcileWaitResult,
 				util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateStatus)))
 		}
-		return ctrl.Result{}, nil
+		return ctrl.Result{}, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileSuccess())
 	} else {
-		//TODO if it's not new, then check whether it's in the middle of rollout
+		// if it's not new, then check whether it's in the middle of rollout
 		if isUnderRollout(&rollouttrait) {
 			//if it's under rollout
 			//fetch two workloadInstances (spec.workloadRef & status.currentWorkloadRef)
-			newWorkload, _, err := r.fetchWorkload(ctx, log, &rollouttrait)
+			newWorkload, result, err := r.fetchWorkload(ctx, log, &rollouttrait)
 			if err != nil {
-				return ctrl.Result{}, err
+				return result, err
 			}
 
 			newUnderlyingDeployments, err := r.getUnderlyingDeployment(ctx, log, newWorkload)
 			if err != nil {
-				return ctrl.Result{}, err
+				log.Error(err, "Cannot find the workload child resources", "workload", newWorkload.UnstructuredContent())
+				return util.ReconcileWaitResult, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
+			}
+
+			// handle the situation where no deployments belonging to the workload returned
+			if len(newUnderlyingDeployments) == 0 {
+				// it means WorkloadInstance is already created
+				// but underlying deployments not
+				return util.ReconcileWaitResult, nil
 			}
 
 			var oldWorkload unstructured.Unstructured
@@ -128,20 +151,25 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 			wn := client.ObjectKey{Name: rollouttrait.Status.CurrentWorkloadReference.Name, Namespace: rollouttrait.GetNamespace()}
 
 			if err := r.Get(ctx, wn, &oldWorkload); err != nil {
-				log.Error(err, "Workload not find", "kind", rollouttrait.GetWorkloadReference().Kind,
+				log.Error(err, "Old workload not find", "kind", rollouttrait.GetWorkloadReference().Kind,
 					"workload name", rollouttrait.GetWorkloadReference().Name)
-				return ctrl.Result{}, err
+				return util.ReconcileWaitResult, err
 			}
 
 			oldUnderlyingDeployments, err := r.getUnderlyingDeployment(ctx, log, &oldWorkload)
+			if err != nil {
+				log.Error(err, "Cannot find the workload child resources", "workload", oldWorkload.UnstructuredContent())
+				return util.ReconcileWaitResult, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
+			}
 
 			// check whether both scale are ready
-			if isScaleUpReady(newUnderlyingDeployments[0], *targetReplica) && isScaleDownReady(oldUnderlyingDeployments[0]) {
+			if isScaleUpReady(newUnderlyingDeployments, *targetReplica) && isScaleDownReady(oldUnderlyingDeployments) {
 				// if both are ready
 				// delete old workload instance
 				if err := r.Delete(ctx, &oldWorkload); err != nil {
 					log.Error(err, "Failed to delete old workload instance", "kind", oldWorkload.GetKind())
-					return ctrl.Result{}, err
+					return util.ReconcileWaitResult,
+						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errFailDeleteLegacyWorkload)))
 				}
 				log.Info("Deleted old workload instance successfully", "kind", oldWorkload.GetKind())
 
@@ -153,17 +181,23 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateStatus)))
 				}
 				// rollouttrait turn out Stable status, no more requeue
-				return ctrl.Result{}, nil
+				return ctrl.Result{}, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileSuccess())
 
 			} else {
 				// if anyone is not ready
 				// gradually scale up/down
-				r.scaleUpGradually(ctx, log, newUnderlyingDeployments[0], *targetReplica, batch.IntVal)
-				r.scaleDownGradually(ctx, log, oldUnderlyingDeployments[0], 0, maxUnavailable.IntVal)
-				// no status update
+				if err := r.scaleUpGradually(ctx, log, newUnderlyingDeployments, *targetReplica, batch.IntVal); err != nil {
+					r.Log.Error(err, "Failed to scale up new wrokload")
+					return util.ReconcileWaitResult,
+						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailScaleUp)))
+				}
+				if err := r.scaleDownGradually(ctx, log, oldUnderlyingDeployments, 0, maxUnavailable.IntVal); err != nil {
+					r.Log.Error(err, "Failed to scale down old wrokload")
+					return util.ReconcileWaitResult,
+						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailScaleDown)))
+				}
 				// reconcile after 5 seconds
-				// requeue after 5s to observe status transition
-				return reconcile.Result{RequeueAfter: 5 * time.Second}, nil
+				return ReconcileWaitWorkloadScale, nil
 			}
 
 		} else {

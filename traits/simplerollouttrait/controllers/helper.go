@@ -8,9 +8,9 @@ import (
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	appsv1 "k8s.io/api/apps/v1"
-	autoscalingv1 "k8s.io/api/autoscaling/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 
+	runtimev1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/oam-controllers/pkg/oam/util"
 	"github.com/crossplane/oam-kubernetes-runtime/apis/core/v1alpha2"
 	"github.com/go-logr/logr"
@@ -24,8 +24,6 @@ import (
 var (
 	oamAPIVersion  = v1alpha2.SchemeGroupVersion.String()
 	appsAPIVersion = appsv1.SchemeGroupVersion.String()
-
-	GroupVersionHPA = autoscalingv1.SchemeGroupVersion.String()
 )
 
 const (
@@ -70,7 +68,11 @@ func DetermineWorkloadType(ctx context.Context, log logr.Logger, r client.Reader
 	switch apiVersion {
 	case oamAPIVersion:
 		// oam core workloads
-		return util.FetchWorkloadDefinition(ctx, log, r, workload)
+		unsctrucs, err := util.FetchWorkloadDefinition(ctx, log, r, workload)
+		if err != nil {
+			return nil, err
+		}
+		return unsctrucs, nil
 	case appsAPIVersion:
 		// k8s native resources
 		log.Info("workload is K8S native resources", "APIVersion", apiVersion)
@@ -83,11 +85,11 @@ func DetermineWorkloadType(ctx context.Context, log logr.Logger, r client.Reader
 	}
 }
 
-func isNewleCreatedRolloutTrait(rt *extendoamdevv1alpha2.SimpleRolloutTrait) bool {
-	if rt.Status.CurrentWorkloadReference.APIVersion != "" {
-		return false
+func isNewlyCreatedRolloutTrait(rt *extendoamdevv1alpha2.SimpleRolloutTrait) bool {
+	if rt.Status.CurrentWorkloadReference == (runtimev1alpha1.TypedReference{}) {
+		return true
 	}
-	return true
+	return false
 }
 
 func isUnderRollout(rt *extendoamdevv1alpha2.SimpleRolloutTrait) bool {
@@ -97,66 +99,83 @@ func isUnderRollout(rt *extendoamdevv1alpha2.SimpleRolloutTrait) bool {
 	return false
 }
 
-func isScaleUpReady(deploy *appsv1.Deployment, targetReplicas int32) bool {
-	if deploy.Status.ReadyReplicas == targetReplicas {
-		return true
+func isScaleUpReady(deployments []*appsv1.Deployment, targetReplicas int32) bool {
+	//TODO if there's no deployment
+	// does it mean something wrong with Workload controller?
+	if len(deployments) == 0 {
+		return false
 	}
-	return false
+	for _, deploy := range deployments {
+		if deploy.Status.ReadyReplicas != targetReplicas {
+			return false
+		}
+	}
+	return true
 }
 
-func isScaleDownReady(deploy *appsv1.Deployment) bool {
-	//TODO When spec.replicas is 0, there's no status.readyReplicas
-	if *(deploy.Spec.Replicas) == 0 && deploy.Status.ReadyReplicas == 0 {
-		return true
+func isScaleDownReady(deployments []*appsv1.Deployment) bool {
+	if len(deployments) == 0 {
+		return false
 	}
-	return false
+	for _, deploy := range deployments {
+		if *(deploy.Spec.Replicas) != 0 || deploy.Status.ReadyReplicas != 0 {
+			return false
+		}
+	}
+	return true
 }
 
-func (r *SimpleRolloutTraitReconciler) scaleUpGradually(ctx context.Context, log logr.Logger, deployment *appsv1.Deployment, targetReplica, batch int32) error {
+func (r *SimpleRolloutTraitReconciler) scaleUpGradually(ctx context.Context, log logr.Logger, deployments []*appsv1.Deployment, targetReplica, batch int32) error {
 	// check whether last round scale up is done
-	if *(deployment.Spec.Replicas) == *(&deployment.Status.ReadyReplicas) {
-		if *(deployment.Spec.Replicas) == targetReplica {
-			log.Info("Scale up is ready")
-			return nil
+	for _, deployment := range deployments {
+		if *(deployment.Spec.Replicas) == deployment.Status.ReadyReplicas {
+			if *(deployment.Spec.Replicas) == targetReplica {
+				log.Info("Scale up is ready")
+				continue
+			}
+			if *(deployment.Spec.Replicas)+batch >= targetReplica {
+				*(deployment.Spec.Replicas) = targetReplica
+			} else {
+				*(deployment.Spec.Replicas) += batch
+			}
+			// update deployment
+			if err := r.Update(ctx, deployment); err != nil {
+				log.Error(err, "Failed to upate deployment for scaling up")
+				return err
+			}
+			log.Info("Successfully update deployment for scaling up", "deployment name", deployment.GetName())
+			continue
 		}
-		if *(deployment.Spec.Replicas)+batch >= targetReplica {
-			*(deployment.Spec.Replicas) = targetReplica
-		} else {
-			*(deployment.Spec.Replicas) += batch
-		}
-		//TODO update deployment
-		if err := r.Update(ctx, deployment); err != nil {
-			log.Error(err, "Failed to upate deployment for scaling up")
-			return err
-		}
-		log.Info("Successfully update deployment for scaling up", "deployment name", deployment.GetName())
-		return nil
+		continue
 	}
 	return nil
 }
 
-func (r *SimpleRolloutTraitReconciler) scaleDownGradually(ctx context.Context, log logr.Logger, deployment *appsv1.Deployment, targetReplica, batch int32) error {
-	if *(deployment.Spec.Replicas) == 0 {
-		return nil
-	}
-	// check whether last round scale down is done
-	if *(deployment.Spec.Replicas) == *(&deployment.Status.ReadyReplicas) {
-		if *(deployment.Spec.Replicas) == targetReplica {
-			log.Info("Scale down is ready")
-			return nil
+func (r *SimpleRolloutTraitReconciler) scaleDownGradually(ctx context.Context, log logr.Logger, deployments []*appsv1.Deployment, targetReplica, batch int32) error {
+	for _, deployment := range deployments {
+		if *(deployment.Spec.Replicas) == 0 {
+			continue
 		}
-		if *(deployment.Spec.Replicas)-batch <= targetReplica {
-			*(deployment.Spec.Replicas) = targetReplica
-		} else {
-			*(deployment.Spec.Replicas) -= batch
+		// check whether last round scale down is done
+		if *(deployment.Spec.Replicas) == deployment.Status.ReadyReplicas {
+			if *(deployment.Spec.Replicas) == targetReplica {
+				log.Info("Scale down is ready")
+				continue
+			}
+			if *(deployment.Spec.Replicas)-batch <= targetReplica {
+				*(deployment.Spec.Replicas) = targetReplica
+			} else {
+				*(deployment.Spec.Replicas) -= batch
+			}
+			// update deployment
+			if err := r.Update(ctx, deployment); err != nil {
+				log.Error(err, "Failed to upate deployment for scaling down")
+				return err
+			}
+			log.Info("Successfully update deployment for scaling down", "deployment name", deployment.GetName())
+			continue
 		}
-		// update deployment
-		if err := r.Update(ctx, deployment); err != nil {
-			log.Error(err, "Failed to upate deployment for scaling down")
-			return err
-		}
-		log.Info("Successfully update deployment for scaling down", "deployment name", deployment.GetName())
-		return nil
+		continue
 	}
 	return nil
 }
