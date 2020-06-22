@@ -36,14 +36,16 @@ import (
 
 // Reconcile error strings.
 const (
-	errLocateWorkload           = "cannot find workload"
-	errLocateResources          = "cannot find resources"
-	errLocateAvailableResouces  = "cannot find available resources"
-	errMarshalDeployment        = "cannot unmarshal deployment"
-	errFailUpdateDeployment     = "failed to update deployment"
-	errFailDeleteLegacyWorkload = "failed to delete wrokload"
-	errFailScaleUp              = "failed to scale up new workload"
-	errFailScaleDown            = "failed to scale down new workload"
+	errLocateWorkload            = "cannot find workload"
+	errLocateResources           = "cannot find resources"
+	errLocateAvailableResouces   = "cannot find available resources"
+	errMarshalDeployment         = "cannot unmarshal deployment"
+	errFailUpdateDeployment      = "failed to update deployment"
+	errFailDeleteLegacyWorkload  = "failed to delete wrokload"
+	errFailScaleUp               = "failed to scale up new workload"
+	errFailScaleDown             = "failed to scale down new workload"
+	errFailUpdateStatus          = "fail to update rollout status"
+	errFailGetControllerRevision = "fail to get controller revision"
 )
 
 var (
@@ -61,6 +63,7 @@ type SimpleRolloutTraitReconciler struct {
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=controllerrevisions,verbs=get;
 
 func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
@@ -82,9 +85,9 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 	// check whether it's newly created
 	if isNewlyCreatedRolloutTrait(&rollouttrait) {
 		//if it's new, set rollingupdate for deployment & update rollouttrait status
-		workload, _, err := r.fetchWorkload(ctx, log, &rollouttrait)
+		workload, result, err := r.fetchWorkload(ctx, log, &rollouttrait)
 		if err != nil {
-			return ctrl.Result{}, err
+			return result, err
 		}
 		underlyingDeployments, err := r.getUnderlyingDeployment(ctx, log, workload)
 		if err != nil {
@@ -92,6 +95,7 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 			return util.ReconcileWaitResult, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
 		}
 
+		// check initial setup starts
 		if len(underlyingDeployments) == 0 {
 			return ReconcileWaitWorkloadInit, nil
 		}
@@ -99,10 +103,16 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 		for _, deployment := range underlyingDeployments {
 			if deployment.Status.AvailableReplicas != *deployment.Spec.Replicas {
 				// initial setup is not ready, requeue to wait
-				return reconcile.Result{Requeue: true}, nil
+				// if update deployment before initial setup finish
+				// runtime will raise an error
+				return ReconcileWaitWorkloadInit, nil
+			}
+
+			if deployment.Status.AvailableReplicas == *targetReplica {
+				continue
 			}
 			//TODO is it necessary to make the initial create gradually?
-			//TODO or just set the replicas and leave it swarm?
+			// or just set the replicas and leave it swarm?
 			deployment.Spec.Replicas = targetReplica
 
 			log.Info("Going to update Deployment", "deployment detail", deployment)
@@ -113,8 +123,23 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 					util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateDeployment)))
 			}
 		}
-		//update rollouttrait status
+		// get corresponding ControllerRevision
+		cr, err := r.getControllerRevision(ctx, log, &rollouttrait)
+		if err != nil {
+			r.Log.Error(err, "Failed to get ControllerRevision", "Revision name", rollouttrait.Spec.WorkloadReference.Name)
+			return util.ReconcileWaitResult,
+				util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailGetControllerRevision)))
+		}
+
+		newRolloutiHistory := extendoamdevv1alpha2.RolloutHistory{
+			Revision:    cr.Revision,
+			HistoryData: cr.Data,
+		}
+
+		rollouttrait.Status.RolloutHistory = []extendoamdevv1alpha2.RolloutHistory{newRolloutiHistory}
 		rollouttrait.Status.CurrentWorkloadReference = rollouttrait.Spec.WorkloadReference
+
+		//update rollouttrait status
 		if err := r.Status().Update(ctx, &rollouttrait); err != nil {
 			r.Log.Error(err, "Failed to update rollouttrait status")
 			return util.ReconcileWaitResult,
@@ -137,9 +162,9 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 				return util.ReconcileWaitResult, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateResources)))
 			}
 
-			// handle the situation where no deployments belonging to the workload returned
+			// handle the situation where no deployments in the workload returned
 			if len(newUnderlyingDeployments) == 0 {
-				// it means WorkloadInstance is already created
+				// it means workload instance is already created
 				// but underlying deployments not
 				return util.ReconcileWaitResult, nil
 			}
@@ -172,15 +197,30 @@ func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result,
 						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(fmt.Errorf(errFailDeleteLegacyWorkload)))
 				}
 				log.Info("Deleted old workload instance successfully", "kind", oldWorkload.GetKind())
+				// get corresponding ControllerRevision
+				cr, err := r.getControllerRevision(ctx, log, &rollouttrait)
+				if err != nil {
+					r.Log.Error(err, "Failed to get ControllerRevision", "Revision name", rollouttrait.Spec.WorkloadReference.Name)
+					return util.ReconcileWaitResult,
+						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailGetControllerRevision)))
+				}
+
+				newRolloutHistory := extendoamdevv1alpha2.RolloutHistory{
+					Revision:    cr.Revision,
+					HistoryData: cr.Data,
+				}
+
+				rollouttrait.Status.RolloutHistory = append(rollouttrait.Status.RolloutHistory, newRolloutHistory)
 
 				// update rollouttrait.status.currentWorkloadRef to new one
 				rollouttrait.Status.CurrentWorkloadReference = rollouttrait.Spec.WorkloadReference
+
 				if err := r.Status().Update(ctx, &rollouttrait); err != nil {
 					r.Log.Error(err, "Failed to update rollouttrait status")
 					return util.ReconcileWaitResult,
 						util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errFailUpdateStatus)))
 				}
-				// rollouttrait turn out Stable status, no more requeue
+				// rollouttrait turn out Stable status, no more reconcile
 				return ctrl.Result{}, util.PatchCondition(ctx, r, &rollouttrait, cpv1alpha1.ReconcileSuccess())
 
 			} else {

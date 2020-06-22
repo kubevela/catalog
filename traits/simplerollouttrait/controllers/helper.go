@@ -27,16 +27,12 @@ var (
 )
 
 const (
-	KindDeployment  = "Deployment"
-	KindStatefulSet = "StatefulSet"
+	KindDeployment         = "Deployment"
+	KindStatefulSet        = "StatefulSet"
+	KindControllerRevision = "ControllerRevision"
 
 	GVKDeployment  = "apps/v1, Kind=Deployment"
 	GVKStatefulSet = "apps/v1, Kind=StatefulSet"
-)
-
-const (
-	errMissContainerResources = "missing container resources config"
-	errFailUpdateStatus       = "fail to update rollout status"
 )
 
 func (r *SimpleRolloutTraitReconciler) fetchWorkload(ctx context.Context, log logr.Logger,
@@ -204,4 +200,17 @@ func (r *SimpleRolloutTraitReconciler) getUnderlyingDeployment(ctx context.Conte
 		deployments = append(deployments, &deployment)
 	}
 	return deployments, nil
+}
+
+func (r *SimpleRolloutTraitReconciler) getControllerRevision(ctx context.Context, log logr.Logger, rolloutTrait *extendoamdevv1alpha2.SimpleRolloutTrait) (*appsv1.ControllerRevision, error) {
+	var cr appsv1.ControllerRevision
+	// rolloutTrait.spec.workloadRef.name equals to controllerrevision name
+	wn := client.ObjectKey{Name: rolloutTrait.GetWorkloadReference().Name, Namespace: rolloutTrait.GetNamespace()}
+
+	if err := r.Get(ctx, wn, &cr); err != nil {
+		log.Error(err, "ControllerRevision not find", "kind", rolloutTrait.GetWorkloadReference().Kind,
+			"ControllerRevision name", rolloutTrait.GetWorkloadReference().Name)
+		return nil, err
+	}
+	return &cr, nil
 }

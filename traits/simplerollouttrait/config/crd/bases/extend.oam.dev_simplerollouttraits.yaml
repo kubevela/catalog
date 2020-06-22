@@ -138,6 +138,16 @@ spec:
               - kind
               - name
               type: object
+            rolloutiHistory:
+              items:
+                properties:
+                  historyData:
+                    type: object
+                  revision:
+                    format: int64
+                    type: integer
+                type: object
+              type: array
           required:
           - currentWorkloadRef
           type: object

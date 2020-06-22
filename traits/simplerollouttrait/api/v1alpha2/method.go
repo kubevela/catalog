@@ -27,3 +27,11 @@ func (rt *SimpleRolloutTrait) GetWorkloadReference() runtimev1alpha1.TypedRefere
 func (rt *SimpleRolloutTrait) SetWorkloadReference(r runtimev1alpha1.TypedReference) {
 	rt.Spec.WorkloadReference = r
 }
+
+func (rt *SimpleRolloutTrait) GetRolloutHistory() []RolloutHistory {
+	return rt.Status.RolloutHistory
+}
+
+func (rt *SimpleRolloutTrait) SetRolloutHistory(rh []RolloutHistory) {
+	rt.Status.RolloutHistory = rh
+}
