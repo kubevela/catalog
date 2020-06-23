@@ -25,7 +25,7 @@ const (
 
 // create a ingress for the workload
 func (r *IngressTraitReconciler) renderIngress(ctx context.Context, trait *corev1alpha2.IngressTrait,
-	obj oam.Object, svcInfo *v1beta1.IngressBackend) (*corev1.Service, *v1beta1.Ingress, error) {
+	obj oam.Object, svcInfo *corev1alpha2.InternalBackend) (*corev1.Service, *v1beta1.Ingress, error) {
 	// create a ingress
 	resources, err := r.IngressInjector(ctx, trait, []oam.Object{obj}, svcInfo)
 	if err != nil {
@@ -105,8 +105,8 @@ func (r *IngressTraitReconciler) cleanupResources(ctx context.Context,
 }
 
 // get the service information to create the ingress
-func (r *IngressTraitReconciler) getServiceInfo(ctx context.Context, resources []*unstructured.Unstructured) (*v1beta1.IngressBackend, error) {
-	var serviceInfo v1beta1.IngressBackend
+func (r *IngressTraitReconciler) getServiceInfo(ctx context.Context, resources []*unstructured.Unstructured) (*corev1alpha2.InternalBackend, error) {
+	var serviceInfo corev1alpha2.InternalBackend
 	// Determine whether the workload has a service or not
 	if len(resources) == 1 {
 		// It turns out to be a K8S native resource
@@ -122,7 +122,9 @@ func (r *IngressTraitReconciler) getServiceInfo(ctx context.Context, resources [
 					return nil, errors.Wrap(err, "Failed to convert an unstructured obj to a service")
 				}
 				serviceInfo.ServiceName = svc.Name
-				serviceInfo.ServicePort = intstr.FromInt(int(svc.Spec.Ports[0].Port))
+				for _, p := range svc.Spec.Ports {
+					serviceInfo.ServicePort = append(serviceInfo.ServicePort, intstr.FromInt(int(p.Port)))
+				}
 			}
 		}
 	}

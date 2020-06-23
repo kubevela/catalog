@@ -35,20 +35,19 @@ var (
 
 // IngressInjector adds a Ingress object for the resources observed in a workload translation.
 func (r *IngressTraitReconciler) IngressInjector(ctx context.Context, trait oam.Trait,
-	objs []oam.Object, svcInfo *v1beta1.IngressBackend) ([]oam.Object, error) {
+	objs []oam.Object, svcInfo *corev1alpha2.InternalBackend) ([]oam.Object, error) {
 	t, ok := trait.(*corev1alpha2.IngressTrait)
 	if !ok {
 		return nil, errors.New(errNotIngressTrait)
 	}
 
-	nilStruct := v1beta1.IngressBackend{}
-	if *svcInfo == nilStruct {
-		r.Log.Info("serviceInfo is nil, we'll create a service")
+	if svcInfo.ServiceName == "" {
 		var err error
 		objs, svcInfo, err = ServiceInjector(ctx, t, objs)
 		if err != nil {
 			return nil, err
 		}
+		r.Log.Info("serviceInfo is nil, so we should create a service", "serviceInfo", svcInfo)
 	} else {
 		r.Log.Info("serviceInfo is not nil", "serviceInfo", svcInfo)
 	}
@@ -69,22 +68,24 @@ func (r *IngressTraitReconciler) IngressInjector(ctx context.Context, trait oam.
 			IngressClassName: t.Spec.IngressClassName,
 			Backend:          t.Spec.DefaultBackend,
 			TLS:              t.Spec.TLS,
-			Rules: []v1beta1.IngressRule{
-				{
-					Host: t.Spec.Rules[0].Host,
-					IngressRuleValue: v1beta1.IngressRuleValue{
-						HTTP: &v1beta1.HTTPIngressRuleValue{
-							Paths: []v1beta1.HTTPIngressPath{
-								{
-									Path:    t.Spec.Rules[0].Paths[0].Path,
-									Backend: *svcInfo,
-								},
-							},
-						},
-					},
-				},
-			},
 		},
+	}
+
+	for i, r := range t.Spec.Rules {
+		ingress.Spec.Rules = append(ingress.Spec.Rules, v1beta1.IngressRule{
+			Host: r.Host,
+		})
+		http := v1beta1.HTTPIngressRuleValue{}
+		for j, p := range svcInfo.ServicePort {
+			http.Paths = append(http.Paths, v1beta1.HTTPIngressPath{
+				Path: r.Paths[j].Path,
+				Backend: v1beta1.IngressBackend{
+					ServiceName: svcInfo.ServiceName,
+					ServicePort: p,
+				},
+			})
+		}
+		ingress.Spec.Rules[i].HTTP = &http
 	}
 
 	objs = append(objs, ingress)
@@ -92,8 +93,8 @@ func (r *IngressTraitReconciler) IngressInjector(ctx context.Context, trait oam.
 	return objs, nil
 }
 
-func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []oam.Object) ([]oam.Object, *v1beta1.IngressBackend, error) {
-	var svcInfo v1beta1.IngressBackend
+func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []oam.Object) ([]oam.Object, *corev1alpha2.InternalBackend, error) {
+	var svcInfo corev1alpha2.InternalBackend
 
 	for _, o := range objs {
 		s := &corev1.Service{
@@ -123,18 +124,14 @@ func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []o
 				return nil, nil, errors.Wrap(err, "Failed to covert an unstructured obj to a deployment")
 			}
 
-			if len(deploy.Spec.Template.Spec.Containers) < 1 {
-				continue
-			}
-
-			if len(deploy.Spec.Template.Spec.Containers[0].Ports) > 0 {
-				s.Spec.Ports = []corev1.ServicePort{
-					{
-						Name:       deploy.GetName(),
-						Port:       deploy.Spec.Template.Spec.Containers[0].Ports[0].ContainerPort,
-						TargetPort: intstr.FromInt(int(deploy.Spec.Template.Spec.Containers[0].Ports[0].ContainerPort)),
-						Protocol:   corev1.ProtocolTCP,
-					},
+			for _, c := range deploy.Spec.Template.Spec.Containers {
+				for _, p := range c.Ports {
+					s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
+						Name:       c.Name,
+						Port:       p.ContainerPort,
+						TargetPort: intstr.FromInt(int(p.ContainerPort)),
+						Protocol:   p.Protocol,
+					})
 				}
 			}
 
@@ -146,18 +143,14 @@ func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []o
 				return nil, nil, errors.Wrap(err, "Failed to convert an unstructured obj to a statefulset")
 			}
 
-			if len(set.Spec.Template.Spec.Containers) < 1 {
-				continue
-			}
-
-			if len(set.Spec.Template.Spec.Containers[0].Ports) > 0 {
-				s.Spec.Ports = []corev1.ServicePort{
-					{
-						Name:       set.GetName(),
-						Port:       set.Spec.Template.Spec.Containers[0].Ports[0].ContainerPort,
-						TargetPort: intstr.FromInt(int(set.Spec.Template.Spec.Containers[0].Ports[0].ContainerPort)),
-						Protocol:   corev1.ProtocolTCP,
-					},
+			for _, c := range set.Spec.Template.Spec.Containers {
+				for _, p := range c.Ports {
+					s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
+						Name:       c.Name,
+						Port:       p.ContainerPort,
+						TargetPort: intstr.FromInt(int(p.ContainerPort)),
+						Protocol:   p.Protocol,
+					})
 				}
 			}
 
@@ -165,9 +158,24 @@ func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []o
 			s.Name = set.Spec.ServiceName
 		}
 
-		svcInfo = v1beta1.IngressBackend{
-			ServiceName: s.Name,
-			ServicePort: intstr.FromInt(int(s.Spec.Ports[0].Port)),
+		for _, r := range t.Spec.Rules {
+			length := len(s.Spec.Ports)
+			for i, p := range r.Paths {
+				// If workload is StatefulSet, s.Name should be statefulset.serviceName, we can't change it
+				if p.Backend.ServiceName != "" && s.Name == t.GetName() {
+					s.Name = p.Backend.ServiceName
+				}
+				if p.Backend.ServicePort.IntVal != 0 && i < length {
+					s.Spec.Ports[i].Port = p.Backend.ServicePort.IntVal
+				}
+			}
+		}
+
+		// get serviceName and servicePorts information from service to ingress
+		svcInfo = corev1alpha2.InternalBackend{}
+		svcInfo.ServiceName = s.GetName()
+		for _, p := range s.Spec.Ports {
+			svcInfo.ServicePort = append(svcInfo.ServicePort, intstr.FromInt(int(p.Port)))
 		}
 
 		objs = append(objs, s)

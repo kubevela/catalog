@@ -24,6 +24,12 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
+// Used to store service information internally
+type InternalBackend struct {
+	ServiceName string
+	ServicePort []intstr.IntOrString
+}
+
 // You can choose not to define it, because IngressTrait will create a service automatically
 type OptionalBackend struct {
 	ServiceName string `json:"serviceName,omitempty"`
@@ -42,7 +48,7 @@ type IngressPath struct {
 }
 
 type Rule struct {
-	Host string `json:"host"`
+	Host string `json:"host,omitempty"`
 
 	Paths []IngressPath `json:"paths,omitempty"`
 }
