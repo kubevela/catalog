@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
 	runtimev1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
@@ -44,7 +45,15 @@ type SimpleRolloutTraitStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 	runtimev1alpha1.ConditionedStatus `json:",inline"`
 
+	RolloutHistory []RolloutHistory `json:"rolloutiHistory,omitempty"`
+
 	CurrentWorkloadReference runtimev1alpha1.TypedReference `json:"currentWorkloadRef"`
+}
+
+type RolloutHistory struct {
+	Revision int64 `json:"revision,omitempty"`
+
+	HistoryData runtime.RawExtension `json:"historyData,omitempty"`
 }
 
 // +kubebuilder:object:root=true

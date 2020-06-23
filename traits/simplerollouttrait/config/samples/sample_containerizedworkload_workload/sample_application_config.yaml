@@ -10,8 +10,6 @@ spec:
             apiVersion: extend.oam.dev/v1alpha2
             kind: SimpleRolloutTrait
             metadata:
-              # TODO(negz): This name can be omitted and generated automatically if
-              # each trait kind may apply only once to a component/workload.
               name:  example-rollout-trait
             spec:
               replica: 6

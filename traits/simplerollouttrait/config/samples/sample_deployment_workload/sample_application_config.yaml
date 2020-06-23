@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig-rollout-deployment
+spec:
+  components:
+    - componentName: example-component-deployment
+      traits:
+        - trait:
+            apiVersion: extend.oam.dev/v1alpha2
+            kind: SimpleRolloutTrait
+            metadata:
+              name:  example-rollout-trait-deployment
+            spec:
+              replica: 6
+              maxUnavailable: 2
+              batch: 2

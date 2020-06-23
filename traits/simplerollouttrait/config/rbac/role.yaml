@@ -9,6 +9,12 @@ rules:
 - apiGroups:
   - apps
   resources:
+  - controllerrevisions
+  verbs:
+  - get
+- apiGroups:
+  - apps
+  resources:
   - deployments
   verbs:
   - delete
