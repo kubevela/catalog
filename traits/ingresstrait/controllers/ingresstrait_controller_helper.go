@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/crossplane/oam-controllers/pkg/oam/util"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	corev1alpha2 "github.com/oam-dev/catalog/traits/ingresstrait/api/v1alpha2"
@@ -27,37 +26,20 @@ const (
 func (r *IngressTraitReconciler) renderIngress(ctx context.Context, trait *corev1alpha2.IngressTrait,
 	obj oam.Object, svcInfo *corev1alpha2.InternalBackend) (*corev1.Service, *v1beta1.Ingress, error) {
 	// create a ingress
-	resources, err := r.IngressInjector(ctx, trait, []oam.Object{obj}, svcInfo)
+	service, ingress, err := r.IngressInjector(ctx, trait, obj, svcInfo)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var ingress *v1beta1.Ingress
-	var service *corev1.Service
-	var ok bool
-	// If the length is 2, the service is not created
-	if len(resources) == 2 {
-		ingress, ok = resources[1].(*v1beta1.Ingress)
-		if !ok {
-			return nil, nil, fmt.Errorf("internal error, ingress is not rendered correctly")
-		}
-	} else {
-		service, ok = resources[1].(*corev1.Service)
-		if !ok {
-			return nil, nil, fmt.Errorf("internal error, service is not rendered correctly")
-		}
+	if service != nil {
 		if err := ctrl.SetControllerReference(trait, service, r.Scheme); err != nil {
 			return nil, nil, err
-		}
-
-		ingress, ok = resources[2].(*v1beta1.Ingress)
-		if !ok {
-			return nil, nil, fmt.Errorf("internal error, ingress is not rendered correctly")
 		}
 	}
 	if err := ctrl.SetControllerReference(trait, ingress, r.Scheme); err != nil {
 		return nil, nil, err
 	}
+
 	return service, ingress, nil
 }
 

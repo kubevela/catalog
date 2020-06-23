@@ -35,17 +35,18 @@ var (
 
 // IngressInjector adds a Ingress object for the resources observed in a workload translation.
 func (r *IngressTraitReconciler) IngressInjector(ctx context.Context, trait oam.Trait,
-	objs []oam.Object, svcInfo *corev1alpha2.InternalBackend) ([]oam.Object, error) {
+	obj oam.Object, svcInfo *corev1alpha2.InternalBackend) (*corev1.Service, *v1beta1.Ingress, error) {
 	t, ok := trait.(*corev1alpha2.IngressTrait)
 	if !ok {
-		return nil, errors.New(errNotIngressTrait)
+		return nil, nil, errors.New(errNotIngressTrait)
 	}
 
+	var svc *corev1.Service
 	if svcInfo.ServiceName == "" {
 		var err error
-		objs, svcInfo, err = ServiceInjector(ctx, t, objs)
+		svc, svcInfo, err = ServiceInjector(ctx, t, obj)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		r.Log.Info("serviceInfo is nil, so we should create a service", "serviceInfo", svcInfo)
 	} else {
@@ -88,99 +89,91 @@ func (r *IngressTraitReconciler) IngressInjector(ctx context.Context, trait oam.
 		ingress.Spec.Rules[i].HTTP = &http
 	}
 
-	objs = append(objs, ingress)
-
-	return objs, nil
+	return svc, ingress, nil
 }
 
-func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []oam.Object) ([]oam.Object, *corev1alpha2.InternalBackend, error) {
+func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, obj oam.Object) (*corev1.Service, *corev1alpha2.InternalBackend, error) {
 	var svcInfo corev1alpha2.InternalBackend
 
-	for _, o := range objs {
-		s := &corev1.Service{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       serviceKind,
-				APIVersion: serviceAPIVersion,
+	s := &corev1.Service{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       serviceKind,
+			APIVersion: serviceAPIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      t.GetName(),
+			Namespace: t.GetNamespace(),
+			Labels: map[string]string{
+				LabelKey: string(t.GetUID()),
 			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      t.GetName(),
-				Namespace: t.GetNamespace(),
-				Labels: map[string]string{
-					LabelKey: string(t.GetUID()),
-				},
-			},
-			Spec: corev1.ServiceSpec{
-				Ports: []corev1.ServicePort{},
-			},
-		}
-
-		// Determine whether the resource kind is Deployment or StatefulSet
-		// If it's StatefulSet, service name must be same as StatefulSet.Spec.ServiceName
-		if o.GetObjectKind().GroupVersionKind().Kind == KindDeployment {
-			var deploy appsv1.Deployment
-			bts, _ := json.Marshal(o)
-			if err := json.Unmarshal(bts, &deploy); err != nil {
-				return nil, nil, errors.Wrap(err, "Failed to covert an unstructured obj to a deployment")
-			}
-
-			for _, c := range deploy.Spec.Template.Spec.Containers {
-				for _, p := range c.Ports {
-					s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
-						Name:       c.Name,
-						Port:       p.ContainerPort,
-						TargetPort: intstr.FromInt(int(p.ContainerPort)),
-						Protocol:   p.Protocol,
-					})
-				}
-			}
-
-			s.Spec.Selector = deploy.Spec.Selector.MatchLabels
-		} else if o.GetObjectKind().GroupVersionKind().Kind == KindStatefulSet {
-			var set appsv1.StatefulSet
-			bts, _ := json.Marshal(o)
-			if err := json.Unmarshal(bts, &set); err != nil {
-				return nil, nil, errors.Wrap(err, "Failed to convert an unstructured obj to a statefulset")
-			}
-
-			for _, c := range set.Spec.Template.Spec.Containers {
-				for _, p := range c.Ports {
-					s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
-						Name:       c.Name,
-						Port:       p.ContainerPort,
-						TargetPort: intstr.FromInt(int(p.ContainerPort)),
-						Protocol:   p.Protocol,
-					})
-				}
-			}
-
-			s.Spec.Selector = set.Spec.Selector.MatchLabels
-			s.Name = set.Spec.ServiceName
-		}
-
-		for _, r := range t.Spec.Rules {
-			length := len(s.Spec.Ports)
-			for i, p := range r.Paths {
-				// If workload is StatefulSet, s.Name should be statefulset.serviceName, we can't change it
-				if p.Backend.ServiceName != "" && s.Name == t.GetName() {
-					s.Name = p.Backend.ServiceName
-				}
-				if p.Backend.ServicePort.IntVal != 0 && i < length {
-					s.Spec.Ports[i].Port = p.Backend.ServicePort.IntVal
-				}
-			}
-		}
-
-		// get serviceName and servicePorts information from service to ingress
-		svcInfo = corev1alpha2.InternalBackend{}
-		svcInfo.ServiceName = s.GetName()
-		for _, p := range s.Spec.Ports {
-			svcInfo.ServicePort = append(svcInfo.ServicePort, intstr.FromInt(int(p.Port)))
-		}
-
-		objs = append(objs, s)
-
-		break
+		},
+		Spec: corev1.ServiceSpec{
+			Ports: []corev1.ServicePort{},
+		},
 	}
 
-	return objs, &svcInfo, nil
+	// Determine whether the resource kind is Deployment or StatefulSet
+	// If it's StatefulSet, service name must be same as StatefulSet.Spec.ServiceName
+	if obj.GetObjectKind().GroupVersionKind().Kind == KindDeployment {
+		var deploy appsv1.Deployment
+		bts, _ := json.Marshal(obj)
+		if err := json.Unmarshal(bts, &deploy); err != nil {
+			return nil, nil, errors.Wrap(err, "Failed to covert an unstructured obj to a deployment")
+		}
+
+		for _, c := range deploy.Spec.Template.Spec.Containers {
+			for _, p := range c.Ports {
+				s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
+					Name:       p.Name,
+					Port:       p.ContainerPort,
+					TargetPort: intstr.FromInt(int(p.ContainerPort)),
+					Protocol:   p.Protocol,
+				})
+			}
+		}
+
+		s.Spec.Selector = deploy.Spec.Selector.MatchLabels
+	} else if obj.GetObjectKind().GroupVersionKind().Kind == KindStatefulSet {
+		var set appsv1.StatefulSet
+		bts, _ := json.Marshal(obj)
+		if err := json.Unmarshal(bts, &set); err != nil {
+			return nil, nil, errors.Wrap(err, "Failed to convert an unstructured obj to a statefulset")
+		}
+
+		for _, c := range set.Spec.Template.Spec.Containers {
+			for _, p := range c.Ports {
+				s.Spec.Ports = append(s.Spec.Ports, corev1.ServicePort{
+					Name:       p.Name,
+					Port:       p.ContainerPort,
+					TargetPort: intstr.FromInt(int(p.ContainerPort)),
+					Protocol:   p.Protocol,
+				})
+			}
+		}
+
+		s.Spec.Selector = set.Spec.Selector.MatchLabels
+		s.Name = set.Spec.ServiceName
+	}
+
+	for _, r := range t.Spec.Rules {
+		length := len(s.Spec.Ports)
+		for i, p := range r.Paths {
+			// If workload is StatefulSet, s.Name should be statefulset.serviceName, we can't change it
+			if p.Backend.ServiceName != "" && s.Name == t.GetName() {
+				s.Name = p.Backend.ServiceName
+			}
+			if p.Backend.ServicePort.IntVal != 0 && i < length {
+				s.Spec.Ports[i].Port = p.Backend.ServicePort.IntVal
+			}
+		}
+	}
+
+	// get serviceName and servicePorts information from service to ingress
+	svcInfo = corev1alpha2.InternalBackend{}
+	svcInfo.ServiceName = s.GetName()
+	for _, p := range s.Spec.Ports {
+		svcInfo.ServicePort = append(svcInfo.ServicePort, intstr.FromInt(int(p.Port)))
+	}
+
+	return s, &svcInfo, nil
 }
