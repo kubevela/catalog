@@ -171,8 +171,8 @@ web    1/1     1            1           32s
 - And a service created by IngressTrait
 ```
 kubectl get service
-NAME          TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-deploy-test   LoadBalancer   10.108.95.103   <pending>     8080:32105/TCP   42s
+NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+deploy-test   ClusterIP   10.108.95.103   <none>     8080:32105/TCP   42s
 ```
 - You should see a ingress and it's rules looking like below
 ```
@@ -237,8 +237,8 @@ web    1/1     6s
 - And a service created by IngressTrait
 ```
 kubectl get service
-NAME   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-test   LoadBalancer   10.96.198.230   <pending>     80:32424/TCP   19s
+NAME   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+test   ClusterIP   10.96.198.230   <none>     80:32424/TCP   19s
 ```
 - You should see a ingress and it's rules looking like below
 ```

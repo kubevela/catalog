@@ -111,7 +111,6 @@ func ServiceInjector(ctx context.Context, t *corev1alpha2.IngressTrait, objs []o
 			},
 			Spec: corev1.ServiceSpec{
 				Ports: []corev1.ServicePort{},
-				Type:  corev1.ServiceTypeLoadBalancer,
 			},
 		}
 
