@@ -18,15 +18,54 @@ package v1alpha2
 
 import (
 	runtimev1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/api/networking/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 )
+
+// Used to store service information internally
+type InternalBackend struct {
+	ServiceName string
+	ServicePort []intstr.IntOrString
+}
+
+// You can choose not to define it, because IngressTrait will create a service automatically
+type OptionalBackend struct {
+	ServiceName string `json:"serviceName,omitempty"`
+
+	ServicePort intstr.IntOrString `json:"servicePort,omitempty"`
+
+	Resource *v1.TypedLocalObjectReference `json:"resource,omitempty"`
+}
+
+type IngressPath struct {
+	Path string `json:"path,omitempty"`
+
+	PathType *v1beta1.PathType `json:"pathType,omitempty"`
+
+	Backend OptionalBackend `json:"backend,omitempty"`
+}
+
+type Rule struct {
+	Host string `json:"host,omitempty"`
+
+	Paths []IngressPath `json:"paths,omitempty"`
+}
 
 // IngressTraitSpec defines the desired state of IngressTrait
 type IngressTraitSpec struct {
-	// NOTE: You can add extension of IngressTraitSpec in the future
-	// K8S natice IngressSpec
-	Template v1beta1.IngressSpec `json:"template,omitempty"`
+	// K8S native IngressClassName: defines which controller will implement the resource
+	IngressClassName *string `json:"ingressClassName,omitempty"`
+
+	// A default backend capable of servicing requests that don't match any rule
+	DefaultBackend *v1beta1.IngressBackend `json:"defaultBackend,omitempty"`
+
+	// K8S native TLS
+	TLS []v1beta1.IngressTLS `json:"tls,omitempty"`
+
+	// A list of host rules used to configure the Ingress
+	Rules []Rule `json:"rules,omitempty"`
 
 	// WorkloadReference to the workload this trait applies to.
 	WorkloadReference runtimev1alpha1.TypedReference `json:"workloadRef"`
