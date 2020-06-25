@@ -15,6 +15,9 @@ Please follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-o
 - Crossplane v0.11+ installed
 - OAM controllers installed
 
+:exclamation: Please notice that, since oam-core-controller enabled new versioning mechanism has not been released yet, you have to setup it with latest code of oam-kubernetes-runtime locally instead of installing it by [offical Helm charts](https://github.com/crossplane/addon-oam-kubernetes-local/tree/master/charts/oam-core-resources). More details refer to [Development.md](https://github.com/crossplane/oam-kubernetes-runtime)
+    
+
 ## Get started
 - Clone the project into your $GOPATH
 ```shell
