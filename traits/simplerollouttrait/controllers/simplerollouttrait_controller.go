@@ -63,8 +63,13 @@ type SimpleRolloutTraitReconciler struct {
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=extend.oam.dev,resources=simplerollouttraits/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;update;patch;delete
-// +kubebuilder:rbac:groups=apps,resources=controllerrevisions,verbs=get;
+// +kubebuilder:rbac:groups=apps,resources=controllerrevisions,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core.oam.dev,resources=containerizedworkloads/status,verbs=get;
+// +kubebuilder:rbac:groups=core.oam.dev,resources=containerizedworkloads,verbs=get;list;watch;update;patch;delete
+// +kubebuilder:rbac:groups=core.oam.dev,resources=workloaddefinitions,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
 
+// Reconcile reconciles the request
 func (r *SimpleRolloutTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	log := r.Log.WithValues("simplerollouttrait", req.NamespacedName)

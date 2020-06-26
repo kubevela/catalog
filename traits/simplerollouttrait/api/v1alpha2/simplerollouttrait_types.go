@@ -47,7 +47,7 @@ type SimpleRolloutTraitStatus struct {
 
 	RolloutHistory []RolloutHistory `json:"rolloutiHistory,omitempty"`
 
-	CurrentWorkloadReference runtimev1alpha1.TypedReference `json:"currentWorkloadRef"`
+	CurrentWorkloadReference runtimev1alpha1.TypedReference `json:"currentWorkloadRef,omitempty"`
 }
 
 type RolloutHistory struct {
