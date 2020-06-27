@@ -12,6 +12,8 @@ rules:
   - controllerrevisions
   verbs:
   - get
+  - list
+  - watch
 - apiGroups:
   - apps
   resources:
@@ -22,6 +24,43 @@ rules:
   - list
   - patch
   - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads/status
+  verbs:
+  - get
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - workloaddefinitions
+  verbs:
+  - get
+  - list
   - watch
 - apiGroups:
   - extend.oam.dev

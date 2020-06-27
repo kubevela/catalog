@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/crossplane/crossplane-runtime v0.8.0
 	github.com/crossplane/oam-controllers v0.0.0-00010101000000-000000000000
-	github.com/crossplane/oam-kubernetes-runtime v0.0.1
+	github.com/crossplane/oam-kubernetes-runtime v0.0.2-0.20200624061533-3f4e315b9246
 	github.com/go-logr/logr v0.1.0
 	github.com/onsi/ginkgo v1.11.0
 	github.com/onsi/gomega v1.8.1
@@ -17,5 +17,3 @@ require (
 )
 
 replace github.com/crossplane/oam-controllers => github.com/crossplane/addon-oam-kubernetes-local v0.0.0-20200522083149-1bc0918a6ce9
-
-replace github.com/crossplane/oam-kubernetes-runtime => /Users/roy/go/src/github.com/crossplane/oam-kubernetes-runtime
