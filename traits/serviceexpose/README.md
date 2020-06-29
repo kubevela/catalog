@@ -7,7 +7,7 @@ You can use ServiceExpose to create a k8s service for workload on a Kubernetes c
 - Deployment
 
 ## Prerequisites
-- Please follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-oam-kubernetes-local) to install OAM Controllers.
+- Please follow [common prerequisites](../../README.md) to install OAM Controllers.
 
 ## Getting started
 - Get the project to your $GOPATH

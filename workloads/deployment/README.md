@@ -2,15 +2,9 @@
 
 Similar to [OAM interacts with Kubernetes StatefulSet](https://github.com/oam-dev/catalog/tree/master/workloads/statefulset), this section will introduce how to use `Deployment`.
 
-## Update RBAC for OAM ApplicationConfiguration
-Please check the name and namespace of `ServiceAccount` you actually use in `rbac.yaml` before applying it.
-```shell script
-$ kubectl apply -f rbac.yaml
-clusterrole.rbac.authorization.k8s.io/deployment-clusterrole-poc created
-clusterrolebinding.rbac.authorization.k8s.io/component-deployment-workload-poc created
-```
+## Pre-requisites
 
-
+Please follow [common prerequisites](../../README.md) to install Crossplane and OAM.
 
 ## Install Component
 

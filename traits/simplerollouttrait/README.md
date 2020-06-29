@@ -8,7 +8,7 @@ More details refer to [OAM Component mutable and versioning mechanism](https://g
 - Deployment
 
 ## Prerequisites
-Please follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-oam-kubernetes-local) to setup OAM runtime.
+Please follow [common prerequisites](../../README.md) to setup OAM runtime.
 
 - Kubernetes v1.16+
 - Helm 3
