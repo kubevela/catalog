@@ -2,37 +2,9 @@
 
 oam-kubernetes-runtime also supports K8s native resource, this section will introduce how to use K8s StatefulSet.
 
-## Update RBAC for OAM AppConfig Controller
+## Pre-requisites
 
-Make sure your cluster-role bound has following rules:
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: <your-cluster-role>
-rules:
-- apiGroups:
-  - apps
-  resources:
-  - statefulsets
-  # - deployments
-  verbs:
-  - "*"
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: oam-example-catalog
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: <your-cluster-role>
-subjects:
-  - kind: ServiceAccount
-    name: <crossplane-name>
-    namespace: <crossplane-namsepace>
-```
+Please follow [common prerequisites](../../README.md) to install Crossplane and OAM.
 
 ## Install Component
 

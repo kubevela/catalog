@@ -8,7 +8,7 @@ An abstraction for k8s Ingress which will always create Service automatically fo
 - Deployment
 
 ## Prerequisites
-Please follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-oam-kubernetes-local) to install OAM Controllers.
+Please follow [common prerequisites](../../README.md) to install OAM Controllers.
 
 ## Getting started
 - Get the IngressTrait project to your GOPATH

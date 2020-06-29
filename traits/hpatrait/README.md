@@ -8,7 +8,7 @@ HorizontalPodAutoscalerTrait (HPATrait) is used to create Kubernetes HorizontalP
 - Deployment
 
 ## Prerequisites
-- Please follow [addon-oam-kubernetes-local](https://github.com/crossplane/addon-oam-kubernetes-local) to setup OAM runtime and make sure [HPA  is enabled](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#before-you-begin) on your Kubernetes cluster. 
+- Please follow [common prerequisites](../../README.md) to setup OAM runtime and make sure [HPA  is enabled](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#before-you-begin) on your Kubernetes cluster. 
 
 - If you are using minikube Kubernetes, please enable `metrics-server` addon.
 ```shellscript

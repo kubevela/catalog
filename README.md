@@ -2,13 +2,20 @@
 
 Catalog of OAM workloads, traits and scopes.
 
-## Pre-requisites
+## Common pre-requisites
 
-- [Install Crossplane and OAM](https://github.com/oam-dev/crossplane-oam-sample)
-- Update RBAC for OAM ApplicationConfiguration: 
+- [Kubernetes cluster](https://kubernetes.io/docs/setup/)
+  - For example
+    [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/),
+    minimum version `v0.28+`
+- [Helm 3](https://helm.sh/docs/intro/), minimum version `v3.0.0+`.
+- Install Crossplane and OAM
 ```
-kubectl apply -f ./rbac.yaml
+helm repo add oam https://oam-dev.github.io/crossplane-oam-sample/archives/
+kubectl create namespace oam-system
+helm install crossplane --namespace oam-system oam/crossplane-oam
 ```
+
 ## Workloads
 
 Refer to [OAM Workloads](workloads/README.md) to see currently supported workloads.
