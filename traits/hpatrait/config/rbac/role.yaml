@@ -41,6 +41,31 @@ rules:
   - update
   - watch
 - apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - core.oam.dev
+  resources:
+  - containerizedworkloads/status
+  verbs:
+  - get
+- apiGroups:
   - core.oam.dev
   resources:
   - horizontalpodautoscalertraits
