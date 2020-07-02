@@ -60,7 +60,6 @@ type HorizontalPodAutoscalerTraitReconciler struct {
 // +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;
 
 func (r *HorizontalPodAutoscalerTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	o
 	ctx := context.Background()
 	log := r.Log.WithValues("horizontalpodautoscalertrait", req.NamespacedName)
 
