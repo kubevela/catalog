@@ -83,12 +83,12 @@ var _ = Describe("HPATrait Controller Test", func() {
 
 	Context("When reconciler cannot fetch workload", func() {
 		It("retruns reconcile-wait result and non-nil error from fetchWorkload", func() {
-			mclient.MockGet = test.NewMockGetFn(nil, func(o runtime.Object) error {
-				if _, ok := o.(*hpav1alpha2.HorizontalPodAutoscalerTrait); ok {
-					o = newMockHPATrait()
+			mclient.MockGet = test.NewMockGetFn(nil, func(obj runtime.Object) error {
+				if o, ok := obj.(*hpav1alpha2.HorizontalPodAutoscalerTrait); ok {
+					*o = *newMockHPATrait()
 					return nil
 				}
-				if _, ok := o.(*unstructured.Unstructured); ok {
+				if _, ok := obj.(*unstructured.Unstructured); ok {
 					return mockErr
 				}
 				return nil
@@ -104,19 +104,19 @@ var _ = Describe("HPATrait Controller Test", func() {
 
 	Context("When DetermineWorkloadType raises error ", func() {
 		It("returns reconcile-wait result and non-nil error", func() {
-			mclient.MockGet = test.NewMockGetFn(nil, func(o runtime.Object) error {
-				if _, ok := o.(*hpav1alpha2.HorizontalPodAutoscalerTrait); ok {
-					o = newMockHPATrait()
+			mclient.MockGet = test.NewMockGetFn(nil, func(obj runtime.Object) error {
+				if o, ok := obj.(*hpav1alpha2.HorizontalPodAutoscalerTrait); ok {
+					*o = *newMockHPATrait()
 					return nil
 				}
-				if _, ok := o.(*unstructured.Unstructured); ok {
+				if o, ok := obj.(*unstructured.Unstructured); ok {
 					var unsupportWL unstructured.Unstructured
 					unsupportWL.SetGroupVersionKind(runtimeschema.GroupVersionKind{
 						Group:   "",
 						Version: "",
 						Kind:    "unknown",
 					})
-					o = &unsupportWL
+					*o = unsupportWL
 					return nil
 				}
 				return nil
