@@ -19,6 +19,8 @@ Pleaser refer to [Download and Install Istio](https://istio.io/latest/docs/setup
 
 ## Deploy the application
 
+Please keep the present working directory as `applications/istio/bookinfo` of the GitHub repo in this step and all others.
+
 Remember to apply [rbac.yaml](./rbac.yaml) first for needed access controls.
 
 ```shell script
@@ -52,6 +54,12 @@ the controller for scope `bookinfo-gateway` in the next step.
 $ kubectl apply -f definitions.yaml
 traitdefinition.core.oam.dev/virtualservices.networking.istio.io created
 scopedefinition.core.oam.dev/gateway.netwoking.istio.scops created
+```
+
+Apply Scops manifest [Scopes/scope-gateway.yaml](./Scopes/scope-gateway.yaml).
+```shell script
+$ kubectl apply -f Scopes/scope-gateway.yaml
+gateway.networking.istio.io/bookinfo-gateway created
 ```
 
 In [appconfig-1-bookinfo.yaml](./appconfig-1-bookinfo.yaml), the ApplicationConfiguration consists of four components:
@@ -241,6 +249,26 @@ applicationconfiguration.core.oam.dev/bookinfo configured
 
 ![bookstore-home-3](imgs/bookstore-home-3.jpg)
 
+## Clean up
+```shell script
+kubectl delete -R --ignore-not-found -f .
+component.core.oam.dev "details" deleted
+component.core.oam.dev "productpage" deleted
+component.core.oam.dev "ratings" deleted
+component.core.oam.dev "reviews-v1" deleted
+component.core.oam.dev "reviews-v2" deleted
+component.core.oam.dev "reviews-v3" deleted
+gateway.networking.istio.io "bookinfo-gateway" deleted
+applicationconfiguration.core.oam.dev "bookinfo" deleted
+traitdefinition.core.oam.dev "virtualservices.networking.istio.io" deleted
+scopedefinition.core.oam.dev "gateway.netwoking.istio.scops" deleted
+serviceaccount "bookinfo-details" deleted
+serviceaccount "bookinfo-ratings" deleted
+serviceaccount "bookinfo-reviews" deleted
+serviceaccount "bookinfo-productpage" deleted
+clusterrole.rbac.authorization.k8s.io "bookinfo-clusterrole" deleted
+clusterrolebinding.rbac.authorization.k8s.io "bookinfo-binding" deleted
+```
 
 ## Summary
 In the demonstration, we refactored those manifests from [Istio Bookinfo application](https://istio.io/latest/docs/examples/bookinfo/) to OAM Components, Traits, Scops and

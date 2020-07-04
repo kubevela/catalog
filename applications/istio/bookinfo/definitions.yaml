@@ -10,8 +10,8 @@ spec:
 apiVersion: core.oam.dev/v1alpha2
 kind: ScopeDefinition
 metadata:
-  name: gateway.netwoking.istio.scops
+  name: gateways.netwoking.istio.scops
 spec:
   allowComponentOverlap: true
   definitionRef:
-    name: bookinfo-gateway
+    name: gateways.netwoking.istio.scops
