@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-component-mhpa
+      parameterValues:
+        - name: instance-name
+          value: example-component-cw 
+      traits:
+        - trait:
+            apiVersion: extend.oam.dev/v1alpha2
+            kind: MetricHPATrait
+            metadata:
+              name:  example-mhpatrait
+            spec:
+              pollingInterval: 15
+              cooldownPeriod: 30
+              minReplicaCount: 1
+              maxReplicaCount: 10
+              promQuery: sum(rate(http_requests[2m]))
+              promThreshold: 3 
+

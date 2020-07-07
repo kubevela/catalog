@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: github.com/oam-dev/catalog/traits/metrichpatrait
+resources:
+- group: extend
+  kind: MetricHPATrait
+  version: v1alpha2
+version: "2"
