@@ -46,6 +46,14 @@ spec:
               promThreshold: 3 # custom scaling threshold
 ```
 - The component contains an application that can interact with Prometheus server. More detail, the app exposes HTTP access count metrics in Prometheus format. The trait will set up a Prometheus server to scrape the metrics from the app. 
+
+Let's have a look at the scaling rule used in the demo. It means that, if the aggregated value of the per-second rate of HTTP requests as measured ove the last 2 minutes is or less than 3, then there will be one Pod. If it goes up, autoscaler will create more Pods, e.g. if the value turns into 12 to 14, the number of Pods will be 4.
+
+
+```yaml
+promQuery: sum(rate(http_requests[2m])) # custom Prometheus query
+promThreshold: 3 # custom scaling threshold
+```
 - Then the metrics from Prometheus will be used as scale criteria of one HPA created by KEAD and targeting the deployment of the componenone. 
 - When increase access workload of the component, scaling out occurs according to the threshold specified in the trait config. After trafic peak, it will scale down after specified cool-down interval time.
 
@@ -145,3 +153,18 @@ NAME                            REFERENCE                         TARGETS     MI
 keda-hpa-example-component-cw   Deployment/example-component-cw   0/3 (avg)   1         10        2          95m
 ```
 
+## What happened behind the scenes
+
+After deploying the ApplicationConfiguration, OAM runtime creates a service & a deployment for the component as well as one MetricHPATrait object. Then the MetriHPATrait controller can fetch the information of the deployment and create a KEDA `scaledobject` CR object whose "scale target" is the deployment. 
+
+Meanwhile, MetricHPATrait controller creates a new Prometheus server and set the component service's endpoints as its monitoring target. This Prometheus's infor is also fulfilled into newly created KEDA `scaledobject` CR object. 
+
+> 💥 Please note that, `MetricHPATrait` CR provides an optional field `promServerAddress` to accept any Prometheus address. If it's fulfilled, MetricHPATrait controller will use the Prometheus provided instead of creating new one. It's highly recommeded to use your own Prometheus.  
+
+After that, KEDA operator will take over everything left.
+
+At first, KEDA will create a k8s native HPA for the target deployment. The HPA has an external metrics source assigned by KEDA. Significantly, KEDA operator plays a role as metric server providing metrics registered for all `scaledobject` CR objects, e.g. in this demo, metrics from Prometheus. 
+
+The real scaling works are handled by native HPA. It will scrape metrics fro KEDA metris server periodically. When flucuation beyond the threshold detected, HPA will trigger scaling operation. Overall pic shows as below. 
+
+![image](./assets/MetricHPATrait.png)
