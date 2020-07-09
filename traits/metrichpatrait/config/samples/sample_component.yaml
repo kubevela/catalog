@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-component-mhpa
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: ContainerizedWorkload
+    spec:
+      containers:
+        - name: go-prom-app
+          image: captainroy1121/go-prom-app
+          imagePullPolicy: Always
+          ports:
+              - containerPort: 8080
+                name: gopromapp
+  parameters:
+    - name: instance-name
+      required: true
+      fieldPaths:
+        - metadata.name
