@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-deployment-appconfig
+spec:
+  components:
+    - componentName: example-deployment
+      traits:
+        - trait:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              labels:
+                app: prometheus
+              name: example-service
+            spec:
+              ports:
+                - name: http-metrics
+                  port: 8080
+                  protocol: TCP
+                  targetPort: 8080
+              selector:
+                app: prometheus
+        - trait:
+            apiVersion: monitoring.coreos.com/v1
+            kind: ServiceMonitor
+            metadata:
+              labels:
+                app: prometheus
+              name: example-servicemonitor
+            spec:
+              namespaceSelector:
+                matchNames:
+                  - default
+              selector:
+                matchLabels:
+                  app: prometheus
+              endpoints:
+                - port: http-metrics
+                  interval: 30s

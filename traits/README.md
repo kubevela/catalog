@@ -16,3 +16,4 @@ Currently we have OAM traits as below:
 - [ServiceExpose](serviceexpose) can help create k8s service for workload.
 - [IngressTrait](ingresstrait) can help create k8s ingress for workload.
 - [HPATrait](hpatrait) can help create k8s HorizontalPodAutoscaler for workload.
+- [ServiceMonitorTrait](servicemonitor) gives an example how to use k8s third-party CR ServiceMonitor as OAM trait.

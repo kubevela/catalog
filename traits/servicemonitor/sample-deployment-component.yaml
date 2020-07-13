@@ -1,0 +1,30 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-deployment
+spec:
+  workload:
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: prometheus-deploy
+      labels:
+        app: prometheus
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: prometheus
+      template:
+        metadata:
+          labels:
+            app: prometheus
+        spec:
+          containers:
+          - name: demo-app
+            # This prometheus-demo comes from https://developer.aliyun.com/article/658890?spm=a2c6h.14164896.0.0.4edf66d0ltjE4Z
+            image: registry.cn-hangzhou.aliyuncs.com/ringtail/prometheus-demo:v1
+            command:
+            - /random
+            ports:
+            - containerPort: 8080 
