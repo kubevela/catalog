@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: cronhpatrait
+resources:
+- group: core
+  kind: CronHPATrait
+  version: v1alpha2
+version: "2"

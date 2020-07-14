@@ -1,0 +1,26 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-component
+      parameterValues:
+        - name: instance-name
+          value: example-appconfig-workload
+        - name: image
+          value: nginx:1.17
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha2
+            kind: CronHPATrait
+            metadata:
+              name: example-cronhpa-trait
+            spec:
+              jobs:
+                - name: "scale-down"
+                  schedule: "30 */1 * * * *"
+                  targetSize: 1
+                - name: "scale-up"
+                  schedule: "0 */1 * * * *"
+                  targetSize: 3
