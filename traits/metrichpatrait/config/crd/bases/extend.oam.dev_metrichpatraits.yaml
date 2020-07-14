@@ -18,6 +18,8 @@ spec:
     plural: metrichpatraits
     singular: metrichpatrait
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       description: MetricHPATrait is the Schema for the metrichpatraits API
@@ -117,7 +119,7 @@ spec:
                 type: object
               type: array
             resources:
-              description: Resources managed by this service trait
+              description: Resources managed by this trait
               items:
                 description: A TypedReference refers to an object by Name, Kind, and
                   APIVersion. It is commonly used to reference cluster-scoped objects

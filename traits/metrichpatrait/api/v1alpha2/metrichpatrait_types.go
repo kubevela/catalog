@@ -63,13 +63,13 @@ type MetricHPATraitStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 	runtimev1alpha1.ConditionedStatus `json:",inline"`
 
-	// Resources managed by this service trait
+	// Resources managed by this trait
 	Resources []runtimev1alpha1.TypedReference `json:"resources,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:categories={crossplane,oam}
-// +kubebuilder:subresources:status
+// +kubebuilder:subresource:status
 
 // MetricHPATrait is the Schema for the metrichpatraits API
 type MetricHPATrait struct {

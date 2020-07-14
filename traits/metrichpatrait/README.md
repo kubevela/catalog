@@ -8,6 +8,18 @@ The trait is going to setup an external metrics to auto-scale a K8s application.
 - ContainerizedWorkload
 - Deployment
 
+## CR fields specification
+
+| Field | Type | Required | Description
+|---|---|---|---|
+| pollingInterval | int | NO | Get metrics per `pollingInterval` seconds. Default 15. |  
+| cooldownPeriod | int | NO | Wait for `cooldownPeriod` seconds before scaling down. Default 30. |  
+| minReplicaCount | int | NO | Minimum number of replicas. Default 1. |  
+| maxReplicaCount | int | NO | Maxmum number of replicas. Default 10. |  
+| promServerAddress | string | NO | Address of Prometheus server used as metrics source. E.g. http://prome.default.svc.cluster.local:9090 |  
+| promQuery | string | YES | Prometheus query used to scrape metrics. | 
+| promThreshold | int | YES | Minimum metrics value flucuation to trigger scaling up/down. |  
+
 ## Prerequisites
 - Please follow [common prerequisites](../../README.md) to setup OAM runtime and make sure [HPA  is enabled](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#before-you-begin) on your Kubernetes cluster, since this trait depends on Kubernetes native HPA. 
 
@@ -101,18 +113,6 @@ keda-hpa-example-component-cw   Deployment/example-component-cw   0/3 (avg)   1 
 ```
 
 ## Trigger scaling up/down
-Before trigger scaling, let's have a look at the scaling rule used in the demo.
-
-The demo component exposes two endpoints, `/metrics` and `/test`, the former one is used for Prometheus and the latter one is used for calling to increase workload. 
-
-Here's the scaling rule. It means that, if the aggregated value of the per-second rate of HTTP requests as measured ove the last 2 minutes is or less than 3, then there will be one Pod. If it goes up, autoscaler will create more Pods, e.g. if the value turns into 12 to 14, the number of Pods will be 4.
-
-
-```yaml
-promQuery: sum(rate(http_requests[2m])) # custom Prometheus query
-promThreshold: 3 # custom scaling threshold
-```
-
 Let's increase workload to trigger scaling up. 
 
 - First, forward target service to localhost. After that you should be able to access the endpoints.
