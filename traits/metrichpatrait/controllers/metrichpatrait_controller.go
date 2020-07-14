@@ -30,6 +30,7 @@ import (
 
 	extendv1alpha2 "github.com/oam-dev/catalog/traits/metrichpatrait/api/v1alpha2"
 	"github.com/pkg/errors"
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -43,6 +44,7 @@ const (
 	errCreatePromeSvc    = "cannot create service for Prometheus"
 	errCreatePromeDeploy = "cannot create deployment for Prometheus"
 	errCreatScaledObject = "cannot create KEDA ScaledObject"
+	errGarbageCollection = "garbage collect failed"
 	LabelKey             = "extend.oam.dev/metrichpatrait"
 )
 
@@ -134,32 +136,40 @@ func (r *MetricHPATraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		return util.ReconcileWaitResult, err
 	}
 
-	//TODO construct & create Deployment&Service for Prometheus
-	promeDeploy, promeSvc := renderPrometheusResources(&mhpaTrait)
+	var promeServerAddress string
+	var promeDeploy *appsv1.Deployment
+	var promeSvc *corev1.Service
 
-	if err := ctrl.SetControllerReference(&mhpaTrait, promeDeploy, r.Scheme); err != nil {
-		return util.ReconcileWaitResult, err
-	}
-	if err := ctrl.SetControllerReference(&mhpaTrait, promeSvc, r.Scheme); err != nil {
-		return util.ReconcileWaitResult, err
-	}
+	if len(mhpaTrait.Spec.PromServerAddress) > 0 {
+		// use external Prometheus server
+		promeServerAddress = mhpaTrait.Spec.PromServerAddress
+	} else {
+		// construct & create Deployment&Service for Prometheus
+		promeDeploy, promeSvc = renderPrometheusResources(&mhpaTrait)
 
-	if err := r.Patch(ctx, promeDeploy, client.Apply, applyOptions...); err != nil {
-		log.Error(err, "Apply Deployment for Prometheus failed.")
-		if errP := util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errCreatePromeDeploy))); errP != nil {
-			return util.ReconcileWaitResult, errors.Wrap(err, errP.Error())
+		if err := ctrl.SetControllerReference(&mhpaTrait, promeDeploy, r.Scheme); err != nil {
+			return util.ReconcileWaitResult, err
 		}
-		return util.ReconcileWaitResult, err
-	}
-	if err := r.Patch(ctx, promeSvc, client.Apply, applyOptions...); err != nil {
-		log.Error(err, "Apply Service for Prometheus failed.")
-		if errP := util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errCreatePromeSvc))); errP != nil {
-			return util.ReconcileWaitResult, errors.Wrap(err, errP.Error())
+		if err := ctrl.SetControllerReference(&mhpaTrait, promeSvc, r.Scheme); err != nil {
+			return util.ReconcileWaitResult, err
 		}
-		return util.ReconcileWaitResult, err
-	}
 
-	promeSvcDNS := strings.Join([]string{promeSvc.ObjectMeta.Name, promeSvc.ObjectMeta.Namespace, "svc.cluster.local"}, ".")
+		if err := r.Patch(ctx, promeDeploy, client.Apply, applyOptions...); err != nil {
+			log.Error(err, "Apply Deployment for Prometheus failed.")
+			if errP := util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errCreatePromeDeploy))); errP != nil {
+				return util.ReconcileWaitResult, errors.Wrap(err, errP.Error())
+			}
+			return util.ReconcileWaitResult, err
+		}
+		if err := r.Patch(ctx, promeSvc, client.Apply, applyOptions...); err != nil {
+			log.Error(err, "Apply Service for Prometheus failed.")
+			if errP := util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errCreatePromeSvc))); errP != nil {
+				return util.ReconcileWaitResult, errors.Wrap(err, errP.Error())
+			}
+			return util.ReconcileWaitResult, err
+		}
+		promeServerAddress = "http://" + strings.Join([]string{promeSvc.ObjectMeta.Name, promeSvc.ObjectMeta.Namespace, "svc.cluster.local"}, ".") + ":" + fmt.Sprint(defaultPromeServerPort)
+	}
 
 	//TODO construct & create KEDA ScaledObject
 	scaledObj := &kedav1alpha1.ScaledObject{
@@ -182,8 +192,8 @@ func (r *MetricHPATraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 			Triggers: []kedav1alpha1.ScaleTriggers{{
 				Type: "prometheus",
 				Metadata: map[string]string{
-					"serverAddress": "http://" + promeSvcDNS + ":9090",
-					"metricName":    "access_frequency",
+					"serverAddress": promeServerAddress,
+					"metricName":    mhpaTrait.GetName() + "-metric",
 					"threshold":     fmt.Sprint(*mhpaTrait.Spec.PromThreshold),
 					"query":         mhpaTrait.Spec.PromQuery,
 				},
@@ -202,11 +212,47 @@ func (r *MetricHPATraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		return util.ReconcileWaitResult, err
 	}
 
-	//TODO garbage collect & update subresources
+	// garbage collect
+	if err := r.cleanupResources(ctx, &mhpaTrait, &promeDeploy.UID, &promeSvc.UID, &scaledObj.UID); err != nil {
+		log.Error(err, "Garbage collection failed.")
+		if errP := util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileError(errors.Wrap(err, errGarbageCollection))); errP != nil {
+			return util.ReconcileWaitResult, errors.Wrap(err, errP.Error())
+		}
+		return util.ReconcileWaitResult, err
+	}
 
-	//TODO update Trait status
+	// update Trait status
+	mhpaTrait.Status.Resources = nil
+	mhpaTrait.Status.Resources = append(mhpaTrait.Status.Resources,
+		cpv1alpha1.TypedReference{
+			APIVersion: scaledObj.GetObjectKind().GroupVersionKind().GroupVersion().String(),
+			Kind:       scaledObj.GetObjectKind().GroupVersionKind().Kind,
+			Name:       scaledObj.GetName(),
+			UID:        scaledObj.UID,
+		},
+	)
+	if promeDeploy != nil && promeSvc != nil {
+		mhpaTrait.Status.Resources = append(mhpaTrait.Status.Resources,
+			cpv1alpha1.TypedReference{
+				APIVersion: promeDeploy.GetObjectKind().GroupVersionKind().GroupVersion().String(),
+				Kind:       promeDeploy.GetObjectKind().GroupVersionKind().Kind,
+				Name:       promeDeploy.GetName(),
+				UID:        promeDeploy.UID,
+			},
+			cpv1alpha1.TypedReference{
+				APIVersion: promeSvc.GetObjectKind().GroupVersionKind().GroupVersion().String(),
+				Kind:       promeSvc.GetObjectKind().GroupVersionKind().Kind,
+				Name:       promeSvc.GetName(),
+				UID:        promeSvc.UID,
+			},
+		)
 
-	return ctrl.Result{}, nil
+	}
+	if err := r.Status().Update(ctx, &mhpaTrait); err != nil {
+		log.Error(err, "Update mhpaTrait status failed", "mhpaTrait", mhpaTrait)
+		return util.ReconcileWaitResult, err
+	}
+	return ctrl.Result{}, util.PatchCondition(ctx, r, &mhpaTrait, cpv1alpha1.ReconcileSuccess())
 }
 
 func (r *MetricHPATraitReconciler) SetupWithManager(mgr ctrl.Manager) error {

@@ -6,14 +6,17 @@ import (
 	"reflect"
 
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam/util"
+	kedav1alpha1 "github.com/kedacore/keda/pkg/apis/keda/v1alpha1"
 
 	// "github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	"github.com/go-logr/logr"
 	extendv1alpha2 "github.com/oam-dev/catalog/traits/metrichpatrait/api/v1alpha2"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/types"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -27,6 +30,8 @@ const (
 var (
 	var_1   int32 = 1
 	var_420 int32 = 420
+
+	defaultPromeServerPort int32 = 9090
 )
 
 func (r *MetricHPATraitReconciler) getReferecedWrokload(ctx context.Context, log logr.Logger, trait *extendv1alpha2.MetricHPATrait) (*unstructured.Unstructured, ctrl.Result, error) {
@@ -125,7 +130,7 @@ func renderPrometheusResources(trait *extendv1alpha2.MetricHPATrait) (*appsv1.De
 							},
 							Ports: []corev1.ContainerPort{
 								{
-									ContainerPort: 9090,
+									ContainerPort: defaultPromeServerPort,
 									Protocol:      corev1.ProtocolTCP,
 								},
 							},
@@ -168,4 +173,63 @@ func renderPrometheusResources(trait *extendv1alpha2.MetricHPATrait) (*appsv1.De
 			},
 		}}
 	return deployment, service
+}
+
+func (r *MetricHPATraitReconciler) cleanupResources(ctx context.Context,
+	trait *extendv1alpha2.MetricHPATrait, deployUID, serviceUID, scaledobjectUID *types.UID) error {
+	log := r.Log.WithValues("gc KEDA.scaledobject", trait.Name)
+	var deploy appsv1.Deployment
+	var service corev1.Service
+	var scaledobject kedav1alpha1.ScaledObject
+	for _, res := range trait.Status.Resources {
+		uid := res.UID
+		if res.Kind == util.KindDeployment && res.APIVersion == appsv1.SchemeGroupVersion.String() {
+			if uid != *deployUID {
+				log.Info("Found an orphaned deployment", "deployment UID", *deployUID, "orphaned  UID", uid)
+				dn := client.ObjectKey{Name: res.Name, Namespace: trait.Namespace}
+				if err := r.Get(ctx, dn, &deploy); err != nil {
+					if apierrors.IsNotFound(err) {
+						continue
+					}
+					return err
+				}
+				if err := r.Delete(ctx, &deploy); err != nil {
+					return err
+				}
+				log.Info("Removed an orphaned deployment", "deployment UID", *deployUID, "orphaned UID", uid)
+			}
+		} else if res.Kind == util.KindService && res.APIVersion == corev1.SchemeGroupVersion.String() {
+			if uid != *serviceUID {
+				log.Info("Found an orphaned service", "orphaned  UID", uid)
+				sn := client.ObjectKey{Name: res.Name, Namespace: trait.Namespace}
+				if err := r.Get(ctx, sn, &service); err != nil {
+					if apierrors.IsNotFound(err) {
+						continue
+					}
+					return err
+				}
+				if err := r.Delete(ctx, &service); err != nil {
+					return err
+				}
+				log.Info("Removed an orphaned service", "orphaned UID", uid)
+			}
+		} else if res.Kind == reflect.TypeOf(kedav1alpha1.ScaledObject{}).Name() && res.APIVersion == kedav1alpha1.SchemeGroupVersion.String() {
+			if uid != *scaledobjectUID {
+				log.Info("Found an orphaned KEDA.scaledobject", "orphaned UID", uid)
+				son := client.ObjectKey{Name: res.Name, Namespace: trait.Namespace}
+				if err := r.Get(ctx, son, &scaledobject); err != nil {
+					if apierrors.IsNotFound(err) {
+						continue
+					}
+					return err
+				}
+				if err := r.Delete(ctx, &scaledobject); err != nil {
+					return err
+				}
+				log.Info("Removed an orphaned KEDA.scaledobject", "orphaned UID", uid)
+			}
+
+		}
+	}
+	return nil
 }
