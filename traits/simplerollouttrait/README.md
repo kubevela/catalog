@@ -7,6 +7,14 @@ More details refer to [OAM Component mutable and versioning mechanism](https://g
 - ContainerizedWorkload
 - Deployment
 
+# CR fields specification
+| Field | Type | Required | Description
+|---|---|---|---|
+| batch | int | YES | Number of (new workload's) pods to be created each round during rollout |  
+| maxUnavailable | int | YES | Number of (old workload's) pods to be terminated each round during rollout. |  
+| replicas | int | YES | Final number of pods after rollout. |  
+
+
 ## Prerequisites
 Please follow [common prerequisites](../../README.md) to setup OAM runtime.
 
