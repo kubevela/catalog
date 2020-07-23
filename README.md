@@ -9,11 +9,11 @@ Catalog of OAM workloads, traits and scopes.
     [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/),
     minimum version `v0.28+`
 - [Helm 3](https://helm.sh/docs/intro/), minimum version `v3.0.0+`.
-- Install Crossplane and OAM
+- Install OAM Runtime
 ```
-helm repo add oam https://oam-dev.github.io/crossplane-oam-sample/archives/
+helm repo add crossplane-master https://charts.crossplane.io/master/
 kubectl create namespace oam-system
-helm install crossplane --namespace oam-system oam/crossplane-oam
+helm install oam --namespace oam-system crossplane-master/oam-kubernetes-runtime --devel
 ```
 
 ## Workloads
