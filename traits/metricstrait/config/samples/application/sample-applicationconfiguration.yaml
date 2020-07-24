@@ -1,0 +1,66 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: sample-application-with-metrics
+spec:
+  components:
+    - componentName: autoscale-application
+      traits:
+        - trait:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              labels:
+                app: sample-app-svc
+              name: sample-app-svc
+            spec:
+              ports:
+                - name: 80-8080
+                  port: 80
+                  protocol: TCP
+                  targetPort: 8080
+              selector:
+                app: sample-app
+              sessionAffinity: None
+              type: ClusterIP
+        - trait:
+            apiVersion: standard.oam.dev/v1alpha1
+            kind: MetricsTrait
+            spec:
+              metricsendpoint:
+                port: "80-8080"
+                path: "/metrics"
+                interval:  "1s"
+              selector:
+                matchLabels:
+                  app: sample-app-svc
+    - componentName: metrics-application
+      traits:
+        - trait:
+            apiVersion: v1
+            kind: Service
+            metadata:
+              labels:
+                app: metrics-app-svc
+              name: metrics-app-svc
+            spec:
+              ports:
+                - name: 80-8080
+                  port: 80
+                  protocol: TCP
+                  targetPort: 8080
+              selector:
+                app: metrics-app
+              sessionAffinity: None
+              type: ClusterIP
+        - trait:
+            apiVersion: standard.oam.dev/v1alpha1
+            kind: MetricsTrait
+            spec:
+              metricsendpoint:
+                port: "80-8080"
+                path: "/metrics"
+                interval:  "5s"
+              selector:
+                matchLabels:
+                  app: metrics-app-svc
