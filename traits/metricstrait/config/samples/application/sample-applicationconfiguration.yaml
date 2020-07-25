@@ -58,7 +58,7 @@ spec:
             kind: MetricsTrait
             spec:
               metricsendpoint:
-                port: "80-8080"
+                targetPort: 8080
                 path: "/metrics"
                 interval:  "5s"
               selector:
