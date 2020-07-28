@@ -30,15 +30,19 @@ import (
 type MetricsTraitSpec struct {
 	// A list of endpoints allowed as part of this ServiceMonitorNames.
 	MetricsEndPoint Endpoint `json:"metricsendpoint"`
-	// Selector to select Endpoints objects.
-	Selector metav1.LabelSelector `json:"selector"`
+	// WorkloadReference to the workload whose metrics needs to be exposed
+	WorkloadReference runtimev1alpha1.TypedReference `json:"workloadRef"`
 }
 
 // Endpoint defines a scrapeable endpoint serving Prometheus metrics.
 type Endpoint struct {
-	// Name of the service port this endpoint refers to. Mutually exclusive with targetPort.
-	Port string `json:"port,omitempty"`
-	// Name or number of the pod port this endpoint refers to. Mutually exclusive with port.
+	// The name of a port within the service that this endpoint refers to.
+	// When this field has value implies that the service already exists
+	// Mutually exclusive with targetPort.
+	PortName string `json:"portName,omitempty"`
+	// Number or name of the port to access on the pods targeted by the service.
+	// When this field has value implies that we need to create a service for the workload
+	// Mutually exclusive with port.
 	TargetPort *intstr.IntOrString `json:"targetPort,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
@@ -69,16 +73,6 @@ type MetricsTrait struct {
 	Status MetricsTraitStatus `json:"status,omitempty"`
 }
 
-var _ oam.Workload = &MetricsTrait{}
-
-func (in *MetricsTrait) SetConditions(c ...runtimev1alpha1.Condition) {
-	in.Status.SetConditions(c...)
-}
-
-func (in *MetricsTrait) GetCondition(c runtimev1alpha1.ConditionType) runtimev1alpha1.Condition {
-	return in.Status.GetCondition(c)
-}
-
 // +kubebuilder:object:root=true
 
 // MetricsTraitList contains a list of MetricsTrait
@@ -90,4 +84,24 @@ type MetricsTraitList struct {
 
 func init() {
 	SchemeBuilder.Register(&MetricsTrait{}, &MetricsTraitList{})
+}
+
+var _ oam.Trait = &MetricsTrait{}
+
+func (in *MetricsTrait) SetConditions(c ...runtimev1alpha1.Condition) {
+	in.Status.SetConditions(c...)
+}
+
+func (in *MetricsTrait) GetCondition(c runtimev1alpha1.ConditionType) runtimev1alpha1.Condition {
+	return in.Status.GetCondition(c)
+}
+
+// GetWorkloadReference of this ManualScalerTrait.
+func (tr *MetricsTrait) GetWorkloadReference() runtimev1alpha1.TypedReference {
+	return tr.Spec.WorkloadReference
+}
+
+// SetWorkloadReference of this ManualScalerTrait.
+func (tr *MetricsTrait) SetWorkloadReference(r runtimev1alpha1.TypedReference) {
+	tr.Spec.WorkloadReference = r
 }

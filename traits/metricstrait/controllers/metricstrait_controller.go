@@ -24,10 +24,14 @@ import (
 	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/crossplane-runtime/pkg/event"
+	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	oamutil "github.com/crossplane/oam-kubernetes-runtime/pkg/oam/util"
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
+	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -52,8 +56,12 @@ var (
 	serviceMonitorAPIVersion = monitoring.SchemeGroupVersion.String()
 )
 
-var (
+const (
 	errApplyServiceMonitor = "failed to apply the service monitor"
+	errLocatingService     = "failed to locate any the services"
+
+	// TODO: use the common one when it's merged in upstream
+	errFetchChildResources = "failed to fetch workload child resources"
 )
 
 // MetricsTraitReconciler reconciles a MetricsTrait object
@@ -80,19 +88,31 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	}
 	mLog.Info("Get the metricsTrait trait",
 		"metrics end point", metricsTrait.Spec.MetricsEndPoint,
-		"metrics label selector", metricsTrait.Spec.Selector,
+		"workload reference", metricsTrait.Spec.WorkloadReference,
 		"labels", metricsTrait.GetLabels())
 
 	// find the resource object to record the event to, default is the parent appConfig.
 	eventObj, err := oamutil.LocateParentAppConfig(ctx, r.Client, &metricsTrait)
 	if eventObj == nil {
 		// fallback to workload itself
-		mLog.Error(err, "metricsTrait", "name", metricsTrait.Name)
+		mLog.Error(err, "add events to metricsTrait itself", "name", metricsTrait.Name)
 		eventObj = &metricsTrait
 	}
 
+	var serviceLabel map[string]string
+
+	if len(metricsTrait.Spec.MetricsEndPoint.PortName) != 0 {
+		// this means the
+		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, &metricsTrait, eventObj, metricsTrait.Spec.MetricsEndPoint.PortName)
+		if err != nil {
+			return oamutil.ReconcileWaitResult,
+				oamutil.PatchCondition(ctx, r, &metricsTrait,
+					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
+		}
+	}
+
 	// server side apply, only the fields we set are touched
-	serviceMonitor := convertToServiceMonitor(&metricsTrait)
+	serviceMonitor := constructServiceMonitor(&metricsTrait, serviceLabel)
 	applyOpts := []client.PatchOption{client.ForceOwnership, client.FieldOwner(metricsTrait.GetUID())}
 	if err := r.Patch(ctx, serviceMonitor, client.Apply, applyOpts...); err != nil {
 		mLog.Error(err, "Failed to apply to serviceMonitor")
@@ -107,6 +127,53 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	r.gcOrphanServiceMonitor(ctx, mLog, &metricsTrait)
 
 	return ctrl.Result{}, oamutil.PatchCondition(ctx, r, &metricsTrait, cpv1alpha1.ReconcileSuccess())
+}
+
+// fetch the label of the service
+func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog logr.Logger, metricsTrait oam.Trait,
+	eventObj oam.Object, portName string) (map[string]string, error) {
+	// Fetch the workload instance to which we want to expose metrics
+	workload, err := oamutil.FetchWorkload(ctx, r, mLog, metricsTrait)
+	if err != nil {
+		if !apierrors.IsNotFound(err) {
+			mLog.Error(err, "Error while fetching the workload", "workload reference",
+				metricsTrait.GetWorkloadReference())
+			r.record.Event(eventObj, event.Warning(oamutil.ErrLocateWorkload, err))
+			return nil, err
+		}
+	}
+	// Fetch the child resources list from the corresponding workload
+	resources, err := oamutil.FetchWorkloadChildResources(ctx, mLog, r, workload)
+	if err != nil {
+		if !apierrors.IsNotFound(err) {
+			mLog.Error(err, "Error while fetching the workload child resources", "workload", workload.UnstructuredContent())
+			r.record.Event(eventObj, event.Warning(errFetchChildResources, err))
+			return nil, err
+		} else {
+			mLog.Error(err, "Cannot locate workload definition", "workload", workload.UnstructuredContent())
+			return nil, nil
+		}
+	}
+	// find the service that has the port
+	for _, childRes := range resources {
+		if childRes.GetAPIVersion() == corev1.SchemeGroupVersion.String() &&
+			childRes.GetKind() == reflect.TypeOf(corev1.Service{}).Name() {
+			ports, exist, err := unstructured.NestedSlice(childRes.Object, "spec", "ports")
+			if !exist || err != nil {
+				panic(fmt.Errorf("unexpected service format: +v%", childRes.Object))
+			}
+			for _, port := range ports {
+				servicePort, ok := port.(corev1.ServicePort)
+				if !ok {
+					panic(fmt.Errorf("unexpected service format: +v%", childRes.Object))
+				}
+				if servicePort.Name == portName {
+					return childRes.GetLabels(), nil
+				}
+			}
+		}
+	}
+	return nil, nil
 }
 
 // remove all service monitors that are no longer used
@@ -136,8 +203,9 @@ func (r *MetricsTraitReconciler) gcOrphanServiceMonitor(ctx context.Context, mLo
 	}
 }
 
-// convert from metrics traits to service monitor
-func convertToServiceMonitor(metricsTrait *v1alpha1.MetricsTrait) *monitoring.ServiceMonitor {
+// construct a serviceMonitor given a metrics trait along with a label selector pointing to the underlying service
+func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
+	serviceLabels map[string]string) *monitoring.ServiceMonitor {
 	return &monitoring.ServiceMonitor{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       serviceMonitorKind,
@@ -150,7 +218,7 @@ func convertToServiceMonitor(metricsTrait *v1alpha1.MetricsTrait) *monitoring.Se
 		},
 		Spec: monitoring.ServiceMonitorSpec{
 			Selector: metav1.LabelSelector{
-				MatchLabels: metricsTrait.Spec.Selector.MatchLabels,
+				MatchLabels: serviceLabels,
 			},
 			// we assumed that the service is in the same namespace as the trait
 			NamespaceSelector: monitoring.NamespaceSelector{
@@ -158,7 +226,7 @@ func convertToServiceMonitor(metricsTrait *v1alpha1.MetricsTrait) *monitoring.Se
 			},
 			Endpoints: []monitoring.Endpoint{
 				{
-					Port:       metricsTrait.Spec.MetricsEndPoint.Port,
+					Port:       metricsTrait.Spec.MetricsEndPoint.PortName,
 					TargetPort: metricsTrait.Spec.MetricsEndPoint.TargetPort,
 					Path:       metricsTrait.Spec.MetricsEndPoint.Path,
 					Interval:   metricsTrait.Spec.MetricsEndPoint.Interval,
