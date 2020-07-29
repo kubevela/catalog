@@ -40,6 +40,7 @@ import (
 const (
 	errApplyServiceMonitor = "failed to apply the service monitor"
 	errLocatingService     = "failed to locate any the services"
+	servicePort			= 4848
 )
 
 var (
@@ -196,13 +197,14 @@ func (r *MetricsTraitReconciler) createService(ctx context.Context, mLog logr.Lo
 	// assign selector
 	if len(metricsTrait.Spec.MetricsEndPoint.Selector) == 0 {
 		// default is that we assumed that the pods have the same label as the workload
+		// we might be able to find the podSpec label but it is more complicated
 		oamService.Spec.Selector = workload.GetLabels()
 	} else {
 		oamService.Spec.Selector = metricsTrait.Spec.MetricsEndPoint.Selector
 	}
 	oamService.Spec.Ports = []corev1.ServicePort{
 		{
-			Port:       4848,
+			Port:       servicePort,
 			TargetPort: *metricsTrait.Spec.MetricsEndPoint.TargetPort,
 			Protocol:   corev1.ProtocolTCP,
 		},

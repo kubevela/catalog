@@ -6,7 +6,6 @@ import (
 	"time"
 
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-
 	runtimev1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam/util"
 	. "github.com/onsi/ginkgo"
@@ -16,7 +15,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"metricstrait/api/v1alpha1"
@@ -30,114 +28,102 @@ var (
 )
 
 var _ = Describe("Metrics Trait Integration Test", func() {
+	// common var init
 	ctx := context.Background()
-	namespace := "metricstrait-integration-test"
-
+	namespaceName := "metricstrait-integration-test"
+	traitLabel := map[string]string{"trait": "metricsTraitBase"}
+	deployLabel := map[string]string{"standard.oam.dev": "oam-test-deployment"}
+	podPort := 8080
+	metricsPath := "/notMetrics"
+	scrapInterval := "1s"
 	ns := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: namespace,
+			Name: namespaceName,
 		},
 	}
-	BeforeEach(func() {
-		logf.Log.Info("Set up resources before an integration test")
-		// delete the namespace with all its resources
-		Expect(k8sClient.Delete(ctx, &ns, client.PropagationPolicy(metav1.DeletePropagationForeground))).
-			Should(SatisfyAny(Succeed(), &util.NotFoundMatcher{}))
-		logf.Log.Info("make sure all the resources are removed")
-		objectKey := client.ObjectKey{
-			Name: namespace,
-		}
-		res := &corev1.Namespace{}
-		Eventually(
-			// gomega has a bug that can't take nil as the actual input, so has to make it a func
-			func() error {
-				return k8sClient.Get(ctx, objectKey, res)
+	targetPort := intstr.FromInt(podPort)
+	metricsTraitBase := v1alpha1.MetricsTrait{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       metricsTraitKind,
+			APIVersion: metricsTraitAPIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: ns.Name,
+			Labels:    traitLabel,
+		},
+		Spec: v1alpha1.MetricsTraitSpec{
+			MetricsEndPoint: v1alpha1.Endpoint{
+				TargetPort: &targetPort,
+				Path:       metricsPath,
+				Interval:   scrapInterval,
 			},
-			time.Second*30, time.Millisecond*500).Should(&util.NotFoundMatcher{})
-		// recreate it
-		Eventually(
-			func() error {
-				return k8sClient.Create(ctx, &ns)
-			},
-			time.Second*3, time.Millisecond*300).Should(SatisfyAny(Succeed(), &util.AlreadyExistMatcher{}))
-	})
-
-	AfterEach(func() {
-		logf.Log.Info("Clean up resources after an integration test")
-		Expect(k8sClient.Delete(ctx, &ns, client.PropagationPolicy(metav1.DeletePropagationForeground))).Should(Succeed())
-	})
-
-	It("Test with deployment as workload", func() {
-		By("Create the deployment as the workload")
-		labelKey := "standard.oam.dev"
-		workloadName := "oam-test-deployment"
-		podPort := 4848
-		workload := &appsv1.Deployment{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       deploymentKind,
+			WorkloadReference: runtimev1alpha1.TypedReference{
 				APIVersion: deploymentAPIVersion,
+				Kind:       deploymentKind,
 			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      workloadName,
-				Namespace: ns.Name,
+		},
+	}
+	workloadBase := appsv1.Deployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       deploymentKind,
+			APIVersion: deploymentAPIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: ns.Name,
+			Labels:    deployLabel,
+		},
+		Spec: appsv1.DeploymentSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: deployLabel,
 			},
-			Spec: appsv1.DeploymentSpec{
-				Selector: &metav1.LabelSelector{
-					MatchLabels: map[string]string{
-						labelKey: workloadName,
-					},
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: deployLabel,
 				},
-				Template: corev1.PodTemplateSpec{
-					ObjectMeta: metav1.ObjectMeta{
-						Labels: map[string]string{
-							labelKey: workloadName,
-						},
-					},
-					Spec: corev1.PodSpec{
-						Containers: []corev1.Container{
-							{
-								Name:    "container-name",
-								Image:   "containerImage",
-								Command: []string{"containerCommand"},
-								Args:    []string{"containerArguments"},
-								Ports: []corev1.ContainerPort{
-									{
-										ContainerPort: int32(podPort),
-									},
+				Spec: corev1.PodSpec{
+					Containers: []corev1.Container{
+						{
+							Name:            "container-name",
+							Image:           "alpine",
+							ImagePullPolicy: corev1.PullNever,
+							Command:         []string{"containerCommand"},
+							Args:            []string{"containerArguments"},
+							Ports: []corev1.ContainerPort{
+								{
+									ContainerPort: int32(podPort),
 								},
 							},
 						},
 					},
 				},
 			},
-		}
+		},
+	}
+	BeforeEach(func() {
+		logf.Log.Info("[TEST] Set up resources before an integration test")
+		By("Create the Namespace for test")
+		Expect(k8sClient.Create(ctx, ns.DeepCopy())).Should(SatisfyAny(Succeed(), &util.AlreadyExistMatcher{}))
+	})
+
+	AfterEach(func() {
+		// Control-runtime test ENV has a bug that can't delete resources like deployment/namespaces
+		// We have to use different names to segregate between tests
+		logf.Log.Info("[TEST] Clean up resources after an integration test")
+	})
+
+	It("Test with deployment as workloadBase without selector", func() {
+		testName := "deploy-without-selector"
+		By("Create the deployment as the workloadBase")
+		workload := workloadBase.DeepCopy()
+		workload.Name = testName+"-workload"
 		Expect(k8sClient.Create(ctx, workload)).ToNot(HaveOccurred())
 
-		By("Create the metrics trait pointing to the workload")
-		targetPort := intstr.FromInt(podPort)
-		label := map[string]string{"trait": "metricsTrait"}
-		metricsTrait := v1alpha1.MetricsTrait{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       metricsTraitKind,
-				APIVersion: metricsTraitAPIVersion,
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "metrics-trait-it-success",
-				Namespace: ns.Name,
-				Labels:    label,
-			},
-			Spec: v1alpha1.MetricsTraitSpec{
-				MetricsEndPoint: v1alpha1.Endpoint{
-					TargetPort: &targetPort,
-				},
-				WorkloadReference: runtimev1alpha1.TypedReference{
-					APIVersion: deploymentAPIVersion,
-					Kind:       deploymentKind,
-					Name:       workloadName,
-				},
-			},
-		}
-		Expect(k8sClient.Create(ctx, &metricsTrait)).ToNot(HaveOccurred())
+		By("Create the metrics trait pointing to the workloadBase")
+		metricsTrait := metricsTraitBase.DeepCopy()
+		metricsTrait.Name = testName+"-trait"
+		metricsTrait.Spec.WorkloadReference.Name = workload.Name
+		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
+
 		By("Check that we have created the service")
 		createdService := corev1.Service{}
 		Eventually(
@@ -146,9 +132,14 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 					types.NamespacedName{Namespace: ns.Name, Name: "oam-" + workload.GetName()},
 					&createdService)
 			},
-			time.Second*30, time.Millisecond*500).Should(BeNil())
-		logf.Log.Info("get the created service", "service ports", createdService.Spec.Ports)
-		By("Check that we have created the serviceMonitor in the pre-defined namespace")
+			time.Second*10, time.Millisecond*500).Should(BeNil())
+		logf.Log.Info("[TEST] Get the created service", "service ports", createdService.Spec.Ports)
+		Expect(createdService.GetNamespace()).Should(Equal(namespaceName))
+		Expect(createdService.Labels).Should(Equal(oamServiceLabel))
+		Expect(len(createdService.Spec.Ports)).Should(Equal(1))
+		Expect(createdService.Spec.Ports[0].Port).Should(BeEquivalentTo(servicePort))
+		Expect(createdService.Spec.Selector).Should(Equal(deployLabel))
+		By("Check that we have created the serviceMonitor in the pre-defined namespaceName")
 		var serviceMonitor monitoringv1.ServiceMonitor
 		Eventually(
 			func() error {
@@ -156,7 +147,65 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 					types.NamespacedName{Namespace: serviceMonitorNSName, Name: metricsTrait.GetName()},
 					&serviceMonitor)
 			},
-			time.Second*30, time.Millisecond*500).Should(BeNil())
-		logf.Log.Info("get the created serviceMonitor", "service end ports", serviceMonitor.Spec.Endpoints)
+			time.Second*5, time.Millisecond*50).Should(BeNil())
+		logf.Log.Info("[TEST] Get the created serviceMonitor", "service end ports", serviceMonitor.Spec.Endpoints)
+		Expect(serviceMonitor.GetNamespace()).Should(Equal(serviceMonitorNSName))
+		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(oamServiceLabel))
+		Expect(serviceMonitor.Spec.Selector.MatchExpressions).Should(BeNil())
+		Expect(serviceMonitor.Spec.NamespaceSelector.MatchNames).Should(Equal([]string{metricsTrait.Namespace}))
+		Expect(serviceMonitor.Spec.NamespaceSelector.Any).Should(BeFalse())
+		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
+		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
+		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
+		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scrapInterval))
+		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
+	})
+
+	It("Test with deployment as workloadBase selector", func() {
+		testName := "deploy-with-selector"
+		By("Create the deployment as the workloadBase")
+		workload := workloadBase.DeepCopy()
+		workload.Name = testName+"-workload"
+		Expect(k8sClient.Create(ctx, workload)).ToNot(HaveOccurred())
+
+		By("Create the metrics trait pointing to the workloadBase")
+		podSelector := map[string]string{"podlabel": "goodboy"}
+		metricsTrait := metricsTraitBase.DeepCopy()
+		metricsTrait.Name = testName+"-trait"
+		metricsTrait.Spec.WorkloadReference.Name = workload.Name
+		metricsTrait.Spec.MetricsEndPoint.Selector = podSelector
+		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
+
+		By("Check that we have created the service")
+		createdService := corev1.Service{}
+		Eventually(
+			func() error {
+				return k8sClient.Get(ctx,
+					types.NamespacedName{Namespace: ns.Name, Name: "oam-" + workload.GetName()},
+					&createdService)
+			},
+			time.Second*10, time.Millisecond*500).Should(BeNil())
+		logf.Log.Info("[TEST] Get the created service", "service ports", createdService.Spec.Ports)
+		Expect(createdService.Labels).Should(Equal(oamServiceLabel))
+		Expect(createdService.Spec.Selector).Should(Equal(podSelector))
+		By("Check that we have created the serviceMonitor in the pre-defined namespaceName")
+		var serviceMonitor monitoringv1.ServiceMonitor
+		Eventually(
+			func() error {
+				return k8sClient.Get(ctx,
+					types.NamespacedName{Namespace: serviceMonitorNSName, Name: metricsTrait.GetName()},
+					&serviceMonitor)
+			},
+			time.Second*5, time.Millisecond*50).Should(BeNil())
+		logf.Log.Info("[TEST] Get the created serviceMonitor", "service end ports", serviceMonitor.Spec.Endpoints)
+		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(oamServiceLabel))
+		Expect(serviceMonitor.Spec.Selector.MatchExpressions).Should(BeNil())
+		Expect(serviceMonitor.Spec.NamespaceSelector.MatchNames).Should(Equal([]string{metricsTrait.Namespace}))
+		Expect(serviceMonitor.Spec.NamespaceSelector.Any).Should(BeFalse())
+		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
+		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
+		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
+		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scrapInterval))
+		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 })

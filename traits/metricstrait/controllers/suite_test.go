@@ -64,18 +64,18 @@ var _ = BeforeSuite(func(done Done) {
 			Name: serviceMonitorNSName,
 		},
 	}
-	By("bootstrapping test environment")
+	By("Bootstrapping test environment")
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
 			filepath.Join("..", "config", "crd", "bases"),
-			filepath.Join("..", "hack"),// this is the serviceMonitor CRD, a bit hacky
+			filepath.Join("..", "hack"), // this is the serviceMonitor CRD, a bit hacky
 		},
 	}
 	var err error
 	cfg, err = testEnv.Start()
 	Expect(err).ToNot(HaveOccurred())
 	Expect(cfg).ToNot(BeNil())
-	
+
 	err = standardv1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 	err = monitoringv1.AddToScheme(scheme.Scheme)
@@ -87,7 +87,7 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(err).ToNot(HaveOccurred())
 	Expect(k8sClient).ToNot(BeNil())
 
-	By("starting the metrics trait controller in the background")
+	By("Starting the metrics trait controller in the background")
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		Scheme:             scheme.Scheme,
 		MetricsBindAddress: "0",
@@ -108,19 +108,19 @@ var _ = BeforeSuite(func(done Done) {
 		Expect(mgr.Start(controllerDone)).ToNot(HaveOccurred())
 	}()
 
-	By("create the serviceMonitor namespace")
+	By("Create the serviceMonitor namespace")
 	Expect(k8sClient.Create(context.Background(), &serviceMonitorNS)).ToNot(HaveOccurred())
 
 	close(done)
 }, 60)
 
 var _ = AfterSuite(func() {
-	By("stop the metricTraitcontroller")
+	By("Stop the metricTrait controller")
 	close(controllerDone)
-	By("delete the serviceMonitor namespace")
+	By("Delete the serviceMonitor namespace")
 	Expect(k8sClient.Delete(context.Background(), &serviceMonitorNS,
 		client.PropagationPolicy(metav1.DeletePropagationForeground))).Should(Succeed())
-	By("tearing down the test environment")
+	By("Tearing down the test environment")
 	err := testEnv.Stop()
 	Expect(err).ToNot(HaveOccurred())
 
