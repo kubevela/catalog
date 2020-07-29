@@ -44,6 +44,9 @@ type Endpoint struct {
 	// When this field has value implies that we need to create a service for the workload
 	// Mutually exclusive with port.
 	TargetPort *intstr.IntOrString `json:"targetPort,omitempty"`
+	// Route service traffic to pods with label keys and values matching this
+	// The default is the labels in the workload
+	Selector map[string]string `json:"selector,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
 	Path string `json:"path,omitempty"`

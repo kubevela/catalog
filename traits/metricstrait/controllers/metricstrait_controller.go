@@ -24,12 +24,10 @@ import (
 	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 	cpv1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplane/crossplane-runtime/pkg/event"
-	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam"
 	oamutil "github.com/crossplane/oam-kubernetes-runtime/pkg/oam/util"
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
-	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -39,29 +37,28 @@ import (
 	"metricstrait/api/v1alpha1"
 )
 
-var (
-	// OamServiceMonitorLabel is the pre-defined labels for any service monitor
-	// created by the MetricsTrait
-	OamServiceMonitorLabel = map[string]string{
-		"k8s-app":    "oam",
-		"controller": "metricsTrait",
-	}
-	// the name of the namespace in which the servicemonitor resides
-	// it must be the same that the prometheus operator is listening to
-	serviceMonitorNSName = "oam-monitoring"
+const (
+	errApplyServiceMonitor = "failed to apply the service monitor"
+	errLocatingService     = "failed to locate any the services"
 )
 
 var (
 	serviceMonitorKind       = reflect.TypeOf(monitoring.ServiceMonitor{}).Name()
 	serviceMonitorAPIVersion = monitoring.SchemeGroupVersion.String()
+	serviceKind              = reflect.TypeOf(corev1.Service{}).Name()
+	serviceAPIVersion        = corev1.SchemeGroupVersion.String()
 )
 
-const (
-	errApplyServiceMonitor = "failed to apply the service monitor"
-	errLocatingService     = "failed to locate any the services"
-
-	// TODO: use the common one when it's merged in upstream
-	errFetchChildResources = "failed to fetch workload child resources"
+var (
+	// oamServiceLabel is the pre-defined labels for any serviceMonitor
+	// created by the MetricsTrait,  prometheus operator listens on this
+	oamServiceLabel = map[string]string{
+		"k8s-app":    "oam",
+		"controller": "metricsTrait",
+	}
+	// serviceMonitorNSName is the name of the namespace in which the serviceMonitor resides
+	// it must be the same that the prometheus operator is listening to
+	serviceMonitorNSName = "oam-monitoring"
 )
 
 // MetricsTraitReconciler reconciles a MetricsTrait object
@@ -99,20 +96,46 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		eventObj = &metricsTrait
 	}
 
-	var serviceLabel map[string]string
+	// Fetch the workload instance to which we want to expose metrics
+	workload, err := oamutil.FetchWorkload(ctx, r, mLog, &metricsTrait)
+	if err != nil {
+		mLog.Error(err, "Error while fetching the workload", "workload reference",
+			metricsTrait.GetWorkloadReference())
+		r.record.Event(eventObj, event.Warning(errLocatingService, err))
+		return oamutil.ReconcileWaitResult,
+			oamutil.PatchCondition(ctx, r, &metricsTrait,
+				cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
+	}
 
+	var serviceLabel map[string]string
 	if len(metricsTrait.Spec.MetricsEndPoint.PortName) != 0 {
-		// this means the
-		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, &metricsTrait, eventObj, metricsTrait.Spec.MetricsEndPoint.PortName)
+		// with a portName indicates that there is already a service created with the workload
+		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, workload, metricsTrait.Spec.MetricsEndPoint.PortName)
 		if err != nil {
+			r.record.Event(eventObj, event.Warning(errLocatingService, err))
+			return oamutil.ReconcileWaitResult,
+				oamutil.PatchCondition(ctx, r, &metricsTrait,
+					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
+		}
+	} else if metricsTrait.Spec.MetricsEndPoint.TargetPort == nil {
+		err := fmt.Errorf("metrics end point has no portName or targetPort: %+v", metricsTrait.Spec.MetricsEndPoint)
+		r.record.Event(eventObj, event.Warning(errLocatingService, err))
+		return oamutil.ReconcileWaitResult,
+			oamutil.PatchCondition(ctx, r, &metricsTrait,
+				cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
+	} else {
+		// we will create a service that talks to the targetPort
+		serviceLabel, err = r.createService(ctx, mLog, workload, &metricsTrait)
+		if err != nil {
+			r.record.Event(eventObj, event.Warning(errLocatingService, err))
 			return oamutil.ReconcileWaitResult,
 				oamutil.PatchCondition(ctx, r, &metricsTrait,
 					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 		}
 	}
-
-	// server side apply, only the fields we set are touched
+	// construct the serviceMonitor that hooks the service to the prometheus server
 	serviceMonitor := constructServiceMonitor(&metricsTrait, serviceLabel)
+	// server side apply the serviceMonitor, only the fields we set are touched
 	applyOpts := []client.PatchOption{client.ForceOwnership, client.FieldOwner(metricsTrait.GetUID())}
 	if err := r.Patch(ctx, serviceMonitor, client.Apply, applyOpts...); err != nil {
 		mLog.Error(err, "Failed to apply to serviceMonitor")
@@ -129,44 +152,21 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	return ctrl.Result{}, oamutil.PatchCondition(ctx, r, &metricsTrait, cpv1alpha1.ReconcileSuccess())
 }
 
-// fetch the label of the service
-func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog logr.Logger, metricsTrait oam.Trait,
-	eventObj oam.Object, portName string) (map[string]string, error) {
-	// Fetch the workload instance to which we want to expose metrics
-	workload, err := oamutil.FetchWorkload(ctx, r, mLog, metricsTrait)
-	if err != nil {
-		if !apierrors.IsNotFound(err) {
-			mLog.Error(err, "Error while fetching the workload", "workload reference",
-				metricsTrait.GetWorkloadReference())
-			r.record.Event(eventObj, event.Warning(oamutil.ErrLocateWorkload, err))
-			return nil, err
-		}
-	}
+// fetch the label of the service that is associated with the workload
+func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog logr.Logger,
+	workload *unstructured.Unstructured, portName string) (map[string]string, error) {
 	// Fetch the child resources list from the corresponding workload
 	resources, err := oamutil.FetchWorkloadChildResources(ctx, mLog, r, workload)
 	if err != nil {
-		if !apierrors.IsNotFound(err) {
-			mLog.Error(err, "Error while fetching the workload child resources", "workload", workload.UnstructuredContent())
-			r.record.Event(eventObj, event.Warning(errFetchChildResources, err))
-			return nil, err
-		} else {
-			mLog.Error(err, "Cannot locate workload definition", "workload", workload.UnstructuredContent())
-			return nil, nil
-		}
+		mLog.Error(err, "Error while fetching the workload child resources", "workload", workload.UnstructuredContent())
+		return nil, err
 	}
 	// find the service that has the port
 	for _, childRes := range resources {
-		if childRes.GetAPIVersion() == corev1.SchemeGroupVersion.String() &&
-			childRes.GetKind() == reflect.TypeOf(corev1.Service{}).Name() {
-			ports, exist, err := unstructured.NestedSlice(childRes.Object, "spec", "ports")
-			if !exist || err != nil {
-				panic(fmt.Errorf("unexpected service format: +v%", childRes.Object))
-			}
+		if childRes.GetAPIVersion() == serviceAPIVersion && childRes.GetKind() == serviceKind {
+			ports, _, _ := unstructured.NestedSlice(childRes.Object, "spec", "ports")
 			for _, port := range ports {
-				servicePort, ok := port.(corev1.ServicePort)
-				if !ok {
-					panic(fmt.Errorf("unexpected service format: +v%", childRes.Object))
-				}
+				servicePort, _ := port.(corev1.ServicePort)
 				if servicePort.Name == portName {
 					return childRes.GetLabels(), nil
 				}
@@ -174,6 +174,46 @@ func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog lo
 		}
 	}
 	return nil, nil
+}
+
+// create a service that targets the exposed workload pod
+func (r *MetricsTraitReconciler) createService(ctx context.Context, mLog logr.Logger, workload *unstructured.Unstructured,
+	metricsTrait *v1alpha1.MetricsTrait) (map[string]string, error) {
+	oamService := &corev1.Service{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       serviceKind,
+			APIVersion: serviceAPIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "oam-" + workload.GetName(),
+			Namespace: workload.GetNamespace(),
+			Labels:    oamServiceLabel,
+		},
+		Spec: corev1.ServiceSpec{
+			Type: corev1.ServiceTypeClusterIP,
+		},
+	}
+	// assign selector
+	if len(metricsTrait.Spec.MetricsEndPoint.Selector) == 0 {
+		// default is that we assumed that the pods have the same label as the workload
+		oamService.Spec.Selector = workload.GetLabels()
+	} else {
+		oamService.Spec.Selector = metricsTrait.Spec.MetricsEndPoint.Selector
+	}
+	oamService.Spec.Ports = []corev1.ServicePort{
+		{
+			Port:       4848,
+			TargetPort: *metricsTrait.Spec.MetricsEndPoint.TargetPort,
+			Protocol:   corev1.ProtocolTCP,
+		},
+	}
+	// server side apply the service, only the fields we set are touched
+	applyOpts := []client.PatchOption{client.ForceOwnership, client.FieldOwner(metricsTrait.GetUID())}
+	if err := r.Patch(ctx, oamService, client.Apply, applyOpts...); err != nil {
+		mLog.Error(err, "Failed to apply to service")
+		return nil, err
+	}
+	return oamServiceLabel, nil
 }
 
 // remove all service monitors that are no longer used
@@ -214,7 +254,7 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      metricsTrait.Name,
 			Namespace: serviceMonitorNSName,
-			Labels:    OamServiceMonitorLabel,
+			Labels:    oamServiceLabel,
 		},
 		Spec: monitoring.ServiceMonitorSpec{
 			Selector: metav1.LabelSelector{

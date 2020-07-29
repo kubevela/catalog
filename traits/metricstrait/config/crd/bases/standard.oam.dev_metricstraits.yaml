@@ -48,64 +48,50 @@ spec:
                 path:
                   description: HTTP path to scrape for metrics. default is /metrics
                   type: string
-                port:
-                  description: Name of the service port this endpoint refers to. Mutually
-                    exclusive with targetPort.
+                portName:
+                  description: The name of a port within the service that this endpoint
+                    refers to. When this field has value implies that the service
+                    already exists Mutually exclusive with targetPort.
                   type: string
+                selector:
+                  additionalProperties:
+                    type: string
+                  description: Route service traffic to pods with label keys and values
+                    matching this The default is the labels in the workload
+                  type: object
                 targetPort:
                   anyOf:
                   - type: integer
                   - type: string
-                  description: Name or number of the pod port this endpoint refers
-                    to. Mutually exclusive with port.
+                  description: Number or name of the port to access on the pods targeted
+                    by the service. When this field has value implies that we need
+                    to create a service for the workload Mutually exclusive with port.
                   x-kubernetes-int-or-string: true
               type: object
-            selector:
-              description: Selector to select Endpoints objects.
+            workloadRef:
+              description: WorkloadReference to the workload whose metrics needs to
+                be exposed
               properties:
-                matchExpressions:
-                  description: matchExpressions is a list of label selector requirements.
-                    The requirements are ANDed.
-                  items:
-                    description: A label selector requirement is a selector that contains
-                      values, a key, and an operator that relates the key and values.
-                    properties:
-                      key:
-                        description: key is the label key that the selector applies
-                          to.
-                        type: string
-                      operator:
-                        description: operator represents a key's relationship to a
-                          set of values. Valid operators are In, NotIn, Exists and
-                          DoesNotExist.
-                        type: string
-                      values:
-                        description: values is an array of string values. If the operator
-                          is In or NotIn, the values array must be non-empty. If the
-                          operator is Exists or DoesNotExist, the values array must
-                          be empty. This array is replaced during a strategic merge
-                          patch.
-                        items:
-                          type: string
-                        type: array
-                    required:
-                    - key
-                    - operator
-                    type: object
-                  type: array
-                matchLabels:
-                  additionalProperties:
-                    type: string
-                  description: matchLabels is a map of {key,value} pairs. A single
-                    {key,value} in the matchLabels map is equivalent to an element
-                    of matchExpressions, whose key field is "key", the operator is
-                    "In", and the values array contains only "value". The requirements
-                    are ANDed.
-                  type: object
+                apiVersion:
+                  description: APIVersion of the referenced object.
+                  type: string
+                kind:
+                  description: Kind of the referenced object.
+                  type: string
+                name:
+                  description: Name of the referenced object.
+                  type: string
+                uid:
+                  description: UID of the referenced object.
+                  type: string
+              required:
+              - apiVersion
+              - kind
+              - name
               type: object
           required:
           - metricsendpoint
-          - selector
+          - workloadRef
           type: object
         status:
           description: MetricsTraitStatus defines the observed state of MetricsTrait

@@ -7,23 +7,6 @@ spec:
     - componentName: autoscale-application
       traits:
         - trait:
-            apiVersion: v1
-            kind: Service
-            metadata:
-              labels:
-                app: sample-app-svc
-              name: sample-app-svc
-            spec:
-              ports:
-                - name: 80-8080
-                  port: 80
-                  protocol: TCP
-                  targetPort: 8080
-              selector:
-                app: sample-app
-              sessionAffinity: None
-              type: ClusterIP
-        - trait:
             apiVersion: standard.oam.dev/v1alpha1
             kind: MetricsTrait
             spec:
@@ -36,23 +19,6 @@ spec:
                   app: sample-app-svc
     - componentName: metrics-application
       traits:
-        - trait:
-            apiVersion: v1
-            kind: Service
-            metadata:
-              labels:
-                app: metrics-app-svc
-              name: metrics-app-svc
-            spec:
-              ports:
-                - name: 80-8080
-                  port: 80
-                  protocol: TCP
-                  targetPort: 8080
-              selector:
-                app: metrics-app
-              sessionAffinity: None
-              type: ClusterIP
         - trait:
             apiVersion: standard.oam.dev/v1alpha1
             kind: MetricsTrait
