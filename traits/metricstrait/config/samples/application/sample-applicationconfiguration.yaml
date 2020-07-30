@@ -10,23 +10,19 @@ spec:
             apiVersion: standard.oam.dev/v1alpha1
             kind: MetricsTrait
             spec:
-              metricsendpoint:
-                port: 80
+              scrapeService:
+                format: "prometheus"
+                portName: 80
                 path: "/metrics"
-                interval:  "1s"
-              selector:
-                matchLabels:
-                  app: sample-app-svc
+                scheme:  "http"
+                enabled: true
     - componentName: metrics-application
       traits:
         - trait:
             apiVersion: standard.oam.dev/v1alpha1
             kind: MetricsTrait
             spec:
-              metricsendpoint:
+              scrapeService:
                 targetPort: 8080
                 path: "/metrics"
                 interval:  "5s"
-              selector:
-                matchLabels:
-                  app: metrics-app-svc

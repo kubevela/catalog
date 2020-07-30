@@ -28,17 +28,20 @@ import (
 
 // MetricsTraitSpec defines the desired state of MetricsTrait
 type MetricsTraitSpec struct {
-	// A list of endpoints allowed as part of this ServiceMonitorNames.
-	MetricsEndPoint Endpoint `json:"metricsendpoint"`
+	// An endpoint to be monitored by a ServiceMonitor.
+	ScrapeService ScapeServiceEndPoint `json:"scrapeService,omitempty"`
 	// WorkloadReference to the workload whose metrics needs to be exposed
 	WorkloadReference runtimev1alpha1.TypedReference `json:"workloadRef"`
 }
 
-// Endpoint defines a scrapeable endpoint serving Prometheus metrics.
-type Endpoint struct {
+// ScapeServiceEndPoint defines a scrapeable endpoint serving Prometheus metrics.
+type ScapeServiceEndPoint struct {
+	// The format of the metrics data,
+	// The default and only supported format is "prometheus" for now
+	Format string `json:"format,omitempty"`
 	// The name of a port within the service that this endpoint refers to.
 	// When this field has value implies that the service already exists
-	// Mutually exclusive with targetPort.
+	// Mutually exclusive with targetPort and targetSelector
 	PortName string `json:"portName,omitempty"`
 	// Number or name of the port to access on the pods targeted by the service.
 	// When this field has value implies that we need to create a service for the workload
@@ -46,13 +49,16 @@ type Endpoint struct {
 	TargetPort *intstr.IntOrString `json:"targetPort,omitempty"`
 	// Route service traffic to pods with label keys and values matching this
 	// The default is the labels in the workload
-	Selector map[string]string `json:"selector,omitempty"`
+	// Mutually exclusive with port.
+	TargetSelector map[string]string `json:"selector,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
 	Path string `json:"path,omitempty"`
-	// default is 1 min
-	// Interval at which metrics should be scraped
-	Interval string `json:"interval,omitempty"`
+	// Scheme at which metrics should be scraped
+	// The default and only supported scheme is "http"
+	Scheme string `json:"scheme,omitempty"`
+	// The default is true
+	Enabled *bool `json:"enabled,omitempty"`
 }
 
 // MetricsTraitStatus defines the observed state of MetricsTrait

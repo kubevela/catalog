@@ -40,7 +40,7 @@ import (
 const (
 	errApplyServiceMonitor = "failed to apply the service monitor"
 	errLocatingService     = "failed to locate any the services"
-	servicePort			= 4848
+	servicePort            = 4848
 )
 
 var (
@@ -85,7 +85,7 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	mLog.Info("Get the metricsTrait trait",
-		"metrics end point", metricsTrait.Spec.MetricsEndPoint,
+		"metrics end point", metricsTrait.Spec.ScrapeService,
 		"workload reference", metricsTrait.Spec.WorkloadReference,
 		"labels", metricsTrait.GetLabels())
 
@@ -95,6 +95,11 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		// fallback to workload itself
 		mLog.Error(err, "add events to metricsTrait itself", "name", metricsTrait.Name)
 		eventObj = &metricsTrait
+	}
+	if !metricsTrait.Spec.ScrapeService.Enabled {
+		r.record.Event(eventObj, event.Normal("Metrics Trait disabled", "no op"))
+		r.gcOrphanServiceMonitor(ctx, mLog, &metricsTrait)
+		return ctrl.Result{}, oamutil.PatchCondition(ctx, r, &metricsTrait, cpv1alpha1.ReconcileSuccess())
 	}
 
 	// Fetch the workload instance to which we want to expose metrics
@@ -109,17 +114,17 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	}
 
 	var serviceLabel map[string]string
-	if len(metricsTrait.Spec.MetricsEndPoint.PortName) != 0 {
+	if len(metricsTrait.Spec.ScrapeService.PortName) != 0 {
 		// with a portName indicates that there is already a service created with the workload
-		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, workload, metricsTrait.Spec.MetricsEndPoint.PortName)
+		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, workload, metricsTrait.Spec.ScrapeService.PortName)
 		if err != nil {
 			r.record.Event(eventObj, event.Warning(errLocatingService, err))
 			return oamutil.ReconcileWaitResult,
 				oamutil.PatchCondition(ctx, r, &metricsTrait,
 					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 		}
-	} else if metricsTrait.Spec.MetricsEndPoint.TargetPort == nil {
-		err := fmt.Errorf("metrics end point has no portName or targetPort: %+v", metricsTrait.Spec.MetricsEndPoint)
+	} else if metricsTrait.Spec.ScrapeService.TargetPort == nil {
+		err := fmt.Errorf("metrics end point has no portName or targetPort: %+v", metricsTrait.Spec.ScrapeService)
 		r.record.Event(eventObj, event.Warning(errLocatingService, err))
 		return oamutil.ReconcileWaitResult,
 			oamutil.PatchCondition(ctx, r, &metricsTrait,
@@ -195,17 +200,17 @@ func (r *MetricsTraitReconciler) createService(ctx context.Context, mLog logr.Lo
 		},
 	}
 	// assign selector
-	if len(metricsTrait.Spec.MetricsEndPoint.Selector) == 0 {
+	if len(metricsTrait.Spec.ScrapeService.TargetSelector) == 0 {
 		// default is that we assumed that the pods have the same label as the workload
 		// we might be able to find the podSpec label but it is more complicated
 		oamService.Spec.Selector = workload.GetLabels()
 	} else {
-		oamService.Spec.Selector = metricsTrait.Spec.MetricsEndPoint.Selector
+		oamService.Spec.Selector = metricsTrait.Spec.ScrapeService.TargetSelector
 	}
 	oamService.Spec.Ports = []corev1.ServicePort{
 		{
 			Port:       servicePort,
-			TargetPort: *metricsTrait.Spec.MetricsEndPoint.TargetPort,
+			TargetPort: *metricsTrait.Spec.ScrapeService.TargetPort,
 			Protocol:   corev1.ProtocolTCP,
 		},
 	}
@@ -223,8 +228,13 @@ func (r *MetricsTraitReconciler) gcOrphanServiceMonitor(ctx context.Context, mLo
 	metricsTrait *v1alpha1.MetricsTrait) {
 	var gcCandidates []string
 	copy(metricsTrait.Status.ServiceMonitorNames, gcCandidates)
-	// re-initialize to the current service monitor
-	metricsTrait.Status.ServiceMonitorNames = []string{metricsTrait.Name}
+	if metricsTrait.Spec.ScrapeService.Enabled {
+		// re-initialize to the current service monitor
+		metricsTrait.Status.ServiceMonitorNames = []string{metricsTrait.Name}
+	} else {
+		// initialize it to be an empty list, gc everything
+		metricsTrait.Status.ServiceMonitorNames = []string{}
+	}
 	for _, smn := range gcCandidates {
 		if smn != metricsTrait.Name {
 			if err := r.Delete(ctx, &monitoring.ServiceMonitor{
@@ -268,10 +278,10 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 			},
 			Endpoints: []monitoring.Endpoint{
 				{
-					Port:       metricsTrait.Spec.MetricsEndPoint.PortName,
-					TargetPort: metricsTrait.Spec.MetricsEndPoint.TargetPort,
-					Path:       metricsTrait.Spec.MetricsEndPoint.Path,
-					Interval:   metricsTrait.Spec.MetricsEndPoint.Interval,
+					Port:       metricsTrait.Spec.ScrapeService.PortName,
+					TargetPort: metricsTrait.Spec.ScrapeService.TargetPort,
+					Path:       metricsTrait.Spec.ScrapeService.Path,
+					Interval:   metricsTrait.Spec.ScrapeService.Scheme,
 				},
 			},
 		},

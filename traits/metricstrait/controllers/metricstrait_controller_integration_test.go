@@ -35,7 +35,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	deployLabel := map[string]string{"standard.oam.dev": "oam-test-deployment"}
 	podPort := 8080
 	metricsPath := "/notMetrics"
-	scrapInterval := "1s"
+	scheme := "http"
 	ns := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: namespaceName,
@@ -52,10 +52,11 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 			Labels:    traitLabel,
 		},
 		Spec: v1alpha1.MetricsTraitSpec{
-			MetricsEndPoint: v1alpha1.Endpoint{
+			ScrapeService: v1alpha1.ScapeServiceEndPoint{
 				TargetPort: &targetPort,
 				Path:       metricsPath,
-				Interval:   scrapInterval,
+				Scheme:     scheme,
+				Enabled:    true,
 			},
 			WorkloadReference: runtimev1alpha1.TypedReference{
 				APIVersion: deploymentAPIVersion,
@@ -115,12 +116,12 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		testName := "deploy-without-selector"
 		By("Create the deployment as the workloadBase")
 		workload := workloadBase.DeepCopy()
-		workload.Name = testName+"-workload"
+		workload.Name = testName + "-workload"
 		Expect(k8sClient.Create(ctx, workload)).ToNot(HaveOccurred())
 
 		By("Create the metrics trait pointing to the workloadBase")
 		metricsTrait := metricsTraitBase.DeepCopy()
-		metricsTrait.Name = testName+"-trait"
+		metricsTrait.Name = testName + "-trait"
 		metricsTrait.Spec.WorkloadReference.Name = workload.Name
 		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
 
@@ -157,7 +158,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
 		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
 		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
-		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scrapInterval))
+		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scheme))
 		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 
@@ -165,15 +166,15 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		testName := "deploy-with-selector"
 		By("Create the deployment as the workloadBase")
 		workload := workloadBase.DeepCopy()
-		workload.Name = testName+"-workload"
+		workload.Name = testName + "-workload"
 		Expect(k8sClient.Create(ctx, workload)).ToNot(HaveOccurred())
 
 		By("Create the metrics trait pointing to the workloadBase")
 		podSelector := map[string]string{"podlabel": "goodboy"}
 		metricsTrait := metricsTraitBase.DeepCopy()
-		metricsTrait.Name = testName+"-trait"
+		metricsTrait.Name = testName + "-trait"
 		metricsTrait.Spec.WorkloadReference.Name = workload.Name
-		metricsTrait.Spec.MetricsEndPoint.Selector = podSelector
+		metricsTrait.Spec.ScrapeService.TargetSelector = podSelector
 		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
 
 		By("Check that we have created the service")
@@ -205,7 +206,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
 		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
 		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
-		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scrapInterval))
+		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scheme))
 		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 })

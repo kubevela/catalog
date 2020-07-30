@@ -38,12 +38,15 @@ spec:
         spec:
           description: MetricsTraitSpec defines the desired state of MetricsTrait
           properties:
-            metricsendpoint:
-              description: A list of endpoints allowed as part of this ServiceMonitorNames.
+            scrapeService:
+              description: An endpoint to be monitored by a ServiceMonitor.
               properties:
-                interval:
-                  description: default is 1 min Interval at which metrics should be
-                    scraped
+                enabled:
+                  description: The default is true
+                  type: boolean
+                format:
+                  description: The format of the metrics data, The default and only
+                    supported format is "prometheus" for now
                   type: string
                 path:
                   description: HTTP path to scrape for metrics. default is /metrics
@@ -51,13 +54,18 @@ spec:
                 portName:
                   description: The name of a port within the service that this endpoint
                     refers to. When this field has value implies that the service
-                    already exists Mutually exclusive with targetPort.
+                    already exists Mutually exclusive with targetPort and targetSelector
+                  type: string
+                scheme:
+                  description: Scheme at which metrics should be scraped The default
+                    and only supported scheme is "http"
                   type: string
                 selector:
                   additionalProperties:
                     type: string
                   description: Route service traffic to pods with label keys and values
-                    matching this The default is the labels in the workload
+                    matching this The default is the labels in the workload Mutually
+                    exclusive with port.
                   type: object
                 targetPort:
                   anyOf:
@@ -90,7 +98,6 @@ spec:
               - name
               type: object
           required:
-          - metricsendpoint
           - workloadRef
           type: object
         status:

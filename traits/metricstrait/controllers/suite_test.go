@@ -36,7 +36,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	standardv1alpha1 "metricstrait/api/v1alpha1"
-
 	// +kubebuilder:scaffold:imports
 )
 

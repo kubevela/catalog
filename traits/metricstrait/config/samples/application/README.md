@@ -1,7 +1,7 @@
-# Deployment Workload
+# Quick start
 
 This example show case how one can use a metricsTrait to add prometheus monitoring capability to any workload that
- emits metrics data through a service.
+ emits metrics data.
 
 ## Install OAM controller
 ```shell script
@@ -11,17 +11,25 @@ helm install oam --namespace oam-system crossplane-master/oam-kubernetes-runtime
 
 ## Install Prometheus operator helm chart
 ```shell script
-kubectl apply  -f config/oam/namespace-oam-namespace.yaml
+kubectl apply  -f config/oam/monitoring-namespace.yaml
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm install monitoring -n oam-monitoring stable/prometheus-operator
 ```
 
+
 ## Install OAM Prometheus
 ```shell script
 kubectl apply  -f config/oam/prometheus-oam.yaml
+kubectl apply  -f config/oam/grafana-oam.yaml
 ```
 
-## Install the metrics trait controller
+## Install the cert-manager
+```shell script
+kubectl create namespace cert-manager
+helm install cert-manager jetstack/cert-manager --namespace cert-manager  --version v0.16.0 --set installCRDs=true
+```
+
+## Install the metrics trait controller and webhook
 ```shell script
 make docker-build
 make deploy
