@@ -21,7 +21,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"k8s.io/apimachinery/pkg/runtime"
+	runtime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
@@ -136,6 +136,11 @@ func (in *ScapeServiceEndPoint) DeepCopyInto(out *ScapeServiceEndPoint) {
 		for key, val := range *in {
 			(*out)[key] = val
 		}
+	}
+	if in.Enabled != nil {
+		in, out := &in.Enabled, &out.Enabled
+		*out = new(bool)
+		**out = **in
 	}
 }
 

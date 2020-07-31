@@ -17,6 +17,8 @@ limitations under the License.
 package webhooks
 
 import (
+	"fmt"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -40,8 +42,6 @@ func (r *MetricsTraitWebHook) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
 // +kubebuilder:webhook:path=/mutate-standard-oam-dev-v1alpha1-metricstrait,mutating=true,failurePolicy=fail,groups=standard.oam.dev,resources=metricstraits,verbs=create;update,versions=v1alpha1,name=mmetricstrait.kb.io
 
 var _ webhook.Defaulter = &MetricsTraitWebHook{}
@@ -64,16 +64,20 @@ var _ webhook.Validator = &MetricsTraitWebHook{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *MetricsTraitWebHook) ValidateCreate() error {
 	metricstraitlog.Info("validate create", "name", r.Name)
-
+	if len(r.Spec.ScrapeService.PortName) == 0 && r.Spec.ScrapeService.TargetPort == nil {
+		return fmt.Errorf("both the portName and targetPort cannot be empty")
+	} else if len(r.Spec.ScrapeService.PortName) > 0 && r.Spec.ScrapeService.TargetPort != nil {
+		return fmt.Errorf("the portName and targetPort are mutually exclusive")
+	} else if r.Spec.ScrapeService.TargetPort == nil && len(r.Spec.ScrapeService.TargetSelector) > 0 {
+		return fmt.Errorf("the targetSelector cannot be set when the targetPort is not")
+	}
 	return nil
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *MetricsTraitWebHook) ValidateUpdate(old runtime.Object) error {
 	metricstraitlog.Info("validate update", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object update.
-	return nil
+	return r.ValidateCreate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -86,6 +90,6 @@ func (r *MetricsTraitWebHook) ValidateDelete() error {
 func Register(mgr ctrl.Manager) {
 	server := mgr.GetWebhookServer()
 	webhook := MetricsTraitWebHook{}
-	server.Register("/validate-standard-oam-dev-v1alpha1-metricstrait", admission.DefaultingWebhookFor(&webhook))
-	server.Register("/mutate-standard-oam-dev-v1alpha1-metricstrait", admission.ValidatingWebhookFor(&webhook))
+	server.Register("/mutate-standard-oam-dev-v1alpha1-metricstrait", admission.DefaultingWebhookFor(&webhook))
+	server.Register("/validate-standard-oam-dev-v1alpha1-metricstrait", admission.ValidatingWebhookFor(&webhook))
 }

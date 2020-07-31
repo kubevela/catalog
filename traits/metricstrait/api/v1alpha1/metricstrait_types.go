@@ -23,7 +23,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // MetricsTraitSpec defines the desired state of MetricsTrait
@@ -53,11 +52,14 @@ type ScapeServiceEndPoint struct {
 	TargetSelector map[string]string `json:"selector,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
+	// +optional
 	Path string `json:"path,omitempty"`
 	// Scheme at which metrics should be scraped
 	// The default and only supported scheme is "http"
+	// +optional
 	Scheme string `json:"scheme,omitempty"`
 	// The default is true
+	// +optional
 	Enabled *bool `json:"enabled,omitempty"`
 }
 

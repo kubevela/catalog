@@ -96,7 +96,7 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		mLog.Error(err, "add events to metricsTrait itself", "name", metricsTrait.Name)
 		eventObj = &metricsTrait
 	}
-	if !metricsTrait.Spec.ScrapeService.Enabled {
+	if metricsTrait.Spec.ScrapeService.Enabled != nil && !*metricsTrait.Spec.ScrapeService.Enabled {
 		r.record.Event(eventObj, event.Normal("Metrics Trait disabled", "no op"))
 		r.gcOrphanServiceMonitor(ctx, mLog, &metricsTrait)
 		return ctrl.Result{}, oamutil.PatchCondition(ctx, r, &metricsTrait, cpv1alpha1.ReconcileSuccess())
@@ -228,12 +228,12 @@ func (r *MetricsTraitReconciler) gcOrphanServiceMonitor(ctx context.Context, mLo
 	metricsTrait *v1alpha1.MetricsTrait) {
 	var gcCandidates []string
 	copy(metricsTrait.Status.ServiceMonitorNames, gcCandidates)
-	if metricsTrait.Spec.ScrapeService.Enabled {
-		// re-initialize to the current service monitor
-		metricsTrait.Status.ServiceMonitorNames = []string{metricsTrait.Name}
-	} else {
+	if metricsTrait.Spec.ScrapeService.Enabled != nil && !*metricsTrait.Spec.ScrapeService.Enabled {
 		// initialize it to be an empty list, gc everything
 		metricsTrait.Status.ServiceMonitorNames = []string{}
+	} else {
+		// re-initialize to the current service monitor
+		metricsTrait.Status.ServiceMonitorNames = []string{metricsTrait.Name}
 	}
 	for _, smn := range gcCandidates {
 		if smn != metricsTrait.Name {

@@ -36,6 +36,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	podPort := 8080
 	metricsPath := "/notMetrics"
 	scheme := "http"
+	trueVar := true
 	ns := corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: namespaceName,
@@ -56,7 +57,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 				TargetPort: &targetPort,
 				Path:       metricsPath,
 				Scheme:     scheme,
-				Enabled:    true,
+				Enabled:    &trueVar,
 			},
 			WorkloadReference: runtimev1alpha1.TypedReference{
 				APIVersion: deploymentAPIVersion,

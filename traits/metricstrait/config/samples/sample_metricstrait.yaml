@@ -1,0 +1,10 @@
+apiVersion: standard.oam.dev/v1alpha1
+kind: MetricsTrait
+metadata:
+  name: metricstrait-sample-1
+spec:
+  scrapeService:
+    format: "prometheus"
+    portName: 80
+    path: "/metrics"
+    scheme:  "http"
