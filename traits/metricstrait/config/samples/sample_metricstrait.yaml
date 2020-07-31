@@ -8,3 +8,5 @@ spec:
     portName: 80
     path: "/metrics"
     scheme:  "http"
+    targetSelector:
+      app: "oam"

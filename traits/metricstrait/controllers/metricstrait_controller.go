@@ -123,12 +123,6 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 				oamutil.PatchCondition(ctx, r, &metricsTrait,
 					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 		}
-	} else if metricsTrait.Spec.ScrapeService.TargetPort == nil {
-		err := fmt.Errorf("metrics end point has no portName or targetPort: %+v", metricsTrait.Spec.ScrapeService)
-		r.record.Event(eventObj, event.Warning(errLocatingService, err))
-		return oamutil.ReconcileWaitResult,
-			oamutil.PatchCondition(ctx, r, &metricsTrait,
-				cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 	} else {
 		// we will create a service that talks to the targetPort
 		serviceLabel, err = r.createService(ctx, mLog, workload, &metricsTrait)

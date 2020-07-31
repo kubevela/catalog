@@ -16,7 +16,6 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm install monitoring -n oam-monitoring stable/prometheus-operator
 ```
 
-
 ## Install OAM Prometheus
 ```shell script
 kubectl apply  -f config/oam/prometheus-oam.yaml

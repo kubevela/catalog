@@ -49,7 +49,7 @@ type ScapeServiceEndPoint struct {
 	// Route service traffic to pods with label keys and values matching this
 	// The default is the labels in the workload
 	// Mutually exclusive with port.
-	TargetSelector map[string]string `json:"selector,omitempty"`
+	TargetSelector map[string]string `json:"targetSelector,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
 	// +optional
