@@ -29,7 +29,6 @@ import (
 
 	standardv1alpha1 "metricstrait/api/v1alpha1"
 	"metricstrait/controllers"
-	"metricstrait/webhooks"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -79,7 +78,7 @@ func main() {
 		os.Exit(1)
 	}
 	if useWebhook {
-		webhooks.Register(mgr)
+		standardv1alpha1.RegisterWebhook(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 

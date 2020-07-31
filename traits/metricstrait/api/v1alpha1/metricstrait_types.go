@@ -28,9 +28,9 @@ import (
 // MetricsTraitSpec defines the desired state of MetricsTrait
 type MetricsTraitSpec struct {
 	// An endpoint to be monitored by a ServiceMonitor.
-	ScrapeService ScapeServiceEndPoint `json:"scrapeService,omitempty"`
+	ScrapeService ScapeServiceEndPoint `json:"scrapeService"`
 	// WorkloadReference to the workload whose metrics needs to be exposed
-	WorkloadReference runtimev1alpha1.TypedReference `json:"workloadRef"`
+	WorkloadReference runtimev1alpha1.TypedReference `json:"workloadRef,omitempty"`
 }
 
 // ScapeServiceEndPoint defines a scrapeable endpoint serving Prometheus metrics.
@@ -80,7 +80,7 @@ type MetricsTrait struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   MetricsTraitSpec   `json:"spec,omitempty"`
+	Spec   MetricsTraitSpec   `json:"spec"`
 	Status MetricsTraitStatus `json:"status,omitempty"`
 }
 
