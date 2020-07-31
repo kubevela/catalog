@@ -173,10 +173,8 @@ github.com/crossplane/crossplane-runtime v0.8.0/go.mod h1:gNY/21MLBaz5KNP7hmfXbB
 github.com/crossplane/crossplane-runtime v0.9.0 h1:K6/tLhXKzhsEUUddTvEWWnQLLrawWyw1ptNK7NBDpDU=
 github.com/crossplane/crossplane-runtime v0.9.0/go.mod h1:gNY/21MLBaz5KNP7hmfXbBXp8reYRbwY5B/97Kp4tgM=
 github.com/crossplane/crossplane-tools v0.0.0-20200219001116-bb8b2ce46330/go.mod h1:C735A9X0x0lR8iGVOOxb49Mt70Ua4EM2b7PGaRPBLd4=
-github.com/crossplane/oam-kubernetes-runtime v0.0.3 h1:RST+pW5t5kIBcMw43N2bnpGBG8UgAaVlEov4sdk1wpY=
-github.com/crossplane/oam-kubernetes-runtime v0.0.3/go.mod h1:8EuLIuv9bSc+ImjE7hJvHZUC+XHVOFVwEZV0/tOcodw=
-github.com/crossplane/oam-kubernetes-runtime v0.0.4 h1:CQ0I6tLZ3nMhOnHzzscivj8jdqLJk5AAc9LLxOsw0BY=
-github.com/crossplane/oam-kubernetes-runtime v0.0.4/go.mod h1:qICT3mLgVRW3PSH0wbJTswj36lZWIDK7Pdofmvy19fg=
+github.com/crossplane/oam-kubernetes-runtime v0.0.7 h1:vwCkzB+0vIsfXO6BCDbIxAFK3b/w4zIEuIWrdyLteOA=
+github.com/crossplane/oam-kubernetes-runtime v0.0.7/go.mod h1:f5xqmo0B2WtaOTZh8jhP+0f0XuzqhJG2xRtxfMZR3jA=
 github.com/dave/jennifer v1.2.0/go.mod h1:fIb+770HOpJ2fmN9EPPKOqm1vMGhB+TwXKMZhrIygKg=
 github.com/dave/jennifer v1.3.0/go.mod h1:fIb+770HOpJ2fmN9EPPKOqm1vMGhB+TwXKMZhrIygKg=
 github.com/davecgh/go-spew v0.0.0-20151105211317-5215b55f46b2/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -835,7 +833,6 @@ github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UV
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
-github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/thanos-io/thanos v0.11.0/go.mod h1:N/Yes7J68KqvmY+xM6J5CJqEvWIvKSR5sqGtmuD6wDc=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/tinylib/msgp v1.0.2/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDWklFE=
@@ -1152,6 +1149,7 @@ golang.org/x/tools v0.0.0-20200331025713-a30bf2db82d4/go.mod h1:Sl4aGygMT6LrqrWc
 golang.org/x/tools v0.0.0-20200422205258-72e4a01eba43/go.mod h1:EkVYQZoAsY45+roYkvgYkIh4xh/qjgUK9TdY2XT94GE=
 golang.org/x/tools v0.0.0-20200603131246-cc40288be839 h1:SxYgZ5FbVts/fm9UsuLycOG8MRWJPm7krdhgPQSayUs=
 golang.org/x/tools v0.0.0-20200603131246-cc40288be839/go.mod h1:EkVYQZoAsY45+roYkvgYkIh4xh/qjgUK9TdY2XT94GE=
+golang.org/x/tools v0.0.0-20200630223951-c138986dd9b9 h1:CrrjeBLnUL9WPTAjIqIPdfEAAs5XNY+8A4/CNxRqmbI=
 golang.org/x/tools v0.0.0-20200630223951-c138986dd9b9/go.mod h1:EkVYQZoAsY45+roYkvgYkIh4xh/qjgUK9TdY2XT94GE=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=

@@ -29,6 +29,7 @@ import (
 
 	standardv1alpha1 "metricstrait/api/v1alpha1"
 	"metricstrait/controllers"
+	"metricstrait/webhooks"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -47,7 +48,8 @@ func init() {
 
 func main() {
 	var metricsAddr string
-	var enableLeaderElection bool
+	var useWebhook, enableLeaderElection bool
+	flag.BoolVar(&useWebhook, "use-webhook", true, "Enable Admission Webhook")
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
@@ -75,6 +77,9 @@ func main() {
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "MetricsTrait")
 		os.Exit(1)
+	}
+	if useWebhook {
+		webhooks.Register(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 
