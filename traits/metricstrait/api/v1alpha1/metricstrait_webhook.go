@@ -45,6 +45,7 @@ var trueVar = true
 // +kubebuilder:webhook:path=/mutate-standard-oam-dev-v1alpha1-metricstrait,mutating=true,failurePolicy=fail,groups=standard.oam.dev,resources=metricstraits,verbs=create;update,versions=v1alpha1,name=mmetricstrait.kb.io
 
 var _ webhook.Defaulter = &MetricsTrait{}
+
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (r *MetricsTrait) Default() {
 	metricstraitlog.Info("default", "name", r.Name)
@@ -69,6 +70,7 @@ func (r *MetricsTrait) Default() {
 // +kubebuilder:webhook:verbs=create;update;delete,path=/validate-standard-oam-dev-v1alpha1-metricstrait,mutating=false,failurePolicy=fail,groups=standard.oam.dev,resources=metricstraits,versions=v1alpha1,name=vmetricstrait.kb.io
 
 var _ webhook.Validator = &MetricsTrait{}
+
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *MetricsTrait) ValidateCreate() error {
 	metricstraitlog.Info("validate create", "name", r.Name)

@@ -48,6 +48,7 @@ var (
 	serviceMonitorAPIVersion = monitoring.SchemeGroupVersion.String()
 	serviceKind              = reflect.TypeOf(corev1.Service{}).Name()
 	serviceAPIVersion        = corev1.SchemeGroupVersion.String()
+	trueVar                  = true
 )
 
 var (
@@ -74,11 +75,14 @@ type MetricsTraitReconciler struct {
 // +kubebuilder:rbac:groups=standard.oam.dev,resources=metricstraits/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=monitoring.coreos.com,resources=*,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=monitoring.coreos.com,resources=*/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=core.oam.dev,resources=*,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=core.oam.dev,resources=*/status,verbs=get;
+// +kubebuilder:rbac:groups="",resources=events,verbs=get;list;create;update;patch
 
 func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	mLog := r.Log.WithValues("metricstrait", req.NamespacedName)
-	mLog.Info("Reconcile manualscalar trait")
+	mLog.Info("Reconcile metricstrait trait")
 	// fetch the trait
 	var metricsTrait v1alpha1.MetricsTrait
 	if err := r.Get(ctx, req.NamespacedName, &metricsTrait); err != nil {
@@ -124,6 +128,7 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 		}
 	} else {
+		// TODO: use podMonitor?
 		// we will create a service that talks to the targetPort
 		serviceLabel, err = r.createService(ctx, mLog, workload, &metricsTrait)
 		if err != nil {
@@ -261,6 +266,16 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 			Name:      metricsTrait.Name,
 			Namespace: serviceMonitorNSName,
 			Labels:    oamServiceLabel,
+			OwnerReferences: []metav1.OwnerReference{
+				{
+					APIVersion:         metricsTrait.GetObjectKind().GroupVersionKind().GroupVersion().String(),
+					Kind:               metricsTrait.GetObjectKind().GroupVersionKind().Kind,
+					UID:                metricsTrait.GetUID(),
+					Name:               metricsTrait.GetName(),
+					Controller:         &trueVar,
+					BlockOwnerDeletion: &trueVar,
+				},
+			},
 		},
 		Spec: monitoring.ServiceMonitorSpec{
 			Selector: metav1.LabelSelector{
@@ -275,7 +290,7 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 					Port:       metricsTrait.Spec.ScrapeService.PortName,
 					TargetPort: metricsTrait.Spec.ScrapeService.TargetPort,
 					Path:       metricsTrait.Spec.ScrapeService.Path,
-					Interval:   metricsTrait.Spec.ScrapeService.Scheme,
+					Scheme:     metricsTrait.Spec.ScrapeService.Scheme,
 				},
 			},
 		},
@@ -283,7 +298,8 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 }
 
 func (r *MetricsTraitReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	r.record = event.NewAPIRecorder(mgr.GetEventRecorderFor("MetricsTrait"))
+	r.record = event.NewAPIRecorder(mgr.GetEventRecorderFor("MetricsTrait")).
+		WithAnnotations("controller", "metricsTrait")
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&v1alpha1.MetricsTrait{}).
 		Owns(&monitoring.ServiceMonitor{}).

@@ -4,5 +4,8 @@ metadata:
   name: metricstrait-sample
 spec:
   scrapeService:
-    portName: "80-8080"
-    targetPort: 80
+    format: "prometheus"
+    targetPort: 8080
+    path: "/metrics"
+    scheme:  "http"
+    enabled: true

@@ -12,7 +12,7 @@ spec:
             spec:
               scrapeService:
                 format: "prometheus"
-                portName: 80
+                targetPort: 8080
                 path: "/metrics"
                 scheme:  "http"
                 enabled: true
@@ -23,6 +23,4 @@ spec:
             kind: MetricsTrait
             spec:
               scrapeService:
-                targetPort: 8080
-                path: "/metrics"
-                interval:  "5s"
+                targetPort: 6668
