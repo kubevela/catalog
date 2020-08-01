@@ -21,6 +21,7 @@ import (
 	"os"
 
 	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
+	oamcore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
@@ -29,7 +30,6 @@ import (
 
 	standardv1alpha1 "metricstrait/api/v1alpha1"
 	"metricstrait/controllers"
-	"metricstrait/webhooks"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -43,6 +43,8 @@ func init() {
 
 	_ = standardv1alpha1.AddToScheme(scheme)
 	_ = monitoring.AddToScheme(scheme)
+	_ = oamcore.AddToScheme(scheme)
+
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -79,7 +81,7 @@ func main() {
 		os.Exit(1)
 	}
 	if useWebhook {
-		webhooks.Register(mgr)
+		standardv1alpha1.RegisterWebhook(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 

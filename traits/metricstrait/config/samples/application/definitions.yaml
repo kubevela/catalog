@@ -30,4 +30,5 @@ spec:
     - statefulsets.apps
   definitionRef:
     name: metricstraits.standard.oam.dev
+  workloadRefPath: spec.workloadRef
 

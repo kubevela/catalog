@@ -159,7 +159,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
 		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
 		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
-		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scheme))
+		Expect(serviceMonitor.Spec.Endpoints[0].Scheme).Should(Equal(scheme))
 		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 
@@ -207,7 +207,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Expect(len(serviceMonitor.Spec.Endpoints)).Should(Equal(1))
 		Expect(serviceMonitor.Spec.Endpoints[0].Port).Should(BeEmpty())
 		Expect(*serviceMonitor.Spec.Endpoints[0].TargetPort).Should(BeEquivalentTo(targetPort))
-		Expect(serviceMonitor.Spec.Endpoints[0].Interval).Should(Equal(scheme))
+		Expect(serviceMonitor.Spec.Endpoints[0].Scheme).Should(Equal(scheme))
 		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 })

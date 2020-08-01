@@ -6,6 +6,7 @@ This example show case how one can use a metricsTrait to add prometheus monitori
 ## Install OAM controller
 ```shell script
 kubectl create ns oam-system
+helm repo add crossplane-master https://charts.crossplane.io/master
 helm install oam --namespace oam-system crossplane-master/oam-kubernetes-runtime --devel
 ```
 
@@ -13,13 +14,12 @@ helm install oam --namespace oam-system crossplane-master/oam-kubernetes-runtime
 ```shell script
 kubectl apply  -f config/oam/monitoring-namespace.yaml
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
-helm install monitoring -n oam-monitoring stable/prometheus-operator
+helm install monitoring -n oam-monitoring stable/prometheus-operator -f config/oam/grafana-oam-datasource.yaml --set alertmanager.service.type=LoadBalancer --set prometheus.service.type=LoadBalancer --set service.type=LoadBalancer
 ```
 
 ## Install OAM Prometheus
 ```shell script
 kubectl apply  -f config/oam/prometheus-oam.yaml
-kubectl apply  -f config/oam/grafana-oam.yaml
 ```
 
 ## Install the cert-manager
@@ -53,11 +53,14 @@ Then access the prometheus dashboard via http://localhost:4848
 
 ## Verify that the metrics showing up on grafana
 ```shell script
-kubectl --namespace oam-monitoring port-forward deploy/monitoring-grafana 3000
+kubectl --namespace oam-monitoring port-forward service/monitoring-grafana 3000:80
 ```
 Then access the grafana dashboard via http://localhost:3000.  You shall set the data source URL as `http://prometheus-oam:4848`
 
 ## Setup Grafana Panel and Alert
+```shell script
+kubectl apply -f config/samples/application/dashboard/OAM-Workload-Dashboard.yaml
+```
 How to set up a Grafana dashboard https://grafana.com/docs/grafana/latest/features/dashboard/dashboards/
 
 Import the dashboard stored in config/samples/application

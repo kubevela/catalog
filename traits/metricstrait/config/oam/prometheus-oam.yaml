@@ -6,11 +6,6 @@ metadata:
   name: oam
   namespace: oam-monitoring
 spec:
-  alerting:
-    alertmanagers:
-      - name: alertmanager-main
-        namespace: monitoring
-        port: web
   image: quay.io/prometheus/prometheus:v2.19.2
   nodeSelector:
     kubernetes.io/os: linux
@@ -20,10 +15,6 @@ spec:
   resources:
     requests:
       memory: 400Mi
-  ruleSelector:
-    matchLabels:
-      prometheus: oam
-      role: alert-rules
   securityContext:
     fsGroup: 2000
     runAsNonRoot: true

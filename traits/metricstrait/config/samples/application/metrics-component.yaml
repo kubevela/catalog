@@ -25,4 +25,4 @@ spec:
               name: metrics-provider
               ports:
                 - name: http
-                  containerPort: 8080
+                  containerPort: 6668

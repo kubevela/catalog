@@ -1,12 +1,11 @@
 apiVersion: standard.oam.dev/v1alpha1
 kind: MetricsTrait
 metadata:
-  name: metricstrait-sample-1
+  name: metricstrait-sample
 spec:
   scrapeService:
     format: "prometheus"
-    portName: 80
+    targetPort: 8080
     path: "/metrics"
     scheme:  "http"
-    targetSelector:
-      app: "oam"
+    enabled: true
