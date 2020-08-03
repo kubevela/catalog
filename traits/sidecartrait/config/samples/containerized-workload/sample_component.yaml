@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Component
+metadata:
+  name: example-component
+spec:
+  workload:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: ContainerizedWorkload
+    spec:
+      containers:
+        - name: redis-main
+          image: bitnami/redis:latest
+          ports:
+            - containerPort: 6379
+              name: redisport
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
