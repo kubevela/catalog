@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
+	oamCore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
@@ -67,7 +68,7 @@ var _ = BeforeSuite(func(done Done) {
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
 			filepath.Join("..", "config", "crd", "bases"),
-			filepath.Join("..", "hack"), // this is the serviceMonitor CRD, a bit hacky
+			filepath.Join("..", "hack/crds"), // this has the OAM CRDs, a bit hacky
 		},
 	}
 	var err error
@@ -78,6 +79,8 @@ var _ = BeforeSuite(func(done Done) {
 	err = standardv1alpha1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 	err = monitoringv1.AddToScheme(scheme.Scheme)
+	Expect(err).NotTo(HaveOccurred())
+	err = oamCore.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	// +kubebuilder:scaffold:scheme

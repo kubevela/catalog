@@ -9,10 +9,9 @@ Here are the brief descriptions of each field and its usage.
 
 | Name | Optional | Default | Description |
 | ---- | ----------- | -------- | --------- |
-| format            | Yes | "prometheus" | The format of the data. The only format we support now is prometheus|
-| portName          | Yes | N/A |  The name of the port in a service that exposes the workload. This is mutually exclusive with targetPort/targetSelector |
-| targetPort        | Yes | N/A  | The pod port that exposes the metrics data. This is mutually exclusive with portName.  |
-| targetSelector    | Yes  | N/A | The selector that can be used to label select target pods. The default uses the labels on the workload.|
+| format            | Yes  | "prometheus" | The format of the data. The only format we support now is prometheus|
+| port              | Yes  | N/A  | The pod port that exposes the metrics data. We use this to locate either a service or a pod   |
+| selector          | Yes  | N/A | The selector that can be used to label select target pods. The default uses the labels on the workload.|
 | path              | Yes  | "/metrics" | path to scrape for metrics from the end point.  |
 | scheme            | Yes  | "http"  | The scrap scheme that we support. We only support http for now.  |
 | enabled           | Yes  | "true"  | Switch for the trait to be turned on or off. |

@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.4
+    controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
   name: metricstraits.standard.oam.dev
 spec:
@@ -51,16 +51,7 @@ spec:
                 path:
                   description: HTTP path to scrape for metrics. default is /metrics
                   type: string
-                portName:
-                  description: The name of a port within the service that this endpoint
-                    refers to. When this field has value implies that the service
-                    already exists Mutually exclusive with targetPort and targetSelector
-                  type: string
-                scheme:
-                  description: Scheme at which metrics should be scraped The default
-                    and only supported scheme is "http"
-                  type: string
-                targetPort:
+                port:
                   anyOf:
                   - type: integer
                   - type: string
@@ -68,7 +59,11 @@ spec:
                     by the service. When this field has value implies that we need
                     to create a service for the workload Mutually exclusive with port.
                   x-kubernetes-int-or-string: true
-                targetSelector:
+                scheme:
+                  description: Scheme at which metrics should be scraped The default
+                    and only supported scheme is "http"
+                  type: string
+                selector:
                   additionalProperties:
                     type: string
                   description: Route service traffic to pods with label keys and values
