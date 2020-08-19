@@ -38,18 +38,14 @@ type ScapeServiceEndPoint struct {
 	// The format of the metrics data,
 	// The default and only supported format is "prometheus" for now
 	Format string `json:"format,omitempty"`
-	// The name of a port within the service that this endpoint refers to.
-	// When this field has value implies that the service already exists
-	// Mutually exclusive with targetPort and targetSelector
-	PortName string `json:"portName,omitempty"`
 	// Number or name of the port to access on the pods targeted by the service.
 	// When this field has value implies that we need to create a service for the workload
 	// Mutually exclusive with port.
-	TargetPort *intstr.IntOrString `json:"targetPort,omitempty"`
+	TargetPort intstr.IntOrString `json:"port,omitempty"`
 	// Route service traffic to pods with label keys and values matching this
 	// The default is the labels in the workload
 	// Mutually exclusive with port.
-	TargetSelector map[string]string `json:"targetSelector,omitempty"`
+	TargetSelector map[string]string `json:"selector,omitempty"`
 	// HTTP path to scrape for metrics.
 	// default is /metrics
 	// +optional

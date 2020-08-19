@@ -34,77 +34,81 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	traitLabel := map[string]string{"trait": "metricsTraitBase"}
 	deployLabel := map[string]string{"standard.oam.dev": "oam-test-deployment"}
 	podPort := 8080
+	targetPort := intstr.FromInt(podPort)
 	metricsPath := "/notMetrics"
 	scheme := "http"
 	trueVar := true
-	ns := corev1.Namespace{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: namespaceName,
-		},
-	}
-	targetPort := intstr.FromInt(podPort)
-	metricsTraitBase := v1alpha1.MetricsTrait{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       metricsTraitKind,
-			APIVersion: metricsTraitAPIVersion,
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: ns.Name,
-			Labels:    traitLabel,
-		},
-		Spec: v1alpha1.MetricsTraitSpec{
-			ScrapeService: v1alpha1.ScapeServiceEndPoint{
-				TargetPort: &targetPort,
-				Path:       metricsPath,
-				Scheme:     scheme,
-				Enabled:    &trueVar,
+	var ns corev1.Namespace
+	var metricsTraitBase v1alpha1.MetricsTrait
+	var workloadBase appsv1.Deployment
+
+	BeforeEach(func() {
+		logf.Log.Info("[TEST] Set up resources before an integration test")
+		ns = corev1.Namespace{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: namespaceName,
 			},
-			WorkloadReference: runtimev1alpha1.TypedReference{
-				APIVersion: deploymentAPIVersion,
-				Kind:       deploymentKind,
+		}
+		By("Create the Namespace for test")
+		Expect(k8sClient.Create(ctx, &ns)).Should(SatisfyAny(Succeed(), &util.AlreadyExistMatcher{}))
+		metricsTraitBase = v1alpha1.MetricsTrait{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       metricsTraitKind,
+				APIVersion: metricsTraitAPIVersion,
 			},
-		},
-	}
-	workloadBase := appsv1.Deployment{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       deploymentKind,
-			APIVersion: deploymentAPIVersion,
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: ns.Name,
-			Labels:    deployLabel,
-		},
-		Spec: appsv1.DeploymentSpec{
-			Selector: &metav1.LabelSelector{
-				MatchLabels: deployLabel,
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: ns.Name,
+				Labels:    traitLabel,
 			},
-			Template: corev1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: deployLabel,
+			Spec: v1alpha1.MetricsTraitSpec{
+				ScrapeService: v1alpha1.ScapeServiceEndPoint{
+					TargetPort: targetPort,
+					Path:       metricsPath,
+					Scheme:     scheme,
+					Enabled:    &trueVar,
 				},
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{
-						{
-							Name:            "container-name",
-							Image:           "alpine",
-							ImagePullPolicy: corev1.PullNever,
-							Command:         []string{"containerCommand"},
-							Args:            []string{"containerArguments"},
-							Ports: []corev1.ContainerPort{
-								{
-									ContainerPort: int32(podPort),
+				WorkloadReference: runtimev1alpha1.TypedReference{
+					APIVersion: deploymentAPIVersion,
+					Kind:       deploymentKind,
+				},
+			},
+		}
+		workloadBase = appsv1.Deployment{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       deploymentKind,
+				APIVersion: deploymentAPIVersion,
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: ns.Name,
+				Labels:    deployLabel,
+			},
+			Spec: appsv1.DeploymentSpec{
+				Selector: &metav1.LabelSelector{
+					MatchLabels: deployLabel,
+				},
+				Template: corev1.PodTemplateSpec{
+					ObjectMeta: metav1.ObjectMeta{
+						Labels: deployLabel,
+					},
+					Spec: corev1.PodSpec{
+						Containers: []corev1.Container{
+							{
+								Name:            "container-name",
+								Image:           "alpine",
+								ImagePullPolicy: corev1.PullNever,
+								Command:         []string{"containerCommand"},
+								Args:            []string{"containerArguments"},
+								Ports: []corev1.ContainerPort{
+									{
+										ContainerPort: int32(podPort),
+									},
 								},
 							},
 						},
 					},
 				},
 			},
-		},
-	}
-	BeforeEach(func() {
-		logf.Log.Info("[TEST] Set up resources before an integration test")
-		By("Create the Namespace for test")
-		Expect(k8sClient.Create(ctx, ns.DeepCopy())).Should(SatisfyAny(Succeed(), &util.AlreadyExistMatcher{}))
+		}
 	})
 
 	AfterEach(func() {
@@ -116,15 +120,15 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	It("Test with deployment as workloadBase without selector", func() {
 		testName := "deploy-without-selector"
 		By("Create the deployment as the workloadBase")
-		workload := workloadBase.DeepCopy()
+		workload := workloadBase
 		workload.Name = testName + "-workload"
-		Expect(k8sClient.Create(ctx, workload)).ToNot(HaveOccurred())
+		Expect(k8sClient.Create(ctx, &workload)).ToNot(HaveOccurred())
 
 		By("Create the metrics trait pointing to the workloadBase")
-		metricsTrait := metricsTraitBase.DeepCopy()
+		metricsTrait := metricsTraitBase
 		metricsTrait.Name = testName + "-trait"
 		metricsTrait.Spec.WorkloadReference.Name = workload.Name
-		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
+		Expect(k8sClient.Create(ctx, &metricsTrait)).ToNot(HaveOccurred())
 
 		By("Check that we have created the service")
 		createdService := corev1.Service{}
@@ -172,11 +176,11 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 
 		By("Create the metrics trait pointing to the workloadBase")
 		podSelector := map[string]string{"podlabel": "goodboy"}
-		metricsTrait := metricsTraitBase.DeepCopy()
+		metricsTrait := metricsTraitBase
 		metricsTrait.Name = testName + "-trait"
 		metricsTrait.Spec.WorkloadReference.Name = workload.Name
 		metricsTrait.Spec.ScrapeService.TargetSelector = podSelector
-		Expect(k8sClient.Create(ctx, metricsTrait)).ToNot(HaveOccurred())
+		Expect(k8sClient.Create(ctx, &metricsTrait)).ToNot(HaveOccurred())
 
 		By("Check that we have created the service")
 		createdService := corev1.Service{}

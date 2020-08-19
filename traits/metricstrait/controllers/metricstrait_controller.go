@@ -28,9 +28,11 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -116,20 +118,16 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 			oamutil.PatchCondition(ctx, r, &metricsTrait,
 				cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
 	}
-
-	var serviceLabel map[string]string
-	if len(metricsTrait.Spec.ScrapeService.PortName) != 0 {
-		// with a portName indicates that there is already a service created with the workload
-		serviceLabel, err = r.fetchServicesLabel(ctx, mLog, workload, metricsTrait.Spec.ScrapeService.PortName)
-		if err != nil {
-			r.record.Event(eventObj, event.Warning(errLocatingService, err))
-			return oamutil.ReconcileWaitResult,
-				oamutil.PatchCondition(ctx, r, &metricsTrait,
-					cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
-		}
-	} else {
-		// TODO: use podMonitor?
-		// we will create a service that talks to the targetPort
+	// try to see if the workload already has services as child resources
+	serviceLabel, err := r.fetchServicesLabel(ctx, mLog, workload, metricsTrait.Spec.ScrapeService.TargetPort)
+	if err != nil && !apierrors.IsNotFound(err) {
+		r.record.Event(eventObj, event.Warning(errLocatingService, err))
+		return oamutil.ReconcileWaitResult,
+			oamutil.PatchCondition(ctx, r, &metricsTrait,
+				cpv1alpha1.ReconcileError(errors.Wrap(err, errLocatingService)))
+	} else if serviceLabel == nil {
+		// TODO: use podMonitor instead?
+		// no service with the targetPort found, we will create a service that talks to the targetPort
 		serviceLabel, err = r.createService(ctx, mLog, workload, &metricsTrait)
 		if err != nil {
 			r.record.Event(eventObj, event.Warning(errLocatingService, err))
@@ -144,7 +142,7 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	applyOpts := []client.PatchOption{client.ForceOwnership, client.FieldOwner(metricsTrait.GetUID())}
 	if err := r.Patch(ctx, serviceMonitor, client.Apply, applyOpts...); err != nil {
 		mLog.Error(err, "Failed to apply to serviceMonitor")
-		r.record.Event(eventObj, event.Warning(event.Reason(errApplyServiceMonitor), err))
+		r.record.Event(eventObj, event.Warning(errApplyServiceMonitor, err))
 		return oamutil.ReconcileWaitResult,
 			oamutil.PatchCondition(ctx, r, &metricsTrait,
 				cpv1alpha1.ReconcileError(errors.Wrap(err, errApplyServiceMonitor)))
@@ -159,11 +157,14 @@ func (r *MetricsTraitReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 
 // fetch the label of the service that is associated with the workload
 func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog logr.Logger,
-	workload *unstructured.Unstructured, portName string) (map[string]string, error) {
+	workload *unstructured.Unstructured, targetPort intstr.IntOrString) (map[string]string, error) {
 	// Fetch the child resources list from the corresponding workload
 	resources, err := oamutil.FetchWorkloadChildResources(ctx, mLog, r, workload)
 	if err != nil {
-		mLog.Error(err, "Error while fetching the workload child resources", "workload", workload.UnstructuredContent())
+		if !apierrors.IsNotFound(err) {
+			mLog.Error(err, "Error while fetching the workload child resources", "workload kind", workload.GetKind(),
+				"workload name", workload.GetName())
+		}
 		return nil, err
 	}
 	// find the service that has the port
@@ -172,7 +173,7 @@ func (r *MetricsTraitReconciler) fetchServicesLabel(ctx context.Context, mLog lo
 			ports, _, _ := unstructured.NestedSlice(childRes.Object, "spec", "ports")
 			for _, port := range ports {
 				servicePort, _ := port.(corev1.ServicePort)
-				if servicePort.Name == portName {
+				if servicePort.TargetPort == targetPort {
 					return childRes.GetLabels(), nil
 				}
 			}
@@ -209,7 +210,7 @@ func (r *MetricsTraitReconciler) createService(ctx context.Context, mLog logr.Lo
 	oamService.Spec.Ports = []corev1.ServicePort{
 		{
 			Port:       servicePort,
-			TargetPort: *metricsTrait.Spec.ScrapeService.TargetPort,
+			TargetPort: metricsTrait.Spec.ScrapeService.TargetPort,
 			Protocol:   corev1.ProtocolTCP,
 		},
 	}
@@ -287,8 +288,7 @@ func constructServiceMonitor(metricsTrait *v1alpha1.MetricsTrait,
 			},
 			Endpoints: []monitoring.Endpoint{
 				{
-					Port:       metricsTrait.Spec.ScrapeService.PortName,
-					TargetPort: metricsTrait.Spec.ScrapeService.TargetPort,
+					TargetPort: &metricsTrait.Spec.ScrapeService.TargetPort,
 					Path:       metricsTrait.Spec.ScrapeService.Path,
 					Scheme:     metricsTrait.Spec.ScrapeService.Scheme,
 				},

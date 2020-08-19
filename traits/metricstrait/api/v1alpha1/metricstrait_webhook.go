@@ -74,13 +74,6 @@ var _ webhook.Validator = &MetricsTrait{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *MetricsTrait) ValidateCreate() error {
 	metricstraitlog.Info("validate create", "name", r.Name)
-	if len(r.Spec.ScrapeService.PortName) == 0 && r.Spec.ScrapeService.TargetPort == nil {
-		return fmt.Errorf("both the portName and targetPort cannot be empty")
-	} else if len(r.Spec.ScrapeService.PortName) > 0 && r.Spec.ScrapeService.TargetPort != nil {
-		return fmt.Errorf("the portName and targetPort are mutually exclusive")
-	} else if r.Spec.ScrapeService.TargetPort == nil && len(r.Spec.ScrapeService.TargetSelector) > 0 {
-		return fmt.Errorf("the targetSelector cannot be set when the targetPort is not")
-	}
 	if r.Spec.ScrapeService.Format != SupportedFormat {
 		return fmt.Errorf("the data format `%s` is not supported", r.Spec.ScrapeService.Format)
 	}
