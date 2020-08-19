@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: sidecartrait
+resources:
+- group: core
+  kind: SidecarTrait
+  version: v1alpha2
+version: "2"

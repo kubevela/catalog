@@ -1,0 +1,25 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-component
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha2
+            kind: SidecarTrait
+            metadata:
+              name: sample-sidecart
+            spec:
+              container:
+                name: nginx-sidecar
+                image: nginx:1.13.12
+                ports:
+                  - containerPort: 8080
+                    name: sidecarport
+              volumes:
+                - name: data
+                  emptyDir : {}
+                - name: data2
+                  emptyDir: {}
