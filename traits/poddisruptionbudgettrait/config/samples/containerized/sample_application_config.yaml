@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: ApplicationConfiguration
+metadata:
+  name: example-appconfig
+spec:
+  components:
+    - componentName: example-component
+      traits:
+        - trait:
+            apiVersion: core.oam.dev/v1alpha2
+            kind: PodDisruptionBudgetTrait
+            metadata:
+              name: example-pdb-trait
+            spec:
+              minAvailable: 1
