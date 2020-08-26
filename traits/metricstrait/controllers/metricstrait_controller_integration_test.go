@@ -17,7 +17,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"metricstrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 )
 
 var (
@@ -37,7 +37,6 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	targetPort := intstr.FromInt(podPort)
 	metricsPath := "/notMetrics"
 	scheme := "http"
-	trueVar := true
 	var ns corev1.Namespace
 	var metricsTraitBase v1alpha1.MetricsTrait
 	var workloadBase appsv1.Deployment
