@@ -36,7 +36,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"metricstrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 )
 
 const (

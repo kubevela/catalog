@@ -28,8 +28,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	standardv1alpha1 "metricstrait/api/v1alpha1"
-	"metricstrait/controllers"
+	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/metricstrait/controllers"
 	// +kubebuilder:scaffold:imports
 )
 

@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
@@ -40,7 +41,6 @@ const (
 
 // log is for logging in this package.
 var metricstraitlog = logf.Log.WithName("metricstrait-resource")
-var trueVar = true
 
 // +kubebuilder:webhook:path=/mutate-standard-oam-dev-v1alpha1-metricstrait,mutating=true,failurePolicy=fail,groups=standard.oam.dev,resources=metricstraits,verbs=create;update,versions=v1alpha1,name=mmetricstrait.kb.io
 
@@ -63,7 +63,7 @@ func (r *MetricsTrait) Default() {
 	}
 	if r.Spec.ScrapeService.Enabled == nil {
 		metricstraitlog.Info("default enabled as true")
-		r.Spec.ScrapeService.Enabled = &trueVar
+		r.Spec.ScrapeService.Enabled = pointer.BoolPtr(true)
 	}
 }
 

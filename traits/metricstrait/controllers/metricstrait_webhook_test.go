@@ -6,7 +6,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
-	"metricstrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 )
 
 var _ = Describe("Metrics Admission controller Test", func() {
