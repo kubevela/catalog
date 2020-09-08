@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: github.com/oam-dev/catalog/traits/poddisruptionbudgettrait
+resources:
+- group: core
+  kind: PodDisruptionBudgetTrait
+  version: v1alpha2
+version: "2"

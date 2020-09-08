@@ -1,0 +1,180 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: poddisruptionbudgettraits.core.oam.dev
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.minAvailable
+    name: MinAvailable
+    type: integer
+  - JSONPath: .spec.maxUnavailable
+    name: MaxUnavailable
+    type: integer
+  - JSONPath: .status.conditions[?(@.type == "Synced")].status
+    name: Synced
+    type: string
+  - JSONPath: .metadata.ownerReferences[?(@.kind=="ApplicationConfiguration")].name
+    name: ApplicationConfiguration
+    type: string
+  - JSONPath: .status.resources[?(@.kind=="PodDisruptionBudget")].name
+    name: PodDisruptionBudget
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  group: core.oam.dev
+  names:
+    categories:
+    - crossplane
+    - oam
+    kind: PodDisruptionBudgetTrait
+    listKind: PodDisruptionBudgetTraitList
+    plural: poddisruptionbudgettraits
+    shortNames:
+    - pdbtrait
+    singular: poddisruptionbudgettrait
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: PodDisruptionBudgetTrait is the Schema for the poddisruptionbudgettraits
+        API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: PodDisruptionBudgetTraitSpec defines the desired state of PodDisruptionBudgetTrait
+          properties:
+            maxUnavailable:
+              anyOf:
+              - type: integer
+              - type: string
+              description: An eviction is allowed if at most "maxUnavailable" pods
+                selected by "selector" are unavailable after the eviction, i.e. even
+                in absence of the evicted pod. For example, one can prevent all voluntary
+                evictions by specifying 0. This is a mutually exclusive setting with
+                "minAvailable".
+              x-kubernetes-int-or-string: true
+            minAvailable:
+              anyOf:
+              - type: integer
+              - type: string
+              description: An eviction is allowed if at least "minAvailable" pods
+                selected by "selector" will still be available after the eviction,
+                i.e. even in the absence of the evicted pod.  So for example you can
+                prevent all voluntary evictions by specifying "100%".
+              x-kubernetes-int-or-string: true
+            workloadRef:
+              description: WorkloadReference to the workload this trait applies to.
+              properties:
+                apiVersion:
+                  description: APIVersion of the referenced object.
+                  type: string
+                kind:
+                  description: Kind of the referenced object.
+                  type: string
+                name:
+                  description: Name of the referenced object.
+                  type: string
+                uid:
+                  description: UID of the referenced object.
+                  type: string
+              required:
+              - apiVersion
+              - kind
+              - name
+              type: object
+          required:
+          - workloadRef
+          type: object
+        status:
+          description: PodDisruptionBudgetTraitStatus defines the observed state of
+            PodDisruptionBudgetTrait
+          properties:
+            conditions:
+              description: Conditions of the resource.
+              items:
+                description: A Condition that may apply to a resource.
+                properties:
+                  lastTransitionTime:
+                    description: LastTransitionTime is the last time this condition
+                      transitioned from one status to another.
+                    format: date-time
+                    type: string
+                  message:
+                    description: A Message containing details about this condition's
+                      last transition from one status to another, if any.
+                    type: string
+                  reason:
+                    description: A Reason for this condition's last transition from
+                      one status to another.
+                    type: string
+                  status:
+                    description: Status of this condition; is it currently True, False,
+                      or Unknown?
+                    type: string
+                  type:
+                    description: Type of this condition. At most one of each condition
+                      type may apply to a resource at any point in time.
+                    type: string
+                required:
+                - lastTransitionTime
+                - reason
+                - status
+                - type
+                type: object
+              type: array
+            resources:
+              description: Resources managed by this service trait
+              items:
+                description: A TypedReference refers to an object by Name, Kind, and
+                  APIVersion. It is commonly used to reference cluster-scoped objects
+                  or objects where the namespace is already known.
+                properties:
+                  apiVersion:
+                    description: APIVersion of the referenced object.
+                    type: string
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  uid:
+                    description: UID of the referenced object.
+                    type: string
+                required:
+                - apiVersion
+                - kind
+                - name
+                type: object
+              type: array
+          type: object
+      type: object
+  version: v1alpha2
+  versions:
+  - name: v1alpha2
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
