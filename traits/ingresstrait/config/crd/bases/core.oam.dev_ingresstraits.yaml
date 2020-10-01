@@ -130,8 +130,6 @@ spec:
                           type: string
                       type: object
                     type: array
-                required:
-                - host
                 type: object
               type: array
             tls:

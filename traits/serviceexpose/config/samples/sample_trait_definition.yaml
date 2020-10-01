@@ -5,3 +5,4 @@ metadata:
 spec:
   definitionRef:
     name: serviceexposes.core.oam.dev
+  workloadRefPath: spec.workloadRef

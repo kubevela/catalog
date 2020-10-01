@@ -31,4 +31,3 @@ spec:
   definitionRef:
     name: metricstraits.standard.oam.dev
   workloadRefPath: spec.workloadRef
-

@@ -5,3 +5,4 @@ metadata:
 spec:
   definitionRef:
     name: horizontalpodautoscalertraits.core.oam.dev
+  workloadRefPath: spec.workloadRef
