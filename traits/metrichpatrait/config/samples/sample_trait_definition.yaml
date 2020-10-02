@@ -7,3 +7,4 @@ spec:
     - core.oam.dev/v1alpha2.ContainerizedWorkload
   definitionRef:
     name: metrichpatraits.extend.oam.dev
+  workloadRefPath: spec.workloadRef
