@@ -1,0 +1,31 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: TraitDefinition
+metadata:
+  name: kubewatch
+  annotations:
+    definition.oam.dev/apiVersion: labs.bitnami.com/v1alpha1
+    definition.oam.dev/kind: KubeWatch
+    definition.oam.dev/description: "Add a watch for resource"
+spec:
+  appliesToWorkloads:
+    - "*"
+  workloadRefPath: spec.workloadRef
+  definitionRef:
+    name: kubewatches.labs.bitnami.com
+  extension:
+    install:
+      helm:
+        repo: my-repo
+        name: kubewatch
+        url: https://wonderflow.info/kubewatch/archives/
+        version: 0.1.0    
+    template: |
+      output: {
+        apiVersion: "labs.bitnami.com/v1alpha1"
+        kind:       "KubeWatch"
+        spec: handler: webhook: url: parameter.webhook
+      }
+      #kubewatch: {
+        webhook: string
+      }
+      parameter: #kubewatch
