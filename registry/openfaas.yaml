@@ -1,0 +1,36 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: WorkloadDefinition
+metadata:
+  name: openfaas
+  annotations:
+    definition.oam.dev/description: "OpenFaaS function workload"
+spec:
+  definitionRef:
+    name: functions.openfaas.com
+  extension:
+    install:
+      helm:
+        repo: openfaas
+        name: openfaas
+        namespace: openfaas
+        url: https://openfaas.github.io/faas-netes/
+        version: 6.1.2
+        values:
+          basic_auth: true
+          operator:
+            create: true
+          functionNamespace: default
+    template: |
+      output: {
+        apiVersion: "openfaas.com/v1"
+        kind:       "Function"
+        spec: {
+          handler: parameter.handler
+          image: parameter.image
+          name: context.name
+        }
+      }
+      parameter: {
+        image: string
+        handler: string
+      }
