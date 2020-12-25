@@ -1,0 +1,14 @@
+name: hello
+services:
+  backend:
+    type: advancedstatefulset
+    image: nginx:1.9.4 # v1
+    # image: wordpress:php7.4-apache # v2
+    port: 80
+    replicas: 10
+
+    parallelPodManagementPolicy:
+      maxUnavailable: 2
+    podUpdatePolicy: "InPlaceIfPossible"
+    inPlaceUpdateStrategy:
+      gracePeriodSeconds: 10
