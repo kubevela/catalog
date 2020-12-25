@@ -1,0 +1,11 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: WorkloadDefinition
+metadata:
+  name: deployment
+  annotations:
+    definition.oam.dev/description: A Deployment provides declarative updates for Pods and ReplicaSets
+spec:
+  definitionRef:
+    name: deployments.apps
+  extension:
+    template: |

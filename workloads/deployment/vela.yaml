@@ -1,0 +1,7 @@
+name: hello
+services:
+  backend:
+    type: deployment
+    image: crccheck/hello-world
+    port: 8000
+    cpu: 0.5
