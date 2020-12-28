@@ -38,18 +38,14 @@ jobs:
         make test
 
     - name: Install Helm
-      uses: engineerd/configurator@v0.0.1
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      uses: engineerd/configurator@v0.0.5
       with:
         name: helm
         url: https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
         pathInArchive: linux-amd64/helm
 
     - name: Setup Kind Cluster
-      uses: engineerd/setup-kind@v0.4.0
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      uses: engineerd/setup-kind@v0.5.0
       with:
         version: "v0.7.0"
 
