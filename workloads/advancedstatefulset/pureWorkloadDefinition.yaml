@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: WorkloadDefinition
+metadata:
+  name: advancedstatefulset
+  annotations:
+    definition.oam.dev/description: Enhanced rolling update workflow of default StatefulSet controller
+spec:
+  definitionRef:
+    name: statefulset.apps.kruise.io
+  extension:
+    install:
+      helm:
+        repo: openkruise
+        name: kruise
+        url: https://cloud-native-application.github.io/charts/
+        version: 0.7.0
+    template: |
