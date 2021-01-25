@@ -1,0 +1,31 @@
+{
+  "module": {
+    "rds": {
+      "source": "terraform-alicloud-modules/rds/alicloud",
+      "engine": "MySQL",
+      "engine_version": "8.0",
+      "instance_type": "rds.mysql.c1.large",
+      "instance_storage": "20",
+      "instance_name": "poc",
+      "account_name": "oam",
+      "password": "Xyfe83jfewGGf"
+    }
+  },
+  "output": {
+    "db_name": {
+      "value": "${module.rds.this_db_instance_name}"
+    },
+    "db_user_name": {
+      "value": "${module.rds.this_db_database_account}"
+    },
+    "db_port": {
+      "value": "${module.rds.this_db_instance_port}"
+    },
+    "DB_HOST": {
+      "value": "${module.rds.this_db_instance_connection_string}"
+    },
+    "DB_PASSWORD": {
+      "value": "xxxxxxx"
+    }
+  }
+}
