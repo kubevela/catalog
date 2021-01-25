@@ -1,4 +1,3 @@
 .terraform
 .vela
 terraform.tfstate*
-.terraform.lock.hcl

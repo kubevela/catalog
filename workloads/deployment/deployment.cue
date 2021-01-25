@@ -114,16 +114,4 @@ parameter: {
 	cpu?: string
 }
 
-context: {
-	name: "abc"
-}
 
-parameter: {
-	env: [
-		{name: "A", value: "a"},
-	]
-	configRef: [
-		{name: "rds-config", keys: ["db_name", "db_host"]},
-		{name: "oss-config", keys: ["bucket_name"]},
-	]
-}
