@@ -153,7 +153,9 @@ services:
 ```
 
 
-- Prepare Terraform environment variables.
+- Install Terraform Cli and prepare Terraform environment variables.
+
+[Install Terraform Cli](https://www.terraform.io/downloads.html) and export the following environment variables.
 
 ```
 export ALICLOUD_ACCESS_KEY=xxx
