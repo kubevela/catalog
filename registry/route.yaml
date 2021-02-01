@@ -14,10 +14,10 @@ spec:
   extension:
     install:
       helm:
-        repo: stable
-        name: nginx-ingress
-        url: https://kubernetes-charts.storage.googleapis.com/
-        version: 1.41.2
+        repo: ingress-nginx
+        name: ingress-nginx
+        url: https://kubernetes.github.io/ingress-nginx
+        version: 3.22.0
     template: |
       output: {
       	apiVersion: "standard.oam.dev/v1alpha1"
