@@ -1,0 +1,13 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Application
+metadata:
+  name: webapp
+spec:
+  components:
+    - name: backend
+      type: knative-serving
+      settings:
+        image: gcr.io/knative-samples/helloworld-go
+        env:
+          - name: TARGET
+            value: "Go Sample v1"
