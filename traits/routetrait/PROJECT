@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: github.com/oam-dev/catalog/traits/routetrait
+resources:
+- group: standard
+  kind: Route
+  version: v1alpha1
+version: "2"

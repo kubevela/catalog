@@ -1,0 +1,7 @@
+domain: oam.dev
+repo: github.com/oam-dev/catalog/workloads/podspecworkload
+resources:
+- group: standard
+  kind: Podspecworkload
+  version: v1alpha1
+version: "2"
