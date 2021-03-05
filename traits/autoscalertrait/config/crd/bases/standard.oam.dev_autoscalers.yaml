@@ -6,22 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
-  name: metricstraits.standard.oam.dev
+  name: autoscalers.standard.oam.dev
 spec:
   group: standard.oam.dev
   names:
     categories:
     - oam
-    kind: MetricsTrait
-    listKind: MetricsTraitList
-    plural: metricstraits
-    singular: metricstrait
+    kind: Autoscaler
+    listKind: AutoscalerList
+    plural: autoscalers
+    singular: autoscaler
   scope: Namespaced
-  subresources:
-    status: {}
   validation:
     openAPIV3Schema:
-      description: MetricsTrait is the Schema for the metricstraits API
+      description: Autoscaler is the Schema for the autoscalers API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -36,45 +34,53 @@ spec:
         metadata:
           type: object
         spec:
-          description: MetricsTraitSpec defines the desired state of MetricsTrait
+          description: AutoscalerSpec defines the desired state of Autoscaler
           properties:
-            scrapeService:
-              description: An endpoint to be monitored by a ServiceMonitor.
+            maxReplicas:
+              description: MinReplicas is the maximal replicas
+              format: int32
+              type: integer
+            minReplicas:
+              description: MinReplicas is the minimal replicas
+              format: int32
+              type: integer
+            targetWorkload:
+              description: TargetWorkload specify the workload which is going to be
+                scaled, it could be WorkloadReference or the child resource of it
               properties:
-                enabled:
-                  description: The default is true
-                  type: boolean
-                format:
-                  description: The format of the metrics data, The default and only
-                    supported format is "prometheus" for now
+                apiVersion:
                   type: string
-                path:
-                  description: HTTP path to scrape for metrics. default is /metrics
+                kind:
                   type: string
-                port:
-                  anyOf:
-                  - type: integer
-                  - type: string
-                  description: Number or name of the port to access on the pods targeted
-                    by the service. The default is discovered automatically from podTemplate,
-                    metricTrait will create a service for the workload
-                  x-kubernetes-int-or-string: true
-                scheme:
-                  description: Scheme at which metrics should be scraped The default
-                    and only supported scheme is "http"
+                name:
                   type: string
-                selector:
-                  additionalProperties:
-                    type: string
-                  description: Route service traffic to pods with label keys and values
-                    matching this The default is discovered automatically from podTemplate.
-                    If no podTemplate, use the labels specified here, or use the labels
-                    of the workload
-                  type: object
+              required:
+              - name
               type: object
+            triggers:
+              description: Triggers lists all triggers
+              items:
+                description: Trigger defines the trigger of Autoscaler
+                properties:
+                  condition:
+                    additionalProperties:
+                      type: string
+                    description: Condition set the condition when to trigger scaling
+                    type: object
+                  name:
+                    description: Name is the trigger name, if not set, it will be
+                      automatically generated and make it globally unique
+                    type: string
+                  type:
+                    description: Type allows value in [cpu/memory/storage/ephemeral-storage、cron、pps、qps/rps、custom]
+                    type: string
+                required:
+                - condition
+                - type
+                type: object
+              type: array
             workloadRef:
-              description: WorkloadReference to the workload whose metrics needs to
-                be exposed
+              description: WorkloadReference marks the owner of the workload
               properties:
                 apiVersion:
                   description: APIVersion of the referenced object.
@@ -94,10 +100,10 @@ spec:
               - name
               type: object
           required:
-          - scrapeService
+          - triggers
           type: object
         status:
-          description: MetricsTraitStatus defines the observed state of MetricsTrait
+          description: AutoscalerStatus defines the observed state of Autoscaler
           properties:
             conditions:
               description: Conditions of the resource.
@@ -132,20 +138,6 @@ spec:
                 - type
                 type: object
               type: array
-            port:
-              anyOf:
-              - type: integer
-              - type: string
-              description: Port is the real port monitoring
-              x-kubernetes-int-or-string: true
-            selectorLabels:
-              additionalProperties:
-                type: string
-              description: SelectorLabels is the real labels selected
-              type: object
-            serviceMonitorName:
-              description: ServiceMonitorName managed by this trait
-              type: string
           type: object
       required:
       - spec
