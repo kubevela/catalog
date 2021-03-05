@@ -84,4 +84,3 @@ var _ = Describe("Metrics Admission controller Test", func() {
 		Expect(len(ValidateCreate(&trait))).Should(Equal(2))
 	})
 })
-

@@ -16,10 +16,8 @@ limitations under the License.
 
 package controllers
 
-
 import (
 	"context"
-	"path/filepath"
 	"testing"
 
 	"github.com/oam-dev/kubevela/pkg/oam/discoverymapper"
@@ -38,8 +36,9 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 	oamCore "github.com/oam-dev/kubevela/apis/core.oam.dev"
+
+	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -71,8 +70,7 @@ var _ = BeforeSuite(func(done Done) {
 	useExistCluster := false
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
-			filepath.Join("../../../../..", "charts/vela-core/crds"), // this has all the required oam CRDs,
-			filepath.Join("..", "testdata/crds"),
+			"../../../test/testdata/crd/", // this has all the required oam CRDs,
 		},
 		UseExistingCluster: &useExistCluster,
 	}
@@ -95,6 +93,7 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(k8sClient).ToNot(BeNil())
 
 	By("Starting the metrics trait controller in the background")
+	standardv1alpha1.AddToScheme(scheme.Scheme)
 	mgr, err := ctrl.NewManager(cfg, ctrl.Options{
 		Scheme:             scheme.Scheme,
 		MetricsBindAddress: "0",
@@ -137,4 +136,3 @@ var _ = AfterSuite(func() {
 	Expect(err).ToNot(HaveOccurred())
 
 })
-

@@ -1,6 +1,5 @@
 package webhook
 
-
 import (
 	"context"
 	"fmt"
@@ -108,4 +107,3 @@ func (h *ValidatingHandler) InjectDecoder(d *admission.Decoder) error {
 	h.Decoder = d
 	return nil
 }
-

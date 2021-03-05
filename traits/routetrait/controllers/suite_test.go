@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"path/filepath"
 	"testing"
 
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
@@ -78,7 +77,7 @@ var _ = BeforeSuite(func(done Done) {
 	useExistCluster := false
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
-			filepath.Join("./", "testdata/"),
+			"../../../test/testdata/crd/",
 		},
 		UseExistingCluster: &useExistCluster,
 	}

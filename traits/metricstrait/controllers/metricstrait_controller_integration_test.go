@@ -1,6 +1,5 @@
 package controllers
 
-
 import (
 	"context"
 	"reflect"
@@ -216,4 +215,3 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Expect(serviceMonitor.Spec.Endpoints[0].Path).Should(Equal(metricsPath))
 	})
 })
-
