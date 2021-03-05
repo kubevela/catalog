@@ -118,8 +118,8 @@ type RouteStatus struct {
 	runtimev1alpha1.ConditionedStatus `json:",inline"`
 }
 
-// Route is the Schema for the routes API
 // +kubebuilder:object:root=true
+// Route is the Schema for the routes API
 // +kubebuilder:resource:categories={oam}
 // +kubebuilder:subresource:status
 type Route struct {

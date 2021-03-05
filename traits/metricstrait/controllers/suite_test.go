@@ -16,13 +16,15 @@ limitations under the License.
 
 package controllers
 
+
 import (
 	"context"
 	"path/filepath"
 	"testing"
 
+	"github.com/oam-dev/kubevela/pkg/oam/discoverymapper"
+
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	oamCore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
@@ -37,6 +39,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
+	oamCore "github.com/oam-dev/kubevela/apis/core.oam.dev"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -61,15 +64,17 @@ var _ = BeforeSuite(func(done Done) {
 	logf.SetLogger(zap.New(zap.UseDevMode(true), zap.WriteTo(GinkgoWriter)))
 	serviceMonitorNS = corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: serviceMonitorNSName,
+			Name: ServiceMonitorNSName,
 		},
 	}
 	By("Bootstrapping test environment")
+	useExistCluster := false
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
-			filepath.Join("..", "config", "crd", "bases"),
-			filepath.Join("..", "hack/crds"), // this has all the required CRDs, a bit hacky
+			filepath.Join("../../../../..", "charts/vela-core/crds"), // this has all the required oam CRDs,
+			filepath.Join("..", "testdata/crds"),
 		},
+		UseExistingCluster: &useExistCluster,
 	}
 	var err error
 	cfg, err = testEnv.Start()
@@ -98,15 +103,20 @@ var _ = BeforeSuite(func(done Done) {
 		LeaderElectionID:   "9f6dad5a.oam.dev",
 	})
 	Expect(err).ToNot(HaveOccurred())
-	r := MetricsTraitReconciler{
+	dm, err := discoverymapper.New(mgr.GetConfig())
+	Expect(err).ToNot(HaveOccurred())
+
+	r := Reconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("controllers").WithName("MetricsTrait"),
 		Scheme: mgr.GetScheme(),
+		dm:     dm,
 	}
 	Expect(r.SetupWithManager(mgr)).ToNot(HaveOccurred())
 	controllerDone = make(chan struct{}, 1)
 	// +kubebuilder:scaffold:builder
 	go func() {
+		defer GinkgoRecover()
 		Expect(mgr.Start(controllerDone)).ToNot(HaveOccurred())
 	}()
 
@@ -127,3 +137,4 @@ var _ = AfterSuite(func() {
 	Expect(err).ToNot(HaveOccurred())
 
 })
+

@@ -18,6 +18,7 @@ package main
 
 import (
 	"flag"
+	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 	"os"
 
 	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
@@ -72,7 +73,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.MetricsTraitReconciler{
+	if err = (&controllers.Reconciler{
 		Client: mgr.GetClient(),
 		Log:    ctrl.Log.WithName("controllers").WithName("MetricsTrait"),
 		Scheme: mgr.GetScheme(),
@@ -81,7 +82,7 @@ func main() {
 		os.Exit(1)
 	}
 	if useWebhook {
-		standardv1alpha1.RegisterWebhook(mgr)
+		webhook.Register(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 
