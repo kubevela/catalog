@@ -35,8 +35,6 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	podspecworloadapi "github.com/oam-dev/catalog/workloads/podspecworkload/api/v1alpha1"
-	podspecworkloadctl "github.com/oam-dev/catalog/workloads/podspecworkload/controllers"
 	controller "github.com/oam-dev/kubevela/pkg/controller/core.oam.dev"
 	"github.com/oam-dev/kubevela/pkg/controller/core.oam.dev/v1alpha2/applicationconfiguration"
 
@@ -101,7 +99,6 @@ var _ = BeforeSuite(func(done Done) {
 		Scheme: scheme.Scheme,
 		Port:   9443,
 	})
-	Expect(podspecworloadapi.AddToScheme(scheme.Scheme)).Should(BeNil())
 	Expect(err).ToNot(HaveOccurred())
 	r := Reconciler{
 		Client: mgr.GetClient(),
@@ -110,7 +107,6 @@ var _ = BeforeSuite(func(done Done) {
 	}
 	Expect(r.SetupWithManager(mgr)).ToNot(HaveOccurred())
 	Expect(applicationconfiguration.Setup(mgr, controller.Args{}, logging.NewLogrLogger(ctrl.Log.WithName("AppConfig")))).ToNot(HaveOccurred())
-	Expect(podspecworkloadctl.Setup(mgr)).ToNot(HaveOccurred())
 
 	controllerDone = make(chan struct{}, 1)
 	// +kubebuilder:scaffold:builder
