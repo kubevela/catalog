@@ -8,7 +8,7 @@ build:
 standard-test: standard-route-test standard-podspecworkload-test standard-metrics-test standard-autoscaler-test
 
 standard-route-test:
-	cd ./traits/routetrait && make unit-test
+	cd ./traits/routetrait && make test
 
 standard-podspecworkload-test:
 	cd ./workloads/podspecworkload && make test
