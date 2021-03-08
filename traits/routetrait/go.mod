@@ -5,7 +5,6 @@ go 1.13
 require (
 	github.com/crossplane/crossplane-runtime v0.10.0
 	github.com/go-logr/logr v0.1.0
-	github.com/oam-dev/catalog/workloads/podspecworkload v0.0.0-00010101000000-000000000000
 	github.com/oam-dev/kubevela v0.3.4-0.20210302053723-84f34e3f01c8
 	github.com/onsi/ginkgo v1.13.0
 	github.com/onsi/gomega v1.10.3
@@ -22,6 +21,5 @@ require (
 
 // clint-go had a buggy release, https://github.com/kubernetes/client-go/issues/749
 replace (
-	github.com/oam-dev/catalog/workloads/podspecworkload => ../../workloads/podspecworkload
 	k8s.io/client-go => k8s.io/client-go v0.18.5
 )
