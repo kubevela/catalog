@@ -1,0 +1,7 @@
+apiVersion: standard.oam.dev/v1alpha1
+kind: Autoscaler
+metadata:
+  name: autoscaler-sample
+spec:
+  # Add fields here
+  foo: bar

@@ -18,19 +18,16 @@ package main
 
 import (
 	"flag"
-	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 	"os"
 
-	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	oamcore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
-	"github.com/oam-dev/catalog/traits/metricstrait/controllers"
+	standardv1alpha1 "github.com/oam-dev/catalog/traits/autoscalertrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/autoscalertrait/controllers"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -43,16 +40,12 @@ func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
 
 	_ = standardv1alpha1.AddToScheme(scheme)
-	_ = monitoring.AddToScheme(scheme)
-	_ = oamcore.AddToScheme(scheme)
-
 	// +kubebuilder:scaffold:scheme
 }
 
 func main() {
 	var metricsAddr string
-	var useWebhook, enableLeaderElection bool
-	flag.BoolVar(&useWebhook, "use-webhook", true, "Enable Admission Webhook")
+	var enableLeaderElection bool
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
@@ -66,7 +59,7 @@ func main() {
 		MetricsBindAddress: metricsAddr,
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
-		LeaderElectionID:   "9f6dad5a.oam.dev",
+		LeaderElectionID:   "23be4be3.oam.dev",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -75,14 +68,11 @@ func main() {
 
 	if err = (&controllers.Reconciler{
 		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("MetricsTrait"),
+		Log:    ctrl.Log.WithName("controllers").WithName("Autoscaler"),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "MetricsTrait")
+		setupLog.Error(err, "unable to create controller", "controller", "Autoscaler")
 		os.Exit(1)
-	}
-	if useWebhook {
-		webhook.Register(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 

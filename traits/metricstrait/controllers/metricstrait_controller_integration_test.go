@@ -7,7 +7,6 @@ import (
 
 	monitoringv1 "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 	runtimev1alpha1 "github.com/crossplane/crossplane-runtime/apis/core/v1alpha1"
-	"github.com/crossplane/oam-kubernetes-runtime/pkg/oam/util"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	appsv1 "k8s.io/api/apps/v1"
@@ -15,9 +14,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/utils/pointer"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
+	"github.com/oam-dev/kubevela/pkg/oam/util"
 )
 
 var (
@@ -64,7 +65,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 					TargetPort: targetPort,
 					Path:       metricsPath,
 					Scheme:     scheme,
-					Enabled:    &trueVar,
+					Enabled:    pointer.BoolPtr(true),
 				},
 				WorkloadReference: runtimev1alpha1.TypedReference{
 					APIVersion: deploymentAPIVersion,
@@ -111,7 +112,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 	})
 
 	AfterEach(func() {
-		// Control-runtime test ENV has a bug that can't delete resources like deployment/namespaces
+		// Control-runtime test environment has a bug that can't delete resources like deployment/namespaces
 		// We have to use different names to segregate between tests
 		logf.Log.Info("[TEST] Clean up resources after an integration test")
 	})
@@ -140,7 +141,7 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 			time.Second*10, time.Millisecond*500).Should(BeNil())
 		logf.Log.Info("[TEST] Get the created service", "service ports", createdService.Spec.Ports)
 		Expect(createdService.GetNamespace()).Should(Equal(namespaceName))
-		Expect(createdService.Labels).Should(Equal(oamServiceLabel))
+		Expect(createdService.Labels).Should(Equal(GetOAMServiceLabel()))
 		Expect(len(createdService.Spec.Ports)).Should(Equal(1))
 		Expect(createdService.Spec.Ports[0].Port).Should(BeEquivalentTo(servicePort))
 		Expect(createdService.Spec.Selector).Should(Equal(deployLabel))
@@ -149,13 +150,13 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 		Eventually(
 			func() error {
 				return k8sClient.Get(ctx,
-					types.NamespacedName{Namespace: serviceMonitorNSName, Name: metricsTrait.GetName()},
+					types.NamespacedName{Namespace: ServiceMonitorNSName, Name: metricsTrait.GetName()},
 					&serviceMonitor)
 			},
 			time.Second*5, time.Millisecond*50).Should(BeNil())
 		logf.Log.Info("[TEST] Get the created serviceMonitor", "service end ports", serviceMonitor.Spec.Endpoints)
-		Expect(serviceMonitor.GetNamespace()).Should(Equal(serviceMonitorNSName))
-		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(oamServiceLabel))
+		Expect(serviceMonitor.GetNamespace()).Should(Equal(ServiceMonitorNSName))
+		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(GetOAMServiceLabel()))
 		Expect(serviceMonitor.Spec.Selector.MatchExpressions).Should(BeNil())
 		Expect(serviceMonitor.Spec.NamespaceSelector.MatchNames).Should(Equal([]string{metricsTrait.Namespace}))
 		Expect(serviceMonitor.Spec.NamespaceSelector.Any).Should(BeFalse())
@@ -191,19 +192,19 @@ var _ = Describe("Metrics Trait Integration Test", func() {
 			},
 			time.Second*10, time.Millisecond*500).Should(BeNil())
 		logf.Log.Info("[TEST] Get the created service", "service ports", createdService.Spec.Ports)
-		Expect(createdService.Labels).Should(Equal(oamServiceLabel))
-		Expect(createdService.Spec.Selector).Should(Equal(podSelector))
+		Expect(createdService.Labels).Should(Equal(GetOAMServiceLabel()))
+		Expect(createdService.Spec.Selector).Should(Equal(deployLabel))
 		By("Check that we have created the serviceMonitor in the pre-defined namespaceName")
 		var serviceMonitor monitoringv1.ServiceMonitor
 		Eventually(
 			func() error {
 				return k8sClient.Get(ctx,
-					types.NamespacedName{Namespace: serviceMonitorNSName, Name: metricsTrait.GetName()},
+					types.NamespacedName{Namespace: ServiceMonitorNSName, Name: metricsTrait.GetName()},
 					&serviceMonitor)
 			},
 			time.Second*5, time.Millisecond*50).Should(BeNil())
 		logf.Log.Info("[TEST] Get the created serviceMonitor", "service end ports", serviceMonitor.Spec.Endpoints)
-		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(oamServiceLabel))
+		Expect(serviceMonitor.Spec.Selector.MatchLabels).Should(Equal(GetOAMServiceLabel()))
 		Expect(serviceMonitor.Spec.Selector.MatchExpressions).Should(BeNil())
 		Expect(serviceMonitor.Spec.NamespaceSelector.MatchNames).Should(Equal([]string{metricsTrait.Namespace}))
 		Expect(serviceMonitor.Spec.NamespaceSelector.Any).Should(BeFalse())
