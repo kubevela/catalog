@@ -3,9 +3,9 @@ entries:
   autoscalertrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T16:59:43.641318+08:00"
+    created: "2021-03-10T21:02:28.911415+08:00"
     description: A Helm chart for Kubernetes
-    digest: 01a926df6c330d27def73dcd754a6857b50ab524fb5e82749222b5a3f9656cf3
+    digest: b6be2b3fd6a52478e259775f69dfe4b847c5c3c4b31bc6e44e8a20c89f4395ab
     name: autoscalertrait
     type: application
     urls:
@@ -14,9 +14,9 @@ entries:
   metricstrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T16:59:43.641871+08:00"
+    created: "2021-03-10T21:02:28.91205+08:00"
     description: A Helm chart for Kubernetes
-    digest: fd2c1c4ce61413115e1da9eccf4df628c7b039786e456f6d27c8d8e03e3bbe73
+    digest: 2820f1c2b0ec1e5089b4aa5774d196e06dbb070267d35f2e5508afcc87b836ba
     name: metricstrait
     type: application
     urls:
@@ -25,9 +25,9 @@ entries:
   podspecworkload:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T16:59:43.645683+08:00"
+    created: "2021-03-10T21:02:28.914167+08:00"
     description: A Helm chart for Kubernetes
-    digest: 6bc913c3a7d801fa549a50046644f6d69359966623ef39061e2b7e282bc41cc7
+    digest: 95cc06015e8b34768516876ede476e55ac26cbe458c86b27352991aeb0553a70
     name: podspecworkload
     type: application
     urls:
@@ -36,12 +36,12 @@ entries:
   routetrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T16:59:43.646828+08:00"
+    created: "2021-03-10T21:02:28.914759+08:00"
     description: A Helm chart for Kubernetes
-    digest: 7c58e46c95c7cdd97c527132085496b3b720b8ac54ab1599286669240b289069
+    digest: 30a2d81cebc223c8f0dffcfe159d54e995866ecd9e6b6253b7e2216f209ee10d
     name: routetrait
     type: application
     urls:
     - http://oam.dev/catalog/routetrait-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-10T16:59:43.638375+08:00"
+generated: "2021-03-10T21:02:28.910606+08:00"
