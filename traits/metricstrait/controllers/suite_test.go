@@ -70,7 +70,7 @@ var _ = BeforeSuite(func(done Done) {
 	useExistCluster := false
 	testEnv = &envtest.Environment{
 		CRDDirectoryPaths: []string{
-			"../../../test/testdata/crd/", // this has all the required oam CRDs,
+			"../../../test/testdata/crds/", // this has all the required oam CRDs,
 		},
 		UseExistingCluster: &useExistCluster,
 	}

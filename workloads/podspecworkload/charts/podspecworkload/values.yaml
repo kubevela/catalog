@@ -8,7 +8,7 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
@@ -77,6 +77,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+webhookService:
+  type: ClusterIP
+  port: 9443
 
 admissionWebhooks:
   enabled: true
