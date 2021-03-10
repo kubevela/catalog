@@ -86,7 +86,7 @@ admissionWebhooks:
   enabled: true
   failurePolicy: Fail
   certificate:
-    mountPath: /etc/k8s-webhook-certs
+    mountPath: /tmp/k8s-webhook-server/serving-certs/
   patch:
     enabled: true
   certManager:

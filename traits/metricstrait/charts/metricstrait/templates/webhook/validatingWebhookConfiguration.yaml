@@ -15,11 +15,6 @@ webhooks:
         name: {{ template "metricstrait.name" . }}-webhook
         namespace: {{ .Release.Namespace }}
         path: /validate-standard-oam-dev-v1alpha1-metricstrait
-    {{- if .Values.admissionWebhooks.patch.enabled  }}
-    failurePolicy: Ignore
-    {{- else }}
-    failurePolicy: {{ .Values.admissionWebhooks.failurePolicy }}
-    {{- end }}
     name: vmetricstrait.kb.io
     rules:
       - apiGroups:
