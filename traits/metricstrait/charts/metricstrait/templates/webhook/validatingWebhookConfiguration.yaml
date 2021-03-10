@@ -1,0 +1,36 @@
+{{- if .Values.admissionWebhooks.enabled -}}
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ template "metricstrait.fullname" . }}-admission
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.admissionWebhooks.certManager.enabled }}
+  annotations:
+    cert-manager.io/inject-ca-from: {{ printf "%s/%s-root-cert" .Release.Namespace (include "metricstrait.fullname" .) | quote }}
+  {{- end }}
+webhooks:
+  - clientConfig:
+      caBundle: Cg==
+      service:
+        name: {{ template "metricstrait.name" . }}-webhook
+        namespace: {{ .Release.Namespace }}
+        path: /validate-standard-oam-dev-v1alpha1-metricstrait
+    {{- if .Values.admissionWebhooks.patch.enabled  }}
+    failurePolicy: Ignore
+    {{- else }}
+    failurePolicy: {{ .Values.admissionWebhooks.failurePolicy }}
+    {{- end }}
+    name: vmetricstrait.kb.io
+    rules:
+      - apiGroups:
+          - standard.oam.dev
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        resources:
+          - metricstraits
+
+{{- end -}}
