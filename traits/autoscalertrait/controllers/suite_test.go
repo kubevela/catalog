@@ -53,7 +53,7 @@ var _ = BeforeSuite(func(done Done) {
 
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{
-		CRDDirectoryPaths: []string{"../../../test/testdata/crds/"},
+		CRDDirectoryPaths: []string{"../../../test/testdata/crd/"},
 	}
 
 	var err error
