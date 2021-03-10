@@ -3,9 +3,9 @@ entries:
   autoscalertrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T14:30:02.219329+08:00"
-    description: A Helm chart for kubevela autoscalertrait controller
-    digest: 5299328e03f5522739bc64b98c17fa9be814efcd2b709804d3ecce0a2ace9532
+    created: "2021-03-10T16:59:43.641318+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 01a926df6c330d27def73dcd754a6857b50ab524fb5e82749222b5a3f9656cf3
     name: autoscalertrait
     type: application
     urls:
@@ -14,9 +14,9 @@ entries:
   metricstrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T14:30:02.220973+08:00"
-    description: A Helm chart for kubevela metricstrait controller
-    digest: aeeca0befac86d615cc88e1d0e959053e033266894bf1a69b7dafcab4f5eb45e
+    created: "2021-03-10T16:59:43.641871+08:00"
+    description: A Helm chart for Kubernetes
+    digest: fd2c1c4ce61413115e1da9eccf4df628c7b039786e456f6d27c8d8e03e3bbe73
     name: metricstrait
     type: application
     urls:
@@ -25,9 +25,9 @@ entries:
   podspecworkload:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T14:30:02.224879+08:00"
-    description: A Helm chart for kubevela podspecworkload controller
-    digest: 80c1844f1a38e18aaad17c42a66c86146c59dff2e7e68d54d8bc1537406a21e3
+    created: "2021-03-10T16:59:43.645683+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 6bc913c3a7d801fa549a50046644f6d69359966623ef39061e2b7e282bc41cc7
     name: podspecworkload
     type: application
     urls:
@@ -36,12 +36,12 @@ entries:
   routetrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-10T14:30:02.226365+08:00"
-    description: A Helm chart for kubevela routetrait controller
-    digest: e5908ef7b3b60ac47190b3ad1ac205fbcf20f0585fabd740585ab09114d24c8d
+    created: "2021-03-10T16:59:43.646828+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 7c58e46c95c7cdd97c527132085496b3b720b8ac54ab1599286669240b289069
     name: routetrait
     type: application
     urls:
     - http://oam.dev/catalog/routetrait-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-10T14:30:02.217477+08:00"
+generated: "2021-03-10T16:59:43.638375+08:00"
