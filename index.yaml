@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  autoscalertrait:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-03-10T10:36:20.480103+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 5299328e03f5522739bc64b98c17fa9be814efcd2b709804d3ecce0a2ace9532
+    name: autoscalertrait
+    type: application
+    urls:
+    - https://github.com/wangyikewxgm/catalog/archive/autoscalertrait-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-03-10T10:36:20.477445+08:00"
