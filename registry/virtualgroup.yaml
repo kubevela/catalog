@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "Add virtual group labels"
   name: virtualgroup
+  namespace: vela-system
 spec:
   appliesToWorkloads:
     - webservice

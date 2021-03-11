@@ -3,6 +3,7 @@ apiVersion: core.oam.dev/v1alpha2
 kind: TraitDefinition
 metadata:
   name: autoscale
+  namespace: vela-system
   annotations:
     definition.oam.dev/description: "Automatically scales workloads by resource utilization metrics or cron triggers."
 spec:

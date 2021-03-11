@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "Specify auto scale by annotation"
   name: kautoscale
+  namespace: vela-system
 spec:
   appliesToWorkloads:
     - webservice # this should be some knative like workload
