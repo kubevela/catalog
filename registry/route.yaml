@@ -19,11 +19,13 @@ spec:
         name: ingress-nginx
         url: https://kubernetes.github.io/ingress-nginx
         version: 3.22.0
-    template: |
-      output: {
-      	apiVersion: "standard.oam.dev/v1alpha1"
-      	kind:       "Route"
-      	spec: {
+  schematic:
+    cue:
+      template: |
+       outputs: route:{
+      	 apiVersion: "standard.oam.dev/v1alpha1"
+      	 kind:       "Route"
+      	 spec: {
       		host: parameter.domain
       
       		if parameter.issuer != "" {
@@ -37,17 +39,18 @@ spec:
       		}
       
       		provider: *"nginx" | parameter.provider
-      	}
-      }
-      parameter: {
-      	// +usage= Domain name
-      	domain: *"" | string
-      
-      	issuer: *"" | string
-      	rules?: [...{
+      	 }
+       }
+
+       parameter: {
+      	 // +usage= Domain name
+      	 domain: *"" | string
+
+      	 issuer: *"" | string
+      	 rules?: [...{
       		path:          string
       		rewriteTarget: *"" | string
-      	}]
-      	provider?: string
-      }
+      	 }]
+      	 provider?: string
+       }
       
