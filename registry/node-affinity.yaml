@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "affinity specify node affinity and toleration"
   name: node-affinity
+  namespace: vela-system
 spec:
   appliesToWorkloads:
     - webservice

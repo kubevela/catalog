@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "Manually scale the app"
   name: scaler
+  namespace: vela-system
 spec:
   appliesToWorkloads:
     - webservice
