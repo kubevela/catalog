@@ -60,6 +60,7 @@ type PodSpecWorkload struct {
 }
 
 // +kubebuilder:object:root=true
+
 // PodSpecWorkloadList contains a list of PodSpecWorkload
 type PodSpecWorkloadList struct {
 	metav1.TypeMeta `json:",inline"`

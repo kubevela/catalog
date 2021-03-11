@@ -44,8 +44,8 @@ undeploy:
 	kustomize build config/default | kubectl delete -f -
 
 # Generate manifests e.g. CRD, RBAC etc.
-manifests: controller-gen
-	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+manifests:
+	go run -tags generate sigs.k8s.io/controller-tools/cmd/controller-gen  paths="./api/..." crd:crdVersions=v1  output:crd:artifacts:config=./charts/metricstrait/crds
 
 # Run go fmt against code
 fmt:

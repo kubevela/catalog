@@ -28,6 +28,7 @@ import (
 
 	standardv1alpha1 "github.com/oam-dev/catalog/workloads/podspecworkload/api/v1alpha1"
 	"github.com/oam-dev/catalog/workloads/podspecworkload/controllers"
+	"github.com/oam-dev/catalog/workloads/podspecworkload/webhook"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -46,6 +47,8 @@ func init() {
 func main() {
 	var metricsAddr string
 	var enableLeaderElection bool
+	var useWebhook bool
+	flag.BoolVar(&useWebhook, "use-webhook", true, "Enable Admission Webhook")
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
@@ -73,6 +76,9 @@ func main() {
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Podspecworkload")
 		os.Exit(1)
+	}
+	if useWebhook {
+		webhook.Register(mgr)
 	}
 	// +kubebuilder:scaffold:builder
 

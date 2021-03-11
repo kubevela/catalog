@@ -5,7 +5,6 @@ metadata:
 spec:
   scrapeService:
     format: "prometheus"
-    targetPort: 8080
     path: "/metrics"
     scheme:  "http"
     enabled: true
