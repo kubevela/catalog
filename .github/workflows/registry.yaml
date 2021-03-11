@@ -34,7 +34,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
-        name: Build & Pushing route
+        name: Build & Pushing routetrait image
         with:
           context: ./traits/routetrait/
           file: traits/routetrait/Dockerfile
@@ -75,7 +75,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
-        name: Build & Pushing route
+        name: Build & Pushing podspecworkload image
         with:
           context: ./workloads/podspecworkload
           file: workloads/podspecworkload/Dockerfile
@@ -116,7 +116,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
-        name: Build & Pushing route
+        name: Build & Pushing autoscalertrait image
         with:
           context: ./traits/autoscalertrait/
           file: traits/autoscalertrait/Dockerfile
@@ -157,7 +157,7 @@ jobs:
       - uses: docker/setup-qemu-action@v1
       - uses: docker/setup-buildx-action@v1
       - uses: docker/build-push-action@v2
-        name: Build & Pushing route
+        name: Build & Pushing metricstrait image
         with:
           context: ./traits/metricstrait/
           file: traits/metricstrait/Dockerfile

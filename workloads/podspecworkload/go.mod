@@ -8,7 +8,6 @@ require (
 	github.com/oam-dev/kubevela v0.3.4-0.20210302053723-84f34e3f01c8
 	github.com/onsi/ginkgo v1.13.0
 	github.com/onsi/gomega v1.10.3
-	github.com/openservicemesh/osm v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1
 	k8s.io/api v0.18.8
 	k8s.io/apimachinery v0.18.8
