@@ -103,10 +103,12 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.admissionWebhooks.enabled }}
           volumeMounts:
             - mountPath: {{ .Values.admissionWebhooks.certificate.mountPath }}
               name: tls-cert-vol
               readOnly: true
+          {{ end }}
       {{ if .Values.admissionWebhooks.enabled }}
       volumes:
         - name: tls-cert-vol
