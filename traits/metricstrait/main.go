@@ -21,7 +21,7 @@ import (
 	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 	"os"
 
-	oamcore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
+	oamcore "github.com/oam-dev/kubevela/apis/core.oam.dev"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
@@ -52,7 +52,7 @@ func init() {
 func main() {
 	var metricsAddr string
 	var useWebhook, enableLeaderElection bool
-	flag.BoolVar(&useWebhook, "use-webhook", true, "Enable Admission Webhook")
+	flag.BoolVar(&useWebhook, "use-webhook", false, "Enable Admission Webhook")
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
