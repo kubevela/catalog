@@ -3,7 +3,7 @@ entries:
   autoscalertrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T15:24:04.275281+08:00"
+    created: "2021-03-12T15:47:25.034488+08:00"
     description: A Helm chart for kubevela autoscalertrait controller
     digest: 33c4b9eeabf6c26e6aa8c4edaaf0e4a5d2a2f1fd857ffe32b6d3be97d6d971f0
     name: autoscalertrait
@@ -14,9 +14,9 @@ entries:
   metricstrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T15:24:04.276016+08:00"
+    created: "2021-03-12T15:47:25.035339+08:00"
     description: A Helm chart for kubevela metricstrait controller
-    digest: 38e950b1b7f008023c9cebb51bd212ba68f44b6b438dd36444f43f18ee9499d1
+    digest: fb80fba2805ce2f403a78c3170242a51a76eda7f2e390d23e1ad23a4bb7f6a8a
     name: metricstrait
     type: application
     urls:
@@ -25,7 +25,7 @@ entries:
   routetrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T15:24:04.276517+08:00"
+    created: "2021-03-12T15:47:25.036666+08:00"
     description: A Helm chart for kubevela routetrait controller
     digest: 1f40dd4054f2f9920198bb9cf3ecd3f42548f5e0ae5174e4bf2f79539aba8479
     name: routetrait
@@ -33,4 +33,4 @@ entries:
     urls:
     - http://oam.dev/catalog/routetrait-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-12T15:24:04.270755+08:00"
+generated: "2021-03-12T15:47:25.032054+08:00"
