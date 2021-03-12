@@ -28,6 +28,9 @@ import (
 
 	standardv1alpha1 "github.com/oam-dev/catalog/traits/autoscalertrait/api/v1alpha1"
 	"github.com/oam-dev/catalog/traits/autoscalertrait/controllers"
+	coreoam "github.com/oam-dev/kubevela/apis/core.oam.dev"
+
+	kedav1alpha1 "github.com/wonderflow/keda-api/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -41,6 +44,8 @@ func init() {
 
 	_ = standardv1alpha1.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
+	_ = coreoam.AddToScheme(scheme)
+	kedav1alpha1.AddToScheme(scheme)
 }
 
 func main() {

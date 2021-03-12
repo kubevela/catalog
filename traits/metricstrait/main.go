@@ -21,8 +21,7 @@ import (
 	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 	"os"
 
-	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
-	oamcore "github.com/crossplane/oam-kubernetes-runtime/apis/core"
+	oamcore "github.com/oam-dev/kubevela/apis/core.oam.dev"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
@@ -32,6 +31,7 @@ import (
 	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
 	"github.com/oam-dev/catalog/traits/metricstrait/controllers"
 	// +kubebuilder:scaffold:imports
+	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
 )
 
 var (
@@ -45,14 +45,14 @@ func init() {
 	_ = standardv1alpha1.AddToScheme(scheme)
 	_ = monitoring.AddToScheme(scheme)
 	_ = oamcore.AddToScheme(scheme)
-
+    _ = monitoring.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
 
 func main() {
 	var metricsAddr string
 	var useWebhook, enableLeaderElection bool
-	flag.BoolVar(&useWebhook, "use-webhook", true, "Enable Admission Webhook")
+	flag.BoolVar(&useWebhook, "use-webhook", false, "Enable Admission Webhook")
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+

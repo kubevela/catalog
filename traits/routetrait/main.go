@@ -28,6 +28,7 @@ import (
 
 	standardv1alpha1 "github.com/oam-dev/catalog/traits/routetrait/api/v1alpha1"
 	"github.com/oam-dev/catalog/traits/routetrait/controllers"
+	coreoam "github.com/oam-dev/kubevela/apis/core.oam.dev"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -40,6 +41,8 @@ func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
 
 	_ = standardv1alpha1.AddToScheme(scheme)
+
+	_ = coreoam.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
 
