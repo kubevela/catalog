@@ -3,9 +3,9 @@ entries:
   autoscalertrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-11T10:26:01.550845+08:00"
+    created: "2021-03-12T15:24:04.275281+08:00"
     description: A Helm chart for kubevela autoscalertrait controller
-    digest: 46de94762cb057821a80b374523e68fdff36c4ccd9cb4dcd121f43623e3da118
+    digest: 33c4b9eeabf6c26e6aa8c4edaaf0e4a5d2a2f1fd857ffe32b6d3be97d6d971f0
     name: autoscalertrait
     type: application
     urls:
@@ -14,34 +14,23 @@ entries:
   metricstrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-11T10:26:01.551771+08:00"
+    created: "2021-03-12T15:24:04.276016+08:00"
     description: A Helm chart for kubevela metricstrait controller
-    digest: 160e830132b2f6d66e8b2803c04fd47b603931b09e5f2eb102ecaa30cf15ac18
+    digest: 38e950b1b7f008023c9cebb51bd212ba68f44b6b438dd36444f43f18ee9499d1
     name: metricstrait
     type: application
     urls:
     - http://oam.dev/catalog/metricstrait-0.1.0.tgz
     version: 0.1.0
-  podspecworkload:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2021-03-11T10:26:01.55372+08:00"
-    description: A Helm chart for kubevela podspecworkload controller
-    digest: ded724d17498cd4e592228fc5348e03e1c9beb5c544b8be659b993a32a0ed51e
-    name: podspecworkload
-    type: application
-    urls:
-    - http://oam.dev/catalog/podspecworkload-0.1.0.tgz
-    version: 0.1.0
   routetrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-11T10:26:01.55428+08:00"
+    created: "2021-03-12T15:24:04.276517+08:00"
     description: A Helm chart for kubevela routetrait controller
-    digest: f3c756a4460c3815becff6dac87a7c59377ef8a868a64e64bb2b29f94db89d0a
+    digest: 1f40dd4054f2f9920198bb9cf3ecd3f42548f5e0ae5174e4bf2f79539aba8479
     name: routetrait
     type: application
     urls:
     - http://oam.dev/catalog/routetrait-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-11T10:26:01.548687+08:00"
+generated: "2021-03-12T15:24:04.270755+08:00"
