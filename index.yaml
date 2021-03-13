@@ -3,7 +3,7 @@ entries:
   autoscalertrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T21:25:51.8878796+09:00"
+    created: "2021-03-13T23:42:30.9837659+09:00"
     description: A Helm chart for kubevela autoscalertrait controller
     digest: 33c4b9eeabf6c26e6aa8c4edaaf0e4a5d2a2f1fd857ffe32b6d3be97d6d971f0
     name: autoscalertrait
@@ -14,7 +14,7 @@ entries:
   helm-flux2:
   - apiVersion: v2
     appVersion: 0.8.0
-    created: "2021-03-12T21:25:51.8884122+09:00"
+    created: "2021-03-13T23:42:30.9842797+09:00"
     description: A Helm chart for flux2 controllers
     digest: 79429edac9998897c7d5f9511a4213b73a7e53e85a6abcf5a97a0e1b6cbfd486
     name: helm-flux2
@@ -25,7 +25,7 @@ entries:
   metricstrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T21:25:51.8889901+09:00"
+    created: "2021-03-13T23:42:30.9848371+09:00"
     description: A Helm chart for kubevela metricstrait controller
     digest: fb80fba2805ce2f403a78c3170242a51a76eda7f2e390d23e1ad23a4bb7f6a8a
     name: metricstrait
@@ -33,10 +33,20 @@ entries:
     urls:
     - http://oam.dev/catalog/metricstrait-0.1.0.tgz
     version: 0.1.0
+  podinfo:
+  - apiVersion: v1
+    appVersion: 5.1.4
+    created: "2021-03-13T23:42:30.9856289+09:00"
+    description: (Used for KubeVela Helm module test) Podinfo Helm chart for Kubernetes
+    digest: 13de42bd4ed2f8ef793ca460626ec44735c1f4f182f91fae1b0311bc5df1f967
+    name: podinfo
+    urls:
+    - http://oam.dev/catalog/podinfo-5.1.4.tgz
+    version: 5.1.4
   routetrait:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-03-12T21:25:51.8894185+09:00"
+    created: "2021-03-13T23:42:30.9870511+09:00"
     description: A Helm chart for kubevela routetrait controller
     digest: 1f40dd4054f2f9920198bb9cf3ecd3f42548f5e0ae5174e4bf2f79539aba8479
     name: routetrait
@@ -44,4 +54,4 @@ entries:
     urls:
     - http://oam.dev/catalog/routetrait-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-12T21:25:51.8873255+09:00"
+generated: "2021-03-13T23:42:30.9832644+09:00"
