@@ -14,7 +14,6 @@ Currently we have OAM traits as below:
 ## Extended Traits
 
 - [ServiceExpose](serviceexpose) can help create k8s service for workload.
-- [IngressTrait](ingresstrait) can help create k8s ingress for workload.
 - [HPATrait](hpatrait) can help create k8s HorizontalPodAutoscaler for workload.
 - [CronHPATrait](cronhpatrait) can help create CronHorizontalPodAutoscaler for workload.
 - [SidecarTrait](sidecartrait) can deploy sidecar for workload.
