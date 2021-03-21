@@ -1,0 +1,36 @@
+apiVersion: core.oam.dev/v1alpha2
+kind: Application
+metadata:
+  name: webapp
+spec:
+  components:
+    - name: express-server
+      type: deployment
+      settings:
+        image: zzxwill/flask-web-application:v0.3
+        ports: 80
+        secretRef:
+          - fromComponent: "sample-db"
+            requiredKeys:
+              - "DB_USER"
+              - "DB_HOST"
+              - "DB_PASSWORD"
+        configRef:
+          - name: "sample-db"
+            keys:
+              - "DB_USER"
+              - "DB_HOST"
+              - "DB_PASSWORD"
+          - name: "sample-oss"
+            keys:
+              - "BUCKET_NAME"
+
+    - name: sample-db
+      type: alibaba-rds
+      settings:
+        name: "sample-db"
+        engine:          "mysql"
+        engineVersion:   "8.0"
+        instanceClass:   "rds.mysql.c1.large"
+        username:        "oam-dev"
+        secretNamespace: string
