@@ -18,7 +18,6 @@ package main
 
 import (
 	"flag"
-	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 	"os"
 
 	oamcore "github.com/oam-dev/kubevela/apis/core.oam.dev"
@@ -28,10 +27,12 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
-	"github.com/oam-dev/catalog/traits/metricstrait/controllers"
 	// +kubebuilder:scaffold:imports
 	monitoring "github.com/coreos/prometheus-operator/pkg/apis/monitoring/v1"
+
+	standardv1alpha1 "github.com/oam-dev/catalog/traits/metricstrait/api/v1alpha1"
+	"github.com/oam-dev/catalog/traits/metricstrait/controllers"
+	"github.com/oam-dev/catalog/traits/metricstrait/webhook"
 )
 
 var (
@@ -45,7 +46,7 @@ func init() {
 	_ = standardv1alpha1.AddToScheme(scheme)
 	_ = monitoring.AddToScheme(scheme)
 	_ = oamcore.AddToScheme(scheme)
-    _ = monitoring.AddToScheme(scheme)
+	_ = monitoring.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
 
