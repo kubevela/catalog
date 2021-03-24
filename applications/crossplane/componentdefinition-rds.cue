@@ -12,7 +12,7 @@ output: {
 		}
 		writeConnectionSecretToRef: {
 			namespace: context.namespace
-			name:      context.appName + "-" + parameter.name
+			name:      context.outputSecretName
 		}
 		providerConfigRef: {
 			name: "default"

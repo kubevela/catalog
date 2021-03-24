@@ -13,15 +13,15 @@ These demonstrations show how cloud resourced are provisioned by Crossplane prov
   
   Refer to [Installation](https://github.com/crossplane/provider-alibaba/releases/tag/v0.5.0) to install Crossplane Alibaba provider.
 
-    ```
-    $ kubectl crossplane install provider crossplane/provider-alibaba:v0.5.0
+  ```
+  $ kubectl crossplane install provider crossplane/provider-alibaba:v0.5.0
 
-    $ kubectl create secret generic alibaba-account-creds -n crossplane-system --from-literal=accessKeyId=xxx --from-literal=accessKeySecret=yyy
+  $ kubectl create secret generic alibaba-account-creds -n crossplane-system --from-literal=accessKeyId=xxx --from-literal=accessKeySecret=yyy
 
-    $ kubectl apply -f provider.yaml
-    ```
+  $ kubectl apply -f provider.yaml
+  ```
 
-## Provision cloud resources
+## Part I: Provision cloud resources
 
 ### Prepare ComponentDefinition `alibaba-rds`
 
@@ -58,7 +58,7 @@ spec:
         		}
         		writeConnectionSecretToRef: {
         			namespace: context.namespace
-        			name:      context.appName + "-" + parameter.name
+        			name:      context.outputSecretName
         		}
         		providerConfigRef: {
         			name: "default"
@@ -77,14 +77,14 @@ spec:
 
 ### Deploy an application
 
-The application [application-v1-provision-cloud-resource.yaml](./application-v1-provision-cloud-resource.yaml) will just include
-a component based the ComponentDefiniton above to create an RDS instance.
+The application [application-1-provision-cloud-service.yaml](./application-1-provision-cloud-service.yaml) will just include
+a component based the ComponentDefinition as above to create an RDS instance.
 
 ```yaml
 apiVersion: core.oam.dev/v1alpha2
 kind: Application
 metadata:
-  name: webapp
+  name: baas-rds
 spec:
   components:
     - name: sample-db
@@ -99,31 +99,42 @@ spec:
 
 ```
 
-Apply it and watch the cloud resource provisioning. A secret `webapp-sample-db` will also be create in the same namespace as the application.
+Apply it and watch the cloud resource provisioning. A secret `db-conn` will also be created in the same namespace as that of
+the application.
 
 ```shell
-$ kubectl apply -f application-provision-cloud-resource.yaml
+$ kubectl apply -f application-1-provision-cloud-service.yaml
 
 $ kubectl get component
 NAME             WORKLOAD-KIND   AGE
-sample-db        RDSInstance     12h
+sample-db        RDSInstance     9h
 
 $ kubectl get rdsinstance
 NAME           READY   SYNCED   STATE     ENGINE   VERSION   AGE
-sample-db-v1   True    True     Running   mysql    8.0       11h
+sample-db-v1   True    True     Running   mysql    8.0       9h
 
 $ kubectl get secret
 NAME                                              TYPE                                  DATA   AGE
-webapp-sample-db                                  connection.crossplane.io/v1alpha1     3      11h
+db-conn                                           connection.crossplane.io/v1alpha1     4      9h
+
+$ ✗ kubectl get secret db-conn -o yaml
+apiVersion: v1
+data:
+  endpoint: xxx==
+  password: yyy
+  port: MzMwNg==
+  username: b2FtdGVzdA==
+kind: Secret
 ```
 
-The outputSecretName `db-conn` will be stored in `context` as a key to context.outputSecretName (`map[string]string` type),
-whose value is in the format `$appName-$componentName`, ie, `webapp-sample-db` in this example.
+It shows the connection secret of Cloud resource RDSInstance is successfully generated. I could be consumed by some business
+applications.
 
-## Consume cloud resources
+## Part II: Consume cloud resources
 
-Add business component `express-server` in the application [application-v2-consume-cloud-resource.yaml](./application-v2-consume-cloud-resource.yaml).
-It states the outputSecret `db-conn` from component `sample-db` will be used, and its required environments are `username`, `endpoint` and `port`.
+### Introduction
+Create business application `webapp` with the Application manifests [application-2-consume-cloud-resource.yaml](./application-2-consume-cloud-resource.yaml).
+It states the outputSecret `db-conn` from component `sample-db` of application `baas-rds` will be used.
 
 ```yaml
 apiVersion: core.oam.dev/v1alpha2
@@ -137,134 +148,83 @@ spec:
       settings:
         image: zzxwill/flask-web-application:v0.3.1-crossplane
         ports: 80
-        secretRef:
-          - name: db-conn
-            environment:
-              - username
-              - endpoint
-              - port
-
-    - name: sample-db
-      ...
-      settings:
-        outputSecretName: db-conn
-      ...
+        dbSecret: db-conn
 ```
 
-Here are two ways to consume the RDS instance. Option 1) is recommended.
+Here are two ways to consume the RDS instance.
 
-1) Extract `parameter.secretRef` in ComponentDefinition.
+- Use `parameter.dbSecret` as secret name.
 
-In the ComponentDefinition of component `express-server` [componentdefinition-deployment.yaml](./componentdefinition-deployment.yaml), we extract `parameter.secretRef`
-to the standard format of `spec.template.spec.containers.0.env` field.
+In the [componentdefinition-deployment.yaml](./componentdefinition-deployment.yaml) of component `express-server` in 
+application `webapp` , we directly use `parameter.dbSecret` as the secret name to rendering environment name `username`.
 
 ```cue
-      import "list"
-
-      output: {
-      	apiVersion: "apps/v1"
-      	kind:       "Deployment"
-      	spec: {
-      		template: {
-      			spec: {
-      				containers: [{
-      					if parameter["secretRef"] != _|_ {
-      						env:
-      							list.FlattenN([ for c in parameter.secretRef {
-      								[ for k in c.environment {
-      									name: k
-      									valueFrom: {
-      										secretKeyRef: {
-      											name: context.outputSecretName[c.name]
-      											key:  k
-      										}
-      									}
-      								},
-      								]
-      							}], 1)
-      					}
-      				}]
-      		}
-      		}
-      	}
-      }
-
-      parameter: {
-      	// +usage=Referred config
-      	secretRef?: [...{
-      		// +usage=Referred secret name
-      		name: string
-      		// +usage=Key from KubeVela config
-      		environment: [...string]
-      	}]
-      }
+env: [
+{
+    name: "username"
+    valueFrom: {
+        secretKeyRef: {
+            name: parameter.dbSecret
+            key:  "username"
+        }
+    }
+},]
 ```
 
-Apply the ComponentDefinition and updated Application, and see the cloud resource is successfully consumed by business component.
+- Use `context.`Directly use secret value
+
+```cue
+env: [
+{
+    ...
+},
+{
+    name:  "endpoint"
+    value: context.dbConn.endpoint
+},
+]
+```
+
+`dbConn` will be rendered as a context field based on all fields of secret `parameter.dbSecret` per the comment 
+`// +k8sSecretSchema=dbConn`. So `context.dbConn.endpoint` is the value of key `endpoint` of the secret.
+
+```cue
+parameter: {
+    ...
+
+	// +usage=Referred db secret
+	// +k8sSecretSchema=dbConn
+	dbSecret?: string
+    
+    ...
+}
+
+#dbConn: {
+    username: string
+    endpoint: string
+    port:     string
+}
+```
+
+### Deploy an application
+
+Apply the ComponentDefinition and Application. We'll see the cloud resource is successfully consumed by the business application.
 
 ```shell
 $ kubectl apply -f componentdefinition-deployment.yaml
 
-$ kubectl apply -f application-v2-consume-cloud-resource.yaml
+$ kubectl apply -f application-2-consume-cloud-resource.yaml
 
-$ kubectl port-forward deployment/express-server-v5 80:80
+$ kubectl get application
+NAME       AGE
+baas-rds   10h
+webapp     14h
+
+$ kubectl get deployment
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+express-server-v1   1/1     1            1           9h
+
+$ kubectl port-forward deployment/express-server-v1 80:80
 ```
 
 ![](./visit-application.jpg)
-
-In all, platform builders is recommended to add the following Cuelang template to field `spec.template.spec.containers.*`.
-
-```cue
-if parameter["secretRef"] != _|_ {
-  env:
-   list.FlattenN([ for c in parameter.secretRef {
-     [ for k in c.environment {
-       name: k
-       valueFrom: {
-         secretKeyRef: {
-           name: context.outputSecretName[c.name]
-           key:  k
-         }
-      }
-     },
-     ]
-   }], 1)
-}
-```
-
-2) Literally use standard env mapping
-
-```yaml
-apiVersion: core.oam.dev/v1alpha2
-kind: Application
-metadata:
-  name: webapp
-spec:
-  components:
-    - name: express-server
-      type: webservice
-      settings:
-        image: zzxwill/flask-web-application:v0.3.1-crossplane
-        ports: 80
-        env:
-          - name: username
-            valueFrom:
-              secretKeyRef: 
-                name: context.outputSecretName["db-conn"]
-                key:  username
-          - name: endpoint
-            valueFrom:
-              secretKeyRef:
-                name: context.outputSecretName["db-conn"]
-                key:  endpoint
-          - name: port
-            valueFrom:
-              secretKeyRef:
-                name: context.outputSecretName["db-conn"]
-                key:  port
-
-    - name: sample-db
-      type: alibaba-rds
-      settings:
-        outputSecretName: db-conn
-```

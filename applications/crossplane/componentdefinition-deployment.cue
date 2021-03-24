@@ -1,5 +1,3 @@
-import "list"
-
 output: {
 	apiVersion: "apps/v1"
 	kind:       "Deployment"
@@ -22,20 +20,31 @@ output: {
 						command: parameter.cmd
 					}
 
-					if parameter["secretRef"] != _|_ {
-						env:
-							list.FlattenN([ for c in parameter.secretRef {
-								[ for k in c.environment {
-									name: k
-									valueFrom: {
-										secretKeyRef: {
-											name: context.outputSecretName[c.name]
-											key:  k
-										}
+					if parameter["dbSecret"] != _|_ {
+						env: [
+							{
+								name: "username"
+								valueFrom: {
+									secretKeyRef: {
+										name: parameter.dbSecret
+										key:  "username"
 									}
-								},
-								]
-							}], 1)
+								}
+							},
+							{
+								name:  "endpoint"
+								value: context.dbConn.endpoint
+							},
+							{
+								name: "password"
+								valueFrom: {
+									secretKeyRef: {
+										name: parameter.dbSecret
+										key:  "password"
+									}
+								}
+							},
+						]
 					}
 
 					ports: [{
@@ -68,33 +77,16 @@ parameter: {
 	// +short=p
 	port: *80 | int
 
-	// +usage=Referred config
-	secretRef?: [...{
-		// +usage=Referred secret name
-		name: string
-		// +usage=Key from KubeVela config
-		environment: [...string]
-	}]
+	// +usage=Referred db secret
+	// +k8sSecretSchema=dbConn
+	dbSecret?: string
 
 	// +usage=Number of CPU units for the service, like `0.5` (0.5 CPU core), `1` (1 CPU core)
 	cpu?: string
 }
 
-context: {
-	name:        "sample-db"
-	appName:     "webapp"
-	appRevision: ""
-	namespace:   "default"
-	outputSecretName: {"db-conn": "webapp-sample-db"}
-}
-
-parameter: {
-	image: "zzxwill/flask-web-application:v0.3"
-	ports: 80
-	secretRef: [
-		{name: "db-conn"
-			environment:
-			["username", "endpoint", "password"]
-		},
-	]
+#dbConn: {
+	username: string
+	endpoint: string
+	port:     string
 }
