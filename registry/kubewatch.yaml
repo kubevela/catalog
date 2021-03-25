@@ -1,4 +1,4 @@
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
   name: kubewatch
@@ -18,12 +18,14 @@ spec:
         name: kubewatch
         url: https://wonderflow.info/kubewatch/archives/
         version: 0.1.0    
-    template: |
-      outputs: watcher:{{
-        apiVersion: "labs.bitnami.com/v1alpha1"
-        kind:       "KubeWatch"
-        spec: handler: webhook: url: parameter.webhook
-      }}
-      parameter: {
-        webhook: string
-      }
+  schematic:
+    cue:
+      template: |-
+        outputs: watcher:{{
+          apiVersion: "labs.bitnami.com/v1alpha1"
+          kind:       "KubeWatch"
+          spec: handler: webhook: url: parameter.webhook
+        }}
+        parameter: {
+          webhook: string
+        }
