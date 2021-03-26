@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: baas-rds
+spec:
+  components:
+    - name: sample-db
+      type: alibaba-rds
+      properties:
+        name: sample-db
+        engine: mysql
+        engineVersion: "8.0"
+        instanceClass: rds.mysql.c1.large
+        username: oamtest
+        outputSecretName: db-conn
