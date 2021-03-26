@@ -1,13 +1,15 @@
-apiVersion: core.oam.dev/v1alpha2
-kind: WorkloadDefinition
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
 metadata:
   name: openfaas
   namespace: vela-system
   annotations:
     definition.oam.dev/description: "OpenFaaS function workload"
 spec:
-  definitionRef:
-    name: functions.openfaas.com
+  workload:
+    definition:
+      apiVersion: openfaas.com/v1
+      kind: Function
   extension:
     install:
       helm:
@@ -21,17 +23,19 @@ spec:
           operator:
             create: true
           functionNamespace: default
-    template: |
-      output: {
-        apiVersion: "openfaas.com/v1"
-        kind:       "Function"
-        spec: {
-          handler: parameter.handler
-          image: parameter.image
-          name: context.name
+  schematic:
+    cue:
+      template: |-
+        output: {
+          apiVersion: "openfaas.com/v1"
+          kind:       "Function"
+          spec: {
+            handler: parameter.handler
+            image: parameter.image
+            name: context.name
+          }
         }
-      }
-      parameter: {
-        image: string
-        handler: string
-      }
+        parameter: {
+          image: string
+          handler: string
+        }

@@ -1,4 +1,4 @@
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
   annotations:
@@ -9,25 +9,26 @@ spec:
   appliesToWorkloads:
     - webservice
     - worker
-  extension:
-    template: |-
-      patch: {
-      	spec: template: spec: {
-      		// +patchKey=name
-      		containers: [{
-      			name: context.name
-      			// +patchKey=name
-      			env: [
-      				for k, v in parameter.env {
-      					name:  k
-      					value: v
-      				},
-      			]
-      		}]
-      	}
-      }
+  schematic:
+    cue:
+      template: |-
+        patch: {
+          spec: template: spec: {
+              // +patchKey=name
+              containers: [{
+                  name: context.name
+                  // +patchKey=name
+                  env: [
+                      for k, v in parameter.env {
+                          name:  k
+                          value: v
+                      },
+                  ]
+              }]
+          }
+        }
 
-      parameter: {
-      	env: [string]: string
-      }
+        parameter: {
+          env: [string]: string
+        }
 

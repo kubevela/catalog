@@ -1,4 +1,4 @@
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
   annotations:
@@ -9,33 +9,34 @@ spec:
   appliesToWorkloads:
     - webservice
     - worker
-  extension:
-    template: |-
-      patch: {
-      	spec: template: spec: {
-      		if parameter.affinity != _|_ {
-      			affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
-      				matchExpressions: [
-      					for k, v in parameter.affinity {
-      						key:      k
-      						operator: "In"
-      						values:   v
-      					},
-      				]}]
-      		}
-      		if parameter.tolerations != _|_ {
-      			tolerations: [
-      				for k, v in parameter.tolerations {
-      					effect:   "NoSchedule"
-      					key:      k
-      					operator: "Equal"
-      					value:    v
-      				}]
-      		}
-      	}
-      }
+  schematic:
+    cue:
+      template: |-
+        patch: {
+          spec: template: spec: {
+              if parameter.affinity != _|_ {
+                  affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+                      matchExpressions: [
+                          for k, v in parameter.affinity {
+                              key:      k
+                              operator: "In"
+                              values:   v
+                          },
+                      ]}]
+              }
+              if parameter.tolerations != _|_ {
+                  tolerations: [
+                      for k, v in parameter.tolerations {
+                          effect:   "NoSchedule"
+                          key:      k
+                          operator: "Equal"
+                          value:    v
+                      }]
+              }
+          }
+        }
 
-      parameter: {
-      	affinity?: [string]: [...string]
-      	tolerations?: [string]: string
-      }
+        parameter: {
+          affinity?: [string]: [...string]
+          tolerations?: [string]: string
+        }
