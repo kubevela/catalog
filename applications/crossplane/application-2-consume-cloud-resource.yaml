@@ -1,4 +1,4 @@
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: webapp
@@ -6,7 +6,7 @@ spec:
   components:
     - name: express-server
       type: deployment
-      settings:
+      properties:
         image: zzxwill/flask-web-application:v0.3.1-crossplane
         ports: 80
         dbSecret: db-conn

@@ -1,4 +1,4 @@
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: baas-rds
@@ -6,7 +6,7 @@ spec:
   components:
     - name: sample-db
       type: alibaba-rds
-      settings:
+      properties:
         name: sample-db
         engine: mysql
         engineVersion: "8.0"

@@ -29,7 +29,7 @@ These demonstrations show how cloud resourced are provisioned by Crossplane prov
 which aims to create an RDS instance from Alibaba Cloud by Crossplane Alibaba provider.
 
 ```yaml
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   name: alibaba-rds
@@ -81,7 +81,7 @@ The application [application-1-provision-cloud-service.yaml](./application-1-pro
 a component based the ComponentDefinition as above to create an RDS instance.
 
 ```yaml
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: baas-rds
@@ -89,7 +89,7 @@ spec:
   components:
     - name: sample-db
       type: alibaba-rds
-      settings:
+      properties:
         name: sample-db
         engine: mysql
         engineVersion: "8.0"
@@ -104,6 +104,10 @@ the application.
 
 ```shell
 $ kubectl apply -f application-1-provision-cloud-service.yaml
+
+$ kubectl get application
+NAME       AGE
+baas-rds   9h
 
 $ kubectl get component
 NAME             WORKLOAD-KIND   AGE
@@ -137,7 +141,7 @@ Create business application `webapp` with the Application manifests [application
 It states the outputSecret `db-conn` from component `sample-db` of application `baas-rds` will be used.
 
 ```yaml
-apiVersion: core.oam.dev/v1alpha2
+apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: webapp
@@ -145,65 +149,48 @@ spec:
   components:
     - name: express-server
       type: deployment
-      settings:
+      properties:
         image: zzxwill/flask-web-application:v0.3.1-crossplane
         ports: 80
         dbSecret: db-conn
 ```
 
-Here are two ways to consume the RDS instance.
-
-- Use `parameter.dbSecret` as secret name.
-
 In the [componentdefinition-deployment.yaml](./componentdefinition-deployment.yaml) of component `express-server` in 
-application `webapp` , we directly use `parameter.dbSecret` as the secret name to rendering environment name `username`.
+application `webapp`.
 
-```cue
-env: [
-{
-    name: "username"
-    valueFrom: {
-        secretKeyRef: {
-            name: parameter.dbSecret
-            key:  "username"
-        }
-    }
-},]
-```
-
-- Use `context.`Directly use secret value
-
-```cue
-env: [
-{
-    ...
-},
-{
-    name:  "endpoint"
-    value: context.dbConn.endpoint
-},
-]
-```
-
-`dbConn` will be rendered as a context field based on all fields of secret `parameter.dbSecret` per the comment 
-`// +k8sSecretSchema=dbConn`. So `context.dbConn.endpoint` is the value of key `endpoint` of the secret.
+All fields of `dbConn` will be rendered as the value of secret `parameter.dbSecret` respectively per the comment 
+`// +insertSecretTo=dbConn`. So `dbConn.endpoint` is the value of key `endpoint` of the secret.
 
 ```cue
 parameter: {
     ...
 
 	// +usage=Referred db secret
-	// +k8sSecretSchema=dbConn
+	// +insertSecretTo=dbConn
 	dbSecret?: string
     
     ...
 }
 
-#dbConn: {
+dbConn: {
     username: string
     endpoint: string
     port:     string
 }
+```
+
+So we can set the value of env directly.
+
+```cue
+env: [
+{
+    ...
+},
+{
+    name:  "username"
+    value: dbConn.username
+},
+]
 ```
 
 ### Deploy an application
@@ -228,3 +215,92 @@ $ kubectl port-forward deployment/express-server-v1 80:80
 ```
 
 ![](./visit-application.jpg)
+
+## Alternatives to consume cloud resource
+
+
+- Use `context` `dbConn`
+
+With the annotation `// +insertSecretTo=dbConn`, `dbConn` will be inserted into `context` and it's content are all the
+key and values of secret `dbSecret`.
+
+```cue
+parameter: {
+    ...
+
+	// +usage=Referred db secret
+	// +insertSecretTo=dbConn
+	dbSecret?: string
+    
+    ...
+}
+```
+
+We can set the value of environment `endpoint` to `context.dbConn.endpoint`.
+
+```cue
+env: [
+{
+    ...
+},
+{
+    name:  "endpoint"
+    value: context.dbConn.endpoint
+},
+]
+```
+
+So the ComponentDefinition can work without section `dbConn`.
+
+```cue
+output: {
+	apiVersion: "apps/v1"
+	kind:       "Deployment"
+	spec: {
+		selector: matchLabels: {
+			"app.oam.dev/component": context.name
+		}
+
+		template: {
+			metadata: labels: {
+				"app.oam.dev/component": context.name
+			}
+
+			spec: {
+				containers: [{
+					...
+					
+					if parameter["dbSecret"] != _|_ {
+						env: [
+							{
+								name:  "username"
+								value: context.dbConn.username
+							},
+							{
+								name:  "endpoint"
+								value: context.dbConn.endpoint
+							},
+							{
+								name:  "DB_PASSWORD"
+								value: context.dbConn.password
+							},
+						]
+					}
+
+					...
+				}]
+		}
+		}
+	}
+}
+
+parameter: {
+	...
+
+	// +usage=Referred db secret
+	// +insertSecretTo=dbConn
+	dbSecret?: string
+
+	...
+}
+```

@@ -23,26 +23,16 @@ output: {
 					if parameter["dbSecret"] != _|_ {
 						env: [
 							{
-								name: "username"
-								valueFrom: {
-									secretKeyRef: {
-										name: parameter.dbSecret
-										key:  "username"
-									}
-								}
+								name:  "username"
+								value: dbConn.username
 							},
 							{
 								name:  "endpoint"
-								value: context.dbConn.endpoint
+								value: dbConn.endpoint
 							},
 							{
-								name: "password"
-								valueFrom: {
-									secretKeyRef: {
-										name: parameter.dbSecret
-										key:  "password"
-									}
-								}
+								name:  "DB_PASSWORD"
+								value: dbConn.password
 							},
 						]
 					}
@@ -78,14 +68,14 @@ parameter: {
 	port: *80 | int
 
 	// +usage=Referred db secret
-	// +k8sSecretSchema=dbConn
+	// +insertSecretTo=dbConn
 	dbSecret?: string
 
 	// +usage=Number of CPU units for the service, like `0.5` (0.5 CPU core), `1` (1 CPU core)
 	cpu?: string
 }
 
-#dbConn: {
+dbConn: {
 	username: string
 	endpoint: string
 	port:     string
