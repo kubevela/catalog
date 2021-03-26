@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "dynamically specify service account"
   name: service-account
+  namespace: vela-system
 spec:
   appliesToWorkloads:
     - webservice
