@@ -27,3 +27,7 @@ Refer to [KubeVela Scopes](scopes/README.md) to see currently supported scopes.
 [Registry](registry) contains many workload/trait/scope definitions. You can apply them in your cluster to extend the capability of KubeVela.
 
 Before apply those definitions, please make sure that related workload/trait controller and crds installed already.
+
+### Usage
+
+[You can use them as a KubeVela cap center]( https://kubevela.io/docs/developers/cap-center) or [Use them directly like this](https://kubevela.io/docs/platform-engineers/keda)
