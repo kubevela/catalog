@@ -4,4 +4,4 @@ These demonstrations show how cloud resourced are provisioned by Crossplane prov
 
 > The demonstrations are verified in Alibaba Kubernetes Cluster v1.18.8 in Hongkong region.
 
-As all files are inlined in [KubeVela Cloud Resource Doc](https://github.com/oam-dev/kubevela/blob/master/docs/en/platform-engineers/cloud-services.md), please refer to it.
+As all files are inlined in [KubeVela Cloud Resource Doc](https://kubevela.io/docs/platform-engineers/cloud-services), please refer to it.
