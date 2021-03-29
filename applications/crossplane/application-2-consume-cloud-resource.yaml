@@ -5,7 +5,7 @@ metadata:
 spec:
   components:
     - name: express-server
-      type: deployment
+      type: webconsumer
       properties:
         image: zzxwill/flask-web-application:v0.3.1-crossplane
         ports: 80
