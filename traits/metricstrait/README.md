@@ -1,9 +1,31 @@
-# OAM Metrics Trait
+# KubeVela Metrics Trait
 This trait is designed to provide an easy way for an OAM application operator to collect metrics from any workload
 that emits metrics through an endpoint reachable from within the cluster. 
 The metrics traits relies on [Prometheus operator](https://github.com/coreos/prometheus-operator) and
 [Prometheus helm chart](https://github.com/helm/charts/tree/master/stable/prometheus-operator). 
 
+## Install
+Make sure [KubeVela](https://kubevela.io/docs/install) is installed in your cluster
+
+Install metrics trait controller with helm
+
+1. Add helm chart repo for metrics trait
+    ```shell script
+    helm repo add oam.catalog  http://oam.dev/catalog/
+    ```
+
+2. Update the chart repo
+    ```shell script
+    helm repo update
+    ```
+
+3. Install metrics trait controller
+    ```shell script
+    helm install --create-namespace -n vela-system metricstrait oam.catalog/metricstrait
+
+4. Apply [definition yaml](../../registry/metrics.yaml) in registry.
+
+## Setting metrics policy
 With this trait, an application operator only needs to specify a few fields to extract metrics from the workloads the trait attached to.
 Here are the brief descriptions of each field and its usage.
 

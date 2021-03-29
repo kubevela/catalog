@@ -1,10 +1,14 @@
-# OAM Traits
-
-Currently we have OAM traits as below:
+# KubeVela Traits
+Currently we have KubeVela traits as below:
 
 ## Core Traits
-
-- [ManualScaler](https://github.com/crossplane/addon-oam-kubernetes-local) can enable replicas of workloads to be manually scaled.
+- [AutoScalerTrait](autoscalertrait) can help automatically scale workloads by resource utilization metrics and cron
+  
+- [MetricsTrait](metricstrait)  can help monitor you app
+  
+- [RouteTrait](routetrait) can help  configure the access to your app
+  
+- [ManualScaler](https://github.com/crossplane/addon-oam-kubernetes-local) can enable replicas of workloads to be manually scaled
 
 ## Standard Traits
 
