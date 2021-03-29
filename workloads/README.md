@@ -1,6 +1,6 @@
-# OAM Workloads
+# KubeVela Workloads
 
-Currently we have OAM workloads as below:
+Currently we have KubeVela workloads as below:
 
 ## Core Workloads
 

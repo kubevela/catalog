@@ -1,29 +1,33 @@
-# OAM catalog
+# KubeVela catalog
 
-Catalog of OAM workloads, traits and scopes.
+Catalog of KubeVela workloads, traits and scopes. 
 
-## Common pre-requisites
+Welcome to contribute this repo putting your customize vela workload/trait/scope here.
 
-- [Kubernetes cluster](https://kubernetes.io/docs/setup/)
-  - For example
-    [Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/),
-    minimum version `v0.28+`
-- [Helm 3](https://helm.sh/docs/intro/), minimum version `v3.0.0+`.
-- Install OAM Runtime
-```
-helm repo add crossplane-master https://charts.crossplane.io/master/
-kubectl create namespace oam-system
-helm install oam --namespace oam-system crossplane-master/oam-kubernetes-runtime --devel
-```
+## Pre-requisites
 
-## Workloads
+- Install [KubeVela](https://kubevela.io/docs/install)
 
-Refer to [OAM Workloads](workloads/README.md) to see currently supported workloads.
+## Controller
 
-## Traits
+### Workloads
 
-Refer to [OAM Traits](traits/README.md) to see currently supported traits.
+Refer to [KubeVela Workloads](workloads/README.md) to see currently supported workloads.
 
-## Scopes
+### Traits
 
-Refer to [OAM Scopes](scopes/README.md) to see currently supported scopes.
+Refer to [KubeVela Traits](traits/README.md) to see currently supported traits.
+
+### Scopes
+
+Refer to [KubeVela Scopes](scopes/README.md) to see currently supported scopes.
+
+## Registry
+
+[Registry](registry) contains many workload/trait/scope definitions. You can apply them in your cluster to extend the capability of KubeVela.
+
+Before apply those definitions, please make sure that related workload/trait controller and crds installed already.
+
+### Usage
+
+You can use them as a [KubeVela cap center]( https://kubevela.io/docs/developers/cap-center) or Use them directly like [this demo](https://kubevela.io/docs/platform-engineers/keda).
