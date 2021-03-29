@@ -30,4 +30,4 @@ Before apply those definitions, please make sure that related workload/trait con
 
 ### Usage
 
-[You can use them as a KubeVela cap center]( https://kubevela.io/docs/developers/cap-center) or [Use them directly like this](https://kubevela.io/docs/platform-engineers/keda)
+You can use them as a [KubeVela cap center]( https://kubevela.io/docs/developers/cap-center) or Use them directly like [this demo](https://kubevela.io/docs/platform-engineers/keda).
