@@ -38,5 +38,6 @@ spec:
         }
 
         parameter: {
+        	// +usage=The mapping of environment variables to secret
         	envMappings: [string]: [string]: string
         }

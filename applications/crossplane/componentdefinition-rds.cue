@@ -12,7 +12,7 @@ output: {
 		}
 		writeConnectionSecretToRef: {
 			namespace: context.namespace
-			name:      context.outputSecretName
+			name:      parameter.secretName
 		}
 		providerConfigRef: {
 			name: "default"
@@ -21,8 +21,14 @@ output: {
 	}
 }
 parameter: {
-	engine:          *"mysql" | string
-	engineVersion:   *"8.0" | string
-	instanceClass:   *"rds.mysql.c1.large" | string
-	username:        string
+	// +usage=RDS engine
+	engine: *"mysql" | string
+	// +usage=The version of RDS engine
+	engineVersion: *"8.0" | string
+	// +usage=The instance class for the RDS
+	instanceClass: *"rds.mysql.c1.large" | string
+	// +usage=RDS username
+	username: string
+	// +usage=Secret name which RDS connection will write to
+	secretName: string
 }
