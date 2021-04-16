@@ -8,7 +8,7 @@ output: {
 		dataRedundancyType: parameter.dataRedundancyType
 		writeConnectionSecretToRef: {
 			namespace: context.namespace
-			name:      context.outputSecretName
+			name:      parameter.secretName
 		}
 		providerConfigRef: {
 			name: "default"
@@ -17,8 +17,14 @@ output: {
 	}
 }
 parameter: {
-	name:               string
-	acl:                *"private" | string
-	storageClass:       *"Standard" | string
+	// +usage=OSS bucket name
+	name: string
+	// +usage=The access control list of the OSS bucket
+	acl: *"private" | string
+	// +usage=The storage type of OSS bucket
+	storageClass: *"Standard" | string
+	// +usage=The data Redundancy type of OSS bucket
 	dataRedundancyType: *"LRS" | string
+	// +usage=Secret name which RDS connection will write to
+	secretName: string
 }
