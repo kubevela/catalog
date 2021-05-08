@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: "Add virtual group labels"
+    definition.oam.dev/description: "Add virtual group labels for component."
   name: virtualgroup
   namespace: vela-system
 spec:

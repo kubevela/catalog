@@ -2,7 +2,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
-  name: rollout
+  name: flagger-rollout
   namespace: vela-system
   annotations:
     definition.oam.dev/description: "Configures Canary deployment strategy for your application."
