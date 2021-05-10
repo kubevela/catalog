@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: "add an init container and use shared volume with pod"
+    definition.oam.dev/description: "add an init container with a shared volume."
   name: init-container
   namespace: vela-system
 spec:

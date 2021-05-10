@@ -1,10 +1,10 @@
 apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
-  name: advancedstatefulset
+  name: kruise-statefulset
   namespace: vela-system
   annotations:
-    definition.oam.dev/description: Enhanced rolling update workflow of default StatefulSet controller
+    definition.oam.dev/description: Enhanced rolling update workflow of default StatefulSet controller.  It was implemented by OpenKruise StatefulSet.
 spec:
   workload:
     definition:
