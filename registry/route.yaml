@@ -12,13 +12,6 @@ spec:
   workloadRefPath: spec.workloadRef
   definitionRef:
     name: routes.standard.oam.dev
-  extension:
-    install:
-      helm:
-        repo: ingress-nginx
-        name: ingress-nginx
-        url: https://kubernetes.github.io/ingress-nginx
-        version: 3.22.0
   schematic:
     cue:
       template: |-
