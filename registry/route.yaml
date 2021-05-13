@@ -5,7 +5,7 @@ metadata:
   name: route
   namespace: vela-system
   annotations:
-    definition.oam.dev/description: "Configures external access to your service."
+    definition.oam.dev/description: "Configures external access to your service, which depends on an Ingress controller"
 spec:
   appliesToWorkloads:
     - webservice
