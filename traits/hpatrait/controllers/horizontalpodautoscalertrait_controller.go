@@ -97,7 +97,7 @@ func (r *HorizontalPodAutoscalerTraitReconciler) Reconcile(req ctrl.Request) (ct
 
 	if len(hpas) == 0 {
 		r.Log.Info("Cannot get any HPA-applicable resources")
-		return ctrl.Result{}, util.PatchCondition(ctx, r, &hpatrait, cpv1alpha1.ReconcileError(fmt.Errorf(errLocateAvailableResouces)))
+		return ctrl.ReconcileWaitResult, fmt.Errorf(errLocateAvailableResouces)
 	}
 
 	// to record UID of newly created HPAs
