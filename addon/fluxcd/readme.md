@@ -2,7 +2,7 @@
 
 This addon is built based [FluxCD](https://fluxcd.io/)
 
-## install
+## Install
 
 ```shell
 vela addon enable fluxcd
