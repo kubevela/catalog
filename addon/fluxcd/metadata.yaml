@@ -21,3 +21,7 @@ xdefinitions:
   description: >
     helps to deploy a kustomize style artifact from a git repo.
   url: https://kubevela.io/docs/end-user/components/kustomize
+
+# dependencies:
+# - name: addon_name
+#   url: addon_url
