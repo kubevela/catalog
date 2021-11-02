@@ -1,4 +1,3 @@
 parameters: {
-  accessKey: string
-  secretKey: string
+  example: string
 }
