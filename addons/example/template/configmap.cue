@@ -1,4 +1,4 @@
-// This will be rendered as an `eampleinput` component of the ConfigMap resource
+// `exampleinput` will be used as the Component name
 exampleinput: {
   apiVersion: "v1"
   kind:       "ConfigMap"
