@@ -5,5 +5,5 @@ example: {
     name: "example-input"
     namespace: "default"
   }
-  data: input: parameters.example
+  data: input: parameter.example
 }

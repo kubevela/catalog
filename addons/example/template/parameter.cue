@@ -1,3 +1,3 @@
-parameters: {
+parameter: {
   example: string
 }
