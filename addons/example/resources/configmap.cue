@@ -7,6 +7,6 @@ output: {
 			name:      "exampleinput"
 			namespace: "default"
 		}
+		data: input: parameter.example
 	}
 }
-data: input: parameter.example
