@@ -1,0 +1,15 @@
+name: terraform-provider-aws
+version: 1.0.0
+description: Kubernetes Terraform Controller for AWS
+icon: https://avatars3.githubusercontent.com/aws
+url: https://registry.terraform.io/providers/hashicorp/aws/latest
+
+tags:
+  - terraform provider
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+- name: terraform

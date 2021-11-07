@@ -1,0 +1,12 @@
+name: ocm-cluster-manager
+version: 1.0.0
+description: ocm-cluster-manager can deploy an OCM hub cluster environment.
+icon: https://github.com/open-cluster-management-io/OCM/raw/main/assets/ocm-logo.png
+url: https://github.com/open-cluster-management-io/OCM
+
+tags:
+  - multicluster
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false

@@ -1,0 +1,11 @@
+name: kruise
+version: 1.0.0
+description: Kruise is a Kubernetes extended suite for application automations
+url: https://openkruise.io/
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+- name: fluxcd
