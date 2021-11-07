@@ -1,0 +1,22 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: fluxcd
+  namespace: vela-system
+spec:
+  workflow:
+    steps:
+      - name: apply-ns
+        type: apply-component
+        properties:
+          component: ns-flux-system
+      - name: apply-resources
+        type: apply-remaining
+  components:
+    - name: ns-flux-system
+      type: raw
+      properties:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: flux-system

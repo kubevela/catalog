@@ -1,0 +1,13 @@
+name: observability
+version: 1.0.0
+description: An out of the box solution for KubeVela observability
+
+tags:
+  - observability
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+- name: fluxcd

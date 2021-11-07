@@ -1,0 +1,16 @@
+name: istio
+version: 1.0.0
+description: istio Controller is a Kubernetes Controller for manage traffic.
+icon: https://github.com/istio/istio/raw/master/logo/istio-bluelogo-whitebackground-unframed.svg
+url: https://istio.io/
+
+tags:
+- service-mesh
+- rollout
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+- name: fluxcd
