@@ -5,7 +5,7 @@ url: https://openkruise.io/
 
 deployTo:
   control_plane: true
-  runtime_cluster: false
+  runtime_cluster: true
 
 dependencies:
 - name: fluxcd
