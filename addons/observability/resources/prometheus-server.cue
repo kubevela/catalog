@@ -7,7 +7,7 @@ output: {
 		repoType: "helm"
 		// original url: https://prometheus-community.github.io/helm-charts
 		url:             "https://charts.kubevela.net/addons"
-		targetNamespace: "observability"
+		targetNamespace: "vela-system"
 		releaseName:     "prometheus"
 		values:
 			alertmanager: persistentVolume: {

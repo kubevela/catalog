@@ -9,14 +9,14 @@ spec:
       - name: apply-ns
         type: apply-component
         properties:
-          component: ns-flux-system
+          component: ns-example-system
       - name: apply-resources
         type: apply-remaining
   components:
-    - name: ns-flux-system
+    - name: ns-example-system
       type: raw
       properties:
         apiVersion: v1
         kind: Namespace
         metadata:
-          name: flux-system
+          name: example-system

@@ -6,7 +6,7 @@ output: {
 		repoType: "helm"
 		// original url: https://grafana.github.io/helm-charts
 		url:             "https://charts.kubevela.net/addons"
-		targetNamespace: "observability"
+		targetNamespace: "vela-system"
 		releaseName:     "grafana"
 	}
 	traits: [
