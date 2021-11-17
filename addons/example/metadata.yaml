@@ -7,6 +7,7 @@ url: https://fluxcd.io
 tags:
 - extended_workload
 - gitops
+- only_example
 
 deployTo:
   control_plane: true

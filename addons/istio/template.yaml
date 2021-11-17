@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: istio
-  namespace: istio-system
+  namespace: vela-system
 spec:
   workflow:
     steps:

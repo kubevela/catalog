@@ -7,7 +7,7 @@ output: {
 			branch: "master"
 		}
 		chart:           "./chart"
-		targetNamespace: "observability"
+		targetNamespace: "vela-system"
 		values: {
 			replicaCount: 1
 		}

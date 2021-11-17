@@ -5,7 +5,7 @@ properties: {
 	repoType: "helm"
 	// original url: https://prometheus-community.github.io/helm-charts
 	url:             "https://charts.kubevela.net/addons"
-	targetNamespace: "observability"
+	targetNamespace: "vela-system"
 	values: {
 		image: {
 			repository: "oamdev/kube-state-metrics"
