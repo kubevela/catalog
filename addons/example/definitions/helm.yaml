@@ -4,7 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: helm release is a group of K8s resources
       from either git repository or helm repo
-  name: helm
+  name: helm-example
   namespace: vela-system
 spec:
   schematic:
