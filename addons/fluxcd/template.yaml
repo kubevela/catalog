@@ -4,14 +4,6 @@ metadata:
   name: fluxcd
   namespace: vela-system
 spec:
-  workflow:
-    steps:
-      - name: apply-ns
-        type: apply-component
-        properties:
-          component: ns-flux-system
-      - name: apply-resources
-        type: apply-remaining
   components:
     - name: ns-flux-system
       type: raw
