@@ -4,11 +4,3 @@ metadata:
   name: fluxcd
   namespace: vela-system
 spec:
-  components:
-    - name: ns-flux-system
-      type: raw
-      properties:
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: flux-system

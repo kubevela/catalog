@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "A list of JSON6902 patch to selected target"
   name: kustomize-json-patch
+  namespace: vela-system
 spec:
   schematic:
     cue:

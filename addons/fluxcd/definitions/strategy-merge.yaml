@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: "A list of strategic merge to kustomize config"
   name: kustomize-strategy-merge
+  namespace: vela-system
 spec:
   schematic:
     cue:
