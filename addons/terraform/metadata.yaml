@@ -13,4 +13,6 @@ deployTo:
   runtime_cluster: false
 
 dependencies:
-- name: fluxcd
+  - name: fluxcd
+
+invisible: true

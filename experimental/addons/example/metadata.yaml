@@ -5,9 +5,9 @@ icon: https://raw.githubusercontent.com/fluxcd/flux/master/docs/_files/weave-flu
 url: https://fluxcd.io
 
 tags:
-- extended_workload
-- gitops
-- only_example
+  - extended_workload
+  - gitops
+  - only_example
 
 deployTo:
   control_plane: true
@@ -15,3 +15,9 @@ deployTo:
 
 dependencies: []
 #- name: addon_name
+
+# set invisible means this won't be list and will be enabled when depended on
+# for example, terraform-alibaba depends on terraform which is invisible,
+# when terraform-alibaba is enabled, terraform will be enabled automatically
+# default: false
+invisible: false
