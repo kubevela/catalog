@@ -24,12 +24,6 @@ rules:
     verbs:
       - '*'
   - apiGroups:
-      - notification.toolkit.fluxcd.io
-    resources:
-      - '*'
-    verbs:
-      - '*'
-  - apiGroups:
       - image.toolkit.fluxcd.io
     resources:
       - '*'
