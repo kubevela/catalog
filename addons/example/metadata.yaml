@@ -13,5 +13,4 @@ deployTo:
   control_plane: true
   runtime_cluster: false
 
-dependencies:
-- name: addon_name
+dependencies: []
