@@ -6,11 +6,6 @@ metadata:
 spec:
   workflow:
     steps:
-      - name: checking-depends-on
-        type: depends-on-app
-        properties:
-          name: fluxcd
-          namespace: vela-system
       - name: apply-resources
         type: apply-application
   components:
