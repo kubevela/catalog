@@ -15,4 +15,4 @@ deployTo:
 needNamespace:
   - flux-system
 
-invisible: true
+invisible: false
