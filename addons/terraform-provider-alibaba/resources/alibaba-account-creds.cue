@@ -10,7 +10,7 @@ output: {
 			namespace: "vela-system"
 		}
 		type: "Opaque"
-		stringData: credentials: strings.Join([creds1, creds2, creds3], "\n")
+		stringData: credentials: strings.Join([creds1, creds2], "\n")
 	}
 }
 
