@@ -1,9 +1,8 @@
 name: terraform-provider-azure
 version: 1.0.0
 description: Kubernetes Terraform Controller for Azure
-icon: https://avatars3.githubusercontent.com/aliyun
+icon: https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31
 url: https://registry.terraform.io/providers/hashicorp/azurerm/latest
-
 tags:
   - terraform provider
 
