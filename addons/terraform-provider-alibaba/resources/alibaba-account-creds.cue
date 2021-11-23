@@ -16,4 +16,3 @@ output: {
 
 creds1: "accessKeyID: " + parameter.ALICLOUD_ACCESS_KEY
 creds2: "accessKeySecret: " + parameter.ALICLOUD_SECRET_KEY
-creds3: "securityToken: " + parameter.ALICLOUD_SECURITY_TOKEN
