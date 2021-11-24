@@ -1,5 +1,5 @@
 output: {
-	type: helm
+	type: "helm"
 	properties: {
 		chart:    "kube-state-metrics"
 		version:  "3.4.1"
