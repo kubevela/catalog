@@ -12,10 +12,11 @@ output: {
 	traits: [
 		{
 			type: "pure-ingress"
-			properties:
+			properties: {
 				domain: parameter["grafana-domain"]
-			http:
-				"/": 80
+				http:
+					"/": 80
+			}
 		},
 		{
 			type: "import-grafana-dashboard"

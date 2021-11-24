@@ -12,15 +12,16 @@ output: {
 	}
 	traits: [{
 		type: "register-grafana-datasource" // register loki datasource to Grafana
-		properties:
-			grafanaServiceName: "grafana"
-		grafanaServiceNamespace:   "observability"
-		credentialSecret:          "grafana"
-		credentialSecretNamespace: "observability"
-		name:                      "loki"
-		service:                   "loki"
-		namespace:                 "observability"
-		type:                      "loki"
-		access:                    "proxy"
+		properties: {
+			grafanaServiceName:        "grafana"
+			grafanaServiceNamespace:   "observability"
+			credentialSecret:          "grafana"
+			credentialSecretNamespace: "observability"
+			name:                      "loki"
+			service:                   "loki"
+			namespace:                 "observability"
+			type:                      "loki"
+			access:                    "proxy"
+		}
 	}]
 }
