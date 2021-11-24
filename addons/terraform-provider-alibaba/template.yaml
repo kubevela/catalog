@@ -2,4 +2,4 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: terraform-provider-alibaba
-  namespace: default
+  namespace: vela-system
