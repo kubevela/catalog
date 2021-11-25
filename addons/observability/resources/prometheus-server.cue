@@ -28,12 +28,12 @@ output: {
 			type: "register-grafana-datasource"
 			properties: {
 				grafanaServiceName:        "grafana"
-				grafanaServiceNamespace:   "observability"
+				grafanaServiceNamespace:   "vela-system"
 				credentialSecret:          "grafana"
-				credentialSecretNamespace: "observability"
+				credentialSecretNamespace: "vela-system"
 				name:                      "prometheus"
 				service:                   "prometheus-server"
-				namespace:                 "observability"
+				namespace:                 "vela-system"
 				type:                      "prometheus"
 				access:                    "proxy"
 			}
