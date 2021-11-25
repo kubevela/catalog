@@ -4,7 +4,7 @@ output: {
 		apiVersion: "terraform.core.oam.dev/v1beta1"
 		kind:       "Provider"
 		metadata: {
-			name:      "alicloud"
+			name:      "default"
 			namespace: "default"
 		}
 		spec: {
