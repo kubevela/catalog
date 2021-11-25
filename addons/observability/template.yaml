@@ -8,4 +8,54 @@ spec:
     steps:
       - name: apply-resources
         type: apply-remaining
-  components: []
+  components:
+    - name: grafana-registration
+      type: helm
+      properties:
+        repoType: git
+        url: https://github.com/oam-dev/grafana-registration
+        git:
+          branch: master
+        chart: ./chart
+        targetNamespace: vela-system
+        values:
+          replicaCount: 1
+
+    # install loki
+    - name: loki
+      type: helm
+      properties:
+        chart: loki-stack
+        version: 2.4.1
+        repoType: helm
+        # original url: https://grafana.github.io/helm-charts
+        url: https://charts.kubevela.net/addons
+        targetNamespace: vela-system
+        releaseName: loki
+      traits:
+        - type: register-grafana-datasource # register loki datasource to Grafana
+          properties:
+            grafanaServiceName: grafana
+            grafanaServiceNamespace: vela-system
+            credentialSecret: grafana
+            credentialSecretNamespace: vela-system
+            name: loki
+            service: loki
+            namespace: vela-system
+            type: loki
+            access: proxy
+
+    # install kube-state-metrics
+    - name: kube-state-metrics
+      type: helm
+      properties:
+        chart: kube-state-metrics
+        version: 3.4.1
+        repoType: helm
+        # original url: https://prometheus-community.github.io/helm-charts
+        url: https://charts.kubevela.net/addons
+        targetNamespace: vela-system
+        values:
+          image:
+            repository: oamdev/kube-state-metrics
+            tag: v2.1.0
