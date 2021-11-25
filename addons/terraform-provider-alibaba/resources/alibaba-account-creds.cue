@@ -10,9 +10,10 @@ output: {
 			namespace: "vela-system"
 		}
 		type: "Opaque"
-		stringData: credentials: strings.Join([creds1, creds2], "\n")
+		stringData: credentials: strings.Join([creds1, creds2, creds3], "\n")
 	}
 }
 
 creds1: "accessKeyID: " + parameter.ALICLOUD_ACCESS_KEY
 creds2: "accessKeySecret: " + parameter.ALICLOUD_SECRET_KEY
+creds3: "securityToken: " + parameter.ALICLOUD_SECURITY_TOKEN
