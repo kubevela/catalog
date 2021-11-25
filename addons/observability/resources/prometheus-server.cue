@@ -9,16 +9,17 @@ output: {
 		url:             "https://charts.kubevela.net/addons"
 		targetNamespace: "vela-system"
 		releaseName:     "prometheus"
-		values:
+		values: {
 			alertmanager: persistentVolume: {
 				enabled:      parameter["alertmanager-pvc-enabled"]
 				storageClass: parameter["alertmanager-pvc-class"]
 				size:         parameter["alertmanager-pvc-size"]
 			}
-		server: persistentVolume: {
-			enabled:      parameter["server-pvc-enabled"]
-			storageClass: parameter["server-pvc-class"]
-			size:         parameter["server-pvc-size"]
+			server: persistentVolume: {
+				enabled:      parameter["server-pvc-enabled"]
+				storageClass: parameter["server-pvc-class"]
+				size:         parameter["server-pvc-size"]
+			}
 		}
 	}
 	traits: [
