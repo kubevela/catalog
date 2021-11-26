@@ -1,0 +1,20 @@
+- jsonKey: repoType
+  label: Chart repo type
+  sort: 1
+- jsonKey: url
+  label: Helm chart repo url
+  sort: 2
+- jsonKey: chart
+  sort: 3
+  label: The relative path to helm chart
+- jsonKey: version
+  sort: 4
+  label: Chart version
+- jsonKey: git
+  sort: 5
+  description: git repoType detail configuration
+- jsonKey: oss
+  sort: 6
+  description: oss repoType detail configuration
+- jsonKey: values
+  sort: 7
