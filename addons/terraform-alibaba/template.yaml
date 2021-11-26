@@ -1,5 +1,5 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: terraform-provider-aws
-  namespace: default
+  name: terraform-alibaba
+  namespace: vela-system
