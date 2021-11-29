@@ -1,6 +1,6 @@
 # fluxcd
 
-This addon is built based [FluxCD](https://fluxcd.io/) 
+This addon is built based [FluxCD](https://fluxcd.io/)
 
 ## install
 
