@@ -57,6 +57,7 @@ spec:
         		name: context.name
         	}
         	spec: {
+        		timeout: parameter.installTimeout
         		interval: parameter.pullInterval
         		chart: {
         			spec: {
@@ -115,6 +116,8 @@ spec:
         	secretRef?: string
         	// +usage=The timeout for operations like download index/clone repository, optional
         	timeout?: string
+        	// +usage=The timeout for operation `helm install`, optional
+        	installTimeout: *"10m" | string
 
         	git?: {
         		// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
