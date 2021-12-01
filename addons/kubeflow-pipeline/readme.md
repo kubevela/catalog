@@ -31,7 +31,7 @@ kubectl patch storageclass <your-storageclass> -p '{"metadata": {"annotations":{
 Install it via CLI:
 
 ```
-vela addon enable kubeflow-pieline
+vela addon enable kubeflow-pipeline
 ```
 
 Or you can enable it via UI.
