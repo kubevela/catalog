@@ -1,0 +1,39 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: build-upload-kfp
+  namespace: vela-system
+  annotations:
+    definition.oam.dev/description: "Build and upload a Kubeflow pipeline"
+spec:
+  workload:
+    type: autodetects.core.oam.dev
+  schematic:
+    cue:
+      template: |
+        parameter: {
+          pipelineURL: string
+        }
+        output: {
+          apiVersion: "batch/v1"
+          kind: "Job"
+          spec: {
+            template: {
+              spec: {
+                containers: [{
+                  name: "build-upload-kfp"
+                  image: "acr.kubevela.net/oamdev/kubeflow-tool"
+                  command: ["/entrypoint/run.sh"]
+                  env: [{
+                    name: "PIPELINE_URL"
+                    value: parameter.pipelineURL
+                  }]
+                }]
+                restartPolicy: "OnFailure"
+              }
+            }
+            backoffLimit: 4
+          }
+        }
+        
+        
