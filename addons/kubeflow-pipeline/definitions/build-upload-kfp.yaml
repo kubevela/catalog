@@ -29,6 +29,7 @@ spec:
                     value: parameter.pipelineURL
                   }]
                 }]
+                restartPolicy: "OnFailure"
               }
             }
             backoffLimit: 4
