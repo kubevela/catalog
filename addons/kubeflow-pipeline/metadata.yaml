@@ -1,4 +1,4 @@
-name: Kubeflow Pipeline
+name: kubeflow-pipeline
 version: 1.0.0
 description: Run Kubeflow Pipelines on KubeVela
 icon: https://raw.githubusercontent.com/kubeflow/kubeflow/master/components/centraldashboard/public/assets/favicon-192x192.png
