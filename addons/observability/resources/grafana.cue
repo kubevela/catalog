@@ -22,9 +22,9 @@ output: {
 			type: "import-grafana-dashboard"
 			properties: {
 				grafanaServiceName:        "grafana"
-				grafanaServiceNamespace:   "observability"
+				grafanaServiceNamespace:   "vela-system"
 				credentialSecret:          "grafana"
-				credentialSecretNamespace: "observability"
+				credentialSecretNamespace: "vela-system"
 				urls: [
 					"https://charts.kubevela.net/addons/dashboards/kubevela_core_logging.json",
 					"https://charts.kubevela.net/addons/dashboards/kubevela_core_monitoring.json",
