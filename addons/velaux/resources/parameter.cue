@@ -1,5 +1,3 @@
-package resources
-
 parameter: {
 	// +usage=Specify the version of velaux.
 	version: "1.2.0"
@@ -13,4 +11,6 @@ parameter: {
 	dbURL?: string
 	// +usage=Specify the domain, if set, Ingress will be created
 	domain?: string
+	// +usage=Specify the serviceAccountName for apiserver
+	serviceAccountName: *"kubevela-vela-core" | string
 }
