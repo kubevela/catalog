@@ -25,6 +25,9 @@ spec:
           acl = var.acl
         }
         output "BUCKET_NAME" {
+          value = "${alicloud_oss_bucket.bucket-acl.bucket}"
+        }
+        output "BUCKET_ENDPOINT" {
           value = "${alicloud_oss_bucket.bucket-acl.bucket}.${alicloud_oss_bucket.bucket-acl.extranet_endpoint}"
         }
         variable "bucket" {
