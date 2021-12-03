@@ -18,6 +18,9 @@ output: {
 				expose:   true
 			},
 		]
+		if parameter["serviceType"] != _|_ {
+			exposeType: parameter["serviceType"]
+		}
 	}
 	traits:[{
 		type: "service-account"
