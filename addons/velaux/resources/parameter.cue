@@ -1,6 +1,6 @@
 parameter: {
 	// +usage=Specify the version of velaux.
-	version: *"1.2.0-rc1"
+	version: *"1.2.0-rc1" | string
 	// +usage=Specify the image hub of velaux.
 	repo?: *"" | string
 	// +usage=Specify the database type, current support KubeAPI(default) and MongoDB.

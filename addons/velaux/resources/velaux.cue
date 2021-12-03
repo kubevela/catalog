@@ -9,10 +9,13 @@ output: {
 				expose:   true
 			},
 		]
-		envs: [
+		if parameter["serviceType"] != _|_ {
+			exposeType: parameter["serviceType"]
+		}
+		env: [
 			{
 				name:  "KUBEVELA_API_URL"
-				value: "apiserver.vela-system:8000"
+				value: "apiserver-cue.vela-system:8000"
 			},
 		]
 	}
