@@ -1,0 +1,28 @@
+name: Registry
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+env:
+  ACCESS_KEY: ${{ secrets.OSS_ACCESS_KEY }}
+  ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+
+jobs:
+  publish-addons:
+    env:
+      ADDON_BUCKET: kubevela-addons
+      ADDON_DIR: addons
+      ADDON_ENDPOINT: oss-cn-beijing.aliyuncs.com
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@master
+      - name: Install ossutil
+        run: wget http://gosspublic.alicdn.com/ossutil/1.7.0/ossutil64 && chmod +x ossutil64 && mv ossutil64 ossutil
+      - name: Configure Alibaba Cloud ossutil
+        run: ./ossutil --config-file .ossutilconfig config -i $ACCESS_KEY -k $ACCESS_KEY_SECRET -e $ADDON_ENDPOINT
+      - name: sync local to cloud
+        run: ./ossutil --config-file .ossutilconfig sync $ADDON_DIR oss://$ADDON_BUCKET -f --delete
