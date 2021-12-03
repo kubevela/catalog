@@ -1,14 +1,16 @@
-package resources
+database: *[if parameter["database"] != _|_ {
+"--datastore-database=" + parameter["database"]
+}] | []
+
+dbURL: *[if parameter["dbURL"] != _|_ {
+"--datastore-url=" + parameter["dbURL"]
+}] | []
 
 output: {
 	type: "webservice"
 	properties: {
 		image: parameter["repo"] + "oamdev/apiserver:" + parameter["version"]
-		cmd: [
-			"--datastore-type=" + parameter["dbType"],
-			"--datastore-database=" + parameter["database"],
-			"--datastore-url=" + parameter["dbURL"],
-		]
+		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL
 		ports: [
 			{
 				port:     8000
@@ -17,4 +19,8 @@ output: {
 			},
 		]
 	}
+	traits:[{
+		type: "service-account"
+		properties: name: parameter["serviceAccountName"]
+	}]
 }

@@ -1,5 +1,3 @@
-package resources
-
 output: {
 	type: "webservice"
 	properties: {
