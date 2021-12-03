@@ -9,6 +9,9 @@ output: {
 				expose:   true
 			},
 		]
+		if parameter["serviceType"] != _|_ {
+			exposeType: parameter["serviceType"]
+		}
 		env: [
 			{
 				name:  "KUBEVELA_API_URL"
