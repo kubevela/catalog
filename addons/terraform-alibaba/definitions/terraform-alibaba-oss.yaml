@@ -9,7 +9,6 @@ metadata:
     cloud-resource/identifier: BUCKET_NAME
     # the console url of this cloud resource
     cloud-resource/console-url: "https://oss.console.aliyun.com/bucket/oss-{REGION}/{BUCKET_NAME}/overview"
-    # the outputs which are sensitive. Separate them by a comma if there are more than one
   labels:
     type: terraform
 spec:

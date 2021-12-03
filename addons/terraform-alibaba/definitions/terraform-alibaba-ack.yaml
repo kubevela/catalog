@@ -5,6 +5,12 @@ metadata:
   namespace: vela-system
   annotations:
     definition.oam.dev/description: Terraform configuration for Alibaba Cloud ACK cluster
+    # identifier of this cloud resource
+    cloud-resource/identifier: CLUSTER_ID
+    # the console url of this cloud resource
+    cloud-resource/console-url: "https://cs.console.aliyun.com/#/k8s/cluster/{CLUSTER_ID}/v2/info/overview?clusterType=Kubernetes&profile=Default&state=running&region={REGION}"
+    # the outputs which are sensitive. Separate them by a comma if there are more than one
+    cloud-resource/sensitive-outputs: "CLUSTER_CA_CERT,CLIENT_CERT,CLIENT_KEY"
   labels:
     type: terraform
 spec:
