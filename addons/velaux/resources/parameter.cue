@@ -1,10 +1,10 @@
 parameter: {
 	// +usage=Specify the version of velaux.
-	version: "1.2.0"
+	version: *"1.2.0-rc1"
 	// +usage=Specify the image hub of velaux.
-	repo: "acr.kubevela.net/"
+	repo?: *"" | string
 	// +usage=Specify the database type, current support KubeAPI(default) and MongoDB.
-	dbType: "kubeapi" | "mongodb"
+	dbType: *"kubeapi" | "mongodb"
 	// +usage=Specify the database name, for the kubeapi db type, it represents namespace.
 	database?: string
 	// +usage=Specify the MongoDB URL. it only enabled where DB type is MongoDB.
@@ -13,4 +13,6 @@ parameter: {
 	domain?: string
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-vela-core" | string
+	// +usage=Specify the service type.
+	serviceType?: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
 }

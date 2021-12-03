@@ -1,6 +1,6 @@
 - uiType: ImageInput
   jsonKey: image
-  label: Application Image
+  label: Image
   sort: 1
 - jsonKey: memory
   uiType: MemoryNumber
@@ -26,11 +26,11 @@
 - jsonKey: exposeType
   sort: 8
 - jsonKey: cmd
-  label: Container Start Command
+  label: CMD
   sort: 9
 - jsonKey: env
   sort: 10
-  label: Environments
+  label: ENV
   subParameterGroupOption:
     - label: Add By Value
       keys:
@@ -62,9 +62,28 @@
 - jsonKey: ports
   label: Service Ports
   sort: 11
+  subParameters:
+    - jsonKey: port
+      sort: 1
+    - jsonKey: protocol
+      sort: 2
+    - jsonKey: expose
+      sort: 3
 - jsonKey: volumeMounts
   label: Persistent Storage
+  description: "Set the path and type that the service needs to persist."
   uiType: Group
+  subParameters:
+    - jsonKey: configMap
+      disable: true
+    - jsonKey: secret
+      disable: true
+    - jsonKey: pvc
+      sort: 1
+    - jsonKey: hostPath
+      sort: 3
+    - jsonKey: emptyDir
+      sort: 5
   sort: 12
 
 - jsonKey: readinessProbe
@@ -73,6 +92,30 @@
   subParameters:
   - jsonKey: hostAliases
     disable: true
+  - jsonKey: timeoutSeconds
+    sort: 1
+  - jsonKey: failureThreshold
+    sort: 4
+  - jsonKey: initialDelaySeconds
+    sort: 7
+  - jsonKey: periodSeconds
+    sort: 9
+  - jsonKey: successThreshold
+    sort: 11
+  - jsonKey: exec
+    sort: 14
+  - jsonKey: httpGet
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        sort: 1
+      - jsonKey: path
+        sort: 3
+      - jsonKey: httpHeaders
+        sort: 5
+  - jsonKey: tcpSocket
+    sort: 19
+    
   sort: 13
 
 - jsonKey: livenessProbe
