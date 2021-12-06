@@ -14,5 +14,5 @@ parameter: {
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-vela-core" | string
 	// +usage=Specify the service type.
-	serviceType?: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
+	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
 }
