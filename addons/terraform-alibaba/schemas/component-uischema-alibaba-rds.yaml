@@ -4,6 +4,7 @@
   disable: true
 - jsonKey: region
   disable: true
+
 - jsonKey: instance_name
   label: InstanceName
   sort: 1

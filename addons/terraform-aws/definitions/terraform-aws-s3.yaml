@@ -35,3 +35,7 @@ spec:
           default = "private"
           type = string
         }
+
+      providerRef:
+        name: aws
+        namespace: default
