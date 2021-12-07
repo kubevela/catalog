@@ -48,3 +48,41 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 Then access `http://localhost:8080/`, you will see:
 
 ![alt](./kubeflow-home.jpg)
+
+
+## Run an app
+
+Save the following as `app.yaml`:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: test-kfp
+spec:
+  components:
+    - name: sequential-example
+      type: upload-kfp
+      properties:
+        image: acr.kubevela.net/oamdev/kubeflow-tool
+        outputDir: /data/kubeflow/
+        outputName: sequential.tar.gz
+        buildScript: |-
+          #!/usr/bin/bash
+          set -ex
+
+          PIPELINE_URL=https://raw.githubusercontent.com/kubeflow/pipelines/master/samples/core/sequential/sequential.py
+          wget -O sequential.py ${PIPELINE_URL}
+          dsl-compile --py sequential.py --output /data/kubeflow/sequential.tar.gz
+```
+
+Run:
+
+```
+kubectl apply -f app.yaml
+```
+
+It will automatically downloads the [`sequential.py` sample pipeline](https://github.com/kubeflow/pipelines/blob/master/samples/core/sequential/sequential.py),
+and builds and uploads it to Kubeflow Pipelines service:
+
+![alt](upload-pipeline.jpg)

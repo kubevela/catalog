@@ -61,9 +61,18 @@ metadata:
 spec:
   components:
     - name: sequential-example
-      type: build-upload-kfp
+      type: upload-kfp
       properties:
-        pipelineURL: https://raw.githubusercontent.com/kubeflow/pipelines/master/samples/core/sequential/sequential.py
+        image: acr.kubevela.net/oamdev/kubeflow-tool
+        outputDir: /data/kubeflow/
+        outputName: sequential.tar.gz
+        buildScript: |-
+          #!/usr/bin/bash
+          set -ex
+
+          PIPELINE_URL=https://raw.githubusercontent.com/kubeflow/pipelines/master/samples/core/sequential/sequential.py
+          wget -O sequential.py ${PIPELINE_URL}
+          dsl-compile --py sequential.py --output /data/kubeflow/sequential.tar.gz
 ```
 
 Run:
