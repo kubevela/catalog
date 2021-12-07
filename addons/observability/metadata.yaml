@@ -7,9 +7,7 @@ tags:
 
 deployTo:
   control_plane: true
-  runtime_cluster: true
-  customize_runtime_cluster: true
-
+  runtime_cluster: false
 
 dependencies:
 - name: fluxcd
