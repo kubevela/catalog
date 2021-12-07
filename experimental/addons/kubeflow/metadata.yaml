@@ -1,0 +1,16 @@
+name: kubeflow
+version: 1.0.0
+description: Build Kubeflow Machine Learning Apps on KubeVela
+icon: https://raw.githubusercontent.com/kubeflow/kubeflow/master/components/centraldashboard/public/assets/favicon-192x192.png
+url: https://www.kubeflow.org/
+
+tags:
+- machine_learning
+- AI
+- kubeflow
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+invisible: false
