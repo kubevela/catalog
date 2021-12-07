@@ -9,7 +9,14 @@ dbURL: *[if parameter["dbURL"] != _|_ {
 output: {
 	type: "webservice"
 	properties: {
-		image: parameter["repo"] + "oamdev/vela-apiserver:" + parameter["version"]
+		if parameter["repo"] == _|_ {
+			image: "oamdev/apiserver:" + parameter["version"]
+		}
+
+		if parameter["repo"] != _|_ {
+			image: parameter["repo"] + "/" +"oamdev/apiserver:" + parameter["version"]
+		}
+
 		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL
 		ports: [
 			{
