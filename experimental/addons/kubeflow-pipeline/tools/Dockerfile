@@ -7,7 +7,7 @@ ENV SHELL /bin/bash
 ARG KUBECTL_ARCH="amd64"
 ARG KUBECTL_VERSION=v1.21.0
 
-WORKDIR /downloads
+WORKDIR /workspace
 
 # install - usefull linux packages
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -31,10 +31,3 @@ RUN curl -sL "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${KUBECTL_A
   && echo "$(cat /tmp/kubectl.sha256) /usr/local/bin/kubectl" | sha256sum --check \
   && rm /tmp/kubectl.sha256 \
   && chmod +x /usr/local/bin/kubectl
-
-# install Kubeflow Pipeline SDK
-RUN pip3 install kfp --upgrade
-
-# add script to build and upload the pipeline
-COPY run.sh /entrypoint/run.sh
-RUN chmod +x /entrypoint/run.sh

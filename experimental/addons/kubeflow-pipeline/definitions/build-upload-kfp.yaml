@@ -12,7 +12,10 @@ spec:
     cue:
       template: |
         parameter: {
-          pipelineURL: string
+          image: string
+          script: string
+          outputDir: string
+          outputName: string
         }
         output: {
           apiVersion: "batch/v1"
@@ -20,8 +23,11 @@ spec:
           spec: {
             template: {
               spec: {
+                initContainers: [{
+                  name: "build-pipeline"
+                }]
                 containers: [{
-                  name: "build-upload-kfp"
+                  name: "upload-pipeline"
                   image: "acr.kubevela.net/oamdev/kubeflow-tool"
                   command: ["/entrypoint/run.sh"]
                   env: [{
