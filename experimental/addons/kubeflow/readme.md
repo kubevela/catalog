@@ -31,7 +31,7 @@ kubectl patch storageclass <your-storageclass> -p '{"metadata": {"annotations":{
 Install it via CLI:
 
 ```
-vela addon enable kubeflow-pipeline
+vela addon enable kubeflow
 ```
 
 Or you can enable it via UI.
@@ -50,7 +50,7 @@ Then access `http://localhost:8080/`, you will see:
 ![alt](./kubeflow-home.jpg)
 
 
-## Run an app
+## Upload an example pipeline
 
 Save the following as `app.yaml`:
 
