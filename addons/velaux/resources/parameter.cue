@@ -1,8 +1,8 @@
 parameter: {
 	// +usage=Specify the version of velaux.
 	version: *"v1.2.0-beta.1" | string
-	// +usage=Specify the image hub of velaux.
-	repo: *"" | string
+	// +usage=Specify the image hub of velaux, eg. "acr.kubevela.net/oamdev/"
+	repo?: string
 	// +usage=Specify the database type, current support KubeAPI(default) and MongoDB.
 	dbType: *"kubeapi" | "mongodb"
 	// +usage=Specify the database name, for the kubeapi db type, it represents namespace.
