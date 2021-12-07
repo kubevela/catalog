@@ -1,7 +1,14 @@
 output: {
 	type: "webservice"
 	properties: {
-		image: parameter["repo"] + "oamdev/velaux:" + parameter["version"]
+		if parameter["repo"] == _|_ {
+			image: "oamdev/velaux:" + parameter["version"]
+		}
+
+		if parameter["repo"] != _|_ {
+			image: parameter["repo"] + "/" + "oamdev/velaux:" + parameter["version"]
+		}
+
 		ports: [
 			{
 				port:     80
