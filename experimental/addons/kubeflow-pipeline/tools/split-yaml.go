@@ -25,6 +25,7 @@ func main() {
 		panic(err)
 	}
 	defer file.Close()
+	os.MkdirAll("_out", 0700)
 
 	scanner := bufio.NewScanner(file)
 	buf := bytes.NewBuffer(nil)
@@ -58,7 +59,7 @@ func main() {
 }
 
 func writeFile(filename string, index int, b []byte) {
-	filename = fmt.Sprintf("%s-%d.yaml", filename, index)
+	filename = fmt.Sprintf("_out/%s-%d.yaml", filename, index)
 	err := ioutil.WriteFile(filename, b, 0600)
 	if err != nil {
 		panic(err)
