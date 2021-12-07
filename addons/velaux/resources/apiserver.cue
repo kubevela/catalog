@@ -10,11 +10,11 @@ output: {
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/apiserver:" + parameter["version"]
+			image: "oamdev/vela-apiserver:" + parameter["version"]
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" +"oamdev/apiserver:" + parameter["version"]
+			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + parameter["version"]
 		}
 
 		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL
