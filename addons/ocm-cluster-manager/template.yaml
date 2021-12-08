@@ -1,6 +1,8 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
+  annotations:
+    addons.oam.dev/description: "ocm-cluster-manager can deploy an OCM hub cluster environment."
   name: ocm-cluster-manager
   namespace: vela-system
 spec:
@@ -20,4 +22,3 @@ spec:
         kind: Namespace
         metadata:
           name: open-cluster-management
-
