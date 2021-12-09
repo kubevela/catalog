@@ -14,7 +14,8 @@ spec:
           component: ns-open-cluster-management
       - name: apply-crd
         type: apply-component
-        properties: crd-cluster-manager-hub
+        properties:
+          component: crd-cluster-manager-hub
       - name: apply-resources
         type: apply-remaining
   components:
