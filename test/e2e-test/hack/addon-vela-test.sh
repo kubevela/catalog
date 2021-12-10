@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ADDONS=`ls './addons'`
+ADDONS=`vela addon list |awk 'NR>1'|awk '{print $1}'`
 
 vela addon list
 
