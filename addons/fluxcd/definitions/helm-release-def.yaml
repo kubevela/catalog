@@ -74,7 +74,6 @@ spec:
         						kind: "Bucket"
         					}
         					name:      context.name
-        					namespace: context.namespace
         				}
         				interval: parameter.pullInterval
         			}

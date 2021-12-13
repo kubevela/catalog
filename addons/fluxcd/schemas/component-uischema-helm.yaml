@@ -2,7 +2,7 @@
   label: Repo Type
   sort: 1
 - jsonKey: url
-  label: Repo Type
+  label: Repo URL
   sort: 2
 - jsonKey: chart
   sort: 3
