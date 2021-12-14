@@ -9,6 +9,14 @@ output: {
 		url:             "https://charts.kubevela.net/addons"
 		targetNamespace: "vela-system"
 		releaseName:     "prometheus"
+		values: {
+			alertmanager: persistentVolume: {
+				size: parameter["disk-size"]
+			}
+			server: persistentVolume: {
+				size: parameter["disk-size"]
+			}
+		}
 	}
 	traits: [
 		{
