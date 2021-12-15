@@ -15,4 +15,4 @@ deployTo:
 dependencies:
   - name: fluxcd
 
-invisible: true
+invisible: false
