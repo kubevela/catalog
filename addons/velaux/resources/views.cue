@@ -184,10 +184,12 @@ output: {
                                                 }}
                                             }
                                         }
-                                        status: {for containerStatus in pod.value.status.containerStatuses if containerStatus.name == container.name {
-                                            state:        containerStatus.state
-                                            restartCount: containerStatus.restartCount
-                                        }}
+                                        if pod.value.status.containerStatuses != _|_ {
+                                            status: {for containerStatus in pod.value.status.containerStatuses if containerStatus.name == container.name {
+                                                state:        containerStatus.state
+                                                restartCount: containerStatus.restartCount
+                                            }}
+                                        }
                                     }]
                                     if eventList.err == _|_ {
                                         events: eventList.list
