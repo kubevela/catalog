@@ -1,0 +1,29 @@
+- jsonKey: dingding
+  subParameters:
+  - jsonKey: message
+    subParameters:
+    - jsonKey: msgtype
+      disable: true
+    - jsonKey: link
+      disable: true
+    - jsonKey: markdown
+      disable: true
+    - jsonKey: at
+      disable: true
+    - jsonKey: actionCard
+      disable: true
+    - jsonKey: feedCard
+      disable: true
+
+- jsonKey: slack
+  subParameters:
+  - jsonKey: message
+    subParameters:
+    - jsonKey: blocks
+      disable: true
+    - jsonKey: attachments
+      disable: true
+    - jsonKey: thread_ts
+      disable: true
+    - jsonKey: mrkdwn
+      disable: true
