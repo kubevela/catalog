@@ -173,7 +173,13 @@ spec:
       			releaseMessage: "Create helm release successfully"
       		}
       		if context.outputs.release.status.conditions[0]["message"] != "Release reconciliation succeeded" {
-      			releaseMessage: "Create helm release fail, message: " + context.outputs.release.status.conditions[0]["message"]
+      			releaseBasicMessage: "Delivery helm release in progress, message: " + context.outputs.release.status.conditions[0]["message"]
+      			if len(context.outputs.release.status.conditions) == 1 {
+      				releaseMessage: releaseBasicMessage
+      			}
+      			if len(context.outputs.release.status.conditions) > 1 {
+      				releaseMessage: releaseBasicMessage + ", " + context.outputs.release.status.conditions[1]["message"]
+      			}
       		}
       	}
 
