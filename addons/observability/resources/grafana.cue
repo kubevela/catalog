@@ -13,7 +13,7 @@ output: {
 		{
 			type: "pure-ingress"
 			properties: {
-				domain: parameter["grafana-domain"]
+				domain: parameter["domain"]
 				http:
 					"/": 80
 			}

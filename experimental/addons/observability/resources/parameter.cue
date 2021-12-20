@@ -1,3 +1,0 @@
-parameter: {
-	"grafana-domain":           *"" | string
-}

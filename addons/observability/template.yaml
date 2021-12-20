@@ -4,10 +4,6 @@ metadata:
   name: observability
   namespace: vela-system
 spec:
-  workflow:
-    steps:
-      - name: apply-resources
-        type: apply-remaining
   components:
     - name: grafana-registration
       type: helm
