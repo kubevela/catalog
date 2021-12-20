@@ -21,3 +21,9 @@ subjects:
   - kind: ServiceAccount
     name: sa-notification-controller
     namespace: flux-system
+  - kind: ServiceAccount
+    name: sa-image-reflector-controller
+    namespace: flux-system
+  - kind: ServiceAccount
+    name: sa-image-automation-controller
+    namespace: flux-system
