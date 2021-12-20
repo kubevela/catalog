@@ -18,3 +18,9 @@ standard-metrics-test:
 
 standard-autoscaler-test:
 	cd ./traits/autoscalertrait && make test
+
+addon-test:
+	cp -r addons/ test/e2e-test/addon/testdata/
+	cd test/e2e-test/addon/ && \
+	   go run mock_server.go && sleep 3 &
+	bash ./test/e2e-test/hack/addon-vela-test.sh

@@ -31,3 +31,6 @@ tmp/
 
 # Vscode files
 .vscode
+
+# addon e2e testdata, only used by CI check
+test/e2e-test/addon/testdata/
