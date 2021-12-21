@@ -20,6 +20,8 @@ spec:
     # install loki
     - name: loki
       type: helm
+      dependsOn:
+        - grafana-registration
       properties:
         chart: loki-stack
         version: 2.4.1
