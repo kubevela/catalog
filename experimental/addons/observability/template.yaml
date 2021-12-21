@@ -43,3 +43,10 @@ spec:
           image:
             repository: oamdev/kube-state-metrics
             tag: v2.1.0
+
+  workflow:
+    steps:
+      - name: apply-resources
+        type: apply-component
+        properties:
+          component: "grafana-registration"
