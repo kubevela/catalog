@@ -1,4 +1,4 @@
-name: Registry
+name: Addon Registry
 on:
   push:
     branches:
@@ -16,6 +16,7 @@ jobs:
     env:
       ADDON_BUCKET: kubevela-addons
       ADDON_DIR: addons
+      EXPERIMENTAL_ADDON_DIR: experimental/addons
       ADDON_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
     runs-on: ubuntu-20.04
     steps:
@@ -24,5 +25,7 @@ jobs:
         run: wget http://gosspublic.alicdn.com/ossutil/1.7.0/ossutil64 && chmod +x ossutil64 && mv ossutil64 ossutil
       - name: Configure Alibaba Cloud ossutil
         run: ./ossutil --config-file .ossutilconfig config -i $ACCESS_KEY -k $ACCESS_KEY_SECRET -e $ADDON_ENDPOINT
-      - name: sync local to cloud
+      - name: sync local to cloud (verified addons)
         run: ./ossutil --config-file .ossutilconfig sync $ADDON_DIR oss://$ADDON_BUCKET -f --delete
+      - name: sync local to cloud (experimental addons)
+        run: ./ossutil --config-file .ossutilconfig sync $EXPERIMENTAL_ADDON_DIR oss://$ADDON_BUCKET/experimental -f --delete
