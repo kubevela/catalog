@@ -1,6 +1,7 @@
 name: observability
 version: 1.0.0
 description: An out of the box solution for KubeVela observability
+icon: https://raw.githubusercontent.com/wangyikewxgm/catalog/edb42bc86ea89ec5bf159e609232c0e09ebfd68d/assets/addon-icon/T-addon-removebg-preview.png
 
 tags:
   - observability
