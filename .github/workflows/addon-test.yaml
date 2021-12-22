@@ -1,0 +1,93 @@
+name: Addon-test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+
+jobs:
+
+  detect-noop:
+    runs-on: ubuntu-20.04
+    outputs:
+      noop: ${{ steps.noop.outputs.should_skip }}
+    steps:
+      - name: Detect No-op Changes
+        id: noop
+        uses: fkirc/skip-duplicate-actions@v3.3.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          paths_ignore: '["**.md", "**.mdx", "**.png", "**.jpg"]'
+          do_not_skip: '["workflow_dispatch", "schedule", "push"]'
+          concurrent_skipping: false
+
+  Addon-test:
+    name: Addon-test
+    runs-on: ubuntu-latest
+    needs: detect-noop
+    if: needs.detect-noop.outputs.noop != 'true'
+
+    steps:
+
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Install ginkgo
+        run:  |
+          sudo apt-get update
+          sudo apt-get install -y golang-ginkgo-dev
+
+      - name: Install Helm
+        uses: engineerd/configurator@v0.0.5
+        with:
+          name: helm
+          url: https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
+          pathInArchive: linux-amd64/helm
+
+      - name: Setup Kind Cluster (Worker)
+        run: |
+          kind delete cluster --name worker
+          kind create cluster --image kindest/node:v1.18.15@sha256:5c1b980c4d0e0e8e7eb9f36f7df525d079a96169c8a8f20d8bd108c0d0889cc4 --name worker
+          kubectl version
+          kubectl cluster-info
+          kind get kubeconfig --name worker --internal > /tmp/worker.kubeconfig
+          kind get kubeconfig --name worker > /tmp/worker.client.kubeconfig
+
+
+      - name: Setup Kind Cluster (Hub)
+        run: |
+          kind create cluster --image kindest/node:v1.18.15@sha256:5c1b980c4d0e0e8e7eb9f36f7df525d079a96169c8a8f20d8bd108c0d0889cc4
+          kubectl version
+          kubectl cluster-info
+
+      - name: Install vela helm chart
+        run:  |
+          helm repo add kubevela https://charts.kubevela.net/core
+          helm repo update
+          kubectl create ns vela-system
+          helm install -n vela-system kubevela kubevela/vela-core --version 1.2.0-beta.3 --set multicluster.enabled=true --wait
+
+      - name: Install vela cli
+        run: |
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s 1.2.0-beta.3
+
+      - name: Vela worker cluster join
+        run: |
+          vela cluster join /tmp/worker.kubeconfig --name worker
+          vela cluster list
+
+      - name: Addon e2e-test
+        run: |
+          make addon-test
+
+
+
+
