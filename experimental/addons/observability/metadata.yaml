@@ -10,4 +10,4 @@ deployTo:
   runtime_cluster: false
 
 dependencies:
-- name: fluxcd
+- name: observability-assets

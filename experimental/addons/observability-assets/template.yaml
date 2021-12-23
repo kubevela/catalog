@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: observability
+  namespace: vela-system
+spec:
+  components:
+    - name: grafana-registration
+      type: helm
+      properties:
+        chart: grafana-registration
+        version: 0.0.7
+        repoType: helm
+        url: https://charts.kubevela.net/addons
+        releaseName: grafana-registration
