@@ -7,7 +7,7 @@ vela addon list
 exit_code=0
 for i in $ADDONS ; do
     if [ $i == "observability" ]; then
-      echo skip # currently observability addon  has some chances to fail, @zzxwill will fix this issue and
+      vela addon enable $i domain=abc.com
       else
       vela addon enable $i
     fi

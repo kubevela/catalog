@@ -1,0 +1,13 @@
+name: observability-assets
+version: 1.0.0
+description: The assets for Addon Observability
+
+tags:
+  - observability-assets
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+dependencies:
+- name: fluxcd

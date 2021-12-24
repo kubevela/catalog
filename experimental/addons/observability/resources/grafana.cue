@@ -8,16 +8,13 @@ output: {
 		url:             "https://charts.kubevela.net/addons"
 		targetNamespace: "vela-system"
 		releaseName:     "grafana"
+		values: {
+			service: {
+				type: "LoadBalancer"
+			}
+		}
 	}
 	traits: [
-		{
-			type: "pure-ingress"
-			properties: {
-				domain: parameter["domain"]
-				http:
-					"/": 80
-			}
-		},
 		{
 			type: "import-grafana-dashboard"
 			properties: {
