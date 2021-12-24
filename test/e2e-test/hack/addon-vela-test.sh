@@ -1,6 +1,23 @@
 #!/bin/sh
 
-ADDONS=`vela addon list |awk 'NR>1'|awk '{print $1}'`
+STARTUP=0
+
+for i in {1..300} ; do
+  curl 127.0.0.1:19098 > /dev/null 2>&1
+  if [ $? == 0 ]; then
+      STARTUP=1
+      break
+     else
+       sleep 1
+  fi
+done
+
+if [ $STARTUP -eq 0  ]; then
+  echo server not startup
+  exit 1
+fi
+
+ADDONS=`vela addon list |awk 'NR>1'|awk '{print $1}'` | sort
 
 vela addon list
 
