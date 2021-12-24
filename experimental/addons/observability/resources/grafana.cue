@@ -16,14 +16,6 @@ output: {
 	}
 	traits: [
 		{
-			type: "pure-ingress"
-			properties: {
-				domain: parameter["domain"]
-				http:
-					"/": 80
-			}
-		},
-		{
 			type: "import-grafana-dashboard"
 			properties: {
 				grafanaServiceName:        "grafana"
