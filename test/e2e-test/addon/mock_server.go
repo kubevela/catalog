@@ -96,6 +96,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Apply mock server config to ConfigMap fail")
 	}
+	log.Println("modify Configmap succeed, ready to startup mock server")
 	http.HandleFunc("/", ossHandler)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {

@@ -22,5 +22,5 @@ standard-autoscaler-test:
 addon-test:
 	cp -r addons/ test/e2e-test/addon/testdata/
 	cd test/e2e-test/addon/ && \
-	   go run mock_server.go && sleep 3 &
+	   go run mock_server.go &
 	bash ./test/e2e-test/hack/addon-vela-test.sh
