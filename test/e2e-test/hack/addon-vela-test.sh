@@ -17,11 +17,13 @@ if [ $STARTUP -eq 0  ]; then
   exit 1
 fi
 
-ADDONS=`vela addon list |awk 'NR>1'|awk '{print $1}'` | sort
+ADDONS=`vela addon list |awk 'NR>1'|awk '{print $1}' | sort`
 
 vela addon list
 
 exit_code=0
+
+echo $ADDONS
 for i in $ADDONS ; do
     if [ $i == "observability" ]; then
       vela addon enable $i domain=abc.com
