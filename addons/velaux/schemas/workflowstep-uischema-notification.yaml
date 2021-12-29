@@ -1,6 +1,20 @@
 - jsonKey: dingding
-  subParameters:
+  sort: 1
+  description: Support push messages to Dingding Group.
+  subParameters: 
+  - jsonKey: url
+    uiType: Ignore
+    sort: 1
+    subParameters:
+      - jsonKey: value
+        label: Webhook
+        uiType: Input
+        validate: 
+          required: true
   - jsonKey: message
+    description: Specify the message that you want to sent
+    sort: 3
+    uiType: Ignore
     subParameters:
     - jsonKey: msgtype
       disable: true
@@ -14,11 +28,61 @@
       disable: true
     - jsonKey: feedCard
       disable: true
-
-- jsonKey: slack
+    - jsonKey: text
+      uiType: Ignore
+      subParameters: 
+      - jsonKey: content
+        label: Message
+        description: Specify the message that you want to sent
+- jsonKey: email
+  sort: 3
+  description: Support push email message.
   subParameters:
-  - jsonKey: message
+  - jsonKey: from
+    sort: 1
     subParameters:
+    - jsonKey: host
+      sort: 1
+    - jsonKey: port
+      sort: 3
+    - jsonKey: address
+      sort: 5
+    - jsonKey: password
+      sort: 7
+      uiType: Ignore
+      subParameters:
+      - jsonKey: value
+        label: Password
+        uiType: Password
+        validate: 
+          required: true
+    - jsonKey: alias
+      sort: 9
+  - jsonKey: to
+    sort: 3
+  - jsonKey: content
+    sort: 5
+    subParameters:
+    - jsonKey: subject
+      sort: 1
+    - jsonKey: body
+      sort: 3
+- jsonKey: slack
+  sort: 5
+  description: Support push messages to slack channel.
+  subParameters: 
+  - jsonKey: url
+    uiType: Ignore
+    sort: 1
+    subParameters:
+      - jsonKey: value
+        label: Webhook
+        uiType: Input
+        validate: 
+          required: true
+  - jsonKey: message
+    uiType: Ignore
+    subParameters: 
     - jsonKey: blocks
       disable: true
     - jsonKey: attachments
@@ -27,3 +91,6 @@
       disable: true
     - jsonKey: mrkdwn
       disable: true
+    - jsonKey: text
+      label: Message
+      description: Specify the message that you want to sent
