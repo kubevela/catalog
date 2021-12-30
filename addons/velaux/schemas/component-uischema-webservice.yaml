@@ -98,6 +98,9 @@
     sort: 4
   - jsonKey: initialDelaySeconds
     sort: 7
+    validate:
+      defaultValue: 5
+      required: true
   - jsonKey: periodSeconds
     sort: 9
   - jsonKey: successThreshold
@@ -124,6 +127,32 @@
   subParameters:
   - jsonKey: hostAliases
     disable: true
+  - jsonKey: timeoutSeconds
+    sort: 1
+  - jsonKey: failureThreshold
+    sort: 4
+  - jsonKey: initialDelaySeconds
+    sort: 7
+    validate:
+      defaultValue: 5
+      required: true
+  - jsonKey: periodSeconds
+    sort: 9
+  - jsonKey: successThreshold
+    sort: 11
+  - jsonKey: exec
+    sort: 14
+  - jsonKey: httpGet
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        sort: 1
+      - jsonKey: path
+        sort: 3
+      - jsonKey: httpHeaders
+        sort: 5
+  - jsonKey: tcpSocket
+    sort: 19
   sort: 15
 
 - jsonKey: annotations
