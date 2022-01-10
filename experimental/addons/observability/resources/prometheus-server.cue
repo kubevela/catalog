@@ -11,10 +11,10 @@ output: {
 		releaseName:     "prometheus"
 		values: {
 			alertmanager: persistentVolume: {
-				size: parameter["disk-size"]
+				size: "\(parameter["disk-size"])Gi"
 			}
 			server: persistentVolume: {
-				size: parameter["disk-size"]
+				size: "\(parameter["disk-size"])Gi"
 			}
 		}
 	}
