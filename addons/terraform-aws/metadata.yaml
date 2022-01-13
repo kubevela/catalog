@@ -1,7 +1,7 @@
 name: terraform-aws
 version: 1.0.0
 description: Kubernetes Terraform Controller for AWS
-icon: https://avatars3.githubusercontent.com/aws
+icon: https://static.kubevela.net/images/logos/aws.png
 url: https://registry.terraform.io/providers/hashicorp/aws/latest
 
 tags:
