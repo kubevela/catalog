@@ -14,5 +14,6 @@ spec:
       kind: Configuration
   schematic:
     terraform:
-      configuration: https://github.com/kubevela-contrib/terraform-modules/alibaba/redis
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
       type: remote
+      path: alibaba/redis
