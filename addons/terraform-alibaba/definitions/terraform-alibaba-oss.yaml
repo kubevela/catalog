@@ -26,9 +26,11 @@ spec:
         }
         output "BUCKET_NAME" {
           value = "${alicloud_oss_bucket.bucket-acl.bucket}"
+          description = "The name of the bucket"
         }
         output "BUCKET_ENDPOINT" {
           value = "${alicloud_oss_bucket.bucket-acl.bucket}.${alicloud_oss_bucket.bucket-acl.extranet_endpoint}"
+          description = "The endpoint of the bucket"
         }
         variable "bucket" {
           description = "OSS bucket name"
