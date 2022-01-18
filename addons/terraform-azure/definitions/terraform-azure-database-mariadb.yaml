@@ -89,23 +89,29 @@ spec:
 
         output "SERVER_NAME" {
           value = var.server_name
+          description = "mariadb server name"
         }
 
         output "DB_NAME" {
           value = var.db_name
+          description = "Database instance name"
         }
         output "DB_USER" {
           value = var.username
+          description = "Database instance username"
         }
         output "DB_PASSWORD" {
           sensitive = true
           value = var.password
+          description = "Database instance password"
         }
         output "DB_PORT" {
           value = "3306"
+          description = "Database instance port"
         }
         output "DB_HOST" {
           value = azurerm_mariadb_server.example.fqdn
+          description = "Database instance host"
         }
 
 
