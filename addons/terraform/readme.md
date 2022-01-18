@@ -1,4 +1,10 @@
 # Terraform
 
-This addon contains terraform operation kit, which allows you to arrange, 
-generate and use cloud service from different cloud vendor.
+A Kubernetes [Terraform Controller](https://github.com/oam-dev/terraform-controller), managing Cloud resources through Kubernetes
+
+# Compatibility
+
+| Terraform Addon | Terraform Controller | Terraform binary |  Cloud Provider   |
+|-----------------|:--------------------:|:----------------:|:-----------------:|
+| 1.0.0           |       v0.2.20        |      1.0.2       | alicloud 1.140.0; | 
+| 1.0.1           |        v0.3.2        |      1.0.2       | alicloud 1.140.0; | 
