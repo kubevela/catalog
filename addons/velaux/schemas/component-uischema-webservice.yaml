@@ -2,27 +2,6 @@
   jsonKey: image
   label: Image
   sort: 1
-- jsonKey: memory
-  uiType: MemoryNumber
-  sort: 3
-  label: Memory Request&Limit
-- uiType: CPUNumber
-  jsonKey: cpu
-  sort: 5
-  label: CPU Request&Limit
-- description: Specify image pull policy for your service
-  jsonKey: imagePullPolicy
-  label: Image Pull Policy
-  uiType: Select
-  sort: 7
-  validate: 
-    options:
-      - label: IfNotPresent
-        value: IfNotPresent
-      - label: Always
-        value: Always
-      - label: Never
-        value: Never
 - jsonKey: exposeType
   sort: 8
 - jsonKey: cmd
@@ -66,9 +45,12 @@
     - jsonKey: port
       sort: 1
     - jsonKey: protocol
-      sort: 2
-    - jsonKey: expose
       sort: 3
+    - jsonKey: name
+      sort: 4
+      disable: true
+    - jsonKey: expose
+      sort: 5
 - jsonKey: volumeMounts
   label: Persistent Storage
   description: "Set the path and type that the service needs to persist."
@@ -158,8 +140,30 @@
 - jsonKey: annotations
   sort: 19
 
-- jsonKey: lables
+- jsonKey: labels
   sort: 21
+
+- jsonKey: memory
+  uiType: MemoryNumber
+  sort: 22
+  label: Memory Request&Limit
+- uiType: CPUNumber
+  jsonKey: cpu
+  sort: 23
+  label: CPU Request&Limit
+- description: Specify image pull policy for your service
+  jsonKey: imagePullPolicy
+  label: Image Pull Policy
+  uiType: Select
+  sort: 24
+  validate: 
+    options:
+      - label: IfNotPresent
+        value: IfNotPresent
+      - label: Always
+        value: Always
+      - label: Never
+        value: Never
 
 - jsonKey: addRevisionLabel
   disable: true
