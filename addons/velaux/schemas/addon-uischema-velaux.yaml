@@ -1,6 +1,4 @@
 - jsonKey: version
-  validate: 
-    defaultValue: 1.2.0-rc1
   sort: 1
 - jsonKey: dbType
   label: DBType
