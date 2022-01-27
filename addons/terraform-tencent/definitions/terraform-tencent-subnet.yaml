@@ -11,7 +11,7 @@ metadata:
 spec:
   schematic:
     terraform:
-      configuration: |-
+      configuration: |
         terraform {
           required_providers {
             tencentcloud = {
@@ -23,6 +23,7 @@ spec:
         variable "availability_zone" {
           description = "Availability Zone"
           default = "ap-beijing-1"
+          type = string
         }
 
         resource "tencentcloud_vpc" "foo" {
