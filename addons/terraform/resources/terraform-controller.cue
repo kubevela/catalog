@@ -4,7 +4,7 @@ output: {
 		repoType: "helm"
 		url:      "https://charts.kubevela.net/addons"
 		chart:    "terraform-controller"
-		version:  "0.3.2"
+		version:  "0.3.4"
 		values: {
 			if !parameter["githubBlocked"] {
 				githubBlocked: "'false'"
