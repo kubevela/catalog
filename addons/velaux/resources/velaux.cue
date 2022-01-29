@@ -1,3 +1,5 @@
+import "encoding/json"
+
 output: {
 	type: "webservice"
 	properties: {
@@ -7,6 +9,10 @@ output: {
 
 		if parameter["repo"] != _|_ {
 			image: parameter["repo"] + "/" + "oamdev/velaux:" + parameter["version"]
+		}
+
+		if parameter["imagePullSecrets"] != _|_ {
+			imagePullSecrets: json.Unmarshal(parameter["imagePullSecrets"])
 		}
 
 		ports: [

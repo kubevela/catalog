@@ -1,3 +1,5 @@
+import "encoding/json"
+
 database: *[if parameter["database"] != _|_ {
 "--datastore-database=" + parameter["database"]
 }] | []
@@ -15,6 +17,10 @@ output: {
 
 		if parameter["repo"] != _|_ {
 			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + parameter["version"]
+		}
+
+		if parameter["imagePullSecrets"] != _|_ {
+			imagePullSecrets: json.Unmarshal(parameter["imagePullSecrets"])
 		}
 
 		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL
