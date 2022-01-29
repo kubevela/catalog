@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Azure Resource Group
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: azure-resource-group
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      path: azure/resource-group
+      providerRef:
+        name: azure
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
