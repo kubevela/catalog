@@ -1,0 +1,16 @@
+# provider name
+name: tencent
+# The Cloud name of the provider
+cloudName: Tencent Cloud
+# When enabling a Terraform provider, these properties need to set for authentication
+properties:
+  - name: TENCENTCLOUD_SECRET_ID
+    secretKey: secretID
+    description: Get TENCENTCLOUD_SECRET_ID per this guide https://cloud.tencent.com/document/product/1213/67093
+  - name: TENCENTCLOUD_SECRET_KEY
+    secretKey: secretKey
+    description: Get TENCENTCLOUD_SECRET_KEY per this guide https://cloud.tencent.com/document/product/1213/67093
+    # If one property is region, please set `isRegion` to true
+  - name: TENCENTCLOUD_REGION
+    description: Get TENCENTCLOUD_REGION by picking one RegionId from Tencent Cloud region list https://cloud.tencent.com/document/api/1140/40509#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
+    isRegion: true
