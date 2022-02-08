@@ -24,3 +24,6 @@ addon-test:
 	cd test/e2e-test/addon/ && \
 	   go run mock_server.go &
 	bash ./test/e2e-test/hack/addon-vela-test.sh
+
+terraform-addon-gen:
+	go run hack/addons/terraform/gen.go $(conf)
