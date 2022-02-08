@@ -2,16 +2,16 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Security-Group
+    definition.oam.dev/description: AWS Cloudfront-S3-Cdn
   creationTimestamp: null
   labels:
     type: terraform
-  name: aws-security-group
+  name: aws-cloudfront-s3-cdn
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-aws-modules/terraform-aws-security-group.git
+      configuration: https://github.com/cloudposse/terraform-aws-cloudfront-s3-cdn.git
       providerRef:
         name: aws
         namespace: default

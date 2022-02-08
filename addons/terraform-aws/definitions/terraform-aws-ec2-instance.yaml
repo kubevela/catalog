@@ -2,16 +2,16 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Security-Group
+    definition.oam.dev/description: AWS Ec2-Instance
   creationTimestamp: null
   labels:
     type: terraform
-  name: aws-security-group
+  name: aws-ec2-instance
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-aws-modules/terraform-aws-security-group.git
+      configuration: https://github.com/terraform-aws-modules/terraform-aws-ec2-instance.git
       providerRef:
         name: aws
         namespace: default
