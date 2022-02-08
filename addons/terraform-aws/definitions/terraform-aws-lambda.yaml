@@ -2,7 +2,9 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Lambda
+    definition.oam.dev/description: Terraform module, which takes care of a lot of
+      AWS Lambda/serverless tasks (build dependencies, packages, updates, deployments)
+      in countless combinations
   creationTimestamp: null
   labels:
     type: terraform

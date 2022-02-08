@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Iam-Role
+    definition.oam.dev/description: A Terraform module that creates IAM role with
+      provided JSON IAM polices documents.
   creationTimestamp: null
   labels:
     type: terraform

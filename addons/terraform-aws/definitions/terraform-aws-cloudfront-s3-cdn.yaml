@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Cloudfront-S3-Cdn
+    definition.oam.dev/description: Terraform module to easily provision CloudFront
+      CDN backed by an S3 origin
   creationTimestamp: null
   labels:
     type: terraform

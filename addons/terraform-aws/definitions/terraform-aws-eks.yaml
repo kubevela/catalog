@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Eks
+    definition.oam.dev/description: Terraform module to create an Elastic Kubernetes
+      (EKS) cluster and associated worker instances on AWS
   creationTimestamp: null
   labels:
     type: terraform

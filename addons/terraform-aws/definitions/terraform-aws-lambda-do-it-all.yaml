@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Lambda-Do-It-All
+    definition.oam.dev/description: Terraform module to provision a lambda with full
+      permissions
   creationTimestamp: null
   labels:
     type: terraform

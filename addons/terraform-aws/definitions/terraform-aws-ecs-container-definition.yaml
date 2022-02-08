@@ -2,7 +2,9 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Ecs-Container-Definition
+    definition.oam.dev/description: Terraform module to generate well-formed JSON
+      documents (container definitions) that are passed to the  aws_ecs_task_definition
+      Terraform resource
   creationTimestamp: null
   labels:
     type: terraform

@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Utils
+    definition.oam.dev/description: Utility functions for use with Terraform in the
+      AWS environment
   creationTimestamp: null
   labels:
     type: terraform

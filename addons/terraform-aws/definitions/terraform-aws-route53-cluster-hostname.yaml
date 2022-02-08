@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Route53-Cluster-Hostname
+    definition.oam.dev/description: Terraform module to define a consistent AWS Route53
+      hostname
   creationTimestamp: null
   labels:
     type: terraform

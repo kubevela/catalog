@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Eks-Node-Problem-Detector
+    definition.oam.dev/description: A terraform module to deploy a node problem detector
+      on Amazon EKS cluster
   creationTimestamp: null
   labels:
     type: terraform

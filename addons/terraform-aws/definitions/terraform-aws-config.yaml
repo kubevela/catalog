@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Config
+    definition.oam.dev/description: This module configures AWS Config, a service that
+      enables you to assess, audit, and evaluate the configurations of your AWS resources.
   creationTimestamp: null
   labels:
     type: terraform

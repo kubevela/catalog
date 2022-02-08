@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Iam-System-User
+    definition.oam.dev/description: Terraform Module to Provision a Basic IAM System
+      User Suitable for CI/CD Systems (E.g. TravisCI, CircleCI)
   creationTimestamp: null
   labels:
     type: terraform

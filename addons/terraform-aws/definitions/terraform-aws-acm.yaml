@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Acm
+    definition.oam.dev/description: Terraform module which creates and validates ACM
+      certificate
   creationTimestamp: null
   labels:
     type: terraform

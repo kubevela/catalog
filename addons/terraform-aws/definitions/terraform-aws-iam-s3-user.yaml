@@ -2,7 +2,9 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Iam-S3-User
+    definition.oam.dev/description: Terraform module to provision a basic IAM user
+      with permissions to access S3 resources, e.g. to give the user read/write/delete
+      access to the objects in an S3 bucket
   creationTimestamp: null
   labels:
     type: terraform

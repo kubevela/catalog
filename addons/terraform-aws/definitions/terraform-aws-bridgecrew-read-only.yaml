@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Bridgecrew-Read-Only
+    definition.oam.dev/description: Bridgecrew READ ONLY integration module
   creationTimestamp: null
   labels:
     type: terraform

@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Security-Hub
+    definition.oam.dev/description: Terraform module to provision AWS Security Hub
   creationTimestamp: null
   labels:
     type: terraform

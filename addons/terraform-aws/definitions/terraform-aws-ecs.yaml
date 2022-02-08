@@ -2,7 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Ecs
+    definition.oam.dev/description: Terraform module which creates AWS ECS resources
   creationTimestamp: null
   labels:
     type: terraform

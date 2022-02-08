@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Elasticache-Redis
+    definition.oam.dev/description: Terraform module to provision an ElastiCache Redis
+      Cluster
   creationTimestamp: null
   labels:
     type: terraform

@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: AWS Route53-Alias
+    definition.oam.dev/description: Terraform Module to Define Vanity Host/Domain
+      (e.g. ) as an ALIAS record
   creationTimestamp: null
   labels:
     type: terraform
