@@ -1,0 +1,25 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform module which creates IAM resources on
+      AWS
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: aws-iam-group-with-policies
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/terraform-aws-modules/terraform-aws-iam.git
+      path: modules/iam-group-with-policies
+      providerRef:
+        name: aws
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}

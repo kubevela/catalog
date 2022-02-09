@@ -7,12 +7,13 @@ metadata:
   creationTimestamp: null
   labels:
     type: terraform
-  name: aws-iam
+  name: aws-iam-assumable-role-with-oidc
   namespace: vela-system
 spec:
   schematic:
     terraform:
       configuration: https://github.com/terraform-aws-modules/terraform-aws-iam.git
+      path: modules/iam-assumable-role-with-oidc
       providerRef:
         name: aws
         namespace: default
