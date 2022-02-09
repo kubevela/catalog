@@ -10,7 +10,7 @@ output: {
 		releaseName:     "grafana"
 		values: {
 			service: {
-				type: "LoadBalancer"
+				type: parameter["serviceType"]
 			}
 		}
 	}
