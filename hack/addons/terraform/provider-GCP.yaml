@@ -10,7 +10,7 @@ cloudName: Google Cloud Platform
 properties:
   - name: GOOGLE_CREDENTIALS
     secretKey: gcpCredentialsJSON
-    description: Get gcpCredentialsJSON per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials
+    description: Get GOOGLE_CREDENTIALS per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials
   - name: GOOGLE_REGION
     description: Get GOOGLE_REGION by picking one RegionId from Google Cloud region list https://cloud.google.com/compute/docs/regions-zones
     isRegion: true
