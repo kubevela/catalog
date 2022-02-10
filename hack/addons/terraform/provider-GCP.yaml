@@ -1,0 +1,19 @@
+# provider name
+name: gcp
+
+# The Cloud name of the provider
+cloudName: Google Cloud Platform
+
+# When enabling a Terraform provider, these properties need to set for authentication. For Tencent Cloud,
+# name: Environment variable name when authenticating Terraform, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L59
+# secretKey: Secret key when storing authentication information in a Kubernetes, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L109.
+properties:
+  - name: GOOGLE_CREDENTIALS
+    secretKey: gcpCredentialsJSON
+    description: Get GOOGLE_CREDENTIALS per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#adding-credentials
+  - name: GOOGLE_REGION
+    description: Get GOOGLE_REGION by picking one RegionId from Google Cloud region list https://cloud.google.com/compute/docs/regions-zones
+    isRegion: true
+  - name: GOOGLE_PROJECT
+    secretKey: gcpProject
+    description: Set GOOGLE_PROJECT per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#configuring-the-provider
