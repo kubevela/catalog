@@ -16,4 +16,4 @@ properties:
     isRegion: true
   - name: GOOGLE_PROJECT
     secretKey: gcpProject
-    description: Set gcpProject per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#configuring-the-provider
+    description: Set GOOGLE_PROJECT per this guide https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/getting_started#configuring-the-provider
