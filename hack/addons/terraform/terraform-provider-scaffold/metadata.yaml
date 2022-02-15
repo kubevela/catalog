@@ -1,0 +1,38 @@
+name: terraform-{{ .Name }}
+version: 1.0.0
+description: Kubernetes Terraform Controller Provider for {{ .CloudName }}
+url: https://github.com/oam-dev/terraform-controller
+
+tags:
+  - Terraform Controller Provider
+  - IaC
+  - Cloud Resources
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+  - name: terraform
+
+# -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
+# provider short name
+shortCloudName: tencent
+
+# The Cloud name of the provider
+completeCloudName: Tencent Cloud
+
+# When enabling a Terraform provider, these properties need to set for authentication. For Tencent Cloud,
+# name: Environment variable name when authenticating Terraform, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L59
+# secretKey: Secret key when storing authentication information in a Kubernetes, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L109.
+cloudProperties:
+  - name: TENCENTCLOUD_SECRET_ID
+    secretKey: secretID
+    description: Get TENCENTCLOUD_SECRET_ID per this guide https://cloud.tencent.com/document/product/1213/67093
+  - name: TENCENTCLOUD_SECRET_KEY
+    secretKey: secretKey
+    description: Get TENCENTCLOUD_SECRET_KEY per this guide https://cloud.tencent.com/document/product/1213/67093
+    # If one property is region, please set `isRegion` to true
+  - name: TENCENTCLOUD_REGION
+    description: Get TENCENTCLOUD_REGION by picking one RegionId from Tencent Cloud region list https://cloud.tencent.com/document/api/1140/40509#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
+    isRegion: true
