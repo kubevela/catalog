@@ -1,5 +1,3 @@
-import "encoding/json"
-
 database: *[if parameter["database"] != _|_ {
 "--datastore-database=" + parameter["database"]
 }] | []
@@ -20,7 +18,7 @@ output: {
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
-			imagePullSecrets: json.Unmarshal(parameter["imagePullSecrets"])
+			imagePullSecrets: parameter["imagePullSecrets"]
 		}
 
 		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL

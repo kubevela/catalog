@@ -1,5 +1,3 @@
-import "encoding/json"
-
 output: {
 	type: "webservice"
 	properties: {
@@ -12,7 +10,7 @@ output: {
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
-			imagePullSecrets: json.Unmarshal(parameter["imagePullSecrets"])
+			imagePullSecrets: parameter["imagePullSecrets"]
 		}
 
 		ports: [
