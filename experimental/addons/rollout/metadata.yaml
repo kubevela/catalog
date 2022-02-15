@@ -19,3 +19,6 @@ dependencies:
 # when terraform-alibaba is enabled, terraform will be enabled automatically
 # default: false
 invisible: false
+
+required:
+  vela: ">=v1.2.4"
