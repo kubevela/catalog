@@ -104,8 +104,7 @@ func render(data []byte, path, name string, provider Provider) error {
 
 func main() {
 	var provider Provider
-	args := os.Args[1:]
-	config, err := os.ReadFile(args[0])
+	config, err := os.ReadFile("hack/addons/terraform/terraform-provider-scaffold/metadata.yaml")
 	if err != nil {
 		panic(err)
 	}
