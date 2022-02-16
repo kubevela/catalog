@@ -1,0 +1,11 @@
+name: model-training
+version: 1.0.0
+description: Enable training for models
+
+tags:
+- ai
+- training
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
