@@ -1,0 +1,11 @@
+name: model-serving
+version: 1.0.0
+description: Enable serving for models
+
+tags:
+- ai
+- serving
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true

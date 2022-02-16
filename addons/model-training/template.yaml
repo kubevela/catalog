@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: model-training
+  namespace: vela-system
+spec:
+  components:
+    - name: training-operator
+      type: helm
+      properties:
+        repoType: helm
+        url: https://cowboysysop.github.io/charts
+        chart: training-operator
+        version: 1.1.4
