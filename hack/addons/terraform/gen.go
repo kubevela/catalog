@@ -14,9 +14,9 @@ import (
 )
 
 type Provider struct {
-	Name       string     `yaml:"name"`
-	CloudName  string     `yaml:"cloudName"`
-	Properties []Property `yaml:"properties"`
+	Name       string     `yaml:"shortCloudName"`
+	CloudName  string     `yaml:"completeCloudName"`
+	Properties []Property `yaml:"cloudProperties"`
 	Region     string     `yaml:"region"`
 }
 
@@ -29,7 +29,7 @@ type Property struct {
 
 const (
 	addonsPath                = "addons/"
-	terraformProviderSkaffold = "./hack/addons/terraform/terraform-provider-skaffold"
+	terraformProviderScaffold = "./hack/addons/terraform/terraform-provider-scaffold"
 )
 
 func genAddon(provider Provider) error {
@@ -45,7 +45,7 @@ func genAddon(provider Provider) error {
 		return err
 	}
 
-	fileInfos, err := ioutil.ReadDir(terraformProviderSkaffold)
+	fileInfos, err := ioutil.ReadDir(terraformProviderScaffold)
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +56,7 @@ func genAddon(provider Provider) error {
 			if err := os.Mkdir(targetProviderAddonSubPath, 0755); err != nil {
 				return err
 			}
-			sourceProviderAddonSubPath := filepath.Join(terraformProviderSkaffold, info.Name())
+			sourceProviderAddonSubPath := filepath.Join(terraformProviderScaffold, info.Name())
 			tmp, err := ioutil.ReadDir(sourceProviderAddonSubPath)
 			if err != nil {
 				return err
@@ -68,12 +68,16 @@ func genAddon(provider Provider) error {
 					return err
 				}
 				fmt.Printf("Rendering %s\n", sourceFile)
-				if err := render(data, targetProviderAddonSubPath, t.Name(), provider); err != nil {
+				name := t.Name()
+				if t.Name() != "parameter.cue" {
+					name = provider.Name + "-" + t.Name()
+				}
+				if err := render(data, targetProviderAddonSubPath, name, provider); err != nil {
 					return err
 				}
 			}
 		} else {
-			sourceFile := filepath.Join(terraformProviderSkaffold, info.Name())
+			sourceFile := filepath.Join(terraformProviderScaffold, info.Name())
 			data, err := ioutil.ReadFile(sourceFile)
 			if err != nil {
 				return err
@@ -100,8 +104,7 @@ func render(data []byte, path, name string, provider Provider) error {
 
 func main() {
 	var provider Provider
-	args := os.Args[1:]
-	config, err := os.ReadFile(args[0])
+	config, err := os.ReadFile("hack/addons/terraform/terraform-provider-scaffold/metadata.yaml")
 	if err != nil {
 		panic(err)
 	}
