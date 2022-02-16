@@ -26,4 +26,4 @@ addon-test:
 	bash ./test/e2e-test/hack/addon-vela-test.sh
 
 terraform-addon-gen:
-	go run hack/addons/terraform/gen.go $(conf)
+	go run hack/addons/terraform/gen.go
