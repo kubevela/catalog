@@ -5,6 +5,10 @@ description: Enable training for models
 tags:
 - ai
 - training
+- alpha
+
+dependencies:
+  - name: fluxcd
 
 deployTo:
   control_plane: true
