@@ -5,6 +5,10 @@ description: Enable serving for models
 tags:
 - ai
 - serving
+- alpha
+
+dependencies:
+  - name: fluxcd
 
 deployTo:
   control_plane: true
