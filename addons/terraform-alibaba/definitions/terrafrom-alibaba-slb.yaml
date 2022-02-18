@@ -1,0 +1,68 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Alicloud SLB
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: alibaba-slb
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: |-
+        resource "random_id" "this" {
+          byte_length = 8
+        }
+
+        variable "namePrefix" {
+          default = ""
+          type    = string
+        }
+
+        locals {
+          default_description = "Auto created by serverless devs with terraform"
+          default_name_prefix = var.namePrefix == "" ? "serverless-devs" : var.namePrefix
+          default_name_suffix = random_id.this.hex
+          default_name        = "${local.default_name_prefix}-${local.default_name_suffix}"
+        }
+
+        data "alicloud_zones" "default" {
+          available_resource_creation = "VSwitch"
+        }
+
+
+        module "vpc" {
+          source  = "git::github.com/kubevela-contrib/terraform-modules.git//alibaba/vswitch"
+          zone_id = var.zone_id==""? data.alicloud_zones.default.zones.0.id : var.zone_id
+        }
+
+
+        resource "alicloud_slb_load_balancer" "slb" {
+          count              = var.createSlb ? 1 : 0
+          load_balancer_name = local.default_name
+          address_type       = "intranet"
+          load_balancer_spec = "slb.s2.small"
+          vswitch_id         = module.vpc.VSWITCH_ID
+        }
+        variable "createSlb" {
+          default = true
+          type    = bool
+        }
+
+        variable "zone_id" {
+          description = "Availability Zone ID"
+          type        = string
+          default     = ""
+        }
+
+        output "slbId" {
+          description = "SLB ID"
+          value = var.createSlb ? alicloud_slb_load_balancer.slb.0.id : null
+        }
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
