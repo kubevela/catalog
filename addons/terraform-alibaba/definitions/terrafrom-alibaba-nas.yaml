@@ -1,0 +1,125 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Alicloud NAS
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: alibaba-nas
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: |-
+        resource "random_id" "this" {
+          byte_length = 8
+        }
+
+        locals {
+          default_description = "Auto created by serverless devs with terraform"
+          default_name_prefix = var.namePrefix == "" ? "serverless-devs" : var.namePrefix
+          default_name_suffix = random_id.this.hex
+          default_name        = "${local.default_name_prefix}-${local.default_name_suffix}"
+        }
+
+        data "alicloud_zones" "default" {
+          available_resource_creation = "VSwitch"
+        }
+
+        resource "alicloud_security_group" "sg" {
+          name        = var.name
+          description = var.description
+          vpc_id      = module.vpc.VPC_ID
+        }
+
+        resource "alicloud_security_group_rule" "sg_rule" {
+          type              = "ingress"
+          ip_protocol       = "tcp"
+          nic_type          = "intranet"
+          policy            = "accept"
+          port_range        = var.port_range
+          priority          = 1
+          security_group_id = alicloud_security_group.sg.id
+          cidr_ip           = var.cidr_ip
+        }
+
+        module "vpc" {
+          source  = "git::github.com/kubevela-contrib/terraform-modules.git//alibaba/vswitch"
+          zone_id = var.zone_id==""? data.alicloud_zones.default.zones.0.id : var.zone_id
+        }
+
+        variable "name" {
+          default     = "tf"
+          description = "The name of the security group rule"
+          type        = string
+        }
+
+        variable "description" {
+          default     = "The description of the security group rule"
+          description = "The description of the security group rule"
+          type        = string
+        }
+
+        variable "port_range" {
+          default     = "1/65535"
+          description = "The port range of the security group rule"
+          type        = string
+        }
+
+        variable "cidr_ip" {
+          description = "cidr blocks used to create a new security group rule"
+          type        = string
+          default     = "0.0.0.0/0"
+        }
+
+        variable "zone_id" {
+          description = "Availability Zone ID"
+          type        = string
+          default     = ""
+        }
+
+        resource "alicloud_nas_file_system" "nas_fs" {
+          count         = var.createNas ? 1 : 0
+          protocol_type = "NFS"
+          storage_type  = "Capacity"
+        }
+
+        resource "alicloud_nas_access_group" "nas_ag" {
+          count = var.createNas ? 1 : 0
+          name  = local.default_name
+          type  = "Vpc"
+        }
+
+        resource "alicloud_nas_mount_target" "nas_mt" {
+          count             = var.createNas ? 1 : 0
+          file_system_id    = alicloud_nas_file_system.nas_fs.0.id
+          access_group_name = alicloud_nas_access_group.nas_ag.0.name
+          vswitch_id        = module.vpc.VSWITCH_ID
+          security_group_id = alicloud_security_group.sg.id
+        }
+
+        variable "namePrefix" {
+          default = ""
+          type    = string
+        }
+
+        variable "createNas" {
+          default = true
+          type    = bool
+        }
+
+        output "nasId" {
+          description = "NAS ID"
+          value = var.createNas ? alicloud_nas_file_system.nas_fs.0.id : null
+        }
+
+        output "nasMountTargetId" {
+          description = "NAS Mount Target ID"
+          value = var.createNas ? replace(alicloud_nas_mount_target.nas_mt.0.id, "${alicloud_nas_file_system.nas_fs.0.id}:", "") : null
+        }
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
