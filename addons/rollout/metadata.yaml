@@ -6,6 +6,7 @@ url: https://kubevela.io/docs/end-user/traits/rollout
 tags:
   - extended_workload
   - rollout
+  - GA
 
 deployTo:
   runtimeCluster: true
