@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Alibaba RDS in a preview mode
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: alibaba-rds-preview
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      path: alibaba/rds-preview
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
