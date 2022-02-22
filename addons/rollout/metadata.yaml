@@ -21,5 +21,5 @@ dependencies:
 # default: false
 invisible: false
 
-required:
+system:
   vela: ">=v1.2.4"

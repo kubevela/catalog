@@ -2,8 +2,15 @@
   sort: 1
 - jsonKey: targetSize
   sort: 3
+  validate:
+    min: 0
 - jsonKey: rolloutBatches
   sort: 5
+  subParameters:
+  - jsonKey: replicas
+    validate:
+      required: true
+      min: 0
 - jsonKey: targetRevision
   sort: 7
   validate:

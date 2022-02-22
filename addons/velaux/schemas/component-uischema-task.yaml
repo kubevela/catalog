@@ -5,7 +5,9 @@
 - jsonKey: restart
   sort: 2
   uiType: Select
-  validate: 
+  validate:
+    required: true 
+    defaultValue: Never
     options: 
       - label: Never
         value: Never
@@ -14,27 +16,31 @@
 - jsonKey: count
   sort: 3
   uiType: Number
+  validate:
+    required: true
+    defaultValue: 1
+    min: 0
+    max: 128
 - jsonKey: memory
   uiType: MemoryNumber
   sort: 4
-  label: Memory Request&Limit
-- uiType: CPUNumber
-  jsonKey: cpu
+  label: Memory
+  description: Specifies the memory resource required for the container, If set to 0, there is no limit.
+  validate:
+    required: true
+    defaultValue: "1024Mi"
+  style:
+    colSpan: 12
+- jsonKey: cpu
+  uiType: CPUNumber
   sort: 5
-  label: CPU Request&Limit
-- description: Specify image pull policy for your service
-  jsonKey: imagePullPolicy
-  label: Image Pull Policy
-  uiType: Select
-  sort: 7
-  validate: 
-    options:
-      - label: IfNotPresent
-        value: IfNotPresent
-      - label: Always
-        value: Always
-      - label: Never
-        value: Never
+  label: CPU
+  description: Specifies the cpu resource required for the container, If set to 0, there is no limit.
+  validate:
+    required: true
+    defaultValue: "0.5"
+  style:
+    colSpan: 12
 - jsonKey: cmd
   label: CMD
   sort: 9
@@ -53,7 +59,7 @@
   subParameters:
   - jsonKey: valueFrom
     label: Secret Selector
-    uiType: InnerGroup
+    uiType: Ignore
     subParameters:
       - jsonKey: configMapKeyRef
         disable: true
@@ -69,31 +75,6 @@
             uiType: SecretKeySelect
             sort: 3
   uiType: Structs
-- jsonKey: ports
-  label: Service Ports
-  sort: 11
-  subParameters:
-    - jsonKey: port
-      sort: 1
-    - jsonKey: protocol
-      sort: 2
-    - jsonKey: expose
-      sort: 3
-- jsonKey: volumeMounts
-  label: Persistent Storage
-  description: "Set the path and type that the service needs to persist."
-  uiType: Group
-  subParameters:
-    - jsonKey: secret
-      disable: true
-    - jsonKey: pvc
-      sort: 1
-    - jsonKey: hostPath
-      sort: 3
-    - jsonKey: emptyDir
-      sort: 5
-  sort: 12
-
 
 - jsonKey: readinessProbe
   uiType: Group
@@ -103,14 +84,27 @@
     disable: true
   - jsonKey: timeoutSeconds
     sort: 1
+    style:
+      colSpan: 12
   - jsonKey: failureThreshold
     sort: 4
+    style:
+      colSpan: 12
   - jsonKey: initialDelaySeconds
     sort: 7
+    style:
+      colSpan: 12
+    validate:
+      defaultValue: 5
+      required: true
   - jsonKey: periodSeconds
     sort: 9
+    style:
+      colSpan: 12
   - jsonKey: successThreshold
     sort: 11
+    style:
+      colSpan: 12
   - jsonKey: exec
     sort: 14
   - jsonKey: httpGet
@@ -118,13 +112,28 @@
     subParameters:
       - jsonKey: port
         sort: 1
+        validate:
+          required: true
+          min: 1
+        style:
+          colSpan: 12
       - jsonKey: path
         sort: 3
+        validate:
+          required: true
+          pattern: ^/(.*)$
+        style:
+          colSpan: 12
       - jsonKey: httpHeaders
         sort: 5
   - jsonKey: tcpSocket
     sort: 19
-
+    subParameters:
+      - jsonKey: port
+        validate:
+          required: true
+          min: 1
+  
   sort: 13
 
 - jsonKey: livenessProbe
@@ -135,14 +144,27 @@
     disable: true
   - jsonKey: timeoutSeconds
     sort: 1
+    style:
+      colSpan: 12
   - jsonKey: failureThreshold
     sort: 4
+    style:
+      colSpan: 12
   - jsonKey: initialDelaySeconds
     sort: 7
+    style:
+      colSpan: 12
+    validate:
+      defaultValue: 5
+      required: true
   - jsonKey: periodSeconds
     sort: 9
+    style:
+      colSpan: 12
   - jsonKey: successThreshold
     sort: 11
+    style:
+      colSpan: 12
   - jsonKey: exec
     sort: 14
   - jsonKey: httpGet
@@ -150,19 +172,49 @@
     subParameters:
       - jsonKey: port
         sort: 1
+        validate:
+          required: true
+          min: 1
+        style:
+          colSpan: 12
       - jsonKey: path
         sort: 3
+        validate:
+          required: true
+          pattern: ^/(.*)$
+        style:
+          colSpan: 12
       - jsonKey: httpHeaders
         sort: 5
   - jsonKey: tcpSocket
     sort: 19
+    subParameters:
+      - jsonKey: port
+        validate:
+          required: true
+          min: 1
   sort: 15
 
 - jsonKey: annotations
   sort: 19
 
-- jsonKey: lables
+- jsonKey: labels
   sort: 21
+
+- description: Specify image pull policy for your service
+  jsonKey: imagePullPolicy
+  label: Image Pull Policy
+  uiType: Select
+  sort: 24
+  validate: 
+    defaultValue: IfNotPresent
+    options:
+      - label: IfNotPresent
+        value: IfNotPresent
+      - label: Always
+        value: Always
+      - label: Never
+        value: Never
 
 - jsonKey: volumes
   disable: true
