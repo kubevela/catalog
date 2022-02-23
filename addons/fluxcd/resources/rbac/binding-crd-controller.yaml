@@ -19,9 +19,6 @@ subjects:
     name: sa-source-controller
     namespace: flux-system
   - kind: ServiceAccount
-    name: sa-notification-controller
-    namespace: flux-system
-  - kind: ServiceAccount
     name: sa-image-reflector-controller
     namespace: flux-system
   - kind: ServiceAccount
