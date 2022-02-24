@@ -15,5 +15,3 @@ This is an example addon based [FluxCD](https://fluxcd.io/)
     - CUE template file that can read user input as `parameter.XXX` as defined `parameter.cue`.
       Basically the CUE template file will be combined with `parameter.cue` to render a resource.
       **You can specify the type and trait in this format**
-      
-
