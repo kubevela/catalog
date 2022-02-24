@@ -9,6 +9,10 @@ output: {
 			image: parameter["repo"] + "/" + "oamdev/velaux:" + parameter["version"]
 		}
 
+		if parameter["imagePullSecrets"] != _|_ {
+			imagePullSecrets: parameter["imagePullSecrets"]
+		}
+
 		ports: [
 			{
 				port:     80

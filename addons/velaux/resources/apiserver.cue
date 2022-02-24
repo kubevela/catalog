@@ -17,6 +17,10 @@ output: {
 			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + parameter["version"]
 		}
 
+		if parameter["imagePullSecrets"] != _|_ {
+			imagePullSecrets: parameter["imagePullSecrets"]
+		}
+
 		cmd: ["apiserver", "--datastore-type=" + parameter["dbType"]] + database + dbURL
 		ports: [
 			{
