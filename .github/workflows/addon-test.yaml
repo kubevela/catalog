@@ -71,16 +71,13 @@ jobs:
           kubectl version
           kubectl cluster-info
 
-      - name: Install vela helm chart
-        run:  |
-          helm repo add kubevela https://charts.kubevela.net/core
-          helm repo update
-          kubectl create ns vela-system
-          helm install -n vela-system kubevela kubevela/vela-core --version 1.2.0-beta.3 --set multicluster.enabled=true --wait
-
       - name: Install vela cli
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s 1.2.0-beta.3
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s 1.2.4
+      
+      - name: Install vela core
+        run: |
+          vela install
 
       - name: Vela worker cluster join
         run: |
