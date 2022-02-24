@@ -15,4 +15,6 @@ parameter: {
 	serviceAccountName: *"kubevela-vela-core" | string
 	// +usage=Specify the service type.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
+	// +usage=Specify the names of imagePullSecret for private image registry, eg. "{a,b,c}"
+	imagePullSecrets?: [...string]
 }

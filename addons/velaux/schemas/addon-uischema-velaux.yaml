@@ -14,4 +14,3 @@
     defaultValue: kubevela
 - jsonKey: domain
   sort: 9
-
