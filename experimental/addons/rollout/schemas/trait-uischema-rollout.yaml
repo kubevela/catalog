@@ -4,6 +4,7 @@
   sort: 3
   validate:
     min: 0
+    required: true
 - jsonKey: rolloutBatches
   sort: 5
   subParameters:
