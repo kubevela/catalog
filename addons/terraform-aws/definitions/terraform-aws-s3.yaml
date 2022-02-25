@@ -34,7 +34,6 @@ spec:
         }
         variable "bucket" {
           description = "S3 bucket name"
-          default     = "vela-website-202202241415"
           type        = string
         }
         variable "acl" {
