@@ -15,25 +15,31 @@ spec:
   schematic:
     terraform:
       configuration: |
+        terraform {
+          required_providers {
+            aws = {
+              source = "hashicorp/aws"
+              version = "3.74.3"
+            }
+          }
+        }
+
         resource "aws_s3_bucket" "bucket-acl" {
           bucket = var.bucket
           acl    = var.acl
         }
-
         output "BUCKET_NAME" {
+          description = "Bucket name"
           value = aws_s3_bucket.bucket-acl.bucket_domain_name
         }
-
         variable "bucket" {
           description = "S3 bucket name"
-          default = "vela-website"
-          type = string
+          type        = string
         }
-
         variable "acl" {
           description = "S3 bucket ACL"
-          default = "private"
-          type = string
+          default     = "private"
+          type        = string
         }
 
       providerRef:
