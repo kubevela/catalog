@@ -2,16 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Create a Network to be used for DC/OS for GCP
+    definition.oam.dev/description: A simple Terraform module to build an instance
+      a static public IP
   creationTimestamp: null
   labels:
     type: terraform
-  name: gcp-network
+  name: gcp-staticip
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/dcos-terraform/terraform-gcp-network.git
+      configuration: https://github.com/JamesWoolfenden/terraform-gcp-staticip.git
       providerRef:
         name: gcp
         namespace: default

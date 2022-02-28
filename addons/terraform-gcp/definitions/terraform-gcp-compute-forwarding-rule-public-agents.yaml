@@ -2,16 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Create a Network to be used for DC/OS for GCP
+    definition.oam.dev/description: This module creates an GCP forwarding rule for
+      DC/OS public agents
   creationTimestamp: null
   labels:
     type: terraform
-  name: gcp-network
+  name: gcp-compute-forwarding-rule-public-agents
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/dcos-terraform/terraform-gcp-network.git
+      configuration: https://github.com/dcos-terraform/terraform-gcp-compute-forwarding-rule-public-agents.git
       providerRef:
         name: gcp
         namespace: default

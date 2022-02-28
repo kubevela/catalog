@@ -2,16 +2,16 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Create a Network to be used for DC/OS for GCP
+    definition.oam.dev/description: Terraform module for creating VPCs on Google Cloud
   creationTimestamp: null
   labels:
     type: terraform
-  name: gcp-network
+  name: gcp-vpc
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/dcos-terraform/terraform-gcp-network.git
+      configuration: https://github.com/GMafra/terraform-gcp-vpc.git
       providerRef:
         name: gcp
         namespace: default
