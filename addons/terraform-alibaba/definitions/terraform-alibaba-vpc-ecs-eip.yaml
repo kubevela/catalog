@@ -2,17 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Bind and unbind hundreds of EIPs to multiple cloud
-      resources with one click based on Terraform
+    definition.oam.dev/description: 'Create a lightweight WEB service based on Terraform
+      under AliCloud''s VPC, including: VPC, ECS, EIP'
   creationTimestamp: null
   labels:
     type: terraform
-  name: alibaba-eip
+  name: alibaba-vpc-ecs-eip
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-eip.git
+      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-vpc-ecs-eip.git
       type: remote
   workload:
     definition:
