@@ -2,17 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Bind and unbind hundreds of EIPs to multiple cloud
-      resources with one click based on Terraform
+    definition.oam.dev/description: Terraform-based module supports creating access
+      control lists for load balancers
   creationTimestamp: null
   labels:
     type: terraform
-  name: alibaba-eip
+  name: alibaba-slb-acl
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-eip.git
+      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-slb-acl.git
       type: remote
   workload:
     definition:

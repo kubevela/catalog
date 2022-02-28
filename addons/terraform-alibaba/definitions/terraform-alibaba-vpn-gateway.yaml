@@ -2,17 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Bind and unbind hundreds of EIPs to multiple cloud
-      resources with one click based on Terraform
+    definition.oam.dev/description: Create VPN resources on AliCloud based on Terraform
+      module
   creationTimestamp: null
   labels:
     type: terraform
-  name: alibaba-eip
+  name: alibaba-vpn-gateway
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-eip.git
+      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-vpn-gateway.git
       type: remote
   workload:
     definition:

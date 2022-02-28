@@ -2,17 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Bind and unbind hundreds of EIPs to multiple cloud
-      resources with one click based on Terraform
+    definition.oam.dev/description: Terraform-based module for creating a MongoDB
+      cloud database under AliCloud VPC
   creationTimestamp: null
   labels:
     type: terraform
-  name: alibaba-eip
+  name: alibaba-mongodb-multi
   namespace: vela-system
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-eip.git
+      configuration: https://github.com/terraform-alicloud-modules/terraform-alicloud-mongodb-multi.git
       type: remote
   workload:
     definition:
