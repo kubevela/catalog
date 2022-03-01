@@ -6,7 +6,7 @@ metadata:
   creationTimestamp: null
   labels:
     type: terraform
-  name: gcp-basic_vpc_module
+  name: gcp-basic-vpc-module
   namespace: vela-system
 spec:
   schematic:

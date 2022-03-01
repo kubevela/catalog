@@ -6,7 +6,7 @@ metadata:
   creationTimestamp: null
   labels:
     type: terraform
-  name: gcp-KTHW
+  name: gcp-kthw
   namespace: vela-system
 spec:
   schematic:
