@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform module for configuring an integration
+      with Google Cloud Platform Organziations and Projects for Audit Logs analysis
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: gcp-audit-log
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/lacework/terraform-gcp-audit-log.git
+      providerRef:
+        name: gcp
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}

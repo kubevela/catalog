@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Create DC/OS Private Agents instance and have
+      conditional DC/OS Prereqs for gcp
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: gcp-private-agents
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/dcos-terraform/terraform-gcp-private-agents.git
+      providerRef:
+        name: gcp
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
