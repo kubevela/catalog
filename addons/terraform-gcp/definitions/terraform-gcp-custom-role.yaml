@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Base IAM role module to create GCP IAM Role from
+      other roles and adhoc permissions
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: gcp-custom-role
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/AckeeCZ/terraform-gcp-custom-role.git
+      providerRef:
+        name: gcp
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}

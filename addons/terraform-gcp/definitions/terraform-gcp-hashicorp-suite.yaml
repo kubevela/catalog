@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform module to run Nomad on Google Cloud
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: gcp-hashicorp-suite
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/nicholasjackson/terraform-gcp-hashicorp-suite.git
+      providerRef:
+        name: gcp
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
