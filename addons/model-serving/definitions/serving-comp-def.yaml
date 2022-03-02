@@ -4,9 +4,10 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Serving uses Seldon deployment to serve models
-  name: serving
-  namespace: vela-system
+    definition.oam.dev/description: Model serving uses Seldon deployment to serve models.
+  labels:
+    custom.definition.oam.dev/ui-hidden: "true"
+  name: model-serving
 spec:
   schematic:
     cue:
@@ -24,13 +25,22 @@ spec:
         	metadata: {
         		name:      context.name
         		namespace: context.namespace
+        		annotations: {
+        			if parameter.timeout != _|_ {
+        				"seldon.io/rest-timeout": parameter.timeout
+        				"seldon.io/grpc-timeout": parameter.timeout
+        			}
+        		}
         	}
         	spec: {
-        		if parameter.customRouting != _|_ {
-        			annotations: {
+        		annotations: {
+        			if parameter.customRouting != _|_ {
         				"seldon.io/ambassador-header":       parameter.customRouting.header
         				"seldon.io/ambassador-service-name": parameter.customRouting.serviceName
         			}
+        		}
+        		if parameter.protocol != _|_ {
+        			protocol: parameter.protocol
         		}
         		predictors: [ for p in parameter.predictors {
         			{
@@ -93,20 +103,35 @@ spec:
         	}
         }
         parameter: {
-        	protocol: *"seldon" | "tensorflow" | ""
+        	// +usage=Specify the custom routing of the serving
         	customRouting?: {
-        		header:      string
+        		// +usage=Request with specified header will be routed to the specified service
+        		header: string
+        		// +usage=The service name that will be routed to
         		serviceName: string
         	}
+        	// +usage=Protocol of model serving, default to seldon
+        	protocol?: "seldon" | "tensorflow" | "v2"
+        	// +usage=If you model serving need long time to return, please set the timeout
+        	timeout?: string
+        	// +usage=The predictors of the serving
         	predictors: [...{
-        		name:      string
+        		// +usage=Name of the predictor
+        		name: string
+        		// +usage=Replica of the predictor
         		replicas?: int
-        		traffic?:  int
+        		// +usage=If you want to split the traffic to different serving, please set the traffic here
+        		traffic?: int
+        		// +usage=The graph of the predictor
         		graph: {
-        			name:           string
-        			modelUri:       string
+        			// +usage=The name of the graph
+        			name: string
+        			// +usage=The model uri, you can use `pvc://pvc-name/path` or `s3://s3-name/path`, etc.
+        			modelUri: string
+        			// +usage=The implementation of the serving
         			implementation: "custom" | "tensorflow" | "sklearn" | "xgboost" | "mlflow"
         		}
+        		// +usage=The resources of the serving
         		resources?: {
         			// +usage=Number of CPU units for the service, like `0.5` (0.5 CPU core), `1` (1 CPU core)
         			cpu?: string
@@ -115,12 +140,18 @@ spec:
         			// +usage=Specifies the attributes of the gpu resource required for the container.
         			gpu?: string
         		}
+        		// +usage=The autoscaler of the serving
         		autoscaler?: {
+        			// +usage=The max replicas of this auto scaler
         			maxReplicas: int
+        			// +usage=The min replicas of this auto scaler
         			minReplicas: int
+        			// +usage=The metrics of this auto scaler
         			metrics: [...{
+        				// +usage=The target average utilization of this auto scaler
         				targetAverageUtilization: int
-        				type:                     "cpu" | "memory"
+        				// +usage=The type of this auto scaler
+        				type: "cpu" | "memory"
         			}]
         		}
         	}]

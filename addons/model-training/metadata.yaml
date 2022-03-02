@@ -13,3 +13,6 @@ dependencies:
 deployTo:
   control_plane: true
   runtime_cluster: true
+
+system:
+  kubernetes: <1.22
