@@ -4,8 +4,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Training uses KubeFlow training operator to train models
-  name: training
+    definition.oam.dev/description: Model Training uses KubeFlow training operator to train models
+  name: model-training
   namespace: vela-system
 spec:
   schematic:
@@ -216,14 +216,22 @@ spec:
         	}
         }
         parameter: {
+        	// +usage=The training framework to use
         	framework: "tensorflow" | "pytorch" | "mpi" | "xgboost" | "mxnet"
+        	// +usage=If you want to train the model in distributed mode, specify here
         	distribution?: {
-        		ps?:        int
-        		master?:    int
+        		// +usage=The number of PS replicas, suits for tensorflow model
+        		ps?: int
+        		// +usage=The number of Master replicas, suits for pytorch model
+        		master?: int
+        		// +usage=The number of Scheduler replicas, suits for mxnet model
         		scheduler?: int
-        		server?:    int
-        		launcher?:  int
-        		worker?:    int
+        		// +usage=The number of Server replicas, suits for mxnet model
+        		server?: int
+        		// +usage=The number of Launcher replicas, suits for mpi model
+        		launcher?: int
+        		// +usage=The number of Worker replicas
+        		worker?: int
         	}
         	restartPolicy: *"Never" | "OnFailure" | "Always"
 
@@ -271,6 +279,7 @@ spec:
         	}]
 
         	storage?: [...{
+        		// +usage=If you want to use a existed PVC, specify the PVC name and moutPath here
         		pvcRef?: {
         			name:      string
         			mountPath: string
