@@ -7,7 +7,7 @@ for i in $ADDONS ; do
     if [ $i == "observability" ]; then
       vela addon enable $i domain=abc.com
       else
-      vela addon enable $i
+      vela addon enable ./addons/$i
     fi
 
     if [ $? -ne 0 ]; then
