@@ -1,6 +1,6 @@
-name: ocm-cluster-manager
-version: 1.0.0
-description: ocm-cluster-manager can deploy an OCM hub cluster environment.
+name: ocm-hub-control-plane
+version: 0.6.0
+description: ocm-hub-control-plane can install OCM hub control plane to the central cluster.
 icon: https://github.com/open-cluster-management-io/OCM/raw/main/assets/ocm-logo.png
 url: https://github.com/open-cluster-management-io/OCM
 
