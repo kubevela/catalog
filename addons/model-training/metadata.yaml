@@ -11,5 +11,4 @@ dependencies:
   - name: fluxcd
 
 deployTo:
-  control_plane: true
-  runtime_cluster: true
+  runtimeCluster: true

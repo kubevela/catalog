@@ -12,6 +12,7 @@ output: {
 			if parameter["serviceType"] != _|_ {
 				service: type: parameter["serviceType"]
 			}
+			replicaCount: 2
 		}
 	}
 }
