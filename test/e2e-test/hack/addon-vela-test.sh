@@ -18,7 +18,11 @@ for i in $ADDONS ; do
     else
       echo -e "\033[32m addon $i enable successfully \033[0m"
     fi
+    if [ $i -ne "fluxcd" -o $i -ne "terraform" ]; then
+      vela addon disable ./addons/$i
+    fi
 done
 
 # test rollout addon
 vela addon enable experimental/addons/rollout
+vela addon disable experimental/addons/rollout
