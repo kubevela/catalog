@@ -1,0 +1,13 @@
+---
+# Source: cluster-proxy/templates/clustermanagementaddon.yaml
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: cluster-proxy
+spec:
+  addOnMeta:
+    displayName: cluster-proxy
+    description: cluster-proxy
+  addOnConfiguration:
+    crdName: managedproxyconfigurations.proxy.open-cluster-management.io
+    crName: cluster-proxy

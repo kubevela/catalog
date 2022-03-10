@@ -1,0 +1,15 @@
+---
+# Source: cluster-proxy/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: open-cluster-management:cluster-proxy:addon-manager
+  namespace: open-cluster-management-addon
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: open-cluster-management:cluster-proxy:addon-manager
+subjects:
+  - kind: ServiceAccount
+    name: cluster-proxy
+    namespace: open-cluster-management-addon
