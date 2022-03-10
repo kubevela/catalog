@@ -109,3 +109,5 @@ spec:
         	// +usage=Specifies the attributes of the gpu resource required for the container.
         	gpu?: string
         }
+  workload:
+    type: autodetects.core.oam.dev
