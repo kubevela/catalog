@@ -1,6 +1,4 @@
-# OCM Cluster Manager
-
-
+# OCM Hub Control Plane
 
 __TL;DR__: Our "OCM Cluster Manager" addon will be helping you to initiate 
 and install the [cluster manager](https://open-cluster-management.io/getting-started/core/cluster-manager/)
