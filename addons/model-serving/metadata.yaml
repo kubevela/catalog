@@ -1,0 +1,17 @@
+name: model-serving
+version: 1.0.0
+description: Enable serving for models
+
+tags:
+- ai
+- serving
+- alpha
+
+dependencies:
+  - name: fluxcd
+
+deployTo:
+  runtimeCluster: true
+
+system:
+  kubernetes: <1.22

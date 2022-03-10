@@ -1,0 +1,19 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: model-serving
+  namespace: vela-system
+spec:
+  components:
+    - name: seldon-core
+      type: helm
+      properties:
+        repoType: helm
+        url: https://storage.googleapis.com/seldon-charts
+        chart: seldon-core-operator
+        version: 1.12.0
+        values:
+          ambassador:
+            enabled: true
+          usageMetrics:
+            enabled: true

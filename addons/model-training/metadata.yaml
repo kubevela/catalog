@@ -1,0 +1,14 @@
+name: model-training
+version: 1.0.0
+description: Enable training for models
+
+tags:
+- ai
+- training
+- alpha
+
+dependencies:
+  - name: fluxcd
+
+deployTo:
+  runtimeCluster: true
