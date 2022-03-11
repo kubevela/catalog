@@ -1,0 +1,298 @@
+- uiType: ImageInput
+  jsonKey: image
+  label: Container Image
+  sort: 1
+- jsonKey: memory
+  uiType: MemoryNumber
+  sort: 4
+  label: Memory
+  description: Specifies the memory resource required for the container, If set to 0, there is no limit.
+  validate:
+    required: true
+    defaultValue: "1024Mi"
+  style:
+    colSpan: 12
+- jsonKey: cpu
+  uiType: CPUNumber
+  sort: 5
+  label: CPU
+  description: Specifies the cpu resource required for the container, If set to 0, there is no limit.
+  validate:
+    required: true
+    defaultValue: "0.5"
+  style:
+    colSpan: 12
+- jsonKey: exposeType
+  sort: 6
+  validate:
+- jsonKey: ports
+  label: Service Ports
+  sort: 7
+  subParameters:
+    - jsonKey: port
+      sort: 1
+      validate:
+        required: true
+        min: 1
+    - jsonKey: protocol
+      sort: 3
+    - jsonKey: name
+      sort: 4
+      disable: true
+    - jsonKey: expose
+      sort: 5
+  validate:
+    required: true
+    defaultValue: [{"port": 80, "protocol": "TCP", "expose": true}]
+- jsonKey: cmd
+  label: CMD
+  sort: 9
+- jsonKey: env
+  sort: 10
+  label: ENV
+  subParameterGroupOption:
+    - label: Add By Value
+      keys:
+        - name
+        - value
+    - label: Add By Secret
+      keys:
+       - name
+       - valueFrom
+  subParameters:
+  - jsonKey: valueFrom
+    label: Secret Selector
+    uiType: Ignore
+    subParameters:
+      - jsonKey: configMapKeyRef
+        disable: true
+      - jsonKey: secretKeyRef
+        uiType: Ignore
+        subParameters:
+          - jsonKey: name
+            label: Secret Name
+            uiType: SecretSelect
+            sort: 1
+          - jsonKey: key
+            label: Secret Key
+            uiType: SecretKeySelect
+            sort: 3
+  uiType: Structs
+- jsonKey: volumeMounts
+  label: Persistent Storage
+  description: "Set the path and type that the service needs to persist."
+  uiType: Group
+  subParameters:
+    - jsonKey: configMap
+      disable: true
+    - jsonKey: secret
+      disable: true
+    - jsonKey: pvc
+      label: Storage By PVC
+      sort: 1
+      subParameters:
+        - jsonKey: name
+          sort: 1
+          validate:
+            required: true
+            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])$
+        - jsonKey: claimName
+          sort: 3
+        - jsonKey: mountPath
+          sort: 5
+          validate:
+            required: true
+            pattern: ^/(.*)$
+    - jsonKey: hostPath
+      label: Storage By HostPath
+      sort: 3
+      subParameters:
+        - jsonKey: name
+          sort: 1
+          validate:
+            required: true
+            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])$
+        - jsonKey: path
+          label: Host Path
+          sort: 3
+          validate:
+            required: true
+            pattern: ^/(.*)$
+        - jsonKey: mountPath
+          sort: 5
+          validate:
+            required: true
+            pattern: ^/(.*)$
+    - jsonKey: emptyDir
+      label: Temporary Storage
+      sort: 5
+      subParameters:
+        - jsonKey: name
+          sort: 1
+          validate:
+            required: true
+            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])$
+        - jsonKey: medium
+          sort: 3
+          validate:
+            required: false
+            options:
+              - label: Memory
+                value: memory
+              - label: Dir
+                value: ""
+        - jsonKey: mountPath
+          sort: 5
+          validate:
+            required: true
+            pattern: ^/(.*)$
+  sort: 12
+
+- jsonKey: readinessProbe
+  uiType: Group
+  label: ReadinessProbe
+  subParameters:
+  - jsonKey: hostAliases
+    disable: true
+  - jsonKey: timeoutSeconds
+    sort: 1
+    style:
+      colSpan: 12
+  - jsonKey: failureThreshold
+    sort: 4
+    style:
+      colSpan: 12
+  - jsonKey: initialDelaySeconds
+    sort: 7
+    style:
+      colSpan: 12
+    validate:
+      defaultValue: 5
+      required: true
+  - jsonKey: periodSeconds
+    sort: 9
+    style:
+      colSpan: 12
+  - jsonKey: successThreshold
+    sort: 11
+    style:
+      colSpan: 12
+  - jsonKey: exec
+    sort: 14
+  - jsonKey: httpGet
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        sort: 1
+        validate:
+          required: true
+          min: 1
+        style:
+          colSpan: 12
+      - jsonKey: path
+        sort: 3
+        validate:
+          required: true
+          pattern: ^/(.*)$
+        style:
+          colSpan: 12
+      - jsonKey: httpHeaders
+        sort: 5
+  - jsonKey: tcpSocket
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        validate:
+          required: true
+          min: 1
+  
+  sort: 13
+
+- jsonKey: livenessProbe
+  uiType: Group
+  label: LivenessProbe
+  subParameters:
+  - jsonKey: hostAliases
+    disable: true
+  - jsonKey: timeoutSeconds
+    sort: 1
+    style:
+      colSpan: 12
+  - jsonKey: failureThreshold
+    sort: 4
+    style:
+      colSpan: 12
+  - jsonKey: initialDelaySeconds
+    sort: 7
+    style:
+      colSpan: 12
+    validate:
+      defaultValue: 5
+      required: true
+  - jsonKey: periodSeconds
+    sort: 9
+    style:
+      colSpan: 12
+  - jsonKey: successThreshold
+    sort: 11
+    style:
+      colSpan: 12
+  - jsonKey: exec
+    sort: 14
+  - jsonKey: httpGet
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        sort: 1
+        validate:
+          required: true
+          min: 1
+        style:
+          colSpan: 12
+      - jsonKey: path
+        sort: 3
+        validate:
+          required: true
+          pattern: ^/(.*)$
+        style:
+          colSpan: 12
+      - jsonKey: httpHeaders
+        sort: 5
+  - jsonKey: tcpSocket
+    sort: 19
+    subParameters:
+      - jsonKey: port
+        validate:
+          required: true
+          min: 1
+  sort: 15
+
+- jsonKey: annotations
+  sort: 19
+
+- jsonKey: labels
+  sort: 21
+
+- description: Specify image pull policy for your service
+  jsonKey: imagePullPolicy
+  label: Image Pull Policy
+  uiType: Select
+  sort: 24
+  validate: 
+    defaultValue: IfNotPresent
+    options:
+      - label: IfNotPresent
+        value: IfNotPresent
+      - label: Always
+        value: Always
+      - label: Never
+        value: Never
+
+- jsonKey: addRevisionLabel
+  disable: true
+
+- jsonKey: port
+  disable: true
+
+- jsonKey: volumes
+  disable: true
