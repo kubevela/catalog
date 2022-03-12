@@ -12,7 +12,7 @@ spec:
   schematic:
     terraform:
       configuration: https://github.com/kubevela-contrib/terraform-modules.git
-      path: alibaba/oss/website
+      path: alibaba/oss/website-bucket
       type: remote
   workload:
     definition:
