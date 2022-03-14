@@ -26,3 +26,7 @@ done
 # test rollout addon
 vela addon enable experimental/addons/rollout
 vela addon disable rollout
+
+# test rollout addon
+vela addon enable experimental/addons/argocd
+vela addon disable argocd
