@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Alibaba Cloud OSS static webstie bucket
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: alibaba-oss-website
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      path: alibaba/oss/website-bucket
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
