@@ -1,0 +1,26 @@
+---
+# Source: cluster-gateway-addon-manager/templates/addon-manager.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-gateway-addon-manager
+  namespace: open-cluster-management-addon
+  labels:
+    app: cluster-gateway-addon-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-gateway-addon-manager
+  template:
+    metadata:
+      labels:
+        app: cluster-gateway-addon-manager
+    spec:
+      serviceAccount: cluster-gateway-addon-manager
+      containers:
+        - name: cluster-gateway-addon-manager
+          image: oamdev/cluster-gateway-addon-manager:v1.1.11
+          imagePullPolicy: IfNotPresent
+          args:
+            - --leader-elect=true

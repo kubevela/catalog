@@ -1,0 +1,13 @@
+---
+# Source: cluster-gateway-addon-manager/templates/clustermanagementaddon.yaml
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: cluster-gateway
+spec:
+  addOnMeta:
+    displayName: cluster-gateway
+    description: cluster-gateway
+  addOnConfiguration:
+    crdName: clustergatewayconfigurations.proxy.open-cluster-management.io
+    crName: cluster-gateway

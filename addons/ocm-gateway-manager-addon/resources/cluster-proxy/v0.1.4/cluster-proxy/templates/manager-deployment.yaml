@@ -1,0 +1,27 @@
+---
+# Source: cluster-proxy/templates/manager-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: open-cluster-management-addon
+  name: cluster-proxy-addon-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-cluster-management.io/addon: cluster-proxy
+  template:
+    metadata:
+      labels:
+        open-cluster-management.io/addon: cluster-proxy
+    spec:
+      serviceAccount: cluster-proxy
+      containers:
+        - name: manager
+          image: quay.io/open-cluster-management/cluster-proxy:v0.1.4
+          imagePullPolicy: IfNotPresent
+          command:
+            - /manager
+          args:
+            - --leader-elect=true
+            - --signer-secret-namespace=open-cluster-management-addon

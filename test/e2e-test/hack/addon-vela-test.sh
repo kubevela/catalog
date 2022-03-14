@@ -5,11 +5,11 @@ ADDONS=`ls -l addons | grep "^d" | awk '{print $9}' | sort`
 echo $ADDONS
 for i in $ADDONS ; do
     if [ $i == "observability" ]; then
-      vela addon enable $i domain=abc.com
+      vela addon enable $i domain=abc.com || vela -n vela-system status addon-$i
       elif [ $i == "model-serving" ]; then
-      vela addon enable ./addons/$i serviceType=ClusterIP
+      vela addon enable ./addons/$i serviceType=ClusterIP || vela -n vela-system status addon-$i
       else
-      vela addon enable ./addons/$i
+      vela addon enable ./addons/$i || vela -n vela-system status addon-$i
     fi
 
     if [ $? -ne 0 ]; then

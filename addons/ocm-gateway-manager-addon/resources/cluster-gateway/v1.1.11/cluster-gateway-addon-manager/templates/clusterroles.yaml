@@ -1,0 +1,130 @@
+---
+# Source: cluster-gateway-addon-manager/templates/clusterroles.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: open-cluster-management:cluster-gateway:managedcluster-reader
+rules:
+  - apiGroups:
+      - cluster.open-cluster-management.io
+    resources:
+      - managedclusters
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - authentication.open-cluster-management.io
+    resources:
+      - managedserviceaccounts
+    verbs:
+      - "*"
+  - apiGroups:
+      - proxy.open-cluster-management.io
+    resources:
+      - clustergatewayconfigurations
+    verbs:
+      - "*"
+  - apiGroups:
+      - cluster.core.oam.dev
+    resources:
+      - clustergateways/health
+      - clustergateways/proxy
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - secrets
+      - configmaps
+      - events
+      - serviceaccounts
+      - services
+    verbs:
+      - "*"
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - "*"
+  - apiGroups:
+      - work.open-cluster-management.io
+    resources:
+      - manifestworks
+    verbs:
+      - "*"
+  - apiGroups:
+      - addon.open-cluster-management.io
+    resources:
+      - clustermanagementaddons
+      - managedclusteraddons
+      - clustermanagementaddons/status
+      - managedclusteraddons/status
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - certificatesigningrequests
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - flowcontrol.apiserver.k8s.io
+    resources:
+      - prioritylevelconfigurations
+      - flowschemas
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - create
+      - bind
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+    verbs:
+      - create
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - "*"
+  - apiGroups:
+      - apiregistration.k8s.io
+    resources:
+      - apiservices
+    verbs:
+      - "*"
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - "*"
