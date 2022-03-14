@@ -1,0 +1,31 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: argocd
+  namespace: vela-system
+spec:
+  components:
+    - name: ns-argocd
+      type: raw
+      properties:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: argocd
+    - name: argocd
+      type: helm
+      properties:
+        repoType: helm
+        url: https://argoproj.github.io/argo-helm
+        chart: argo-cd
+        targetNamespace: argocd
+        version: 3.33.6
+
+  workflow:
+    steps:
+      - name: apply-ns
+        type: apply-component
+        properties:
+          component: ns-argocd
+      - name: apply-resources
+        type: apply-application
