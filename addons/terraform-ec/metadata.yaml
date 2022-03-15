@@ -1,6 +1,6 @@
-name: terraform-{{ .Name }}
+name: terraform-ec
 version: 1.0.0
-description: Kubernetes Terraform Controller Provider for {{ .CloudName }}
+description: Kubernetes Terraform Controller Provider for Elastic Cloud
 url: https://github.com/oam-dev/terraform-controller
 
 tags:
