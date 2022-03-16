@@ -1,6 +1,14 @@
 - jsonKey: repoType
   label: Repo Type
   sort: 1
+  uiType: Select
+  validate:
+    defaultValue: helm
+    options:
+      - label: Helm Repo
+        value: helm
+      - label: Git Repo
+        value: git
 - jsonKey: url
   label: Repo URL
   sort: 2
