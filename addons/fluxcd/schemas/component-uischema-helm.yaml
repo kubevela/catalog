@@ -18,6 +18,7 @@
   sort: 6
   label: OSS
   description: oss repoType detail configuration
+  disable: true
 - jsonKey: values
   uiType: HelmValues
   sort: 7
