@@ -17,7 +17,7 @@ dependencies:
 
 # -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
 # provider short name
-shortCloudName: ec
+shortCloudName: elastic
 
 # The Cloud name of the provider
 completeCloudName: Elastic Cloud

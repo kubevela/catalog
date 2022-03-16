@@ -1,4 +1,4 @@
-name: terraform-ec
+name: terraform-elastic
 version: 1.0.0
 description: Kubernetes Terraform Controller Provider for Elastic Cloud
 url: https://github.com/oam-dev/terraform-controller
@@ -17,7 +17,7 @@ dependencies:
 
 # -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
 # provider short name
-shortCloudName: ec
+shortCloudName: elastic
 
 # The Cloud name of the provider
 completeCloudName: Elastic Cloud

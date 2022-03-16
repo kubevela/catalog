@@ -6,7 +6,7 @@ output: {
 		apiVersion: "v1"
 		kind:       "Secret"
 		metadata: {
-			name:      "ec-account-creds"
+			name:      "elastic-account-creds"
 			namespace: "vela-system"
 		}
 		type: "Opaque"

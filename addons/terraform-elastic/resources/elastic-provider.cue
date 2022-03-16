@@ -4,16 +4,16 @@ output: {
 		apiVersion: "terraform.core.oam.dev/v1beta1"
 		kind:       "Provider"
 		metadata: {
-			name:      "ec"
+			name:      "elastic"
 			namespace: "default"
 		}
 		spec: {
-			provider: "ec"
+			provider: "elastic"
 			credentials: {
 				source: "Secret"
 				secretRef: {
 					namespace: "vela-system"
-					name:      "ec-account-creds"
+					name:      "elastic-account-creds"
 					key:       "credentials"
 				}
 			}
