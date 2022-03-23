@@ -5,6 +5,7 @@ metadata:
   namespace: vela-system
   annotations:
     definition.oam.dev/description: Terraform configuration for Alibaba Cloud SLS Store
+    definition.oam.dev/verified: "true"
   labels:
     type: terraform
 spec:

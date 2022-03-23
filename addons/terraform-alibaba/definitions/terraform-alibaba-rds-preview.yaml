@@ -3,6 +3,7 @@ kind: ComponentDefinition
 metadata:
   annotations:
     definition.oam.dev/description: Alibaba RDS in a preview mode
+    definition.oam.dev/verified: "true"
   creationTimestamp: null
   labels:
     type: terraform
