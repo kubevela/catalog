@@ -4,6 +4,7 @@ metadata:
   annotations:
     definition.oam.dev/description: Bind and unbind hundreds of EIPs to multiple cloud
       resources with one click based on Terraform
+    definition.oam.dev/verified: "true"
   creationTimestamp: null
   labels:
     type: terraform
