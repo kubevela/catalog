@@ -11,6 +11,7 @@ metadata:
     cloud-resource/console-url: "https://rdsnext.console.aliyun.com/detail/{DB_ID}/basicInfo?&region={REGION}"
     # the outputs which are sensitive. Separate them by a comma if there are more than one
     cloud-resource/sensitive-outputs: "DB_PASSWORD"
+    definition.oam.dev/verified: "true"
   labels:
     type: terraform
 spec:
