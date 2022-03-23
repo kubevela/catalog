@@ -8,14 +8,20 @@ You can list all addons by vela cli. For example
 
 ```shell
 $ vela addon list
-terraform               Terraform Controller is a Kubernetes Controller for Terraform.                                                                          disabled
-velaux                  The KubeVela User Experience (UX ). Dashboard Designed as an extensible, application-oriented delivery and management control panel.    disabled
-ocm-cluster-manager     ocm-cluster-manager can deploy an OCM hub cluster environment.                                                                          disabled
-fluxcd                  Extended workload to do continuous and progressive delivery                                                                             disabled
-terraform-aws           Kubernetes Terraform Controller for AWS                                                                                                 disabled
-observability           An out of the box solution for KubeVela observability                                                                                   disabled
-terraform-alibaba       Kubernetes Terraform Controller for Alibaba Cloud                                                                                       disabled
-terraform-azure         Kubernetes Terraform Controller for Azure                                                                                               disabled
+terraform-aws            	KubeVela	Kubernetes Terraform Controller for AWS                                                              	disabled
+ocm-gateway-manager-addon	KubeVela	ocm-gateway-manager-addon is the OCM addon automates the cluster-gateway apiserver.                  	disabled
+fluxcd                   	KubeVela	Extended workload to do continuous and progressive delivery                                          	disabled
+terraform-tencent        	KubeVela	Kubernetes Terraform Controller Provider for Tencent Cloud                                           	disabled
+velaux                   	KubeVela	KubeVela User Experience (UX). An extensible, application-oriented delivery and management Dashboard.	disabled
+terraform-ucloud         	KubeVela	Kubernetes Terraform Controller Provider for UCloud                                                  	disabled
+terraform-gcp            	KubeVela	Kubernetes Terraform Controller Provider for Google Cloud Platform                                   	disabled
+model-training           	KubeVela	Enable training for models                                                                           	disabled
+terraform-baidu          	KubeVela	Kubernetes Terraform Controller Provider for Baidu Cloud                                             	disabled
+model-serving            	KubeVela	Enable serving for models                                                                            	disabled
+terraform-azure          	KubeVela	Kubernetes Terraform Controller for Azure                                                            	disabled
+ocm-hub-control-plane    	KubeVela	ocm-hub-control-plane can install OCM hub control plane to the central cluster.                      	disabled
+terraform                	KubeVela	Terraform Controller is a Kubernetes Controller for Terraform.                                       	disabled
+terraform-alibaba        	KubeVela	Kubernetes Terraform Controller for Alibaba Cloud                                                    	disabled
 ```
 
 When user enable an addon by UX or cli, addon files will be generated as a KubeVela application and apply it.
