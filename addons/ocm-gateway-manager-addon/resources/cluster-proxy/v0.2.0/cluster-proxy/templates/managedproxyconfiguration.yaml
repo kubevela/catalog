@@ -11,10 +11,10 @@ spec:
     signer:
       type: SelfSigned
   proxyServer:
-    image: quay.io/open-cluster-management/cluster-proxy:v0.1.4
+    image: quay.io/open-cluster-management/cluster-proxy:v0.2.0
     namespace: open-cluster-management-addon
     entrypoint:
       type: PortForward
       port: 8091
   proxyAgent:
-    image: quay.io/open-cluster-management/cluster-proxy:v0.1.4
+    image: quay.io/open-cluster-management/cluster-proxy:v0.2.0

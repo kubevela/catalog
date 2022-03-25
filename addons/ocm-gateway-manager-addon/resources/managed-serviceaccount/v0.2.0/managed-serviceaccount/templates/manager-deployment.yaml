@@ -18,12 +18,12 @@ spec:
       serviceAccount: managed-serviceaccount
       containers:
         - name: manager
-          image: "quay.io/open-cluster-management/managed-serviceaccount:v0.1.1"
+          image: "quay.io/open-cluster-management/managed-serviceaccount:v0.2.0"
           imagePullPolicy: IfNotPresent
           command:
             - /manager
           args:
             - --leader-elect=true
-            - --agent-image-name=quay.io/open-cluster-management/managed-serviceaccount:v0.1.1
+            - --agent-image-name=quay.io/open-cluster-management/managed-serviceaccount:v0.2.0
             - --agent-install-all=true
             - --feature-gates=EphemeralIdentity=false
