@@ -17,14 +17,17 @@ experimental    OSS     https://addons.kubevela.net
 ```
 
 Then you will find these addons.
+
 ```shell
-$ vela addon list      
-NAME                    DESCRIPTION                                                             STATUS  
-istio                   Enable service mash and managing triffic shiffting in workflow.         disabled
-example                 Extended workload to do continuous and progressive delivery             disabled
-kruise                  Kruise is a Kubernetes extended suite for application automations       disabled
-kubeflow-pipeline       Run Kubeflow Pipelines on KubeVela                                      disabled
-kubeflow                Build Kubeflow Machine Learning Apps on KubeVela                        disabled
+$ vela addon list
+NAME                     		DESCRIPTION                                                                                          	STATUS
+observability            		An out of the box solution for KubeVela observability                                                	disabled
+kruise                   		Kruise is a Kubernetes extended suite for application automations                                    	disabled
+observability-assets     		The assets for Addon Observability                                                                   	disabled
+rollout                  		Provides basic batch publishing capability.                                                          	disabled
+example                  		Extended workload to do continuous and progressive delivery                                          	disabled
+istio                    		Enable service mash and managing triffic shiffting in workflow.                                      	disabled
+argocd                   		Declarative continuous deployment for Kubernetes.                                                    	disabled
 ```
 
 When user enable an addon by UX or cli, addon files will be generated as a KubeVela application and apply it.
