@@ -1,0 +1,35 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: dex
+  namespace: vela-system
+spec:
+  components:
+    - name: dex-config
+      type: dex-config
+      properties:
+        staticClients:
+          - id: velaux
+            redirectURIs:
+            - '<redirectURIS>'
+            name: 'Vela UX'
+            secret: velaux-secret
+        enablePasswordDB: true
+        issuer: '<issuer>'
+        storage:
+          type: memory
+        web:
+          http: 0.0.0.0:5556
+    - name: dex
+      type: helm
+      dependsOn:
+        - dex-config
+      properties:
+        chart: dex
+        version: "0.6.5"
+        url: "https://charts.dexidp.io"
+        repoType: helm
+        values:
+          configSecret:
+            create: false
+            name: dex-config

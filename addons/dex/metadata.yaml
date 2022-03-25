@@ -1,0 +1,13 @@
+name: dex
+version: 1.0.0
+description: Enable dex for login
+
+tags:
+- auth
+- alpha
+
+dependencies:
+  - name: velaux
+
+deployTo:
+  runtimeCluster: true
