@@ -12,20 +12,55 @@ env:
   ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
 
 jobs:
-  publish-addons:
+  packge-addon-gen-index:
     env:
       ADDON_BUCKET: kubevela-addons
       ADDON_DIR: addons
-      EXPERIMENTAL_ADDON_DIR: experimental/addons
-      ADDON_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
+      ADDON_ENDPOINT: oss-cn-beijing.aliyuncs.com
+      EXPERIMENTAL_DIR: experimental/addons
+      URL: https://addons.kubevela.net
+      GO_VERSION: 1.17
     runs-on: ubuntu-20.04
+
     steps:
-      - uses: actions/checkout@master
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: copy script to dir
+        run: |
+          cp ./hack/addons/syn_addon_package.go ./addons/
+          cp ./hack/addons/syn_addon_package.go ./experimental/addons/
+
+      - name: package-addon-gen-index
+        run: |
+          cd ./addons/
+          go run ./syn_addon_package.go ./ ${{ env.URL }}
+          ls ./
+          cat ./index.yaml
+          mkdir -p addons/
+          cp ./index.yaml addons/
+          cp ./*.tgz addons/
+
+      - name: package-addon-gen-index-experimental
+        run: |
+          cd ./experimental/addons/
+          go run ./syn_addon_package.go ./ ${{ env.URL }}/experimental
+          ls ./
+          cat ./index.yaml
+          mkdir -p addons/
+          cp ./index.yaml addons/
+          cp ./*.tgz addons/
+
       - name: Install ossutil
         run: wget http://gosspublic.alicdn.com/ossutil/1.7.0/ossutil64 && chmod +x ossutil64 && mv ossutil64 ossutil
       - name: Configure Alibaba Cloud ossutil
         run: ./ossutil --config-file .ossutilconfig config -i $ACCESS_KEY -k $ACCESS_KEY_SECRET -e $ADDON_ENDPOINT
       - name: sync local to cloud (verified addons)
-        run: ./ossutil --config-file .ossutilconfig sync $ADDON_DIR oss://$ADDON_BUCKET -f --delete
-      - name: sync local to cloud (experimental addons)
-        run: ./ossutil --config-file .ossutilconfig sync $EXPERIMENTAL_ADDON_DIR oss://$ADDON_BUCKET/experimental -f --delete
+        run: |
+          ./ossutil --config-file .ossutilconfig sync $ADDON_DIR/addons/ oss://$ADDON_BUCKET -f
+          ./ossutil --config-file .ossutilconfig sync $EXPERIMENTAL_DIR/addons/ oss://$ADDON_BUCKET/experimental -f
