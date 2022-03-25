@@ -5,7 +5,7 @@ kind: ClusterGatewayConfiguration
 metadata:
   name: cluster-gateway
 spec:
-  image: oamdev/cluster-gateway:v1.1.11
+  image: oamdev/cluster-gateway:v1.1.14
   installNamespace: vela-system
   secretNamespace: open-cluster-management-credentials
   secretManagement:
