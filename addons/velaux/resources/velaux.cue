@@ -28,6 +28,10 @@ output: {
 				name:  "KUBEVELA_API_URL"
 				value: "apiserver.vela-system:8000"
 			},
+			{
+				name:  "DEX_URL"
+				value: "addon-dex.vela-system:5556"
+			},
 		]
 	}
 	if parameter["domain"] != _|_ {
