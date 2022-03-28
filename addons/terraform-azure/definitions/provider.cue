@@ -2,10 +2,13 @@ import "strings"
 
 "terraform-azure": {
 	type: "component"
-	annotations: {}
+	annotations: {
+		"alias.config.oam.dev": "Terraform Provider for Azure"
+	}
 	labels: {
 		"catalog.config.oam.dev": "velacore-config"
 		"type.config.oam.dev": "terraform-provider"
+		"multi-cluster.config.oam.dev": "false"
 	}
 	description: "Terraform Provider for Azure"
 }

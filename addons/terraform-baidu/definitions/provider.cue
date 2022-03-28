@@ -2,12 +2,13 @@ import "strings"
 
 "terraform-baidu": {
 	type: "component"
-	annotations: {
-		"name.config.oam.dev": "Baidu Cloud"
+		annotations: {
+		"alias.config.oam.dev": "Terraform Provider for Baidu Cloud"
 	}
 	labels: {
 		"catalog.config.oam.dev": "velacore-config"
-		"type.config.oam.dev":    "terraform-provider"
+		"type.config.oam.dev": "terraform-provider"
+		"multi-cluster.config.oam.dev": "false"
 	}
 	description: "Terraform Provider for Baidu Cloud"
 }

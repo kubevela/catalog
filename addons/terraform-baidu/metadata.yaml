@@ -14,3 +14,6 @@ deployTo:
 
 dependencies:
   - name: terraform
+
+system:
+  vela: ">=v1.3.0-alpha.1"
