@@ -15,7 +15,4 @@ deployTo:
 needNamespace:
   - flux-system
 
-system:
-  vela: ">1.2.4"
-
 invisible: false
