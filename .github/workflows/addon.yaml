@@ -16,7 +16,7 @@ jobs:
     env:
       ADDON_BUCKET: kubevela-addons
       ADDON_DIR: addons
-      ADDON_ENDPOINT: oss-cn-beijing.aliyuncs.com
+      ADDON_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
       EXPERIMENTAL_DIR: experimental/addons
       URL: https://addons.kubevela.net
       GO_VERSION: 1.17
