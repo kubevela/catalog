@@ -1,23 +1,15 @@
-# KubeVela catalog
+# KubeVela Catalog
 
-Catalog of KubeVela addon and some example traits.
+This repo contains KubeVela Addons along with CRD operators of components and traits.
 
-Welcome to contribute this repo putting your customize vela addon here.
+Community members are welcome to contribute this repo by putting their customize vela addons here.
 
-## Pre-requisites
+* [Official Addons](https://github.com/oam-dev/catalog/tree/master/addons): when Pull Request of addons were merged to this directory, the addon will automatically synced to the OSS bucket( https://addons.kubevela.net ). This will be displayed in vela CLI by `vela addon list` or VelaUX by default.
 
-- Install [KubeVela](https://kubevela.io/docs/install)
+![image](https://user-images.githubusercontent.com/2173670/160372119-3e62044c-ce93-428d-9681-a91f0742bbaf.png)
 
-## Controller
 
-### Workloads
+* [Experimental Addons](https://github.com/oam-dev/catalog/tree/master/experimental/addons): some addons which were not well verified will be merged into the experimental addons directory, the addon will also be synced to the OSS bucket( https://addons.kubevela.net in path `experimental`) automatically. 
 
-Refer to [KubeVela Workloads](workloads/README.md) to see currently supported workloads.
+![image](https://user-images.githubusercontent.com/2173670/160373204-80e74587-606c-4522-9802-11d4f572450b.png)
 
-### Traits
-
-Refer to [KubeVela Traits](traits/README.md) to see currently supported traits.
-
-### Usage
-
-You can use them as a [KubeVela cap center](https://kubevela.io/docs/developers/cap-center) or Use them directly like [this demo](https://kubevela.io/docs/platform-engineers/keda).
