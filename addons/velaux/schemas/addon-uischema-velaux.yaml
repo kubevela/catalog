@@ -1,5 +1,6 @@
 - jsonKey: version
   sort: 1
+  disable: true
 - jsonKey: dbType
   label: DBType
   validate: 

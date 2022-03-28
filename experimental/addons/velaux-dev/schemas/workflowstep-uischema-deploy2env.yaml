@@ -1,8 +1,0 @@
-- jsonKey: parallel
-  validate:
-   defaultValue: false
-  sort: 5
-- jsonKey: policy
-  sort: 1
-- jsonKey: env
-  sort: 3
