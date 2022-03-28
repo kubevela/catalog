@@ -22,4 +22,4 @@ dependencies:
 invisible: false
 
 system:
-  vela: ">=v1.2.4"
+  vela: ">=v1.3.0-alpha.1"
