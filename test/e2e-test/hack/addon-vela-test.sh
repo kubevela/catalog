@@ -8,7 +8,7 @@ for i in $ADDONS ; do
       vela addon enable $i domain=abc.com || vela -n vela-system status addon-$i
       elif [ $i == "model-serving" ]; then
       vela addon enable ./addons/$i serviceType=ClusterIP || vela -n vela-system status addon-$i
-      else
+      else [ $i != "ocm-gateway-manager-addon" ]
       vela addon enable ./addons/$i || vela -n vela-system status addon-$i
     fi
 
