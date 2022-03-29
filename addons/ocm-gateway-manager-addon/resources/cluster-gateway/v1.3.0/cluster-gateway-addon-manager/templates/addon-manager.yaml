@@ -20,7 +20,7 @@ spec:
       serviceAccount: cluster-gateway-addon-manager
       containers:
         - name: cluster-gateway-addon-manager
-          image: oamdev/cluster-gateway-addon-manager:v1.1.14
+          image: oamdev/cluster-gateway-addon-manager:v1.3.0
           imagePullPolicy: IfNotPresent
           args:
             - --leader-elect=true
