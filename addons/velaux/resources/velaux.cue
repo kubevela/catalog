@@ -23,16 +23,26 @@ output: {
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
 		}
-		env: [
-			{
-				name:  "KUBEVELA_API_URL"
-				value: "apiserver.vela-system:8000"
-			},
-			{
-				name:  "DEX_URL"
-				value: "addon-dex.vela-system:5556"
-			},
-		]
+		if parameter["dex"] == "enable" {
+			env: [
+				{
+					name:  "KUBEVELA_API_URL"
+					value: "apiserver.vela-system:8000"
+				},
+				{
+					name:  "DEX_URL"
+					value: "addon-dex.vela-system:5556"
+				}
+			]
+		}
+		if parameter["dex"] != "enable" {
+			env: [
+				{
+					name:  "KUBEVELA_API_URL"
+					value: "apiserver.vela-system:8000"
+				}
+			]
+		}
 	}
 	if parameter["domain"] != _|_ {
 		traits: [

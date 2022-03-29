@@ -8,3 +8,6 @@ tags:
 
 dependencies:
   - name: velaux
+
+system:
+  vela: ">=v1.3.0-beta.1"
