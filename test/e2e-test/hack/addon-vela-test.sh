@@ -8,8 +8,8 @@ for i in $ADDONS ; do
       vela addon enable $i domain=abc.com || vela -n vela-system status addon-$i
       elif [ $i == "model-serving" ]; then
       vela addon enable ./addons/$i serviceType=ClusterIP || vela -n vela-system status addon-$i
-      else [ $i != "ocm-gateway-manager-addon" ]
-      vela addon enable ./addons/$i || vela -n vela-system status addon-$i
+      elif [ $i != "ocm-gateway-manager-addon" ] && [ $i != "terraform-baidu" ]; then
+      vela addon enable ./addons/$i
     fi
 
     if [ $? -ne 0 ]; then
@@ -22,10 +22,6 @@ for i in $ADDONS ; do
       vela addon disable $i
     fi
 done
-
-# test rollout addon
-vela addon enable experimental/addons/rollout
-vela addon disable rollout
 
 # test rollout addon
 vela addon enable experimental/addons/argocd
