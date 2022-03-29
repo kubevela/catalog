@@ -12,6 +12,8 @@ rollout: {
 				isHealth: context.outputs.rollout.status.batchRollingState == "batchReady"
 				"""#
 		}
+		podDisruptive: false
+		appliesToWorkloads: ["deployments.apps"]
 	}
 }
 template: {
