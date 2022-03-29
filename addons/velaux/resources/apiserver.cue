@@ -10,11 +10,11 @@ output: {
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/vela-apiserver:" + parameter["version"]
+			image: "oamdev/vela-apiserver:" + context.metadata.version
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + parameter["version"]
+			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + context.metadata.version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {

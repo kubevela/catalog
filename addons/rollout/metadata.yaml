@@ -1,5 +1,5 @@
 name: rollout
-version: 1.2.3
+version: 1.2.4
 description: Provides basic batch publishing capability.
 url: https://kubevela.io/docs/end-user/traits/rollout
 

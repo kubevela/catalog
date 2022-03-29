@@ -2,11 +2,11 @@ output: {
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/velaux:" + parameter["version"]
+			image: "oamdev/velaux:" + context.metadata.version
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" + "oamdev/velaux:" + parameter["version"]
+			image: parameter["repo"] + "/" + "oamdev/velaux:" + context.metadata.version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {

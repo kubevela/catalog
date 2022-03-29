@@ -1,4 +1,0 @@
-- jsonKey: replicas
-  validate:
-    required: true
-    min: 0

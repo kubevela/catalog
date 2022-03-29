@@ -26,6 +26,7 @@ output: {
 
                                 annotationDeployVersion:  "app.oam.dev/deployVersion"
                                 annotationPublishVersion: "app.oam.dev/publishVersion"
+                                labelComponentName:       "app.oam.dev/component"
 
                                 ignoreCollectPodKindMap: {
                                     "ConfigMap":                 true
@@ -100,6 +101,11 @@ output: {
                                         workload: {
                                             apiVersion: pods.value.apiVersion
                                             kind:       pods.value.kind
+                                            name:       pods.value.metadata.name
+                                            namespace:  pods.value.metadata.namespace
+                                        }
+                                        if pods.value.metadata.labels[labelComponentName] != _|_ {
+                                            component: pods.value.metadata.labels[labelComponentName]
                                         }
                                         if pods.value.metadata.annotations[annotationPublishVersion] != _|_ {
                                             publishVersion: pods.value.metadata.annotations[annotationPublishVersion]
@@ -112,8 +118,9 @@ output: {
                                     status: {
                                         if len(podsError) == 0 {
                                             podList: [ for pod in podsWithCluster {
-                                                cluster:  pod.cluster
-                                                workload: pod.workload
+                                                cluster:   pod.cluster
+                                                workload:  pod.workload
+                                                component: pod.component
                                                 metadata: {
                                                     name:         pod.obj.metadata.name
                                                     namespace:    pod.obj.metadata.namespace
