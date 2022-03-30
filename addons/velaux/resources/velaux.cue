@@ -31,7 +31,7 @@ output: {
 				},
 				{
 					name:  "DEX_URL"
-					value: "addon-dex.vela-system:5556"
+					value: "dex.vela-system:5556"
 				}
 			]
 		}
