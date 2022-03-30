@@ -24,7 +24,7 @@ for i in $ADDONS ; do
 done
 
 # test dex addon
-vela addon enable addons/dex issuer=http://test-issuer.com
+vela addon enable addons/dex velaux=http://velaux.com
 vela addon disable dex
 
 # test rollout addon
