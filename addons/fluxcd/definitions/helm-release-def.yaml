@@ -7,9 +7,7 @@ metadata:
     definition.oam.dev/description: "helm release is a group of K8s resources from either git repository or helm repo"
 spec:
   workload:
-    definition:
-      apiVersion: "source.toolkit.fluxcd.io/v1beta1"
-      kind:       "HelmRelease"
+    type: autodetects.core.oam.dev
   schematic:
     cue:
       template: |
