@@ -56,6 +56,7 @@ spec:
         parameter: {
                 // +usage=Config type
                 type: "github" | "ldap" | "gitlab" | "oidc" | "saml" | "google"
+                // +usage=GitHub connector
                 github?: {
                         // +usage=GitHub client ID
                         clientID: string
@@ -64,43 +65,79 @@ spec:
                         // +usage=GitHub redirect URI
                         redirectURI: string
                 }
+                // +usage=LDAP connector
                 ldap?: {
-                        host:               string
-                        insecureNoSSL:      *true | bool
-                        insecureSkipVerify: bool
-                        startTLS:           bool
-                        usernamePrompt:     string
+                        // +usage=Host and optional port of the LDAP server in the form "host:port".
+                        host: string
+                        // +usage=This field is required if the LDAP host is not using TLS (port 389).
+                        insecureNoSSL?: *true | bool
+                        // +usage=If a custom certificate isn't provide, this option can be used to turn on
+                        insecureSkipVerify?: bool
+                        // +usage=If unspecified, connections will use the ldaps:// protocol
+                        startTLS?: bool
+                        // +usage=Path to a trusted root certificate file. Default: use the host's root CA.
+                        rootCA?: string
+                        // +usage=The attribute to display in the provided password prompt. If unset, will display "Username"
+                        usernamePrompt?: string
+                        // +usage=User search maps a username and password entered by a user to a LDAP entry.
                         userSearch: {
-                                baseDN:    string
-                                username:  string
-                                idAttr:    string
+                                // +usage=BaseDN to start the search from. It will translate to the query "(&(objectClass=person)(uid=<username>))".
+                                baseDN: string
+                                // +usage=username attribute used for comparing user entries. This will be translated and combined with the other filter as "(<attr>=<username>)".
+                                username: string
+                                // +usage=The following three fields are direct mappings of attributes on the user entry. String representation of the user.
+                                idAttr: string
+                                // +usage=Attribute to map to Email.
                                 emailAttr: string
-                                nameAttr:  string
+                                // +usage=Maps to display name of users. No default value.
+                                nameAttr?: string
+                                // +usage=Optional filter to apply when searching the directory.
+                                filter?: string
                         }
                 }
+                // +usage=GitLab connector
                 gitlab?: {
-                        baseURL?:     string
-                        clientID:     string
+                        // +usage=default to https://gitlab.com
+                        baseURL?: string
+                        // +usage=GitLab client ID
+                        clientID: string
+                        // +usage=GitLab client secret
                         clientSecret: string
-                        redirectURI:  string
+                        // +usage=GitLab redirect URI
+                        redirectURI: string
                 }
+                // +usage=OIDC connector
                 oidc?: {
-                        issuer:       string
-                        clientID:     string
+                        // +usage=Canonical URL of the provider, also used for configuration discovery. This value MUST match the value returned in the provider config discovery. See: https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
+                        issuer: string
+                        // +usage=OIDC client ID
+                        clientID: string
+                        // +usage=OIDC client secret
                         clientSecret: string
-                        redirectURI:  string
+                        // +usage=OIDC redirect URI
+                        redirectURI: string
                 }
+                // +usage=Google connector
                 google?: {
-                        clientID:     string
+                        // +usage=Google client ID
+                        clientID: string
+                        // +usage=Google client secret
                         clientSecret: string
-                        redirectURI:  string
+                        // +usage=Google redirect URI
+                        redirectURI: string
                 }
+                // +usage=SAML connector
                 saml?: {
-                        ssoURL:       string
-                        ca:           string
-                        redirectURI:  string
+                        // +usage=SSO URL used for POST value.
+                        ssoURL: string
+                        // +usage=CA to use when validating the signature of the SAML response.
+                        ca: string
+                        // +usage=SAML redirect URI
+                        redirectURI: string
+                        // +usage=Name of attributes in the returned assertions to map to ID token claims.
                         usernameAttr: string
-                        emailAttr:    string
+                        // +usage=Email of attributes in the returned assertions to map to ID token claims.
+                        emailAttr: string
                 }
         }
   workload:
