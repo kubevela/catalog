@@ -23,7 +23,7 @@ output: {
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
 		}
-		if parameter["dex"] != _|_ {
+		if parameter["dex"] == "true" {
 			env: [
 				{
 					name:  "KUBEVELA_API_URL"
@@ -35,7 +35,7 @@ output: {
 				}
 			]
 		}
-		if parameter["dex"] == _|_  {
+		if parameter["dex"] == "false" {
 			env: [
 				{
 					name:  "KUBEVELA_API_URL"
