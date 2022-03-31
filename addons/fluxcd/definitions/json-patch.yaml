@@ -1,10 +1,12 @@
 apiVersion: core.oam.dev/v1beta1
 kind: TraitDefinition
 metadata:
-  annotations:
-    definition.oam.dev/description: "A list of JSON6902 patch to selected target"
   name: kustomize-json-patch
   namespace: vela-system
+  labels:
+    custom.definition.oam.dev/ui-hidden: "true"
+  annotations:
+    definition.oam.dev/description: "A list of JSON6902 patch to selected target"
 spec:
   schematic:
     cue:
