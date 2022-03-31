@@ -1,0 +1,84 @@
+- jsonKey: type
+  sort: 1
+- jsonKey: github
+  sort: 3
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "github"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: redirectURI
+      sort: 5
+- jsonKey: gitlab
+  sort: 5
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "gitlab"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: baseURL
+      sort: 5
+    - jsonKey: redirectURI
+      sort: 7
+- jsonKey: google
+  sort: 7
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "google"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: redirectURI
+      sort: 5
+- jsonKey: oidc
+  sort: 9
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "oidc"
+  subParameters:
+    - jsonKey: issuer
+      sort: 1
+    - jsonKey: clientID
+      uiType: Password
+      sort: 3
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 5
+    - jsonKey: redirectURI
+      sort: 7
+- jsonKey: saml
+  sort: 11
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "saml"
+- jsonKey: ldap
+  sort: 13
+  uiType: Ignore
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "ldap"
