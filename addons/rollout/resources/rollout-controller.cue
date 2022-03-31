@@ -2,7 +2,7 @@ output: {
 	type: "helm"
 	properties: {
 		chart:           "vela-rollout"
-		version:         parameter["version"]
+		version:         context.metadata.version
 		repoType:        "helm"
 		url:             "https://charts.kubevela.net/core"
 		targetNamespace: "vela-system"
