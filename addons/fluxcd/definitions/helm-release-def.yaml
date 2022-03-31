@@ -109,10 +109,10 @@ spec:
 
         parameter: {
         	repoType: *"helm" | "git" | "oss"
-        	// +usage=The interval at which to check for repository/bucket and relese updates, default to 5m
+        	// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
         	pullInterval: *"5m" | string
-                // +usage=The  Interval at which to reconcile the Helm release, default to 30s
-                interval: *"30s" | string
+          // +usage=The  Interval at which to reconcile the Helm release, default to 30s
+          interval: *"30s" | string
         	// +usage=The Git or Helm repository URL, OSS endpoint, accept HTTP/S or SSH address as git url,
         	url: string
         	// +usage=The name of the secret containing authentication credentials
