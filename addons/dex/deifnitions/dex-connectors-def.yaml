@@ -1,0 +1,107 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    custom.definition.oam.dev/alias.config.oam.dev: Dex Connector
+    definition.oam.dev/description: Config information to authenticate Dex connectors
+  labels:
+    custom.definition.oam.dev/catalog.config.oam.dev: velacore-config
+    custom.definition.oam.dev/multi-cluster.config.oam.dev: "false"
+    custom.definition.oam.dev/type.config.oam.dev: dex-connector
+    custom.definition.oam.dev/ui-hidden: "true"
+  name: config-dex-connector
+spec:
+  schematic:
+    cue:
+      template: |
+        import (
+                "encoding/json"
+        )
+
+        output: {
+                apiVersion: "v1"
+                kind:       "Secret"
+                metadata: {
+                        name:      context.name
+                        namespace: context.namespace
+                        labels: {
+                                "config.oam.dev/catalog":       "velacore-config"
+                                "config.oam.dev/type":          "dex-connector"
+                                "config.oam.dev/multi-cluster": "false"
+                                "config.oam.dev/identifier":    context.name
+                                "config.oam.dev/sub-type":      parameter.type
+                        }
+                }
+                type: "Opaque"
+
+                if parameter.type == "github" {
+                        stringData: github: json.Marshal(parameter.github)
+                }
+                if parameter.type == "ldap" {
+                        stringData: ldap: json.Marshal(parameter.ldap)
+                }
+                if parameter.type == "oidc" {
+                        stringData: oidc: json.Marshal(parameter.oidc)
+                }
+                if parameter.type == "gitlab" {
+                        stringData: gitlab: json.Marshal(parameter.gitlab)
+                }
+                if parameter.type == "saml" {
+                        stringData: saml: json.Marshal(parameter.saml)
+                }
+                if parameter.type == "google" {
+                        stringData: google: json.Marshal(parameter.google)
+                }
+        }
+        parameter: {
+                // +usage=Config type
+                type: "github" | "ldap" | "gitlab" | "oidc" | "saml" | "google"
+                github?: {
+                        // +usage=GitHub client ID
+                        clientID: string
+                        // +usage=GitHub client secret
+                        clientSecret: string
+                        // +usage=GitHub redirect URI
+                        redirectURI: string
+                }
+                ldap?: {
+                        host:               string
+                        insecureNoSSL:      *true | bool
+                        insecureSkipVerify: bool
+                        startTLS:           bool
+                        usernamePrompt:     string
+                        userSearch: {
+                                baseDN:    string
+                                username:  string
+                                idAttr:    string
+                                emailAttr: string
+                                nameAttr:  string
+                        }
+                }
+                gitlab?: {
+                        baseURL?:     string
+                        clientID:     string
+                        clientSecret: string
+                        redirectURI:  string
+                }
+                oidc?: {
+                        issuer:       string
+                        clientID:     string
+                        clientSecret: string
+                        redirectURI:  string
+                }
+                google?: {
+                        clientID:     string
+                        clientSecret: string
+                        redirectURI:  string
+                }
+                saml?: {
+                        ssoURL:       string
+                        ca:           string
+                        redirectURI:  string
+                        usernameAttr: string
+                        emailAttr:    string
+                }
+        }
+  workload:
+    type: autodetects.core.oam.dev

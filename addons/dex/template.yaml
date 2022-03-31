@@ -7,8 +7,6 @@ spec:
   components:
     - name: dex
       type: helm
-      dependsOn:
-        - dex-config-app
       properties:
         chart: dex
         version: "0.6.5"
