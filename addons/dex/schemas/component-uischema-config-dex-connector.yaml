@@ -3,7 +3,8 @@
 - jsonKey: github
   sort: 3
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
@@ -20,7 +21,8 @@
 - jsonKey: gitlab
   sort: 5
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
@@ -39,7 +41,8 @@
 - jsonKey: google
   sort: 7
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
@@ -56,7 +59,8 @@
 - jsonKey: oidc
   sort: 9
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
@@ -75,7 +79,8 @@
 - jsonKey: saml
   sort: 11
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
@@ -83,7 +88,8 @@
 - jsonKey: ldap
   sort: 13
   uiType: Ignore
-  required: true
+  validate:
+    required: true
   conditions:
     - jsonKey: type
       op: "=="
