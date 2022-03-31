@@ -1,0 +1,40 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    custom.definition.oam.dev/alias.config.oam.dev: Helm Repository
+    definition.oam.dev/description: Config information to authenticate helm chart repository
+  labels:
+    custom.definition.oam.dev/ui-hidden: "true"
+    custom.definition.oam.dev/catalog.config.oam.dev: velacore-config
+    custom.definition.oam.dev/multi-cluster.config.oam.dev: "true"
+    custom.definition.oam.dev/type.config.oam.dev: helm-repository
+  name: config-helm-repository
+  namespace: vela-system
+spec:
+  schematic:
+    cue:
+      template: |
+        output: {
+        	apiVersion: "v1"
+        	kind:       "Secret"
+        	metadata: {
+        		name:      context.name
+        		namespace: context.namespace
+        		labels: {
+        			"config.oam.dev/catalog":       "velacore-config"
+        			"config.oam.dev/type":          "helm-repository"
+        			"config.oam.dev/multi-cluster": "true"
+        			"config.oam.dev/identifier":    parameter.url
+        			"config.oam.dev/sub-type":      "helm"
+        		}
+        	}
+        	type: "Opaque"
+        	stringData: url: parameter.url
+        }
+        parameter: {
+        	// +usage=The public url of the helm chart repository.
+        	url: string
+        }
+  workload:
+    type: autodetects.core.oam.dev
