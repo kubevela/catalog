@@ -15,4 +15,6 @@ parameter: {
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
 	// +usage=Specify the names of imagePullSecret for private image registry, eg. "{a,b,c}"
 	imagePullSecrets?: [...string]
+	// +usage=Specify whether to enable the dex
+	dex: *"false" | "true"
 }

@@ -1,0 +1,13 @@
+name: dex
+version: 0.6.5
+description: Enable dex for login
+
+tags:
+- auth
+- alpha
+
+dependencies:
+  - name: velaux
+
+system:
+  vela: ">=v1.3.0-beta.1"

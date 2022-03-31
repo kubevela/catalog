@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: dex
+  namespace: vela-system
+spec:
+  components:
+    - name: dex
+      type: helm
+      properties:
+        chart: dex
+        version: "0.6.5"
+        url: "https://charts.dexidp.io"
+        repoType: helm
+        values:
+          configSecret:
+            create: false
+            name: dex-config
