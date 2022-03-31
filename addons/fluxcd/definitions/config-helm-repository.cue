@@ -23,7 +23,6 @@ template: {
 				"config.oam.dev/catalog":       "velacore-config"
 				"config.oam.dev/type":          "helm-repository"
 				"config.oam.dev/multi-cluster": "true"
-				"config.oam.dev/identifier":    parameter.url
 				"config.oam.dev/sub-type":      parameter.type
 			}
 		}
