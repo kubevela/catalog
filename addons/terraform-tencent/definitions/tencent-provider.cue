@@ -62,7 +62,7 @@ template: {
 
 	parameter: {
 		//+usage=The name of Terraform Provider for Tencent Cloud, default is `default`
-		name: *"default" | string
+		name: *"tencent" | string
 		//+usage=Get TENCENTCLOUD_SECRET_ID per this guide https://cloud.tencent.com/document/product/1213/67093
 		TENCENTCLOUD_SECRET_ID: string
 		//+usage=Get TENCENTCLOUD_SECRET_KEY per this guide https://cloud.tencent.com/document/product/1213/67093

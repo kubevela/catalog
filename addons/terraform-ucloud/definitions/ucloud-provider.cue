@@ -65,7 +65,7 @@ template: {
 
 	parameter: {
 		//+usage=The name of Terraform Provider for Ucloud Cloud, default is `default`
-		name: *"default" | string
+		name: *"ucloud" | string
 	//+usage=Get UCLOUD_PRIVATE_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
 	UCLOUD_PRIVATE_KEY: string
 	//+usage=Get UCLOUD_PUBLIC_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
