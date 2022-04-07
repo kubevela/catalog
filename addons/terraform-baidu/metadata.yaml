@@ -1,5 +1,5 @@
 name: terraform-baidu
-version: 1.0.0
+version: 1.0.1
 description: Kubernetes Terraform Controller Provider for Baidu Cloud
 url: https://github.com/oam-dev/terraform-controller
 
