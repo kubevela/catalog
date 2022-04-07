@@ -29,11 +29,17 @@ spec:
         		}
         	}
         	type: "Opaque"
-        	stringData: url: parameter.url
+        	stringData: {
+        		 url: parameter.url
+        		 username: parameter.username
+        		 password: parameter.password
+        	}
         }
         parameter: {
         	// +usage=The public url of the helm chart repository.
         	url: string
+          username?: string
+          password?: string
         }
   workload:
     type: autodetects.core.oam.dev
