@@ -36,9 +36,11 @@ spec:
         	}
         }
         parameter: {
-        	// +usage=The public url of the helm chart repository.
-        	url: string
+          // +usage=The public url of the helm chart repository.
+          url: string
+          // +usage=The username of basic auth repo
           username?: string
+          // +usage=The password of basic auth repo
           password?: string
         }
   workload:
