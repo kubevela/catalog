@@ -11,6 +11,7 @@ import "strings"
 		"multi-cluster.config.oam.dev": "false"
 	}
 	description: "Terraform Provider for Azure"
+	attributes: workload: type: "autodetects.core.oam.dev"
 }
 
 template: {
@@ -18,7 +19,7 @@ template: {
 		apiVersion: "terraform.core.oam.dev/v1beta1"
 		kind:       "Provider"
 		metadata: {
-			name:      "azure"
+			name:      parameter.name
 			namespace: "default"
 			labels:    l
 		}
@@ -55,6 +56,7 @@ template: {
 	creds4: "armTenantID: " + parameter.ARM_TENANT_ID
 
 	l: {
+		"config.oam.dev/catalog": "velacore-config"
 		"config.oam.dev/type":     "terraform-provider"
 		"config.oam.dev/provider": "terraform-azure"
 	}

@@ -54,6 +54,7 @@ template: {
 	}
 
 	l: {
+		"config.oam.dev/catalog": "velacore-config"
 		"config.oam.dev/type":     "terraform-provider"
 		"config.oam.dev/provider": "terraform-baidu"
 	}

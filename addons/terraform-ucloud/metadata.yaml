@@ -1,5 +1,5 @@
 name: terraform-ucloud
-version: 1.0.0
+version: 1.0.1
 description: Kubernetes Terraform Controller Provider for UCloud
 url: https://github.com/oam-dev/terraform-controller
 
@@ -14,6 +14,10 @@ deployTo:
 
 dependencies:
   - name: terraform
+
+system:
+  vela: ">=v1.3.0"
+
 
 # -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
 # provider short name
