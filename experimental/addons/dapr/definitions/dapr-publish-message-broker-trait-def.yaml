@@ -1,0 +1,39 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: dapr-publish-message-broker
+  namespace: vela-system
+spec:
+  appliesToWorkloads:
+  - deployments.apps
+  podDisruptive: true
+  schematic:
+    cue:
+      template: |
+        parameter: {
+          name: string
+          type: string
+          version: string
+          metadata: [...{
+            name: string
+            value ?: _
+            secretKeyRef ?: {
+              name: string
+              key: string
+            }
+          }]
+        }
+
+        outputs: daprComponent: {
+          apiVersion: "dapr.io/v1alpha1"
+          kind: "Component"
+          metadata: {
+            name: parameter.name
+            namespace: context.namespace
+          }
+          spec: {
+            type: parameter.type
+            version: parameter.version
+            metadata: parameter.metadata
+          }
+        }
