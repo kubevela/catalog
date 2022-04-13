@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE_CLUSTER_GATEWAY=v1.3.0
+RELEASE_CLUSTER_GATEWAY=v1.3.2
 RELEASE_CLUSTER_PROXY=v0.2.0
 RELEASE_MANAGED_SERVICE_ACCOUNT=v0.2.0
 
@@ -44,7 +44,6 @@ mkdir -p "${BASEDIR}"/resources/cluster-gateway/"${RELEASE_CLUSTER_GATEWAY}"
 pushd cluster-gateway
 helm template  -n open-cluster-management-addon \
   ./charts/addon-manager/ --output-dir "${BASEDIR}"/resources/cluster-gateway/"${RELEASE_CLUSTER_GATEWAY}"/ \
-  --set clusterGateway.image=oamdev/cluster-gateway:$RELEASE_CLUSTER_GATEWAY \
   --set tag=${RELEASE_CLUSTER_GATEWAY} \
   --set manualSecretManagement=false \
   --set konnectivityEgress=true
