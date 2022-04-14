@@ -94,3 +94,38 @@
     - jsonKey: type
       op: "=="
       value: "ldap"
+  subParameters:
+    - jsonKey: host
+      style:
+        colSpan: 24
+    - jsonKey: userSearch
+      style:
+        colSpan: 24
+      subParameters:
+      - jsonKey: baseDN
+        style:
+          colSpan: 12
+      - jsonKey: emailAttr
+        style:
+          colSpan: 12
+      - jsonKey: idAttr
+        style:
+          colSpan: 12
+      - jsonKey: username
+        style:
+          colSpan: 12
+      - jsonKey: filter
+        style:
+          colSpan: 12
+      - jsonKey: nameAttr
+        style:
+          colSpan: 12
+        sort: 103
+    - jsonKey: rootCA
+      style:
+        colSpan: 24
+    - jsonKey: usernamePrompt
+      style:
+        colSpan: 24
+    - jsonKey: startTLS
+      sort: 103
