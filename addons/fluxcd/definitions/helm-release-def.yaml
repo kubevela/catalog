@@ -91,7 +91,7 @@ spec:
         }
 
         _secret: {
-        	if parameter.secretRef != _|_ && parameter.secretRef != ""  {
+        	if parameter.secretRef != _|_ {
         		secretRef: {
         			name: parameter.secretRef
         		}
