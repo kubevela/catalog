@@ -37,3 +37,5 @@ KubeVela        OSS     https://addons.kubevela.net
 
 You can add your addon files in this dir and help extends KubeVela addons. 
 
+* Refer to [the docs](https://kubevela.io/docs/how-to/cli/addon/addon) to learn more about addons.
+
