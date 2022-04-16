@@ -1,0 +1,7 @@
+name: kubevela-io
+version: latest
+description: kubevela.io as an addon for users' convenience
+
+tags:
+  - latest
+
