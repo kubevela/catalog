@@ -30,9 +30,14 @@ spec:
         	}
         	type: "Opaque"
         	stringData: {
-        		 url: parameter.url
-        		 username: parameter.username
-        		 password: parameter.password
+        		url: parameter.url
+        		if parameter.username != _|_ {
+        			username: parameter.username
+        		}
+        		if parameter.password != _|_ {
+        			username: parameter.password
+        		}
+
         	}
         }
         parameter: {
