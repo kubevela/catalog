@@ -21,28 +21,28 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
-	"sigs.k8s.io/yaml"
 	"time"
 
-	"helm.sh/helm/v3/pkg/chart"
-	"helm.sh/helm/v3/pkg/repo"
+	"sigs.k8s.io/yaml"
+
 	"io/ioutil"
 	"os"
 	"os/exec"
+
+	"helm.sh/helm/v3/pkg/chart"
+	"helm.sh/helm/v3/pkg/repo"
 )
 
 type Metadata struct {
-	Name               string              `json:"name" validate:"required"`
-	Version            string              `json:"version"`
-	Description        string              `json:"description"`
-	Icon               string              `json:"icon"`
-	URL                string              `json:"url,omitempty"`
-	Tags               []string            `json:"tags,omitempty"`
-	NeedNamespace      []string            `json:"needNamespace,omitempty"`
-	Invisible          bool                `json:"invisible"`
+	Name          string   `json:"name" validate:"required"`
+	Version       string   `json:"version"`
+	Description   string   `json:"description"`
+	Icon          string   `json:"icon"`
+	URL           string   `json:"url,omitempty"`
+	Tags          []string `json:"tags,omitempty"`
+	NeedNamespace []string `json:"needNamespace,omitempty"`
+	Invisible     bool     `json:"invisible"`
 }
-
-
 
 func main() {
 	dir := os.Args[1]
@@ -60,7 +60,7 @@ func main() {
 
 	originIndex := &repo.IndexFile{}
 
-	body, err := http.Get(repoURL+"/index.yaml")
+	body, err := http.Get(repoURL + "/index.yaml")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -96,10 +96,10 @@ func main() {
 			entry := repo.ChartVersions{}
 			entry = append(entry, &repo.ChartVersion{Metadata: &chart.Metadata{Name: info.Name(),
 				Version: m.Version, Icon: m.Icon, Keywords: m.Tags, Description: m.Description,
-				Home: m.URL, }, Created: time.Now(), URLs: []string{repoURL+"/"+info.Name()+"-"+m.Version+".tgz"}})
+				Home: m.URL}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}})
 			entries[info.Name()] = entry
 
-			err = helmSave(dir, info.Name(), info.Name(),m.Version)
+			err = helmSave(dir, info.Name(), info.Name(), m.Version)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -107,9 +107,8 @@ func main() {
 	}
 	index := repo.IndexFile{APIVersion: "v1", Entries: entries}
 
-
 	index.Merge(originIndex)
-	out,err := yaml.Marshal(index)
+	out, err := yaml.Marshal(index)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -127,7 +126,7 @@ func helmSave(dir, name, addonDir, version string) error {
 	cmd := exec.Command("tar", "zcf", filename, dir+addonDir+"/")
 	cmd.Stdout = &outInfo
 	fmt.Println(cmd.String())
-	if err := cmd.Run(); err != nil{
+	if err := cmd.Run(); err != nil {
 		fmt.Println(outInfo.String())
 		fmt.Println(err)
 		return err
