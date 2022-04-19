@@ -47,13 +47,11 @@ template: {
 				labels:    l
 			}
 			type: "Opaque"
-					stringData: credentials: strings.Join([
+			stringData: credentials: strings.Join([
 							"privateKey: " + parameter.UCLOUD_PRIVATE_KEY,
-
 							"publicKey: " + parameter.UCLOUD_PUBLIC_KEY,
-
 							"projectID: " + parameter.UCLOUD_PROJECT_ID,
-						], "\n")
+			], "\n")
 		}
 	}
 
@@ -66,13 +64,13 @@ template: {
 	parameter: {
 		//+usage=The name of Terraform Provider for Ucloud Cloud, default is `default`
 		name: *"ucloud" | string
-	//+usage=Get UCLOUD_PRIVATE_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
-	UCLOUD_PRIVATE_KEY: string
-	//+usage=Get UCLOUD_PUBLIC_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
-	UCLOUD_PUBLIC_KEY: string
-	//+usage=Get UCLOUD_PROJECT_ID per this guide https://docs.ucloud.cn/terraform/quickstart
-	UCLOUD_PROJECT_ID: string
-	//+usage=Get UCLOUD_REGION by picking one RegionId from UCloud region list https://docs.ucloud.cn/api/summary/regionlist
-	UCLOUD_REGION: string
-}
+		//+usage=Get UCLOUD_PRIVATE_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
+		UCLOUD_PRIVATE_KEY: string
+		//+usage=Get UCLOUD_PUBLIC_KEY per this guide https://docs.ucloud.cn/terraform/quickstart
+		UCLOUD_PUBLIC_KEY: string
+		//+usage=Get UCLOUD_PROJECT_ID per this guide https://docs.ucloud.cn/terraform/quickstart
+		UCLOUD_PROJECT_ID: string
+		//+usage=Get UCLOUD_REGION by picking one RegionId from UCloud region list https://docs.ucloud.cn/api/summary/regionlist
+		UCLOUD_REGION: string
+	}
 }
