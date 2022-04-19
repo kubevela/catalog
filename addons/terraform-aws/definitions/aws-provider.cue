@@ -63,10 +63,14 @@ template: {
 
 	parameter: {
 		//+usage=The name of Terraform Provider for AWS, default is `default`
-		name:                  *"aws" | string
-		AWS_ACCESS_KEY_ID:     string
+		name: *"aws" | string
+		//+usage=Get AWS_ACCESS_KEY_ID per https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/
+		AWS_ACCESS_KEY_ID: string
+		//+usage=Get AWS_SECRET_ACCESS_KEY per https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/
 		AWS_SECRET_ACCESS_KEY: string
-		AWS_SESSION_TOKEN:     *"" | string
-		AWS_DEFAULT_REGION:    string
+		//+usage=Get AWS_SESSION_TOKEN per https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html
+		AWS_SESSION_TOKEN: *"" | string
+		//+usage=Choose one of Code form region list https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
+		AWS_DEFAULT_REGION: string
 	}
 }
