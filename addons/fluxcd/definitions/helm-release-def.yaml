@@ -91,10 +91,12 @@ spec:
         }
 
         _secret: {
-        	if parameter.secretRef != _|_ && parameter.secretRef != "" {
-        		secretRef: {
-        			name: parameter.secretRef
-        		}
+        	if parameter.secretRef != _|_ {
+                if parameter.secretRef != "" {
+        		   secretRef: {
+        			  name: parameter.secretRef
+        		   }
+                }
         	}
         }
 
