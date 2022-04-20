@@ -36,8 +36,8 @@ jobs:
       - uses: docker/build-push-action@v2
         name: Build & Pushing routetrait image
         with:
-          context: ./traits/routetrait/
-          file: traits/routetrait/Dockerfile
+          context: ./legacy/traits/routetrait/
+          file: ./legacy/traits/routetrait/Dockerfile
           labels: |-
             org.opencontainers.image.source=https://github.com/${{ github.repository }}/routetrait
             org.opencontainers.image.revision=${{ github.sha }}
@@ -77,8 +77,8 @@ jobs:
       - uses: docker/build-push-action@v2
         name: Build & Pushing podspecworkload image
         with:
-          context: ./workloads/podspecworkload
-          file: workloads/podspecworkload/Dockerfile
+          context: ./legacy/workloads/podspecworkload
+          file: ./legacy/workloads/podspecworkload/Dockerfile
           labels: |-
             org.opencontainers.image.source=https://github.com/${{ github.repository }}/podspecworkload
             org.opencontainers.image.revision=${{ github.sha }}
@@ -118,8 +118,8 @@ jobs:
       - uses: docker/build-push-action@v2
         name: Build & Pushing autoscalertrait image
         with:
-          context: ./traits/autoscalertrait/
-          file: traits/autoscalertrait/Dockerfile
+          context: ./legacy/traits/autoscalertrait/
+          file: ./legacy/traits/autoscalertrait/Dockerfile
           labels: |-
             org.opencontainers.image.source=https://github.com/${{ github.repository }}/autoscalertrait
             org.opencontainers.image.revision=${{ github.sha }}
@@ -159,8 +159,8 @@ jobs:
       - uses: docker/build-push-action@v2
         name: Build & Pushing metricstrait image
         with:
-          context: ./traits/metricstrait/
-          file: traits/metricstrait/Dockerfile
+          context: ./legacy/traits/metricstrait/
+          file: ./legacy/traits/metricstrait/Dockerfile
           labels: |-
             org.opencontainers.image.source=https://github.com/${{ github.repository }}/metricstrait
             org.opencontainers.image.revision=${{ github.sha }}
