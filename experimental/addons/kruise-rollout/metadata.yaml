@@ -1,0 +1,11 @@
+name: kruise-rollout
+version: 1.0.0
+description: Rollout workload by kruise controller
+url: https://github.com/openkruise/rollouts
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+dependencies:
+- name: fluxcd
