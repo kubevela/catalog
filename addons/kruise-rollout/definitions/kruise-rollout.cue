@@ -5,7 +5,7 @@
 	description: "Rollout workload by kruise controller."
 	attributes: {
 		podDisruptive: true
-		appliesToWorkloads: ["*"]
+		appliesToWorkloads: ["deployments.apps", "clonesets.apps.kruise.io"]
 		status: {
 			customStatus: #"""
 				message: context.outputs.rollout.status.message

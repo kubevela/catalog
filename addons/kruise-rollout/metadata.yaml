@@ -9,3 +9,6 @@ deployTo:
 
 dependencies:
 - name: fluxcd
+
+system:
+  kubernetes: ">=1.19.0-0"
