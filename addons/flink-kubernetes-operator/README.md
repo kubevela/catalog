@@ -13,7 +13,6 @@ A Kubernetes operator for Apache Flink(https://github.com/apache/flink-kubernete
 #The cert-manager can also install with pure k8s-object like this:
 kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 
-kubectl create ns flink
 declare -x DEFAULT_VELA_NS=flink
 vela addon enable fluxcd
 vela addon enable flink-kubernetes-operator
@@ -31,6 +30,7 @@ vela addon disable fluxcd
 # set back to the DEFAULT_VELA_NS
 declare -x DEFAULT_VELA_NS=vela-system
 kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+kubectl delete ns flink
 ```
 
 ## To check the flink-kubernetes-operator running status
