@@ -1,7 +1,0 @@
-name: cert-manager
-version: latest
-description: cert-manager is a dependency addon for flink-kubernetes-operator addon
-
-tags:
-  - latest
-

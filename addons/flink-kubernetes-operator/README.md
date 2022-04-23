@@ -5,19 +5,32 @@ A Kubernetes operator for Apache Flink(https://github.com/apache/flink-kubernete
 ## Install
 
 ```shell
+# The following steps are for enabling fluxcd and flink-kubernetes-operator in namespace called flink
+# vela will support the ns setup for addon enable or disable in the future version
+
+#Install the certificate manager on your Kubernetes cluster to enable adding the webhook component 
+#(only needed once per Kubernetes cluster):
+#The cert-manager can also install with pure k8s-object like this:
+kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+
+kubectl create ns flink
 declare -x DEFAULT_VELA_NS=flink
-vela addon enable cert-manager
 vela addon enable fluxcd
 vela addon enable flink-kubernetes-operator
+# set back to the DEFAULT_VELA_NS
 declare -x DEFAULT_VELA_NS=vela-system
 ```
 
 ## Uninstall
 
 ```shell
+# set the DEFAULT_VELA_NS for disabling addons
+declare -x DEFAULT_VELA_NS=flink
 vela addon disable flink-kubernetes-operator
-vela addon disable cert-manager
 vela addon disable fluxcd
+# set back to the DEFAULT_VELA_NS
+declare -x DEFAULT_VELA_NS=vela-system
+kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 ```
 
 ## To check the flink-kubernetes-operator running status
