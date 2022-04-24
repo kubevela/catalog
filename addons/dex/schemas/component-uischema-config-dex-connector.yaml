@@ -96,9 +96,11 @@
       value: "ldap"
   subParameters:
     - jsonKey: host
+      sort: 1
       style:
         colSpan: 24
     - jsonKey: userSearch
+      sort: 3
       style:
         colSpan: 24
       subParameters:
@@ -121,11 +123,23 @@
         style:
           colSpan: 12
         sort: 103
+    - jsonKey: insecureNoSSL
+      sort: 5
+      style:
+        colSpan: 24
     - jsonKey: rootCA
       style:
         colSpan: 24
     - jsonKey: usernamePrompt
       style:
         colSpan: 24
+    - jsonKey: bindDN
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: bindPW
+      sort: 9
+      style:
+        colSpan: 12
     - jsonKey: startTLS
       sort: 103
