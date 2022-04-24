@@ -1,5 +1,5 @@
 name: flink-kubernetes-operator
-version: release-0.1.0
+version: 0.1.0
 description: "A Kubernetes operator for Apache Flink."
 icon: "https://github.com/apache/flink-kubernetes-operator/blob/main/docs/static/img/overview.svg"
 url: "https://github.com/apache/flink-kubernetes-operator"
