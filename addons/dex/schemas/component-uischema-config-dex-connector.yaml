@@ -139,6 +139,7 @@
         colSpan: 12
     - jsonKey: bindPW
       sort: 9
+      uiType: Password
       style:
         colSpan: 12
     - jsonKey: startTLS
