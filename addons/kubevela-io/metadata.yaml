@@ -1,6 +1,6 @@
 name: kubevela-io
 version:  1.3.0
-description: kubevela.io as an addon for users' convenience
+description: enable the website kubevela.io(kubevela.net) as an addon for users' convenience
 
 tags:
   - latest
