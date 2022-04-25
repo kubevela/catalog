@@ -1,6 +1,6 @@
 # cert-manager
 
-This addon is for flink-kubernetes-operator addon and flink-cluster to run in normal,which is for managing flink-kubernetes-operator‘s certificate
+This addon is for cert-manager, which is for managing the k8s certificates
 
 # tips
 
