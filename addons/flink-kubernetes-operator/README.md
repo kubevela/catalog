@@ -11,10 +11,12 @@ A Kubernetes operator for Apache Flink(https://github.com/apache/flink-kubernete
 #Install the certificate manager on your Kubernetes cluster to enable adding the webhook component 
 #(only needed once per Kubernetes cluster):
 #The cert-manager can also install with pure k8s-object like this:
-kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+#kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 
+kubectl create ns flink
 declare -x DEFAULT_VELA_NS=flink
 vela addon enable fluxcd
+vela addon enable cert-manager
 vela addon enable flink-kubernetes-operator
 # set back to the DEFAULT_VELA_NS
 declare -x DEFAULT_VELA_NS=vela-system
@@ -26,39 +28,42 @@ declare -x DEFAULT_VELA_NS=vela-system
 # set the DEFAULT_VELA_NS for disabling addons
 declare -x DEFAULT_VELA_NS=flink
 vela addon disable flink-kubernetes-operator
+vela addon disable cert-manager
 vela addon disable fluxcd
 # set back to the DEFAULT_VELA_NS
 declare -x DEFAULT_VELA_NS=vela-system
-kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
+# kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 kubectl delete ns flink
 ```
 
 ## To check the flink-kubernetes-operator running status
-- Firstly, check the cert-manager running status
+
+- Firstly, check the flink-kubernetes-operator (and the fluxcd and cert-manager we need to deploy by helm) running status
 ```shell
-kubectl get deploy -n cert-manager
+kubectl get application -n flink
+NAME                              COMPONENT               TYPE   PHASE     HEALTHY   STATUS                                                            AGE
+addon-cert-manager                cert-manager            helm   running   true      Fetch repository successfully, Create helm release successfully   25m
+addon-flink-kubernetes-operator   flink-operator          helm   running   true      Fetch repository successfully, Create helm release successfully   22m
+addon-fluxcd                      flux-system-namespace   raw    running   true                                                                       26h
+```
+
+- Secondly, check the cert-manager running status
+```shell
+kubectl get deploy -n flink | grep cert-manager
 NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
 cert-manager              1/1     1            1           2d22h
 cert-manager-cainjector   1/1     1            1           2d22h
 cert-manager-webhook      1/1     1            1           2d22h
 ```
 
-- Secondly, check the flink-kubernetes-operator (and the fluxcd we need to deploy by helm) running status
 ```shell
-kubectl get application -n flink
-NAME                              COMPONENT               TYPE   PHASE     HEALTHY   STATUS                                                            AGE
-addon-flink-kubernetes-operator   flink-operator          helm   running   true      Fetch repository successfully, Create helm release successfully   6h19m
-addon-fluxcd                      flux-system-namespace   raw    running   true                                                                        26h
-```
-
-```shell
-kubectl get deploy  -n flink
+kubectl get deploy  -n flink | grep flink
 NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
 flink-kubernetes-operator   1/1     1            1           6h19m 
 ```
 
 ```shell
-kubectl get pod   -n flink
+kubectl get pod   -n flink | grep flink
 NAME                                        READY   STATUS    RESTARTS   AGE
 flink-kubernetes-operator-9f5546947-2j7x4   2/2     Running   0          6h19m
 ```
