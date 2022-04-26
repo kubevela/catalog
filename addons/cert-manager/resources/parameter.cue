@@ -1,0 +1,3 @@
+parameter: {
+  "installCRDs": *true | bool
+}

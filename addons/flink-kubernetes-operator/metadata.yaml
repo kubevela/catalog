@@ -1,0 +1,22 @@
+name: flink-kubernetes-operator
+version: 0.1.0
+description: A Kubernetes operator for Apache Flink
+icon: https://github.com/apache/flink-kubernetes-operator/blob/main/docs/static/img/overview.svg
+url: https://github.com/apache/flink-kubernetes-operator
+
+tags:
+  - apache/flink-kubernetes-operator
+  - 2c166e3
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+dependencies:
+  - name: fluxcd
+  - name: cert-manager
+
+needNamespace:
+  - flink
+
+invisible: false
