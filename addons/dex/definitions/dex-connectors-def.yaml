@@ -69,6 +69,10 @@ spec:
                 ldap?: {
                         // +usage=Host and optional port of the LDAP server in the form "host:port".
                         host: string
+                        // +usage=The DN and password for an application service account. The connector uses these credentials to search for users and groups. Not required if the LDAP server provides access for anonymous auth.
+                        bindDN?: string
+                        // +usage=The password of the DN
+                        bindPW?: string
                         // +usage=This field is required if the LDAP host is not using TLS (port 389).
                         insecureNoSSL: *true | bool
                         // +usage=If a custom certificate isn't provide, this option can be used to turn on
@@ -84,13 +88,13 @@ spec:
                                 // +usage=BaseDN to start the search from. It will translate to the query "(&(objectClass=person)(uid=<username>))".
                                 baseDN: string
                                 // +usage=username attribute used for comparing user entries. This will be translated and combined with the other filter as "(<attr>=<username>)".
-                                username: string
+                                username: *"uid" | string
                                 // +usage=The following three fields are direct mappings of attributes on the user entry. String representation of the user.
-                                idAttr: string
+                                idAttr: *"uid" | string
                                 // +usage=Attribute to map to Email.
-                                emailAttr: string
+                                emailAttr: *"mail" | string
                                 // +usage=Maps to display name of users. No default value.
-                                nameAttr: string
+                                nameAttr: *"uid" | string
                                 // +usage=Optional filter to apply when searching the directory.
                                 filter?: string
                         }
