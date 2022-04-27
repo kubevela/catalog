@@ -20,6 +20,7 @@ standard-autoscaler-test:
 	cd ./traits/autoscalertrait && make test
 
 addon-test:
+	bash ./test/e2e-test/hack/check-semver.sh
 	bash ./test/e2e-test/hack/addon-vela-test.sh
 
 terraform-addon-gen:

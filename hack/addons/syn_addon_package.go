@@ -19,6 +19,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/Masterminds/semver/v3"
 	"net/http"
 	"path/filepath"
 	"time"
@@ -77,6 +78,16 @@ func main() {
 				fmt.Println(err)
 			}
 		}
+	}
+
+	for chartName, entry := range originIndex.Entries {
+		var q repo.ChartVersions
+		for _, v := range entry {
+			if _, err :=semver.NewVersion(v.Version); err == nil {
+				 q = append(q, v)
+			}
+		}
+		originIndex.Entries[chartName] = q
 	}
 
 	entries := map[string]repo.ChartVersions{}
