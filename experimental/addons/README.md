@@ -2,18 +2,18 @@
 
 This dir is KubeVela official experimental addon-registry which will contain some KubeVela addons which haven't verified stable.
 
-Addon files in this dir files will be synced to alibaba-oss. Addons in this  dir will not be set in KubeVela by default.
+Addon files in this dir will be synced to alibaba-oss. 
 
-You can add this addon registry by vela cli and use them.
+These addon wouldn't be set in KubeVela by default. You can add this addon registry by vela cli and use them.
 
 ```shell
-$ vela addon registry add experimental --type OSS --endpoint=https://addons.kubevela.net --path=experimental/
+$ vela addon registry add experimental --type helm --endpoint=https://addons.kubevela.net/experimental/
 ```
 
 ```shell
 $ vela addon registry list      
 Name            Type    URL                                                                                                      
-experimental    OSS     https://addons.kubevela.net 
+experimental    helm    https://addons.kubevela.net/experimental/ 
 ```
 
 Then you will find these addons.

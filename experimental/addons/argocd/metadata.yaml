@@ -8,6 +8,7 @@ tags:
   - argocd
   - gitops
   - v2.3.3
+  - helm_support
 
 deployTo:
   control_plane: true
