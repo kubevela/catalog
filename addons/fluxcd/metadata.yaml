@@ -5,8 +5,9 @@ icon: https://raw.githubusercontent.com/fluxcd/flux/master/docs/_files/weave-flu
 url: https://fluxcd.io
 
 tags:
-- extended_workload
-- gitops
+ - extended_workload
+ - gitops
+ - helm_support
 
 deployTo:
   control_plane: true
