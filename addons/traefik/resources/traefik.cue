@@ -30,6 +30,18 @@ output: {
 					enabled: parameter.accessLog
 				}
 			}
+			if parameter.entryPoints != _|_ {
+				ports: {
+					for entry in parameter.entryPoints {
+						"\(entry.name)": {
+							expose:      true
+							port:        entry.port
+							exposedPort: entry.port
+							protocol:    entry.protocol
+						}
+					}
+				}
+			}
 		}
 	}
 }
