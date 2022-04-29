@@ -1,6 +1,7 @@
 "config-tls-certificate": {
 	annotations: {
 		"alias.config.oam.dev": "TLS Certificate"
+		"scope.config.oam.dev": "project"
 	}
 	attributes: workload: definition: {
 		apiVersion: "v1"
