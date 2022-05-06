@@ -16,3 +16,44 @@ spec:
           configSecret:
             create: false
             name: dex-config
+          envVars:
+          - name: DEX_FRONTEND_DIR
+            value: /srv/dex/web
+          volumeMounts:
+          - name: logo-light
+            mountPath: /srv/dex/web/themes/light/logo.png
+            subPath: logo.png
+          - name: favicon-light
+            mountPath: /srv/dex/web/themes/light/favicon.png
+            subPath: favicon.png
+          - name: logo-dark
+            mountPath: /srv/dex/web/themes/dark/logo.png
+            subPath: logo.png
+          - name: favicon-dark
+            mountPath: /srv/dex/web/themes/dark/favicon.png
+            subPath: favicon.png
+          volumes:
+          - name: logo-light
+            secret:
+              secretName: kubevela-logo
+              items:
+              - key: logo-light
+                path: logo.png
+          - name: favicon-light
+            secret:
+              secretName: kubevela-logo
+              items:
+              - key: favicon-light
+                path: favicon.png
+          - name: logo-dark
+            secret:
+              secretName: kubevela-logo
+              items:
+              - key: logo-dark
+                path: logo.png
+          - name: favicon-dark
+            secret:
+              secretName: kubevela-logo
+              items:
+              - key: favicon-dark
+                path: favicon.png
