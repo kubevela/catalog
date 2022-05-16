@@ -35,7 +35,7 @@ spec:
         			username: parameter.username
         		}
         		if parameter.password != _|_ {
-        			username: parameter.password
+        			password: parameter.password
         		}
 
         	}
