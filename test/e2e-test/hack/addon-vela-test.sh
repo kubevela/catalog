@@ -14,6 +14,7 @@ for i in $ADDONS ; do
 
     if [ $? -ne 0 ]; then
       echo -e "\033[31m addon $i cannot enable \033[0m"
+      kubectl get app -n vela-system addon-$i -oyaml
       exit 1
     else
       echo -e "\033[32m addon $i enable successfully \033[0m"
