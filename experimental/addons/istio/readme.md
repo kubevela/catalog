@@ -1,3 +1,117 @@
-# istio
+#   Istio
 
 This addon provides istio support for vela rollout.
+
+##  Directory Structure
+```shell
+.
+├── definitions     //  contains the X-Definition yaml/cue files. These file will be rendered as KubeVela Component in `template.yaml`
+├── examples        //  some quick demos to guide you through this addon
+├── metadata.yaml   //  addon metadata information.
+├── readme.md
+├── resources       //  cue definitions which will be converted to JSON schema and rendered in UI forms
+└── template.yaml   //  contains the basic app, you can add some component and workflow to meet your requirements
+```
+
+##  Quick start
+### Install vela istio addon
+```shell
+vela addon enable istio 
+```
+For offline install please use
+```shell
+cd ~/experimental/addons
+vela addon enable istio/
+```
+### Verify installs
+Check the deployment status of the application through `vela status <application name>:`
+```shell
+$ vela status addon-istio
+About:
+
+  Name:         addon-istio
+  Namespace:    vela-system
+  Created at:   2022-05-18 16:57:20 +0800 CST
+  Status:       running
+
+Workflow:
+
+  mode: StepByStep
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id:b6ctrnvrid
+    name:deploy-control-plane
+    type:apply-application
+    phase:succeeded
+    message:
+  - id:x38n3krvj5
+    name:deploy-runtime
+    type:deploy2runtime
+    phase:succeeded
+    message:
+
+Services:
+
+  - Name: ns-istio-system
+    Cluster: local  Namespace: vela-system
+    Type: raw
+    Healthy
+    No trait applied
+
+  - Name: istio
+    Cluster: local  Namespace: vela-system
+    Type: helm
+    Healthy Fetch repository successfully, Create helm release successfully
+    No trait applied
+```
+When we see that the `finished` field in Workflow is `true` and the Status is `running`, it means that the entire application is delivered successfully.
+
+If status shows as rendering or healthy as false, it means that the application has either failed to deploy or is still being deployed. Please proceed according to the information returned in `kubectl get application <application name> -o yaml`.
+
+You can also view application list by using the following command:
+```shell
+$ ls -n vela-system                                                                                                                                                                                                                                           
+APP         	COMPONENT            	TYPE       	TRAITS	PHASE  	HEALTHY	STATUS                                                      	CREATED-TIME
+addon-istio 	ns-istio-system      	raw        	      	running	healthy	                                                            	2022-05-18 16:57:20 +0800 CST
+└─          	istio                	helm       	      	running	healthy	Fetch repository successfully, Create helm release          	2022-05-18 16:57:20 +0800 CST
+            	                     	           	      	       	       	successfully
+```
+We also see that the PHASE of the app is running and the STATUS is healthy.
+
+### Try a demo with istio trait !
+There is a quick demo using `webservice` component and `expose` `istio-gateway` trait to show you how this works.
+```yaml
+traits:
+  # use expose trait to create a svc
+- type: expose
+  properties:
+    port:
+      - 80
+- type: istio-gateway
+  properties:
+    hosts:
+      - awesomesite.com
+    # gateway: "ingressgateway-intranet"
+    port: 80
+
+```
+The configuration snippet should be fairly straight forward , we add a trait `expose` to expose your traffic, and then add `istio-gateway` trait to integrate with istio.
+Please be aware that values for gateway is the same selector for the istio svc which is ingressgateway by default.
+
+Let's get it running , `vela up -f demo.yaml` and you should be able to see the status by `vela ls`
+```yaml
+$ vela ls                                                                                                                                                                                                                                                          
+APP        	COMPONENT  	TYPE           	TRAITS              	PHASE  	HEALTHY	STATUS   	CREATED-TIME
+website    	frontend   	webservice     	expose,istio-gateway	running	healthy	Ready:1/1	2022-05-18 21:22:56 +0800 CST
+```
+Also you can verify istio crs are successfully created:
+```yaml
+kubectl get vs,gw                                                                                                                                                                                                                                     
+NAME                                             GATEWAYS       HOSTS                             AGE
+virtualservice.networking.istio.io/frontend      ["frontend"]   ["awesomesite.com"]   14h
+
+NAME                                   AGE
+gateway.networking.istio.io/frontend   14h
+```
