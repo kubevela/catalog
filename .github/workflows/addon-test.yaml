@@ -58,7 +58,7 @@ jobs:
       - name: Setup Kind Cluster (Worker)
         run: |
           kind delete cluster --name worker
-          kind create cluster --image kindest/node:v1.18.15@sha256:5c1b980c4d0e0e8e7eb9f36f7df525d079a96169c8a8f20d8bd108c0d0889cc4 --name worker
+          kind create cluster --image kindest/node:v1.20.15@sha256:6f2d011dffe182bad80b85f6c00e8ca9d86b5b8922cdf433d53575c4c5212248 --name worker
           kubectl version
           kubectl cluster-info
           kind get kubeconfig --name worker --internal > /tmp/worker.kubeconfig
@@ -67,14 +67,14 @@ jobs:
 
       - name: Setup Kind Cluster (Hub)
         run: |
-          kind create cluster --image kindest/node:v1.18.15@sha256:5c1b980c4d0e0e8e7eb9f36f7df525d079a96169c8a8f20d8bd108c0d0889cc4
+          kind create cluster --image kindest/node:v1.20.15@sha256:6f2d011dffe182bad80b85f6c00e8ca9d86b5b8922cdf433d53575c4c5212248
           kubectl version
           kubectl cluster-info
 
       - name: Install vela cli
         run: |
           curl -fsSl https://kubevela.io/script/install.sh | bash -s 1.3.1
-      
+
       - name: Install vela core
         run: |
           vela install --yes
