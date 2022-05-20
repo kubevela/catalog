@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: dapr-subscribe-injection
+  namespace: vela-system
+spec:
+  appliesToWorkloads:
+  - deployments.apps
+  podDisruptive: true
+  schematic:
+    cue:
+      template: |
+        parameter: {
+          port: string
+        }
+
+        patch: {
+          spec: template: metadata: annotations: {
+            "dapr.io/enabled": "true"
+            "dapr.io/app-id": context.name
+            "dapr.io/app-port": parameter.port
+          }
+        }

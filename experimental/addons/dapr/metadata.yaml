@@ -1,0 +1,16 @@
+name: dapr
+version: 1.0.0
+description: Distributed application sidecar provider standard interface
+icon: https://github.com/dapr/dapr/blob/master/img/dapr_logo.svg
+url: https://dapr.io/
+
+tags:
+- data-mesh
+- standard-interface
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+dependencies:
+- name: fluxcd

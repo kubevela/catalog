@@ -32,6 +32,10 @@ vela addon disable dex
 vela addon enable experimental/addons/argocd
 vela addon disable argocd
 
+# test dapr addon
+vela addon enable experimental/addons/dapr
+vela addon disable dapr
+
 # test flink-kubernetes-operator addon
 # enable flink-kubernetes-operator
 
