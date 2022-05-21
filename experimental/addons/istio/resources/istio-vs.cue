@@ -10,7 +10,7 @@
 }
 
 template: {
-	output: {
+	outputs: VirtualService:{
 		apiVersion: "networking.istio.io/v1alpha3"
 		kind:       "VirtualService"
 		metadata: name: context.name
