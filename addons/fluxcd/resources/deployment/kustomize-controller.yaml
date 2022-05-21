@@ -30,7 +30,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          image: fluxcd/kustomize-controller:v0.13.1
+          image: fluxcd/kustomize-controller:v0.25.0
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -57,6 +57,12 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
+            capabilities:
+            drop:
+            - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - mountPath: /tmp
               name: temp
