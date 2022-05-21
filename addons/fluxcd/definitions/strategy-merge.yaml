@@ -13,7 +13,7 @@ spec:
       template: |
         patch: {
         	spec: {
-        		patchesStrategicMerge: parameter.patchesStrategicMerge
+        		patches: parameter.patchesStrategicMerge
         	}
         }
 

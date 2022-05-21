@@ -13,7 +13,7 @@ spec:
       template: |
         patch: {
         	spec: {
-        		patchesJson6902: parameter.patchesJson
+        		patches: parameter.patchesJson
         	}
         }
 
