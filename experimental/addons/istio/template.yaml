@@ -14,8 +14,9 @@ spec:
         type: apply-remaining
   components:
     - name: ns-istio-system
-      type: raw
+      type: k8s-objects
       properties:
+        objects:
         apiVersion: v1
         kind: Namespace
         metadata:
