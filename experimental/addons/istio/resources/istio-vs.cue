@@ -10,7 +10,7 @@
 }
 
 template: {
-	outputs: VirtualService:{
+	outputs: VirtualService: {
 		apiVersion: "networking.istio.io/v1alpha3"
 		kind:       "VirtualService"
 		metadata: name: context.name
@@ -32,9 +32,9 @@ template: {
 		// +usage=Annotations variable name
 		annotations?: [string]: string
 		// +usage=The destination hosts to which traffic is being sent
-		hosts?: [...string]
+		hosts: [...string]
 		// +usage=The names of gateways and sidecars that should apply these routes
-		gateways?: [...string]
+		gateways: [...string]
 		// +usage=An ordered list of route rules for HTTP traffic
 		http?: [...#HTTPRoute]
 		// +usage=An ordered list of route rules for opaque TCP traffic
@@ -45,9 +45,9 @@ template: {
 
 	#TCPRoute:{
 		// +usage=Match conditions to be satisfied for the rule to be activated
-		match?: [...#L4MatchAttributes]
+		match: [...#L4MatchAttributes]
 		// +usage=The destination to which the connection should be forwarded to
-		route?: [...#RouteDestination]
+		route: [...#RouteDestination]
 	}
 
 	#L4MatchAttributes:{
@@ -67,9 +67,9 @@ template: {
 		// +usage=The name assigned to the route for debugging purposes
 		name?: string
 		// +usage=Match conditions to be satisfied for the rule to be activated
-		match?: [...#HTTPMatchRequest]
+		match: [...#HTTPMatchRequest]
 		// +usage=A HTTP rule can either redirect or forward (default) traffic
-		route?: [...#RouteDestination]
+		route: [...#RouteDestination]
 		// +usage=Rewrite HTTP URIs and Authority headers
 		rewrite?: #HTTPRewrite
 		// +usage=Cross-Origin Resource Sharing policy (CORS)
@@ -82,7 +82,7 @@ template: {
 
 	#HTTPMatchRequest: {
 		// +usage=URI to match values are case-sensitive Ref(https://github.com/google/re2/wiki/Syntax).:
-		uri?: #StringMatchOneOf
+		uri: #StringMatchOneOf
 		// +usage=HTTP Authority to match values are case-sensitive Ref(https://github.com/google/re2/wiki/Syntax).:
 		authority?: #StringMatchOneOf
 		// +usage=URI Scheme to match values are case-sensitive Ref(https://github.com/google/re2/wiki/Syntax).:
@@ -95,14 +95,14 @@ template: {
 
 	#RouteDestination:{
 		// +usage=Destination uniquely identifies the instances of a service to which the request/connection should be forwarded to.
-		destination?: #Destination
+		destination: #Destination
 		// +usage=Weight specifies the relative proportion of traffic to be forwarded to the destination
 		weight?: int
 	}
 
 	#HTTPRewrite:{
 		// +usage=Rewrite the path (or the prefix) portion of the URI with this value
-		uri?: string
+		uri: string
 		// +usage=Rewrite the Authority/Host header with this value.
 		authority?: string
 	}
@@ -121,7 +121,7 @@ template: {
 
 	#Destination:{
 		// +usage=The name of a service from the service registry
-		host?: string
+		host: string
 		// +usage=The name of a subset within the service
 		subset?: string
 		// +usage=Specifies the port on the host that is being addressed
