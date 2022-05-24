@@ -28,4 +28,4 @@ spec:
         url: https://charts.kubevela.net/addons
         chart: istio
         version: 1.11.1
-
+        targetNamespace: istio-system
