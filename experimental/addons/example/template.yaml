@@ -14,9 +14,10 @@ spec:
         type: apply-remaining
   components:
     - name: ns-example-system
-      type: raw
+      type: k8s-objects
       properties:
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: example-system
+        objects:
+          - kind: Namespace
+            apiVersion: v1
+            metadata:
+              name: example-system

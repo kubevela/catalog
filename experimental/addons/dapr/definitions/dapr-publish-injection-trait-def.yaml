@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: dapr-publish-injection
+  namespace: vela-system
+spec:
+  appliesToWorkloads:
+  - deployments.apps
+  podDisruptive: true
+  schematic:
+    cue:
+      template: |
+        patch: {
+          spec: template: metadata: annotations: {
+            "dapr.io/enabled": "true"
+            "dapr.io/app-id": context.name
+          }
+        }

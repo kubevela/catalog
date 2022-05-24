@@ -1,5 +1,5 @@
 name: ocm-gateway-manager-addon
-version: 1.3.2
+version: 1.3.3
 description: ocm-gateway-manager-addon is the OCM addon automates the cluster-gateway apiserver.
 icon: https://github.com/open-cluster-management-io/OCM/raw/main/assets/ocm-logo.png
 url: https://github.com/open-cluster-management-io/OCM

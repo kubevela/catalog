@@ -14,6 +14,7 @@ for i in $ADDONS ; do
 
     if [ $? -ne 0 ]; then
       echo -e "\033[31m addon $i cannot enable \033[0m"
+      kubectl get app -n vela-system addon-$i -oyaml
       exit 1
     else
       echo -e "\033[32m addon $i enable successfully \033[0m"
@@ -34,6 +35,10 @@ vela addon disable argocd
 # test istio addon
 vela addon enable experimental/addons/istio
 vela addon disable istio
+
+# test dapr addon
+vela addon enable experimental/addons/dapr
+vela addon disable dapr
 
 # test flink-kubernetes-operator addon
 # enable flink-kubernetes-operator

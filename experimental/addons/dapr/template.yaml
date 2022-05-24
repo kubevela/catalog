@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: dapr
+  namespace: dapr-system
+spec:
+  components:
+    - name: dapr
+      type: helm
+      properties:
+        repoType: helm
+        url: https://dapr.github.io/helm-charts/
+        chart: dapr
+        version: 1.6.0
