@@ -31,6 +31,10 @@ vela addon disable dex
 vela addon enable experimental/addons/argocd
 vela addon disable argocd
 
+# test istio addon
+vela addon enable experimental/addons/istio
+vela addon disable istio
+
 # test flink-kubernetes-operator addon
 # enable flink-kubernetes-operator
 
