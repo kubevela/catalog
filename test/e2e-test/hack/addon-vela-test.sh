@@ -79,3 +79,17 @@ vela addon disable fluxcd
 declare -x DEFAULT_VELA_NS=vela-system
 kubectl delete -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 kubectl delete ns flink
+
+# enable mysql-operator
+kubectl create ns mysql-operator
+declare -x DEFAULT_VELA_NS=mysql-operator
+vela addon enable fluxcd
+vela addon enable mysql-operator
+declare -x DEFAULT_VELA_NS=vela-system
+
+# disable mysql-operator
+declare -x DEFAULT_VELA_NS=mysql-operator
+vela addon disable mysql-operator
+vela addon disable fluxcd
+declare -x DEFAULT_VELA_NS=vela-system
+kubectl delete ns mysql-operator

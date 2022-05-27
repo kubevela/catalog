@@ -1,0 +1,17 @@
+name: mysql-operator
+version: v0.6.2
+description: A Kubernetes operator for Mysql Cluster
+url: https://github.com/bitpoke/mysql-operator
+
+tags:
+  - bitpoke/mysql-operator
+  - v0.6.2
+
+deployTo:
+  control_plane: true
+  runtime_cluster: true
+
+needNamespace:
+  - mysql-operator
+
+invisible: false
