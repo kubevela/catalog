@@ -10,12 +10,14 @@
         value: kubeapi
   sort: 1
 - jsonKey: dbURL
-  label: DBURL
+  label: DatabaseURL
   sort: 3
   conditions:
     - jsonKey: dbType
       op: "=="
       value: "mongodb"
+  validate:
+    required: true
 - jsonKey: database
   sort: 7
   validate:
@@ -27,6 +29,8 @@
   sort: 8
 - jsonKey: domain
   sort: 9
+- jsonKey: gatewayDriver
+  sort: 10
 - jsonKey: repo
   sort: 11
 - jsonKey: imagePullSecrets

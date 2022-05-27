@@ -10,11 +10,11 @@ data:
     )
 
     parameter: {
-        name:       string
-        namespace:  string
-        cluster?:   string
-        kind:       string
-        apiVersion: string
+        name:        string
+        namespace?:  string
+        cluster?:    string
+        kind:        string
+        apiVersion:  string
     }
     response: ql.#Read & {
         value: {
@@ -22,10 +22,14 @@ data:
             kind:       parameter.kind
             metadata: {
                 name:      parameter.name
-                namespace: parameter.namespace
+                if parameter.namespace != _|_ {
+                   namespace: parameter.namespace
+                }
             }
         }
-        cluster: parameter.cluster
+        if parameter.cluster != _|_ {
+           cluster: parameter.cluster
+        }
     }
 
     if response.err == _|_ {

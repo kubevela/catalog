@@ -7,8 +7,10 @@ parameter: {
 	database?: string
 	// +usage=Specify the MongoDB URL. it only enabled where DB type is MongoDB.
 	dbURL?: string
-	// +usage=Specify the domain, if set, Ingress will be created
+	// +usage=Specify the domain, if set, ingress will be created if the gateway driver is nginx.
 	domain?: string
+	// +usage=Specify the gateway type.
+	gatewayDriver: *"nginx" | "traefik"
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-vela-core" | string
 	// +usage=Specify the service type.
