@@ -32,7 +32,7 @@ output: {
 				{
 					name:  "DEX_URL"
 					value: "dex.vela-system:5556"
-				}
+				},
 			]
 		}
 		if parameter["dex"] == "false" {
@@ -40,23 +40,36 @@ output: {
 				{
 					name:  "KUBEVELA_API_URL"
 					value: "apiserver.vela-system:8000"
-				}
+				},
 			]
 		}
 	}
 	if parameter["domain"] != _|_ {
-		traits: [
-			{
-				type: "gateway"
-				properties: {
-					domain: parameter["domain"]
-					http: {
-						"/": 80
+		if parameter["gatewayDriver"] == "nginx" {
+			traits: [
+				{
+					type: "gateway"
+					properties: {
+						domain: parameter["domain"]
+						http: {
+							"/": 80
+						}
+						class: "nginx"
 					}
-					class: "nginx"
-				}
-			},
-		]
+				},
+			]
+		}
+		if parameter["gatewayDriver"] == "traefik" {
+			traits: [
+				{
+					type: "http-route"
+					properties: {
+						domains: [ parameter["domain"]]
+						rules: [{port: 80}]
+					}
+				},
+			]
+		}
 	}
 	dependsOn: ["apiserver"]
 }

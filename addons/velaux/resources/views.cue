@@ -266,18 +266,20 @@ output: {
                                     appNs:   string
                             }
 
-                            apiVersion: "terraform.core.oam.dev/v1beta1"
-                            kind:       "Configuration"
-
                             resources: ql.#ListResourcesInApp & {
                                     app: {
                                             name:      parameter.appName
                                             namespace: parameter.appNs
+                                            filter: {
+                                                "apiVersion": "terraform.core.oam.dev/v1beta1"
+                                                "kind": "Configuration"
+                                            }
+                                            withStatus: true
                                     }
                             }
                             status: {
                                     if resources.err == _|_ {
-                                            "cloud-resources": [ for i, resource in resources.list if resource.object.apiVersion == apiVersion && resource.object.kind == kind {
+                                            "cloud-resources": [ for i, resource in resources.list {
                                                     resource.object
                                             }]
                                     }
@@ -421,9 +423,6 @@ output: {
                             clusterNs?: string
                           }
 
-                          apiVersion: "v1"
-                          kind:       "Service"
-
                           resources: ql.#ListResourcesInApp & {
                             app: {
                               name:      parameter.appName
@@ -435,12 +434,15 @@ output: {
                                 if parameter.clusterNs != _|_ {
                                   clusterNamespace: parameter.clusterNs
                                 }
+                                apiVersion: "v1"
+                                kind:       "Service"
                               }
+                              withStatus: true
                             }
                           }
                           status: {
                             if resources.err == _|_ {
-                              services: [ for i, resource in resources.list if resource.object.apiVersion == apiVersion && resource.object.kind == kind {
+                              services: [ for i, resource in resources.list {
                                 resource.object
                               }]
                             }
