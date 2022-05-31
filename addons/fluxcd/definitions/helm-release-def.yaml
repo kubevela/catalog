@@ -154,18 +154,18 @@ spec:
     # helmRelease's `ready` condition must be the first one
     healthPolicy: 'isHealth: len(context.outputs.release.status.conditions) != 0 && context.outputs.release.status.conditions[0]["status"]=="True"'
     customStatus: |-
-      repoMessage:    string
-      releaseMessage: string
+      repoMessage:    *""|string
+      releaseMessage: *""|string
       if context.output.status == _|_ {
       	repoMessage:    "Fetching repository"
       	releaseMessage: "Wating repository ready"
       }
       if context.output.status != _|_ {
       	repoStatus: context.output.status
-      	if repoStatus.conditions[0]["type"] != "Ready" {
+      	if len(repoStatus.conditions) !=0 && repoStatus.conditions[0]["type"] != "Ready" {
       		repoMessage: "Fetch repository fail"
       	}
-      	if repoStatus.conditions[0]["type"] == "Ready" {
+      	if len(repoStatus.conditions) !=0 && repoStatus.conditions[0]["type"] == "Ready" {
       		repoMessage: "Fetch repository successfully"
       	}
 
