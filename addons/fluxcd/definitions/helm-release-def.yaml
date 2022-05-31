@@ -162,7 +162,7 @@ spec:
       }
       if context.output.status != _|_ {
       	repoStatus: context.output.status
-      	if len(repoStatus.conditions) ==0 && repoStatus.conditions[0]["type"] != "Ready" {
+      	if len(repoStatus.conditions) ==0 || repoStatus.conditions[0]["type"] != "Ready" {
       		repoMessage: "Fetch repository fail"
       	}
       	if len(repoStatus.conditions) !=0 && repoStatus.conditions[0]["type"] == "Ready" {
