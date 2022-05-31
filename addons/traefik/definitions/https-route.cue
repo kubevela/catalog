@@ -93,7 +93,7 @@ template: {
 		// +usage=Specify some domains, the domain may be prefixed with a wildcard label (*.)
 		domains: [...string]
 
-		TLSPort: *443 | int
+		TLSPort: *8443 | int
 
 		// +usage=Specify the TLS secrets
 		secrets: [...{
