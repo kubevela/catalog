@@ -1,0 +1,13 @@
+name: vegeta
+version: 12.8.4
+description: Vegeta is a versatile HTTP load testing tool built out of a need to drill HTTP services with a constant request rate. It can be used both as a command line utility and a library.
+url: https://github.com/tsenart/vegeta
+icon: https://camo.githubusercontent.com/faf9be097f4731212debdd24210c750b2dc276d0a17df19c6a8ac026427c09e9/687474703a2f2f666330392e64657669616e746172742e6e65742f667334392f692f323030392f3139382f632f632f73736a325f7665676574615f62795f7472756e6b7332342e6a7067
+
+tags:
+  - extended_trait
+
+deployTo:
+  control_plane: true
+
+invisible: false
