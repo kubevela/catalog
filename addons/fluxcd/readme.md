@@ -20,14 +20,14 @@ git repo / helm repo / S3 compatible bucket.
 ## Note
 - In this Fluxcd Addon, there are five controllers to be installed by default
 
-|CONTROLLER NAME                |DEFINITION NAME                         |DEFINITION TYPE           |DEFINITION DESCRIPTION|
-| :----:        |    :----:   |          :----: | ---|
-|helm-controller                |config-helm-repository                  |ComponentDefinition       |Config information to authenticate helm chart repository|
-|helm-controller                |helm                                    |ComponentDefinition       |helm release is a group of K8s resources from either gitrepository or helm repo|
-|kustomize-controller           |kustomize                               |ComponentDefinition       |kustomize can fetching, building, updating and applying Kustomize manifests from git repo|
-|kustomize-controller           |kustomize-json-patch                    |TraitDefinition           |A list of JSON6902 patch to selected target|
-|kustomize-controller           |kustomize-patch                         |TraitDefinition           |A list of StrategicMerge or JSON6902 patch to selected target|
-|kustomize-controller           |kustomize-strategy-merge                |TraitDefinition           |A list of strategic merge to kustomize config
+|DEFINITION NAME                         |DEFINITION TYPE           |DEFINITION DESCRIPTION|   SUPPORT CONTROLLER                |                                         
+|:----:   |          :----: | ---| :----: |
+|config-helm-repository                  |ComponentDefinition       |Config information to authenticate helm chart repository| helm-controller                |                                               
+|helm                                    |ComponentDefinition       |helm release is a group of K8s resources from either gitrepository or helm repo|helm-controller                |
+|kustomize                               |ComponentDefinition       |kustomize can fetching, building, updating and applying Kustomize manifests from git repo|kustomize-controller           |
+|kustomize-json-patch                    |TraitDefinition           |A list of JSON6902 patch to selected target|kustomize-controller           |
+|kustomize-patch                         |TraitDefinition           |A list of StrategicMerge or JSON6902 patch to selected target   |kustomize-controller           |
+|kustomize-strategy-merge                |TraitDefinition           |A list of strategic merge to kustomize config               |kustomize-controller           |     
 
 - Source controller
   - The source-controller is a Kubernetes operator, specialised in artifacts acquisition from external sources such as Git, Helm repositories and S3 buckets. The source-controller implements the source.toolkit.fluxcd.io API and is a core component of the GitOps toolkit.
