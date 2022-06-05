@@ -4,6 +4,24 @@ output: {
 		repoType: "helm"
 		url:      "https://charts.kubevela.net/prism"
 		chart:    "vela-prism"
-		version:  "0.1.0"
+        values: {
+            replicaCount: parameter["replicacount"]
+
+            image: {
+                  repository: parameter["repository"]
+                  tag: parameter["tag"]
+                  pullPolicy: parameter["pullPolicy"]
+            }
+
+            resources: {
+                limits: {
+                    cpu: parameter["cpu"]
+                    memory: parameter["memory"]
+                }
+            }
+            secureTLS: {
+              enabled: parameter["enabled"]
+            }
+        }
 	}
 }
