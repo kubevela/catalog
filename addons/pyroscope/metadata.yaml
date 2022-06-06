@@ -1,0 +1,19 @@
+name: pyroscope
+version: 0.17.1
+description: Pyroscope is an open source platform, consisting of server and agent. It allows the user to collect, store, and query the profiling data in a CPU and disk efficient way.
+url: https://github.com/pyroscope-io/pyroscope
+icon: https://raw.githubusercontent.com/pyroscope-io/pyroscope/main/webapp/images/favicon.ico
+
+tags:
+  - profiling tool
+
+deployTo:
+  control_plane: true
+
+dependencies:
+  - name: fluxcd
+
+needNamespace:
+  - vela-system
+
+invisible: false

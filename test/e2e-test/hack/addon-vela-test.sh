@@ -8,7 +8,7 @@ for i in $ADDONS ; do
       vela addon enable $i domain=abc.com || vela -n vela-system status addon-$i
       elif [ $i == "model-serving" ]; then
       vela addon enable ./addons/$i serviceType=ClusterIP || vela -n vela-system status addon-$i
-      elif [ $i != "ocm-gateway-manager-addon" ] && [ $i != "terraform-baidu" ] && [ $i != "dex" ] && [ $i != "flink-kubernetes-operator" ] && [ $i != "cert-manager" ]; then
+      elif [ $i != "ocm-gateway-manager-addon" ] && [ $i != "terraform-baidu" ] && [ $i != "dex" ] && [ $i != "flink-kubernetes-operator" ] && [ $i != "cert-manager" ] && [ $i != "pyroscope" ]; then
       vela addon enable ./addons/$i
     fi
 
@@ -49,6 +49,16 @@ vela addon enable cert-manager
 vela addon enable flink-kubernetes-operator
 # set back to the DEFAULT_VELA_NS
 declare -x DEFAULT_VELA_NS=vela-system
+
+# test pyroscope addon
+# enable pyroscope
+vela addon enable fluxcd
+vela addon enable pyroscope
+
+# disable pyroscope
+vela addon disable pyroscope
+vela addon disable fluxcd
+# set back to the DEFAULT_VELA_NS
 ```
 
 ## Uninstall
