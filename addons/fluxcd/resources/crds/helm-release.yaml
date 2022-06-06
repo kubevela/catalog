@@ -4,7 +4,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.5.0
   labels:
-    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/instance: vela-system
   name: helmreleases.helm.toolkit.fluxcd.io
 spec:
   group: helm.toolkit.fluxcd.io

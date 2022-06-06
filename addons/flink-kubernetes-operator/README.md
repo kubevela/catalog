@@ -44,7 +44,7 @@ kubectl get application -n flink
 NAME                              COMPONENT               TYPE   PHASE     HEALTHY   STATUS                                                            AGE
 addon-cert-manager                cert-manager            helm   running   true      Fetch repository successfully, Create helm release successfully   25m
 addon-flink-kubernetes-operator   flink-operator          helm   running   true      Fetch repository successfully, Create helm release successfully   22m
-addon-fluxcd                      flux-system-namespace   raw    running   true                                                                       26h
+addon-fluxcd                      vela-system-namespace   raw    running   true                                                                       26h
 ```
 
 - Secondly, check the cert-manager running status

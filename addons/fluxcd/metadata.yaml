@@ -13,7 +13,4 @@ deployTo:
   control_plane: true
   runtime_cluster: true
 
-needNamespace:
-  - flux-system
-
 invisible: false

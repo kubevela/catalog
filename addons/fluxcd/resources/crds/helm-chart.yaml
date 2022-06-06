@@ -6,7 +6,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.7.0
   labels:
-    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/instance: vela-system
   name: helmcharts.source.toolkit.fluxcd.io
 spec:
   group: source.toolkit.fluxcd.io
