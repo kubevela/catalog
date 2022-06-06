@@ -52,19 +52,13 @@ declare -x DEFAULT_VELA_NS=vela-system
 
 # test pyroscope addon
 # enable pyroscope
-kubectl create ns pyroscope-system
-declare -x DEFAULT_VELA_NS=pyroscope-system
 vela addon enable fluxcd
 vela addon enable pyroscope
-declare -x DEFAULT_VELA_NS=vela-system
 
 # disable pyroscope
-declare -x DEFAULT_VELA_NS=pyroscope-system
 vela addon disable pyroscope
 vela addon disable fluxcd
-kubectl delete ns pyroscope-system
 # set back to the DEFAULT_VELA_NS
-declare -x DEFAULT_VELA_NS=vela-system
 ```
 
 ## Uninstall
