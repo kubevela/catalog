@@ -40,10 +40,13 @@ spec:
         			_sourceCommonArgs
         		}
         	}
-        	if parameter.repoType == "helm" {
+        	if parameter.repoType == "helm" || parameter.repoType == "oci" {
         		kind: "HelmRepository"
         		spec: {
         			url: parameter.url
+                    if parameter.repoType == "oci" {
+                       type: "oci"
+                    }
         			_secret
         			_sourceCommonArgs
         		}
@@ -67,7 +70,7 @@ spec:
         					if parameter.repoType == "git" {
         						kind: "GitRepository"
         					}
-        					if parameter.repoType == "helm" {
+        					if parameter.repoType == "helm" || parameter.repoType == "oci" {
         						kind: "HelmRepository"
         					}
         					if parameter.repoType == "oss" {
@@ -108,7 +111,7 @@ spec:
         }
 
         parameter: {
-        	repoType: *"helm" | "git" | "oss"
+        	repoType: *"helm" | "git" | "oss" | "oci"
         	// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
         	pullInterval: *"5m" | string
           // +usage=The  Interval at which to reconcile the Helm release, default to 30s

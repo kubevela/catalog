@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: oci-app
+  namespace: default
+spec:
+  components:
+    - name: test-helm
+      type: helm
+      properties:
+        repoType: "oci"
+        url: oci://ghcr.io/stefanprodan/charts
+        chart: podinfo
+        version: '6.1.*'
