@@ -70,7 +70,12 @@ vela addon disable dapr
 
 
 ## test dependencies-addon unInstall
-vela addon disable velaux
-vela addon disable cert-manager
-vela addon disable terraform
-vela addon disable fluxcd
+for i in $(seq 1 1 5)
+do
+  echo "the $i time retry"
+  vela addon disable velaux
+  vela addon disable cert-manager
+  vela addon disable terraform
+  vela addon disable fluxcd
+  sleep 5s
+done
