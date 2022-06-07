@@ -37,6 +37,9 @@ spec:
         		if parameter.password != _|_ {
         			password: parameter.password
         		}
+                if parameter.caCert != _|_ {
+                    caCert: parameter.caCert
+                }
 
         	}
         }
@@ -47,6 +50,8 @@ spec:
         	username?: string
         	// +usage=The password of basic auth repo
         	password?: string
+            // +usage=The ca cert of tls
+            caCert?: string
         }
   workload:
     type: autodetects.core.oam.dev
