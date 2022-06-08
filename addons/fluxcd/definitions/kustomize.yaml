@@ -36,7 +36,7 @@ spec:
         		suspend:    parameter.suspend
         		prune:      parameter.prune
         		force:      parameter.force
-        		if parameter.targetNamespace == _|_ {
+        		if parameter.targetNamespace != _|_ {
                 targetNamespace: parameter.targetNamespace
                 }
         	}
