@@ -5,7 +5,7 @@
 	description: "Rollout workload by kruise controller."
 	attributes: {
 		podDisruptive: true
-		appliesToWorkloads: ["deployments.apps", "clonesets.apps.kruise.io"]
+		appliesToWorkloads: ["autodetects.core.oam.dev"]
 		status: {
 			customStatus: #"""
 				message: context.outputs.rollout.status.message
@@ -29,10 +29,12 @@ template: {
 		// use context.name as service if not filled
 		service?:           string
 		gracePeriodSeconds: *5 | int
-		// +usage=Traffic routing for ingress providers, currently only nginx is supported, later we will gradually add more types, such as Isito, Alb
-		type:               "nginx"
 		// +usage=ingress name
 		ingress: name?:     string
+	}
+	#WorkloadType: {
+		apiVersion: string
+		kind: string
 	}
 	parameter: {
 		// +usage=If true, a streaming release will be performed, i.e., after the current step is released, subsequent steps will be released without interval
@@ -43,6 +45,7 @@ template: {
 			// +usage=Define traffic routing related service, ingress information
 			trafficRoutings?: [...#TrafficRouting]
 		}
+		workloadType?: #WorkloadType
 	}
 
   srcName: context.output.metadata.name
@@ -57,8 +60,18 @@ template: {
 		spec: {
 			objectRef: {
 				workloadRef: {
-					apiVersion: context.output.apiVersion
-					kind:       context.output.kind
+					if parameter["workloadType"] != _|_ {
+						 apiVersion: parameter["workloadType"].apiVersion
+					}
+					if parameter["workloadType"] == _|_ {
+						 apiVersion: context.output.apiVersion
+          }
+					if parameter["workloadType"] != _|_ {
+						 kind: parameter["workloadType"].kind
+          }
+          if parameter["workloadType"] == _|_ {
+          	 kind:       context.output.kind
+          }
                     if srcName != _|_ {
                         name: srcName
                     }
