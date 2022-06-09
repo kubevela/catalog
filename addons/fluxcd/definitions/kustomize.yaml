@@ -33,7 +33,12 @@ spec:
         			namespace: context.namespace
         		}
         		path:       parameter.path
-        		prune:      true
+        		suspend:    parameter.suspend
+        		prune:      parameter.prune
+        		force:      parameter.force
+        		if parameter.targetNamespace != _|_ {
+                targetNamespace: parameter.targetNamespace
+                }
         	}
         }
 
@@ -226,4 +231,12 @@ spec:
         	}
         	//+usage=Path to the directory containing the kustomization.yaml file, or the set of plain YAMLs a kustomization.yaml should be generated for.
         	path: string
+        	//+usage=Whether to delete objects that have already been applyed
+        	prune: *true | bool            
+            //+usage=This flag tells the controller to suspend subsequent kustomize executions, it does not apply to already started executions. Defaults to false.
+        	suspend: *false | bool               
+            //+usage=Force instructs the controller to recreate resources when patching fails due to an immutable field change.
+        	force: *false | bool                  
+            //+usage=TargetNamespace sets or overrides the namespace in the kustomization.yaml file, optional    
+            targetNamespace?: string
         }
