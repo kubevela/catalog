@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: grafana
+  namespace: crane-system
+spec:
+  interval: 10m
+  timeout: 5m
+  url: https://grafana.github.io/helm-charts
