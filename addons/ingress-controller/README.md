@@ -2,15 +2,13 @@
 
 [Ingress controller](https://kubernetes.github.io/ingress-nginx/) is an Ingress controller for Kubernetes using NGINX as a reverse proxy and load balancer.
 
-### How to install
+## Install
 
 ```shell
 vela addon enable ingrss-controller
 ```
 
-If your cluster 
-
-## uninstall
+## Uninstall
 
 ```shell
 vela addon disable ingrss-controller
