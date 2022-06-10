@@ -1,0 +1,13 @@
+name: pyroscope
+version: v0.17.1
+description: "Continuous Profiling Platform. Debug performance issues down to a single line of code"
+icon: "https://user-images.githubusercontent.com/662636/105129037-11334180-5a99-11eb-8951-1d4aaaed50de.png"
+url: "https://github.com/pyroscope-io/pyroscope"
+
+tags:
+  - extended_trait
+
+deployTo:
+  control_plane: true
+
+invisible: false
