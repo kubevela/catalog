@@ -1,0 +1,17 @@
+# This demo is about choosing valuesFiles defined in a helm-chart. If you don't config the valuesFiles:["values-production.yaml"]
+# you will see the message is "You're testing this environment." Otherwise the message is "Great! You're in production now."
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: hello-kubernetes
+spec:
+  components:
+    - name: hello-kubernetes
+      type: helm
+      properties:
+        repoType: "helm"
+        url: "https://wangyikewxgm.github.io/my-charts/"
+        chart: "hello-kubernetes-chart"
+        version: "0.1.0"
+        valuesFiles:
+          - "values-production.yaml"
