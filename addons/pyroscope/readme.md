@@ -7,19 +7,10 @@ This addon is built based [Pyroscope](https://github.com/pyroscope-io/pyroscope)
 ```shell
 vela addon enable pyroscope
 ```
-After enable pyroscope successfully, you can execute command to expose the port for Dashboard UI
+After enable pyroscope successfully, you can execute command to expose the port `4040` for Dashboard UI.
 ```shell
-export POD_NAME=$(kubectl get pods --namespace vela-system -l "app.kubernetes.io/name=pyroscope,app.kubernetes.io/instance=pyroscope" -o jsonpath="{.items[0].metadata.name}")
-export CONTAINER_PORT=$(kubectl get pod --namespace vela-system $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-kubectl --namespace vela-system port-forward $POD_NAME 8083:$CONTAINER_PORT
+vela port-forward addon-pyroscope -n vela-system
 ```
-
-## uninstall
-
-```shell
-vela addon disable pyroscope
-```
-
 
 # How to start
 Use a component typed webservice to start, keep the following to pyroscope-demo.yaml, then vela up -f app-demo.yaml
@@ -230,4 +221,10 @@ Pyroscope.init({
 
 Pyroscope.start()
 ```
-- Check out the [examples](https://github.com/pyroscope-io/pyroscope/tree/main/examples/nodejs) directory in our repository to learn more 
+- Check out the [examples](https://github.com/pyroscope-io/pyroscope/tree/main/examples/nodejs) directory in our repository to learn more.
+
+## uninstall
+
+```shell
+vela addon disable pyroscope
+```
