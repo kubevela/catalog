@@ -1,0 +1,17 @@
+name: crossplane
+version: 0.0.1
+description: Crossplane assembles infrastructure from multiple vendors
+url: https://crossplane.io/
+
+tags:
+  - IaC
+  - cloud resource
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+  - name: fluxcd
+
+invisible: false

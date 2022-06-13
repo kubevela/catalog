@@ -1,0 +1,14 @@
+name: crossplane-aws
+version: 0.0.1
+description: AWS Provider for Crossplane
+url: https://crossplane.io/
+
+tags:
+  - Crossplane provider
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+- name: crossplane
