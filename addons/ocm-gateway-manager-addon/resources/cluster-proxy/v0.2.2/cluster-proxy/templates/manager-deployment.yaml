@@ -18,7 +18,7 @@ spec:
       serviceAccount: cluster-proxy
       containers:
         - name: manager
-          image: quay.io/open-cluster-management/cluster-proxy:v0.2.0
+          image: quay.io/open-cluster-management/cluster-proxy:v0.2.2
           imagePullPolicy: IfNotPresent
           command:
             - /manager
