@@ -1,6 +1,7 @@
 name: dex
 version: 0.6.5
 description: Enable dex for login
+icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/dex/horizontal/color/dex-horizontal-color.png
 
 tags:
 - auth
