@@ -19,19 +19,17 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/Masterminds/semver/v3"
+	"io/ioutil"
 	"net/http"
+	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 
-	"sigs.k8s.io/yaml"
-
-	"io/ioutil"
-	"os"
-	"os/exec"
-
+	"github.com/Masterminds/semver/v3"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
+	"sigs.k8s.io/yaml"
 )
 
 type Metadata struct {
@@ -83,8 +81,8 @@ func main() {
 	for chartName, entry := range originIndex.Entries {
 		var q repo.ChartVersions
 		for _, v := range entry {
-			if _, err :=semver.NewVersion(v.Version); err == nil {
-				 q = append(q, v)
+			if _, err := semver.NewVersion(v.Version); err == nil {
+				q = append(q, v)
 			}
 		}
 		originIndex.Entries[chartName] = q
