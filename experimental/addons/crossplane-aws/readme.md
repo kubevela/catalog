@@ -1,6 +1,6 @@
 # Crossplane AWS
 
-AWS Provider for Crossplane.
+[AWS Provider](https://github.com/crossplane-contrib/provider-aws) for Crossplane.
 
 ## Provision AWS cloud resources
 
