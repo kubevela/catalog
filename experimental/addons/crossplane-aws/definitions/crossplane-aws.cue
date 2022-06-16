@@ -37,8 +37,8 @@ template: {
 		}
 	}
 
-	creds1: "awsAccessKeyID: " + parameter.AWS_ACCESS_KEY_ID
-	creds2: "awsSecretAccessKey: " + parameter.AWS_SECRET_ACCESS_KEY
+	creds1: "aws_access_key_id: " + parameter.AWS_ACCESS_KEY_ID
+	creds2: "aws_secret_access_key: " + parameter.AWS_SECRET_ACCESS_KEY
 
 	parameter: {
 		//+usage=The name of Crossplane Provider AWS, default to `default`
