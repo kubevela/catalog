@@ -1,6 +1,7 @@
 name: crossplane-aws
 version: 0.0.1
 description: AWS Provider for Crossplane
+icon: https://static.kubevela.net/images/logos/aws.png
 url: https://crossplane.io/
 
 tags:
