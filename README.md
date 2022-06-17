@@ -35,7 +35,7 @@ Please be aware of this contribution rules when contribute addons.
 
   - A accessible icon url and source url defined in addon's `metadata.yaml`
     
-  - A detail introduction for this addon in `README.md` for this addon as the [documentation]().
+  - A detail introduction for this addon in `README.md` for this addon as the [documentation](https://kubevela.net/docs/reference/addons/overview).
     
   - Better provide many useful examples in [dir](examples/)
     
