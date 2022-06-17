@@ -33,6 +33,7 @@ relevant to every OAM catalog pull request.
 
 I have:
 
-- [ ] Title of the PR starts with type (e.g. `[Addon]` or `[Trait]`).
-- [ ] Updated/Added any relevant [documentation] and [examples].
-- [ ] Unit/E2E Tests added.
+- [ ] Title of the PR starts with type (e.g. `[Addon]` or `[Doc]`).
+- [ ] Updated/Added any relevant [documentation](https://kubevela.io/docs/reference/addons/overview) and [examples](../examples).
+- [ ] New addon should be put in [experimental](../experimental/addons).
+- [ ] Update addon should modify the `version` in `metadata.yaml` to generate a new version.
