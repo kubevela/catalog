@@ -4,7 +4,7 @@
 
 This is repo of source files of community KubeVela [addons](https://kubevela.net/docs/reference/addons/overview) which extend the capability of platform. An addoon can be a kubernetes operator and its [X-definition](https://kubevela.net/docs/getting-started/definition) such as [Fluxcd](addons/fluxcd) or other useful components for KubeVela such as [VelaUX](addons/velaux).
 
-Addons here contain [verified](./addons) addons which have been test for a long time can be used in product environment and [experimental](experimental/addons) addons which have not become general available.
+Addons here contain [verified](./addons) addons which have been tested for a long time can be used in product environment and [experimental](experimental/addons) addons which isn't general available yet.
 
 * [Verified Addons](/addons): when a pull Request of addons were merged to this directory, the addon will automatically synced to the OSS bucket( https://addons.kubevela.net ). This will be displayed in vela CLI by `vela addon list` or VelaUX by default.
 
