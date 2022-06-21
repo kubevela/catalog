@@ -2,6 +2,9 @@
   jsonKey: image
   label: Container Image
   sort: 1
+- jsonKey: imagePullSecret
+  sort: 2
+  disable: true
 - jsonKey: memory
   uiType: MemoryNumber
   sort: 4

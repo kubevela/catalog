@@ -31,8 +31,8 @@ template: {
 							tls: {
 								certificateRefs: [
 									{
-										kind:      "Secret"
-										name:      secret.name
+										kind: "Secret"
+										name: secret.name
 										if secret.namespace != _|_ {
 											namespace: secret.namespace
 										}
@@ -51,7 +51,7 @@ template: {
 			apiVersion: "gateway.networking.k8s.io/v1alpha2"
 			kind:       "HTTPRoute"
 			metadata: {
-				name:      context.name
+				name:      context.name + "-ssl"
 				namespace: context.namespace
 			}
 			spec: {
