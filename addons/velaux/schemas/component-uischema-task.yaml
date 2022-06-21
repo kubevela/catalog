@@ -2,8 +2,11 @@
   jsonKey: image
   label: Image
   sort: 1
-- jsonKey: restart
+- jsonKey: imagePullSecret
   sort: 2
+  disable: true
+- jsonKey: restart
+  sort: 3
   uiType: Select
   validate:
     required: true 
@@ -14,7 +17,7 @@
       - label: OnFailure
         value: OnFailure
 - jsonKey: count
-  sort: 3
+  sort: 4
   uiType: Number
   validate:
     required: true
@@ -23,7 +26,7 @@
     max: 128
 - jsonKey: memory
   uiType: MemoryNumber
-  sort: 4
+  sort: 5
   label: Memory
   description: Specifies the memory resource required for the container, If set to 0, there is no limit.
   validate:
@@ -33,7 +36,7 @@
     colSpan: 12
 - jsonKey: cpu
   uiType: CPUNumber
-  sort: 5
+  sort: 7
   label: CPU
   description: Specifies the cpu resource required for the container, If set to 0, there is no limit.
   validate:
