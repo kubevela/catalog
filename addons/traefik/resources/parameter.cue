@@ -8,7 +8,7 @@ parameter: {
 	// +usage=Exposed the dashboard of traefik
 	exposeDashboard: *true | bool
 	// +usage=Specify the traefik entry points, only configured ports can be used for listenner.
-	entryPoints: [...{
+	entryPoints?: [...{
 		name:     string
 		port:     int
 		protocol: *"TCP" | "UDP"

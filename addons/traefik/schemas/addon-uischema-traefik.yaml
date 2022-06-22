@@ -1,0 +1,17 @@
+- jsonKey: serviceType
+  sort: 1
+- jsonKey: accessLog
+  sort: 3
+  style:
+    colSpan: 8
+- jsonKey: exposeDashboard
+  sort: 4
+  style:
+    colSpan: 8
+- jsonKey: autoscaling
+  sort: 5
+  style:
+    colSpan: 8
+- jsonKey: entryPoints
+  sort: 7
+  
