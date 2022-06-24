@@ -1,0 +1,13 @@
+name: ingress-nginx
+version: 1.0.0
+description: gateway for serving ingress traffic
+
+tags:
+  - network
+  - gateway
+
+dependencies:
+  - name: fluxcd
+
+deployTo:
+  runtimeCluster: true
