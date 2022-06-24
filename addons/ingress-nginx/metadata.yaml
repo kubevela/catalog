@@ -1,4 +1,4 @@
-name: ingress-controller
+name: ingress-nginx
 version: 1.0.0
 description: gateway for serving ingress traffic
 

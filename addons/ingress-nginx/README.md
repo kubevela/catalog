@@ -1,17 +1,17 @@
-# Ingress controller
+# ingress-nginx
 
-[Ingress controller](https://kubernetes.github.io/ingress-nginx/) is an Ingress controller for Kubernetes using NGINX as a reverse proxy and load balancer.
+[Ingress nginx](https://kubernetes.github.io/ingress-nginx/) is an Ingress controller for Kubernetes using NGINX as a reverse proxy and load balancer.
 
 ## Install
 
 ```shell
-vela addon enable ingrss-controller
+vela addon enable ingress-nginx
 ```
 
 ## Uninstall
 
 ```shell
-vela addon disable ingrss-controller
+vela addon disable ingress-nginx
 ```
 
 Use this addon by deploy a application:
@@ -42,6 +42,6 @@ EOF
 Then access the gateway's endpoint will see:
 
 ```shell
-$ curl -H "Host: canary-demo.com" <ingress-controller-endpoint>/version
+$ curl -H "Host: canary-demo.com" <ingress-nginx-endpoint>/version
 Demo: V1
 ```
