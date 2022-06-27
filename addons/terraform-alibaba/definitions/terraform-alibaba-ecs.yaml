@@ -2,7 +2,8 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Terraform configuration for Alibaba Cloud Elastic
+    definition.oam.dev/description:
+      Terraform configuration for Alibaba Cloud Elastic
       Compute Service
   creationTimestamp: null
   labels:
@@ -12,11 +13,10 @@ metadata:
 spec:
   schematic:
     terraform:
-      configuration: https://github.com/wonderflow/terraform-alicloud-ecs-instance.git
+      configuration: https://github.com/kubevela-contrib/terraform-alibaba-ecs.git
       type: remote
   workload:
     definition:
       apiVersion: terraform.core.oam.dev/v1beta2
       kind: Configuration
 status: {}
-
