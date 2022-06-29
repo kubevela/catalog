@@ -93,6 +93,16 @@ spec:
         		if parameter.values != _|_ {
         			values: parameter.values
         		}
+        		install: {
+        			 remediation: {
+        			 	  retries: parameter.retries
+        			 }
+        		}
+        		upgrade: {
+        			 remediation: {
+        			 	    retries: parameter.retries
+               }
+            }
         	}
         }
 
@@ -151,6 +161,8 @@ spec:
         	targetNamespace?: string
         	// +usage=The release name
         	releaseName?: string
+                 // +usage=Retry times when install/upgrade fail.
+                 retries: *3|int
         	// +usage=Chart values
         	values?: #nestedmap
         }
