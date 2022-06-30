@@ -4,4 +4,4 @@ metadata:
   name: chartmuseum
   namespace: vela-system
 spec:
-  components:
+  components: null
