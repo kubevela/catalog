@@ -161,8 +161,8 @@ spec:
         	targetNamespace?: string
         	// +usage=The release name
         	releaseName?: string
-                 // +usage=Retry times when install/upgrade fail.
-                 retries: *3|int
+                // +usage=Retry times when install/upgrade fail.
+                retries: *3|int
         	// +usage=Chart values
         	values?: #nestedmap
         }
