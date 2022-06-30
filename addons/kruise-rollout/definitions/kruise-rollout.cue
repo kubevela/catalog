@@ -31,7 +31,7 @@ template: {
 		gracePeriodSeconds: *5 | int
 		// +usage=Traffic routing for ingress providers, currently only nginx is supported, later we will gradually add more types, such as Isito, Alb
 		type:               "nginx"
-//		// +usage=ingress name
+		// +usage=ingress name
 		ingressName?: string
 	}
 	#WorkloadType: {
@@ -128,7 +128,7 @@ template: {
 								type:               routing.type
 								ingress: {
 									if routing.ingressName != _|_ {
-										name: routing.ingress.name
+										name: routing.ingressName
 									}
 									if routing.ingressName == _|_ {
 										name: context.name
