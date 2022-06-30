@@ -11,20 +11,13 @@ There are instructions on official KubeVela documentation website:
 > Documentation link will be here once the doc PR is merged
 
 ## Usages
-
-### Using with local filesystem storage
-
-By default ChartMuseum uses local filesystem storage.
-But on pod recreation it will lose all charts, to prevent that enable persistent storage.
-
-```json5
-enablePersistence: true
-persistentSize:    "8Gi"
-```
-
 ### Authentication
 
-By default this addon does not have any authentication configured and allows anyone to fetch or upload (unless the API is disabled with `disableAPI`) charts.
+> Warning: to prevent anonymous uploads, do any of the following: 
+> - set `disableAPI` to `true`
+> - enable authentication
+
+By default this addon does not have any authentication configured and allows anyone to fetch or upload charts (unless the API is disabled with `disableAPI`).
 
 To enable Basic Auth to protect APIs, configure `basicAuth` parameters:
 
@@ -36,6 +29,16 @@ basicAuth: {
 	// +usage=Password for basic http authentication
 	password: "pswd"
 }
+```
+
+### Using with local filesystem storage
+
+By default ChartMuseum uses local filesystem storage.
+But on pod recreation it will lose all charts, to prevent that enable persistent storage.
+
+```json5
+enablePersistence: true
+persistentSize:    "8Gi"
 ```
 
 ### Using with Alibaba Cloud OSS Storage
