@@ -98,6 +98,27 @@ output: {
 				enabled: parameter.enablePersistence
 				size:    parameter.persistentSize
 			}
+
+			ingress: {
+				enabled: parameter.enableIngress
+				annotations: {
+					for k, v in parameter.ingressAnnotations {
+						"\(k)": v
+					}
+				}
+				hosts: [
+					if parameter.ingressHosts != _|_ {
+						for h in parameter.ingressHosts {
+							name: h.name
+							path: h.path
+							tls:  h.tls
+							if h.tlsSecret != _|_ {
+								tlsSecret: h.tlsSecret
+							}
+						}
+					}
+				]
+			}
 		}
 	}
 }

@@ -79,4 +79,17 @@ parameter: {
 	// +usage=Persist ChartMuseum data
 	enablePersistence: *false | bool
 	persistentSize:    *"8Gi" | =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
+    // +usage=Enable Ingress for load balancer
+    enableIngress: *false | bool
+    ingressAnnotations: [string]: string | null
+    // +usage=Hosts for Ingress
+    ingressHosts?: [...{
+        // +usage=Domain name, e.g. cm.domain.com
+        name: string
+        path: *"/" | string
+        // +usage=Enable TLS on the ingress record
+        tls: *false | bool
+        // +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
+        tlsSecret?: string
+    }]
 }

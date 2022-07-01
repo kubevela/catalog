@@ -1,6 +1,6 @@
 name: chartmuseum
 version: 3.8.0
-description: ChartMuseum is an open-source, easy to deploy, Helm Chart Repository server.
+description: ChartMuseum is an open-source and easy to deploy Helm Chart Repository server.
 icon: https://raw.githubusercontent.com/helm/chartmuseum/main/logo2.png
 url: https://chartmuseum.com
 invisible: false
