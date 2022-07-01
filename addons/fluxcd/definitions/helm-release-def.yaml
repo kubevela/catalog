@@ -44,9 +44,9 @@ spec:
         		kind: "HelmRepository"
         		spec: {
         			url: parameter.url
-                    if parameter.repoType == "oci" {
-                       type: "oci"
-                    }
+        			if parameter.repoType == "oci" {
+        				type: "oci"
+        			}
         			_secret
         			_sourceCommonArgs
         		}
@@ -60,7 +60,7 @@ spec:
         		name: context.name
         	}
         	spec: {
-        		timeout: parameter.installTimeout
+        		timeout:  parameter.installTimeout
         		interval: parameter.pullInterval
         		chart: {
         			spec: {
@@ -76,12 +76,12 @@ spec:
         					if parameter.repoType == "oss" {
         						kind: "Bucket"
         					}
-        					name:      context.name
+        					name: context.name
         				}
         				interval: parameter.interval
-                        if parameter["valuesFiles"] != _|_ {
-                            valuesFiles: parameter["valuesFiles"]
-                        }
+        				if parameter["valuesFiles"] != _|_ {
+        					valuesFiles: parameter["valuesFiles"]
+        				}
         			}
         		}
         		if parameter.targetNamespace != _|_ {
@@ -93,16 +93,26 @@ spec:
         		if parameter.values != _|_ {
         			values: parameter.values
         		}
+        		install: {
+        			remediation: {
+        				retries: parameter.retries
+        			}
+        		}
+        		upgrade: {
+        			remediation: {
+        				retries: parameter.retries
+        			}
+        		}
         	}
         }
 
         _secret: {
         	if parameter.secretRef != _|_ {
-                if parameter.secretRef != "" {
-        		   secretRef: {
-        			  name: parameter.secretRef
-        		   }
-                }
+        		if parameter.secretRef != "" {
+        			secretRef: {
+        				name: parameter.secretRef
+        			}
+        		}
         	}
         }
 
@@ -140,8 +150,8 @@ spec:
         		// +usage=The bucket region, optional
         		region?: string
         	}
-            // +usage=Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef.Values files are merged in the order of this list with the last file overriding the first.
-            valuesFiles?: [...string]
+        	// +usage=Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef.Values files are merged in the order of this list with the last file overriding the first.
+        	valuesFiles?: [...string]
 
         	// +usage=1.The relative path to helm chart for git/oss source. 2. chart name for helm resource 3. relative path for chart package(e.g. ./charts/podinfo-1.2.3.tgz)
         	chart: string
@@ -151,6 +161,8 @@ spec:
         	targetNamespace?: string
         	// +usage=The release name
         	releaseName?: string
+        	// +usage=Retry times when install/upgrade fail.
+        	retries: *3 | int
         	// +usage=Chart values
         	values?: #nestedmap
         }
