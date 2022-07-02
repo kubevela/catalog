@@ -33,15 +33,20 @@ import (
 )
 
 type Metadata struct {
-	Name          string   `json:"name" validate:"required"`
-	Version       string   `json:"version"`
-	Description   string   `json:"description"`
-	Icon          string   `json:"icon"`
-	URL           string   `json:"url,omitempty"`
-	Tags          []string `json:"tags,omitempty"`
-	NeedNamespace []string `json:"needNamespace,omitempty"`
-	Invisible     bool     `json:"invisible"`
-	System        string   `json:"system"`
+	Name          string              `json:"name" validate:"required"`
+	Version       string              `json:"version"`
+	Description   string              `json:"description"`
+	Icon          string              `json:"icon"`
+	URL           string              `json:"url,omitempty"`
+	Tags          []string            `json:"tags,omitempty"`
+	NeedNamespace []string            `json:"needNamespace,omitempty"`
+	Invisible     bool                `json:"invisible"`
+	System        *SystemRequirements `json:"system"`
+}
+
+type SystemRequirements struct {
+	Vela       string `json:"vela"`
+	Kubernetes string `json:"kubernetes"`
 }
 
 func main() {
@@ -106,7 +111,7 @@ func main() {
 			entry := repo.ChartVersions{}
 			entry = append(entry, &repo.ChartVersion{Metadata: &chart.Metadata{Name: info.Name(),
 				Version: m.Version, Icon: m.Icon, Keywords: m.Tags, Description: m.Description,
-				Home: m.URL, Annotations: map[string]string{"system": m.System}}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}})
+				Home: m.URL, Annotations: map[string]string{"system.vela": m.System.Vela, "system.kubernetes": m.System.Kubernetes}}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}})
 			entries[info.Name()] = entry
 
 			err = helmSave(dir, info.Name(), info.Name(), m.Version)
