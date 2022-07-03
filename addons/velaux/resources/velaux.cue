@@ -59,6 +59,17 @@ output: {
 				},
 			]
 		}
+
+		httpsTrait: *[ if parameter["secretName"] != _|_ {
+			type: "https-route"
+			properties: {
+				domains: [ parameter["domain"]]
+				rules: [{port: 80}]
+				secrets: [{
+					name: parameter["secretName"]
+				}]
+			}}] | []
+
 		if parameter["gatewayDriver"] == "traefik" {
 			traits: [
 				{
@@ -68,7 +79,7 @@ output: {
 						rules: [{port: 80}]
 					}
 				},
-			]
+			] + httpsTrait
 		}
 	}
 	dependsOn: ["apiserver"]

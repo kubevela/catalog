@@ -9,3 +9,6 @@ deployTo:
 
 dependencies:
 - name: fluxcd
+
+tags:
+  - Official
