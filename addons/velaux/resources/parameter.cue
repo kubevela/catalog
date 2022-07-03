@@ -9,6 +9,8 @@ parameter: {
 	dbURL?: string
 	// +usage=Specify the domain, if set, ingress will be created if the gateway driver is nginx.
 	domain?: string
+	// +usage=Specify the name of the certificate cecret, if set, means enable the HTTPs.
+	secretName?: string
 	// +usage=Specify the gateway type.
 	gatewayDriver: *"nginx" | "traefik"
 	// +usage=Specify the serviceAccountName for apiserver
