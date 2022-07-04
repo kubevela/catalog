@@ -109,9 +109,20 @@ func main() {
 				return
 			}
 			entry := repo.ChartVersions{}
-			entry = append(entry, &repo.ChartVersion{Metadata: &chart.Metadata{Name: info.Name(),
+			chartVersion := &repo.ChartVersion{Metadata: &chart.Metadata{Name: info.Name(),
 				Version: m.Version, Icon: m.Icon, Keywords: m.Tags, Description: m.Description,
-				Home: m.URL, Annotations: map[string]string{"system.vela": m.System.Vela, "system.kubernetes": m.System.Kubernetes}}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}})
+				Home: m.URL, Annotations: map[string]string{}}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}}
+
+			if m.System != nil {
+				if len(m.System.Kubernetes) != 0 {
+					chartVersion.Metadata.Annotations["system.kubernetes"] = m.System.Kubernetes
+				}
+				if len(m.System.Vela) != 0 {
+					chartVersion.Metadata.Annotations["system.vela"] = m.System.Vela
+				}
+			}
+
+			entry = append(entry, chartVersion)
 			entries[info.Name()] = entry
 
 			err = helmSave(dir, info.Name(), info.Name(), m.Version)
