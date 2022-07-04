@@ -37,9 +37,9 @@ spec:
         		if parameter.password != _|_ {
         			password: parameter.password
         		}
-                if parameter.caFile != _|_ {
-                    caFile: parameter.caFile
-                }
+        		if parameter.caFile != _|_ {
+        			caFile: parameter.caFile
+        		}
         	}
         }
         parameter: {
@@ -49,8 +49,8 @@ spec:
         	username?: string
         	// +usage=The password of basic auth repo.
         	password?: string
-            // +usage=The ca certificate of helm repository.
-            caFile?: string
+        	// +usage=The ca certificate of helm repository.
+        	caFile?: string
         }
   workload:
     type: autodetects.core.oam.dev
