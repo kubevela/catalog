@@ -1,6 +1,5 @@
-resource - view.cue
 import (
-"vela/ql",
+	"vela/ql"
 )
 
 parameter: {
