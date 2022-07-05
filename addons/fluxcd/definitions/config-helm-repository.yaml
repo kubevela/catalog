@@ -37,6 +37,8 @@ spec:
         		if parameter.password != _|_ {
         			password: parameter.password
         		}
+        	}
+        	data: {
         		if parameter.caFile != _|_ {
         			caFile: parameter.caFile
         		}
@@ -49,7 +51,7 @@ spec:
         	username?: string
         	// +usage=The password of basic auth repo.
         	password?: string
-        	// +usage=The ca certificate of helm repository.
+        	// +usage=The ca certificate of helm repository. Please encode this data with base64.
         	caFile?: string
         }
   workload:
