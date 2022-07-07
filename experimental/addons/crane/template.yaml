@@ -2,5 +2,6 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: crane
-  namespace: crane-system
+  namespace: vela-system
 spec:
+  components: []
