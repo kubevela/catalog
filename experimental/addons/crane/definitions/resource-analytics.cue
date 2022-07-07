@@ -24,8 +24,8 @@ template: {
 		}
 		spec: {
 			resourceSelectors: [{
-				apiVersion: parameter.targetAPIVersion
-				kind:       parameter.targetKind
+				apiVersion: context.output.apiVersion
+				kind:       context.output.kind
 				name:       context.name
 			}]
 			type: "Resource"
@@ -36,11 +36,7 @@ template: {
 		}
 	}
 	parameter: {
-		// +usage=Analyze resources every x seconds
+		// +usage=Analyze resources every analyzePeriod seconds
 		analyzePeriod: *86400 | int
-		// +usage=Specify the apiVersion of analyze target
-		targetAPIVersion: *"apps/v1" | string
-		// +usage=Specify the kind of analyze target
-		targetKind: *"Deployment" | string
 	}
 }

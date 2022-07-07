@@ -26,8 +26,8 @@ template: {
 		}
 		spec: {
 			scaleTargetRef: {
-				apiVersion: parameter.targetAPIVersion
-				kind:       parameter.targetKind
+				apiVersion: context.output.apiVersion
+				kind:       context.output.kind
 				name:       context.name
 			}
 			scaleStrategy: "Auto"
@@ -72,9 +72,5 @@ template: {
 		sampleInterval: *"60s" | string
 		// +usage=DSP history length
 		historyLength: *"3d" | string
-		// +usage=Specify the apiVersion of scale target
-		targetAPIVersion: *"apps/v1" | string
-		// +usage=Specify the kind of scale target
-		targetKind: *"Deployment" | string
 	}
 }
