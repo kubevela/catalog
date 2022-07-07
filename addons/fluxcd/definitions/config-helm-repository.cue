@@ -38,13 +38,20 @@ template: {
 			}
 
 		}
+		data: {
+			if parameter.caFile != _|_ {
+				caFile: parameter.caFile
+			}
+		}
 	}
 	parameter: {
 		// +usage=The public url of the helm chart repository.
 		url: string
-		// +usage=The username of basic auth repo
+		// +usage=The username of basic auth repo.
 		username?: string
-		// +usage=The password of basic auth repo
+		// +usage=The password of basic auth repo.
 		password?: string
+		// +usage=The ca certificate of helm repository. Please encode this data with base64.
+		caFile?: string
 	}
 }
