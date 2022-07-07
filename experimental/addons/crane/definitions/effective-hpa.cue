@@ -17,11 +17,11 @@
 }
 
 template: {
-	output: {
+	outputs: ehpa: {
 		apiVersion: "autoscaling.crane.io/v1alpha1"
 		kind:       "EffectiveHorizontalPodAutoscaler"
 		metadata: {
-			name:      context.name
+			name:      context.appName + "-" + context.name
 			namespace: context.namespace
 		}
 		spec: {

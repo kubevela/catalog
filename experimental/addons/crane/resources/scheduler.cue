@@ -15,10 +15,20 @@ output: {
 			releaseName:     "scheduler"
 		}
 	}
+
+	// We cannot have selective resources currently.
 	// If parameter.deployScheduler is false, then the above component won't be generated, causing errors.
 	// Just put some dummy resources to prevent that error.
 	if !parameter.deployScheduler {
 		type: "k8s-objects"
-		properties: objects: [{}]
+		properties: {
+			objects: [
+				{
+					apiVersion: "v1"
+					kind:       "Namespace"
+					metadata: name: "crane-system"
+				},
+			]
+		}
 	}
 }

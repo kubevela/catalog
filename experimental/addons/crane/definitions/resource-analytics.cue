@@ -15,11 +15,11 @@
 }
 
 template: {
-    output: {
+	outputs: resanalyt: {
 		apiVersion: "analysis.crane.io/v1alpha1"
 		kind:       "Analytics"
 		metadata: {
-			name:      context.name + "-resource"
+			name:      context.appName + "-" + context.name + "-resource"
 			namespace: context.namespace
 		}
 		spec: {
