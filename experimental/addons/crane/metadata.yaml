@@ -1,18 +1,26 @@
 name: crane
-version: v0.5.0
-description: crane
-icon: https://docs.gocrane.io/dev/images/crane.svg
-url:
 
-tags:
-  - crane
+version: 0.5.0
 
-deployTo:
-  control_plane: true
-  runtime_cluster: false
+description: Crane (FinOps Crane) is an open-source project which manages cloud resource on Kubernetes stack, it is inspired by FinOps concepts.
 
-dependencies:
-  - name: velaux
-  - name: fluxcd
+icon: https://raw.githubusercontent.com/gocrane/crane/main/docs/images/crane.png
+
+url: https://docs.gocrane.io/
 
 invisible: false
+
+dependencies:
+- name: fluxcd
+
+deployTo:
+  runtimeCluster: true
+
+tags:
+- finops
+- monitoring
+- prediction
+- time-series
+- analytics
+- cost-optimization
+- autoscaling
