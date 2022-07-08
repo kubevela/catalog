@@ -83,9 +83,14 @@ Watch how the replicas increase.
 
 We provided a convenient [VelaQL](https://kubevela.net/docs/next/platform-engineers/system-operation/velaql) view `crane-recommendation` for you to quickly see recommendations:
 
+Parameters:
+- ns: query in which namespace, default is ""
+- appName: application name, required
+- componentName: component name, default is "". Omit this to show all components.
+
 ```shell
 # Query recommendation of the nginx component we just created
-$ vela ql --query 'crane-recommendation{appName=crane-sample,componentName=crane-nginx}'
+$ vela ql --query 'crane-recommendation{appName=crane-sample}'
 {
   "recommendedValues": [
     {

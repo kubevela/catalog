@@ -13,6 +13,9 @@ invisible: false
 dependencies:
 - name: fluxcd
 
+deployTo:
+  runtimeCluster: true
+
 tags:
 - finops
 - monitoring

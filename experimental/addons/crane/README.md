@@ -12,6 +12,14 @@ The goal of Crane is to provide a one-stop-shop project to help Kubernetes users
 - **Enhanced QoS** based on Pod PriorityClass
 - **Load-aware Scheduling** 
 
+## Install addon
+
+```shell
+$ vela addon enable crane
+# If you have trouble accessing GitHub, enable mirrors
+$ vela addon enable crane mirror=true
+```
+
 ## Features
 ### Time Series Prediction
 
