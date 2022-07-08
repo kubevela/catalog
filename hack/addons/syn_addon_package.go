@@ -109,9 +109,9 @@ func main() {
 				return
 			}
 			entry := repo.ChartVersions{}
-			chartVersion := &repo.ChartVersion{Metadata: &chart.Metadata{Name: info.Name(),
+			chartVersion := &repo.ChartVersion{Metadata: &chart.Metadata{Name: m.Name,
 				Version: m.Version, Icon: m.Icon, Keywords: m.Tags, Description: m.Description,
-				Home: m.URL, Annotations: map[string]string{}}, Created: time.Now(), URLs: []string{repoURL + "/" + info.Name() + "-" + m.Version + ".tgz"}}
+				Home: m.URL, Annotations: map[string]string{}}, Created: time.Now(), URLs: []string{repoURL + "/" + m.Name + "-" + m.Version + ".tgz"}}
 
 			if m.System != nil {
 				if len(m.System.Kubernetes) != 0 {
@@ -123,9 +123,9 @@ func main() {
 			}
 
 			entry = append(entry, chartVersion)
-			entries[info.Name()] = entry
+			entries[m.Name] = entry
 
-			err = helmSave(dir, info.Name(), info.Name(), m.Version)
+			err = helmSave(dir, m.Name, info.Name(), m.Version)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -147,7 +147,7 @@ func main() {
 }
 
 func helmSave(dir, name, addonDir, version string) error {
-	filename := fmt.Sprintf("%s%s-%s.tgz", dir, name, version)
+	filename := fmt.Sprintf("%s-%s.tgz", name, version)
 	var outInfo bytes.Buffer
 	cmd := exec.Command("tar", "zcf", filename, dir+addonDir+"/")
 	cmd.Stdout = &outInfo
