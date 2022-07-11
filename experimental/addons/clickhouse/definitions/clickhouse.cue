@@ -1,8 +1,7 @@
 "clickhouse": {
 	annotations: {}
-	attributes: workload: definition: {
-		apiVersion: "clickhouse.altinity.com/v1"
-		kind:       "ClickHouseInstallation"
+	attributes: workload: {
+		type: "autodetects.core.oam.dev"
 	}
 	description: "Clickhouse Component provision a clickhouse cluster."
 	labels: {}
