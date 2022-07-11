@@ -3,7 +3,7 @@ helm: {
 		workload: type: "autodetects.core.oam.dev"
 		status: {
 			healthPolicy: #"""
-				isHealth: len(context.outputs.release.status.conditions) != 0 && context.outputs.release.status.conditions[0]["status"]=="True
+				isHealth: len(context.outputs.release.status.conditions) != 0 && context.outputs.release.status.conditions[0]["status"]=="True"
 				"""#
 			customStatus: #"""
 					repoMessage:    *"" | string
