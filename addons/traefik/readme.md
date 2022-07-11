@@ -2,6 +2,14 @@
 
 Traefik is a modern HTTP reverse proxy and load balancer made to deploy microservices with ease.
 
+## Version description
+
+* v2.6.3-1
+
+This version depends on VelaUX with version `1.5.0-alpha.3`, because the `config-tls-certificate` configuration uses the `CertBase64` UI component.
+
+> The traefik version is v2.6.3
+
 ## How to configure
 
 * ServiceType

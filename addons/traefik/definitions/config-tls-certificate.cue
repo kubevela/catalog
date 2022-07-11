@@ -36,9 +36,9 @@ template: {
 		}
 	}
 	parameter: {
-		// +usage=the certificate public key encrypted by base64
+		// +usage=The certificate public key encrypted by base64
 		cert: string
-		// // +usage=the certificate privite key encrypted by base64
+		// +usage=The certificate privite key encrypted by base64
 		key: string
 	}
 }
