@@ -1,4 +1,6 @@
 parameter: {
+	// +usage=ChartMuseum image
+	image: *"ghcr.io/helm/chartmuseum:v0.15.0" | string
 	// +usage=Storage backend, can be one of: local(default), alibaba, amazon, google, microsoft
 	storage: *"local" | "alibaba" | "amazon" | "google" | "microsoft"
 	// +usage=Alibaba Cloud storage backend settings
@@ -21,7 +23,7 @@ parameter: {
 		// +usage=S3 bucket to store charts for amazon storage backend, e.g. my-s3-bucket
 		bucket: string
 		// +usage=Prefix to store charts for amazon storage backend
-		prefix?: *"string" | string
+		prefix?: string
 		// +usage=Region of s3 bucket to store charts, e.g. us-east-1
 		region: string
 		// +usage=Alternative s3 endpoint
@@ -39,7 +41,7 @@ parameter: {
 		bucket: string
 		// +usage=Prefix to store charts for google storage backend
 		prefix?: string
-		// +usage=GCP service account json file
+		// +usage=GCP service account json string
 		googleCredentialsJSON: string
 	}
 	// +usage=Microsoft Azure storage backend settings
@@ -70,26 +72,20 @@ parameter: {
 	}
 	// +usage=Service type
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
-	// +usage=Uses pre-assigned IP address from cloud provider, only valid when serviceType=LoadBalancer
-	loadBalancerIP?: int
-	externalPort?:   *8080 | int
-	nodePort?:       int
-	// +usage=Enable metrics at /metrics
-	enableServiceMonitor: *false | bool
-	// +usage=Persist ChartMuseum data
+	// +usage=Access ChartMuseum from this port
+	externalPort: *8080 | int
+	// +usage=Persist ChartMuseum data to PV. PVC will be created automatically. Specify a pvcName to prevent that.
 	enablePersistence: *false | bool
-	persistentSize:    *"8Gi" | =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
-    // +usage=Enable Ingress for load balancer
-    enableIngress: *false | bool
-    ingressAnnotations: [string]: string | null
-    // +usage=Hosts for Ingress
-    ingressHosts?: [...{
-        // +usage=Domain name, e.g. cm.domain.com
-        name: string
-        path: *"/" | string
-        // +usage=Enable TLS on the ingress record
-        tls: *false | bool
-        // +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
-        tlsSecret?: string
-    }]
+	// +usage=Use an existing PVC. If you specify this, PVC will NOT be created automatically.
+	pcvName?: string
+	// +usage=Hosts for Ingress
+	ingressHost?: {
+		// +usage=Domain name, e.g. cm.domain.com
+		name: string
+		path: *"/" | string
+		// +usage=Enable TLS on the ingress record
+		tls: *false | bool
+		// +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
+		tlsSecret?: string
+	}
 }
