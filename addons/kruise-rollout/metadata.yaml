@@ -1,5 +1,5 @@
 name: kruise-rollout
-version: 1.0.0
+version: 1.0.1
 description: Rollout workload by kruise controller
 url: https://github.com/openkruise/rollouts
 icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/openkruise/stacked/color/openkruise-stacked-color.png

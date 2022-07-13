@@ -11,4 +11,4 @@ spec:
         repoType: helm
         url: https://openkruise.github.io/charts/
         chart: kruise-rollout
-        version: 0.1.0
+        version: 0.1.1
