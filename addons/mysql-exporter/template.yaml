@@ -1,6 +1,6 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: mysql-operator
+  name: mysql-exporter
   namespace: vela-system
 spec:
