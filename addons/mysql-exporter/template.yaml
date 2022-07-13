@@ -1,0 +1,6 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: mysql-operator
+  namespace: vela-system
+spec:

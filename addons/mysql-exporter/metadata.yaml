@@ -1,0 +1,13 @@
+name: mysql-exporter
+version: 0.0.1
+appVersion: v1.14.0
+description: Prometheus exporter for MySQL server metrics.
+icon: https://www.mysql.com/common/logos/powered-by-mysql-167x86.png
+url: https://github.com/prometheus/mysqld_exporter
+
+tags:
+  - Observability
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: false
