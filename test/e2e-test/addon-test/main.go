@@ -177,6 +177,16 @@ func enableAddonsByOrder (changedAddon map[string]bool)  error {
 		}
 		changedAddon["fluxcd"] = false
 	}
+	if changedAddon["model-serving"] {
+		if err := enableOneAddon(fmt.Sprintf(dirPattern, "model-serving")); err != nil {
+			return err
+		}
+		changedAddon["model-serving"] = false
+		if err := disableOneAddon("model-serving"); err != nil {
+			checkAppStatus("model-serving")
+			return err
+		}
+	}
 	if changedAddon["terraform"] {
 		if err := enableOneAddon(fmt.Sprintf(dirPattern, "terraform")); err != nil {
 			return err
