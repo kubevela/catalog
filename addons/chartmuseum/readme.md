@@ -33,10 +33,12 @@ basicAuth: {
 
 ### Using with local filesystem storage
 
-By default ChartMuseum uses local filesystem storage. But on pod recreation it will lose all charts, to prevent that, enable persistent storage. This will store your data to a automatically created PV.
+By default ChartMuseum uses local filesystem storage. But on pod recreation it will lose all charts, to prevent that, enable persistent storage. This will store your data to a automatically created PVC.
 
 ```json5
-enablePersistence: true
+persistence: {
+	enabled: true
+}
 ```
 
 > WARNING: even if you enabled persistent storage, when you disable the addon, data will still be deleted. Because the PVC will be deleted as well. 
@@ -44,8 +46,10 @@ enablePersistence: true
 You should consider using a existing PVC by specifying `pvcName`.
 
 ```json5
-enablePersistence: true
-pvcName: "mypvc"
+persistence: {
+	enabled: true
+	pvcName: "mypvc"
+}
 ```
 
 ### Using with Alibaba Cloud OSS Storage
@@ -105,8 +109,8 @@ storage: "google"
 google: {
 	// +usage=GCS bucket to store charts for google storage backend, e.g. my-gcs-bucket
 	bucket: "my-gcs-bucket"
-	// +usage=GCP service account json file
-	googleCredentialsJSON: "json"
+	// +usage=GCP service account json string
+	googleCredentialsJSON: "jsonstring"
 }
 ```
 
