@@ -3,9 +3,9 @@ module github.com/oam-dev/catalog
 go 1.17
 
 require (
+	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/go-yaml/yaml v2.1.0+incompatible
-	golang.org/x/mod v0.3.1-0.20200828183125-ce943fd02449
 	helm.sh/helm/v3 v3.6.1
 	sigs.k8s.io/yaml v1.2.0
 )
@@ -13,7 +13,6 @@ require (
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
-	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/Microsoft/hcsshim v0.8.14 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect

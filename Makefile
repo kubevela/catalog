@@ -22,6 +22,8 @@ standard-autoscaler-test:
 addon-test:
 	bash ./test/e2e-test/hack/check-semver.sh
 	bash ./test/e2e-test/hack/addon-vela-test.sh
+	go run hack/e2e-test/addon-test/main.go
+
 
 terraform-addon-gen:
 	go run hack/addons/terraform/gen.go
