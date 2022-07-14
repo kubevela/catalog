@@ -22,7 +22,7 @@ import (
 )
 
 func checkAppStatus(addonName string)  {
-	cmd := exec.Command("vela","status", "-n", "vela-system", "addon" + addonName)
+	cmd := exec.Command("vela","status", "-n", "vela-system", "addon-" + addonName)
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
