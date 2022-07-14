@@ -54,21 +54,21 @@ import (
 		enabled: parameter.storage == "local" || parameter.google != _|_
 		type:    "storage"
 		properties: {
-			if !parameter.enablePersistence {
+			if !parameter.persistence.enabled {
 				emptyDir: [{
 					name:      "chartmuseum-local-storage"
 					mountPath: "/storage"
 				}]
 			}
-			if parameter.enablePersistence {
+			if parameter.persistence.enabled {
 				pvc: [{
-                    if parameter.pvcName != _|_ {
-                        name: parameter.pvcName
-                        mountOnly: true
-                    }
-                    if parameter.pvcName == _|_ {
-                        name: "chartmuseum-local-storage"
-                    }
+					if parameter.persistence.pvcName != _|_ {
+						name:      parameter.pvcName
+						mountOnly: true
+					}
+					if parameter.persistence.pvcName == _|_ {
+						name: "chartmuseum-local-storage"
+					}
 					mountPath: "/storage"
 				}]
 			}

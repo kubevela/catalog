@@ -48,7 +48,6 @@ enablePersistence: true
 pvcName: "mypvc"
 ```
 
-
 ### Using with Alibaba Cloud OSS Storage
 
 Make sure your environment is properly setup to access `my-oss-bucket`.

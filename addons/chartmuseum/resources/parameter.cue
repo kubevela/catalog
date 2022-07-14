@@ -74,10 +74,16 @@ parameter: {
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Access ChartMuseum from this port
 	externalPort: *8080 | int
-	// +usage=Persist ChartMuseum data to PV. PVC will be created automatically. Specify a pvcName to prevent that.
-	enablePersistence: *false | bool
-	// +usage=Use an existing PVC. If you specify this, PVC will NOT be created automatically.
-	pcvName?: string
+	// +usage=Settings related to persisting data. You only need this if you are using local storage.
+	persistence: {
+		// +usage=Persist ChartMuseum data to PV. PVC will be created automatically. Specify a pvcName to prevent that.
+		enabled: *false | bool
+		// This is commented out because I haven't found a way to specify policies.
+		// Keep automatically created PVC even if addon is deleted.
+		// alwaysKeep: *false | bool
+		// +usage=Use an existing PVC. If you specify this, PVC will NOT be created automatically.
+		pvcName?: string
+	}
 	// +usage=Hosts for Ingress
 	ingressHost?: {
 		// +usage=Domain name, e.g. cm.domain.com
