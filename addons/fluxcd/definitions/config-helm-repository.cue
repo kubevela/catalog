@@ -7,7 +7,7 @@
 	labels: {
 		"ui-hidden":                    "true"
 		"catalog.config.oam.dev":       "velacore-config"
-		"multi-cluster.config.oam.dev": "true"
+		"multi-cluster.config.oam.dev": "false"
 		"type.config.oam.dev":          "helm-repository"
 	}
 	type: "component"
