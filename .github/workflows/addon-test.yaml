@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check addon semver
-        run:|
+        run: |
           make check-addon-semver
 
       - name: Install ginkgo
