@@ -1,0 +1,40 @@
+- jsonKey: name
+  sort: 10
+
+- jsonKey: mysqlHost
+  sort: 13
+  style:
+    colSpan: 12
+
+- jsonKey: mysqlPort
+  sort: 15
+  style:
+    colSpan: 12
+
+- jsonKey: username
+  sort: 17
+  style:
+    colSpan: 12
+
+- jsonKey: password
+  uiType: Password
+  sort: 19
+  style:
+    colSpan: 12
+
+- jsonKey: version
+  sort: 21
+  style:
+    colSpan: 8
+
+- jsonKey: memory
+  uiType: MemoryNumber
+  sort: 25
+  style:
+    colSpan: 8
+
+- jsonKey: cpu
+  uiType: CPUNumber
+  sort: 27
+  style:
+    colSpan: 8

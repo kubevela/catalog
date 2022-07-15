@@ -1,7 +1,6 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: chartmuseum
+  name: mysql-exporter
   namespace: vela-system
 spec:
-  components: []
