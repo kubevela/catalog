@@ -23,7 +23,7 @@ output: {
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
 		}
-		if parameter["dex"] == "true" {
+		if parameter["dex"] == true {
 			env: [
 				{
 					name:  "KUBEVELA_API_URL"
@@ -35,12 +35,12 @@ output: {
 				},
 			]
 		}
-		if parameter["dex"] == "false" {
+		if parameter["dex"] != true {
 			env: [
 				{
 					name:  "KUBEVELA_API_URL"
 					value: "apiserver.vela-system:8000"
-				},
+				}
 			]
 		}
 	}
