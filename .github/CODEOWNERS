@@ -1,21 +1,21 @@
 # This file is a github code protect rule follow the codeowners https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners#example-of-a-codeowners-file
 
-*                                  @wangyikewxgm @wonderflow
+*                                  @wangyikewxgm @wonderflow @barnettZQG
 
 # Owner of addon fluxcd
 addons/fluxcd                      @wangyikewxgm @FogDong
 
 # Owner of addon obeservability
-addons/obeservability              @zzxwill
+addons/obeservability              @zzxwill @Somefive
 
 # Owner of addon ocm
 addons/ocm-cluster-manager         @Somefive
 
 # Owner of addon terraform
-addons/terraform                   @zzxwill
-addons/terraform-alibaba           @zzxwill
-addons/terraform-aws               @zzxwill
-addons/terraform-azure             @zzxwill
+addons/terraform                   @zzxwill @chivalryq
+addons/terraform-alibaba           @zzxwill @chivalryq
+addons/terraform-aws               @zzxwill @chivalryq
+addons/terraform-azure             @zzxwill @chivalryq
 
 # Owner of health addon velaux
 addons/velaux                      @barnettZQG
