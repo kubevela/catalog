@@ -1,9 +1,6 @@
 "flink-cluster": {
         annotations: {}
-        attributes: workload: definition: {
-                apiVersion: "flink.apache.org/v1alpha1"
-                kind:       "FlinkDeployment"
-        }
+        attributes: workload: type: "autodetects.core.oam.dev"
         description: "Flink Component."
         labels: {}
         type: "component"
