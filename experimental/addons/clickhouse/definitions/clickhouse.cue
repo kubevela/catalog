@@ -26,8 +26,10 @@ template: {
 				replicasUseFQDN: "no"
 				distributedDDL: profile: "default"
 				templates: {
-					serviceTemplate:         context.name + "-svc-templ"
-					dataVolumeClaimTemplate: context.name + "-vol-templ"
+					serviceTemplate: context.name + "-svc-templ"
+					if parameter.storage == _|_ {
+						dataVolumeClaimTemplate: context.name + "-vol-templ"
+					}
 				}
 			}
 			templates: {
@@ -59,14 +61,16 @@ template: {
 						type: parameter.svcPortType
 					}
 				}]
-				volumeClaimTemplates: [{
-					name: context.name + "-vol-templ"
-					spec: {
-						storageClassName: parameter.storage.class
-						accessModes: ["ReadWriteOnce"]
-						resources: requests: storage: parameter.storage.size
-					}
-				}]
+				if parameter.storage == _|_ {
+					volumeClaimTemplates: [{
+						name: context.name + "-vol-templ"
+						spec: {
+							storageClassName: parameter.storage.class
+							accessModes: ["ReadWriteOnce"]
+							resources: requests: storage: parameter.storage.size
+						}
+					}]
+				}
 			}
 		}
 	}
@@ -74,9 +78,9 @@ template: {
 		svcann: [string]:   string | null
 		svclabel: [string]: string | null
 		svcPortType: *"ClusterIP" | "NodePort" | "LoadBalancer"
-		storage: {
-			size:  *"2Gi" | string
-			class: *"" | string
+		storage?: {
+			size:  string
+			class: *"local-path" | string
 		}
 	}
 }

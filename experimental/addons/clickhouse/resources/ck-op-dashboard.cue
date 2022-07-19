@@ -1,8 +1,7 @@
 output: {
 	type: "webservice"
 	properties: {
-
-		image: "ghcr.io/altinity/altinity-dashboard:main"
+		image: "ghcr.io/altinity/altinity-dashboard:v0.1.4"
 
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
@@ -16,4 +15,5 @@ output: {
 			},
 		]
 	}
+	dependsOn: ["ck-op"]
 }

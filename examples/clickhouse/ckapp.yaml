@@ -1,0 +1,11 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ck-app
+spec:
+  components:
+    - name: my-ck
+      type: clickhouse
+      properties:
+        storage:
+          size: "6Gi"
