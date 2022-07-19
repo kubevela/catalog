@@ -29,7 +29,7 @@ import (
 )
 
 type AddonMeta struct {
-	Name string `json:"name"`
+	Name         string       `json:"name"`
 	Dependencies []Dependency `json:"dependencies"`
 }
 
@@ -57,7 +57,7 @@ func main() {
 }
 
 // will check all needed enabled addons according to changed files.
-func determineNeedEnableAddon (changedFile []string) map[string]bool {
+func determineNeedEnableAddon(changedFile []string) map[string]bool {
 	needEnabledAddon := map[string]bool{}
 	globalRex := regexp.MustCompile(globalRexPattern)
 	regx := regexp.MustCompile(regexPattern)
@@ -86,9 +86,9 @@ func determineNeedEnableAddon (changedFile []string) map[string]bool {
 	}
 
 	for addon := range needEnabledAddon {
-		 if err := checkAffectedAddon(addon, needEnabledAddon); err != nil {
-		 	panic(err)
-		 }
+		if err := checkAffectedAddon(addon, needEnabledAddon); err != nil {
+			panic(err)
+		}
 	}
 
 	for addon := range needEnabledAddon {
@@ -110,7 +110,7 @@ func checkAffectedAddon(addonName string, needEnabledAddon map[string]bool) erro
 	if err != nil {
 		return err
 	}
-	for _, subDir := range  dir {
+	for _, subDir := range dir {
 		if subDir.IsDir() {
 			meta, err := readAddonMeta(subDir.Name())
 			if err != nil {
@@ -128,12 +128,12 @@ func checkAffectedAddon(addonName string, needEnabledAddon map[string]bool) erro
 	return nil
 }
 
-func putInAllAddons (addons map[string]bool) error {
+func putInAllAddons(addons map[string]bool) error {
 	dir, err := ioutil.ReadDir("./addons")
 	if err != nil {
 		return err
 	}
-	for _, subDir := range  dir {
+	for _, subDir := range dir {
 		if subDir.IsDir() {
 			fmt.Println(subDir.Name())
 			addons[subDir.Name()] = true
@@ -143,7 +143,7 @@ func putInAllAddons (addons map[string]bool) error {
 }
 
 // these addons are depended by changed addons.
-func checkAddonDependency(addon string, changedAddon map[string]bool ) {
+func checkAddonDependency(addon string, changedAddon map[string]bool) {
 	meta, err := readAddonMeta(addon)
 	if err != nil {
 		panic(err)
@@ -169,7 +169,7 @@ func readAddonMeta(addonName string) (*AddonMeta, error) {
 
 // This func will enable addon by order rely-on addon's relationShip dependency,
 // this func is so dummy now that the order is written manually, we can generated a dependency DAG workflow in the furture.
-func enableAddonsByOrder (changedAddon map[string]bool)  error {
+func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
 	if changedAddon["fluxcd"] {
 		if err := enableOneAddon(fmt.Sprintf(dirPattern, "fluxcd")); err != nil {
@@ -219,7 +219,33 @@ func enableAddonsByOrder (changedAddon map[string]bool)  error {
 }
 
 func enableOneAddon(dir string) error {
-	cmd := exec.Command("vela","addon", "enable", dir)
+	cmd := exec.Command("vela", "addon", "enable", dir)
+	fmt.Println(cmd.String())
+	stdout, err := cmd.StdoutPipe()
+	cmd.Stderr = cmd.Stdout
+	if err != nil {
+		panic(err)
+	}
+	if err = cmd.Start(); err != nil {
+		return err
+	}
+	for {
+		tmp := make([]byte, 1024)
+		_, err := stdout.Read(tmp)
+		fmt.Print(string(tmp))
+		if err != nil {
+			break
+		}
+	}
+	if err = cmd.Wait(); err != nil {
+		checkAppStatus(dir)
+		return err
+	}
+	return nil
+}
+
+func disableOneAddon(addonName string) error {
+	cmd := exec.Command("vela", "addon", "disable", addonName)
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
@@ -242,36 +268,10 @@ func enableOneAddon(dir string) error {
 	}
 	return nil
 }
-
-func disableOneAddon (addonName string) error {
-	cmd := exec.Command("vela","addon", "disable", addonName)
-	fmt.Println(cmd.String())
-	stdout, err := cmd.StdoutPipe()
-	cmd.Stderr = cmd.Stdout
-	if err != nil {
-		panic(err)
-	}
-	if err = cmd.Start(); err != nil {
-		return err
-	}
-	for {
-		tmp := make([]byte, 1024)
-		_, err := stdout.Read(tmp)
-		fmt.Print(string(tmp))
-		if err != nil {
-			break
-		}
-	}
-	if err = cmd.Wait(); err != nil {
-		return err
-	}
-	return nil
-}
-
 
 // this func can be used for debug when addon enable failed.
-func checkAppStatus(addonName string)  {
-	cmd := exec.Command("vela","status", "-n", "vela-system", "addon-" + addonName)
+func checkAppStatus(addonName string) {
+	cmd := exec.Command("vela", "status", "-n", "vela-system", "addon-"+addonName)
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
@@ -296,7 +296,7 @@ func checkAppStatus(addonName string)  {
 
 // this func can be used for debug when addon enable failed.
 func checkPodStatus(namespace string) {
-	cmd := exec.Command("kubectl","get pods", "-n", namespace)
+	cmd := exec.Command("kubectl", "get pods", "-n", namespace)
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
