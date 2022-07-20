@@ -6,7 +6,7 @@ url: https://github.com/oam-dev/terraform-controller
 
 tags:
   - IaC
-  - cloud resource
+  - Cloud Resource
 
 deployTo:
   control_plane: true
