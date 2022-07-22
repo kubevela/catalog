@@ -83,7 +83,7 @@ if resources.err == _|_ {
 			}
 		}
 	}
-	podsWithCluster: [ for pods in collectedPods if pods.list != _|_ for podObj in pods.list {
+	podsWithCluster: [ for pods in collectedPods if pods.list != _|_ && pods.list != null for podObj in pods.list {
 		cluster: pods.cluster
 		obj:     podObj
 		workload: {

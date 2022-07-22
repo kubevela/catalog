@@ -1,0 +1,6 @@
+- sort: 100
+  jsonKey: selector
+  uiType: ComponentSelect
+- sort: 101
+  jsonKey: components
+  uiType: ComponentPatches
