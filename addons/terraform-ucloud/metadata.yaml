@@ -4,9 +4,8 @@ description: Kubernetes Terraform Controller Provider for UCloud
 url: https://github.com/oam-dev/terraform-controller
 
 tags:
-  - Terraform Controller Provider
-  - IaC
-  - Cloud Resources
+  - Terraform Provider
+  - Cloud Resource
 
 deployTo:
   control_plane: true

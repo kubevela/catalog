@@ -4,7 +4,8 @@ description: Kubernetes Terraform Controller for Azure
 icon: https://avatars3.githubusercontent.com/azure
 url: https://registry.terraform.io/providers/hashicorp/azurerm/latest
 tags:
-  - terraform provider
+  - Terraform Provider
+  - Cloud Resource
 
 deployTo:
   control_plane: true

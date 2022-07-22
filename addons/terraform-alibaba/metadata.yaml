@@ -5,7 +5,8 @@ icon: https://avatars3.githubusercontent.com/aliyun
 url: https://registry.terraform.io/providers/aliyun/alicloud/latest
 
 tags:
-  - terraform provider
+  - Terraform Provider
+  - Cloud Resource
 
 deployTo:
   control_plane: true

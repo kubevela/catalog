@@ -1,12 +1,12 @@
 name: terraform
-version: 1.0.9
+version: 1.0.10
 description: Terraform Controller is a Kubernetes Controller for Terraform.
 icon: https://static.kubevela.net/images/logos/terraform.png
 url: https://github.com/oam-dev/terraform-controller
 
 tags:
   - IaC
-  - cloud resource
+  - Cloud Resource
 
 deployTo:
   control_plane: true
