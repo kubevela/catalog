@@ -2,7 +2,7 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.kustomizeController
+		image:           parameter.images.kustomizeController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

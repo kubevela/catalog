@@ -2,7 +2,7 @@ output: {
 	type: "webservice"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.sourceController
+		image:           parameter.images.sourceController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

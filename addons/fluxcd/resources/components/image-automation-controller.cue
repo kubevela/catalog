@@ -2,7 +2,7 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.imageAutomationController
+		image:           parameter.images.imageAutomationController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

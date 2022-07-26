@@ -2,7 +2,7 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.imageReflectorController
+		image:           parameter.images.imageReflectorController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

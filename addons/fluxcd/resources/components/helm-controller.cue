@@ -2,7 +2,7 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.helmController
+		image:           parameter.images.helmController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
