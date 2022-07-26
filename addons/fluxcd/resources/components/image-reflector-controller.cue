@@ -2,11 +2,11 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           "fluxcd/image-reflector-controller:v0.18.0"
+		image:           parameter.imageReflectorController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "vela-system"
+				value: "flux-system"
 			},
 		]
 		livenessProbe: {
@@ -46,7 +46,7 @@ output: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "vela-system"
+				"app.kubernetes.io/instance": "flux-system"
 				"control-plane":              "controller"
 			}
 		},

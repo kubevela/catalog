@@ -1,5 +1,5 @@
 name: fluxcd
-version: 1.3.5
+version: 2.0.0
 description: Extended workload to do continuous and progressive delivery
 icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/flux/horizontal/color/flux-horizontal-color.png
 url: https://fluxcd.io
@@ -9,11 +9,5 @@ tags:
   - GitOps
   - Helm
 
-deployTo:
-  control_plane: true
-  runtime_cluster: true
-
-needNamespace:
-  - flux-system
-
-invisible: false
+system:
+  vela: ">=1.5.0"

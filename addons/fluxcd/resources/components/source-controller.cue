@@ -2,11 +2,11 @@ output: {
 	type: "webservice"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           "fluxcd/source-controller:v0.24.4"
+		image:           parameter.sourceController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "vela-system"
+				value: "flux-system"
 			},
 		]
 		livenessProbe: {
@@ -55,7 +55,7 @@ output: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "vela-system"
+				"app.kubernetes.io/instance": "flux-system"
 				"control-plane":              "controller"
 			}
 		},
@@ -68,7 +68,7 @@ output: {
 					"--log-encoding=json",
 					"--enable-leader-election",
 					"--storage-path=/data",
-					"--storage-adv-addr=http://source-controller.vela-system.svc:9090",
+					"--storage-adv-addr=http://source-controller.flux-system.svc:9090",
 				]
 			}
 		},

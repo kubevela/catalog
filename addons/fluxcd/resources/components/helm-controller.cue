@@ -2,11 +2,11 @@ output: {
 	type: "worker"
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           "fluxcd/helm-controller:v0.21.0"
+		image:           parameter.helmController
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "vela-system"
+				value: "flux-system"
 			},
 		]
 		livenessProbe: {
@@ -42,7 +42,7 @@ output: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "vela-system"
+				"app.kubernetes.io/instance": "flux-system"
 				"control-plane":              "controller"
 			}
 		},
