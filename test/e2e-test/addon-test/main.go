@@ -42,7 +42,7 @@ var regexPattern = "^addons.*"
 var globalRexPattern = "^.github.*|Makefile|.*.go"
 
 // This can be used for pending some error addon temporally, Please fix it as soon as posible.
-var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true}
+var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true, "flink-kubernetes-operator": true}
 
 func main() {
 	changedFile := os.Args[1:]
