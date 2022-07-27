@@ -5,7 +5,8 @@ icon: https://static.kubevela.net/images/logos/aws.png
 url: https://registry.terraform.io/providers/hashicorp/aws/latest
 
 tags:
-  - terraform provider
+  - Terraform Provider
+  - Cloud Resource
 
 deployTo:
   control_plane: true

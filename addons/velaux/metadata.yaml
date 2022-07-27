@@ -1,5 +1,5 @@
 name: velaux
-version: v1.5.0-alpha.3
+version: v1.5.0-beta.2
 description: KubeVela User Experience (UX). An extensible, application-oriented delivery and management Dashboard.
 icon: https://static.kubevela.net/images/logos/KubeVela%20-03.png
 url: https://kubevela.io
@@ -12,4 +12,4 @@ deployTo:
   runtimeCluster: false
 
 system:
-  vela: ">=v1.4.0-beta.2"
+  vela: ">=v1.4.0"

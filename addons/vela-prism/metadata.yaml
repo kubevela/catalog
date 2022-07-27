@@ -5,7 +5,7 @@ icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
 url: "https://github.com/kubevela/prism"
 
 tags:
-  - vela-prism
+  - Official
 
 deployTo:
   control_plane: true

@@ -1,11 +1,11 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: cloushell
+  name: cloudshell
   namespace: vela-system
 spec:
   components:
-    - name: cloushell-operator
+    - name: cloudshell-operator
       type: helm
       properties:
         repoType: helm
@@ -21,4 +21,4 @@ spec:
             image:
               registry: hub.kubevela.net
               repository: oamdev/cloudshell
-              tag: "v1.5.0-alpha.2"
+              tag: "v1.5.0-beta.2"

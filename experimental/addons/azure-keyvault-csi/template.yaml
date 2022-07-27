@@ -1,7 +1,6 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: ingress-controller
+  name: azure-keyvault-csi
   namespace: vela-system
 spec:
-  components:

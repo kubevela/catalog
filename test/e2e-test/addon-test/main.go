@@ -42,7 +42,7 @@ var regexPattern = "^addons.*"
 var globalRexPattern = "^.github.*|Makefile|.*.go"
 
 // This can be used for pending some error addon temporally, Please fix it as soon as posible.
-var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true}
+var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true, "flink-kubernetes-operator": true}
 
 func main() {
 	changedFile := os.Args[1:]
@@ -271,7 +271,7 @@ func disableOneAddon(addonName string) error {
 
 // this func can be used for debug when addon enable failed.
 func checkAppStatus(addonName string) {
-	cmd := exec.Command("vela", "status", "-n", "vela-system", "addon-"+addonName)
+	cmd := exec.Command("vela", "status", "-n", "vela-system", "addon-"+filepath.Base(addonName))
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
