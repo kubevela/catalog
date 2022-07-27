@@ -1,16 +1,18 @@
 package main
 
+_base: string
+
 helmController: {
 	name: "helm-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "/fluxcd/helm-controller:v0.22.0"
+		image:           _base + "fluxcd/helm-controller:v0.22.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "flux-system"
+				value: parameter.namespace
 			},
 		]
 		livenessProbe: {
@@ -46,8 +48,7 @@ helmController: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "flux-system"
-				"control-plane":              "controller"
+				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "helm-controller"

@@ -1,16 +1,18 @@
 package main
 
+_base: string
+
 sourceController: {
 	name: "source-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "/fluxcd/source-controller:v0.25.1"
+		image:           _base + "fluxcd/source-controller:v0.25.1"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "flux-system"
+				value: parameter.namespace
 			},
 		]
 		livenessProbe: {
@@ -59,8 +61,7 @@ sourceController: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "flux-system"
-				"control-plane":              "controller"
+				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "source-controller"
@@ -75,7 +76,7 @@ sourceController: {
 					"--log-encoding=json",
 					"--enable-leader-election",
 					"--storage-path=/data",
-					"--storage-adv-addr=http://source-controller.flux-system.svc:9090",
+					"--storage-adv-addr=http://source-controller." + parameter.namespace + ".svc:9090",
 				]
 			}
 		},

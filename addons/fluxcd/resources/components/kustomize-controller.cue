@@ -1,16 +1,18 @@
 package main
 
+_base: string
+
 kustomizeController: {
 	name: "kustomize-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "/fluxcd/kustomize-controller:v0.26.0"
+		image:           _base + "fluxcd/kustomize-controller:v0.26.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "flux-system"
+				value: parameter.namespace
 			},
 		]
 		livenessProbe: {
@@ -46,8 +48,7 @@ kustomizeController: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "flux-system"
-				"control-plane":              "controller"
+				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "kustomize-controller"

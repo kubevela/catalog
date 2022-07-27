@@ -1,16 +1,18 @@
 package main
 
+_base: string
+
 imageAutomationController: {
 	name: "image-automation-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "/fluxcd/image-automation-controller:v0.23.0"
+		image:           _base + "fluxcd/image-automation-controller:v0.23.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: "flux-system"
+				value: parameter.namespace
 			},
 		]
 		livenessProbe: {
@@ -46,8 +48,7 @@ imageAutomationController: {
 		{
 			type: "labels"
 			properties: {
-				"app.kubernetes.io/instance": "flux-system"
-				"control-plane":              "controller"
+				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "image-automation-controller"
