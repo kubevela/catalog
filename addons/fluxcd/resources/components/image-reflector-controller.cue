@@ -1,11 +1,12 @@
 package main
 
 _base: string
+_rules: [...]
 
 imageReflectorController: {
 	name: "image-reflector-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/image-reflector-controller:v0.19.0"
@@ -46,7 +47,9 @@ imageReflectorController: {
 		{
 			type: "service-account"
 			properties: {
-				name: "sa-image-reflector-controller"
+				name:       "sa-image-reflector-controller"
+				create:     true
+				privileges: _rules
 			}
 		},
 		{

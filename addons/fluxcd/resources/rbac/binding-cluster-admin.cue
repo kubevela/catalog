@@ -1,6 +1,6 @@
 package main
 
-binding_cluster_admin: {
+bindingClusterAdmin: {
 	apiVersion: "rbac.authorization.k8s.io/v1"
 	kind:       "ClusterRoleBinding"
 	metadata: {

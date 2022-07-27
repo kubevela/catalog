@@ -1,11 +1,12 @@
 package main
 
 _base: string
+_rules: [...]
 
 sourceController: {
 	name: "source-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/source-controller:v0.25.1"
@@ -55,7 +56,9 @@ sourceController: {
 		{
 			type: "service-account"
 			properties: {
-				name: "sa-source-controller"
+				name:       "sa-source-controller"
+				create:     true
+				privileges: _rules
 			}
 		},
 		{

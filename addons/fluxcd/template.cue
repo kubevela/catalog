@@ -2,6 +2,7 @@ package main
 
 import "strings"
 
+// controller images prefix
 if parameter.registry != "" && !strings.HasSuffix(parameter.registry, "/") {
 	_base: parameter.registry + "/"
 }
@@ -28,14 +29,7 @@ output: {
 				name: "fluxcd-rbac"
 				properties: objects: [
 					// auto-generated from original yaml files
-					binding_cluster_admin,
-					binding_crd_controller,
-					crd_controller,
-					rbac_helm_controller,
-					rbac_image_automation_controller,
-					rbac_image_reflector_controller,
-					rbac_kustomize_controller,
-					rbac_source_controller,
+					bindingClusterAdmin,
 				]
 			},
 			helmController,

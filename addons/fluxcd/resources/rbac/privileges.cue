@@ -1,12 +1,7 @@
 package main
 
-crd_controller: {
-	apiVersion: "rbac.authorization.k8s.io/v1"
-	kind:       "ClusterRole"
-	metadata: {
-		name: "cr-crd-controller"
-	}
-	rules: [{
+_rules: [
+	{
 		apiGroups: [
 			"source.toolkit.fluxcd.io",
 		]
@@ -16,6 +11,7 @@ crd_controller: {
 		verbs: [
 			"*",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"kustomize.toolkit.fluxcd.io",
@@ -26,6 +22,7 @@ crd_controller: {
 		verbs: [
 			"*",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"helm.toolkit.fluxcd.io",
@@ -36,6 +33,7 @@ crd_controller: {
 		verbs: [
 			"*",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"image.toolkit.fluxcd.io",
@@ -46,6 +44,7 @@ crd_controller: {
 		verbs: [
 			"*",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"",
@@ -61,6 +60,7 @@ crd_controller: {
 			"list",
 			"watch",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"",
@@ -72,6 +72,7 @@ crd_controller: {
 			"create",
 			"patch",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"",
@@ -88,6 +89,7 @@ crd_controller: {
 			"patch",
 			"delete",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"",
@@ -100,6 +102,7 @@ crd_controller: {
 			"update",
 			"patch",
 		]
+		scope: "cluster"
 	}, {
 		apiGroups: [
 			"coordination.k8s.io",
@@ -116,5 +119,6 @@ crd_controller: {
 			"patch",
 			"delete",
 		]
-	}]
-}
+		scope: "cluster"
+	},
+]

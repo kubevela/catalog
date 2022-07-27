@@ -1,11 +1,12 @@
 package main
 
 _base: string
+_rules: [...]
 
 kustomizeController: {
 	name: "kustomize-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/kustomize-controller:v0.26.0"
@@ -42,7 +43,9 @@ kustomizeController: {
 		{
 			type: "service-account"
 			properties: {
-				name: "sa-kustomize-controller"
+				name:       "sa-kustomize-controller"
+				create:     true
+				privileges: _rules
 			}
 		},
 		{

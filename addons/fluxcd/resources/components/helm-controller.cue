@@ -1,11 +1,12 @@
 package main
 
 _base: string
+_rules: [...]
 
 helmController: {
 	name: "helm-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/helm-controller:v0.22.0"
@@ -42,7 +43,9 @@ helmController: {
 		{
 			type: "service-account"
 			properties: {
-				name: "sa-helm-controller"
+				name:       "sa-helm-controller"
+				create:     true
+				privileges: _rules
 			}
 		},
 		{

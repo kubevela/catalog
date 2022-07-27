@@ -1,11 +1,12 @@
 package main
 
 _base: string
+_rules: [...]
 
 imageAutomationController: {
 	name: "image-automation-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/image-automation-controller:v0.23.0"
@@ -42,7 +43,9 @@ imageAutomationController: {
 		{
 			type: "service-account"
 			properties: {
-				name: "sa-image-automation-controller"
+				name:       "sa-image-automation-controller"
+				create:     true
+				privileges: _rules
 			}
 		},
 		{
