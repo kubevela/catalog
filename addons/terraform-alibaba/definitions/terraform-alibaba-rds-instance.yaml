@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: alibaba-rds-instance
+  namespace: vela-system
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Alibaba Cloud RDS object, only create instance.
+    # identifier of this cloud resource
+    cloud-resource/identifier: instance_id
+    # the console url of this cloud resource
+    cloud-resource/console-url: "https://rdsnext.console.aliyun.com/detail/{instance_id}/basicInfo?&region={REGION}"
+    definition.oam.dev/verified: "true"
+  labels:
+    type: terraform
+spec:
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      type: remote
+      path: alibaba/rds-instance

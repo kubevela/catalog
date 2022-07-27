@@ -1,0 +1,26 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  name: alibaba-rds-database
+  namespace: vela-system
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Alibaba Cloud RDS object
+    # identifier of this cloud resource
+    cloud-resource/identifier: database_id
+    # the console url of this cloud resource
+    cloud-resource/console-url: https://rdsnext.console.aliyun.com/detail/{instance_id}/dataManage/databaseList
+    # the outputs which are sensitive. Separate them by a comma if there are more than one
+    cloud-resource/sensitive-outputs: "database_password"
+    definition.oam.dev/verified: "true"
+  labels:
+    type: terraform
+spec:
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      type: remote
+      path: alibaba/rds-database
