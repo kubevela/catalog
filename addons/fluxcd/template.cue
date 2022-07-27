@@ -18,7 +18,7 @@ output: {
 			imageAutomationController,
 			imageReflectorController,
 			kustomizeController,
-			sourceController
+			sourceController,
 		]
 		policies: [
 			{
