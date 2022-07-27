@@ -79,12 +79,5 @@ sourceController: {
 				]
 			}
 		},
-		{
-			type: "annotations"
-			properties: {
-				"prometheus.io/port":   "8080"
-				"prometheus.io/scrape": "true"
-			}
-		},
 	]
 }

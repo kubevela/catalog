@@ -2,7 +2,7 @@ package main
 
 helmController: {
 	name: "helm-controller"
-	type: "worker"
+	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
@@ -62,13 +62,6 @@ helmController: {
 					"--log-encoding=json",
 					"--enable-leader-election",
 				]
-			}
-		},
-		{
-			type: "annotations"
-			properties: {
-				"prometheus.io/port":   "8080"
-				"prometheus.io/scrape": "true"
 			}
 		},
 	]
