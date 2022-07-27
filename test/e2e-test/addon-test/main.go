@@ -271,7 +271,7 @@ func disableOneAddon(addonName string) error {
 
 // this func can be used for debug when addon enable failed.
 func checkAppStatus(addonName string) {
-	cmd := exec.Command("vela", "status", "-n", "vela-system", "addon-"+addonName)
+	cmd := exec.Command("vela", "status", "-n", "vela-system", "addon-"+filepath.Base(addonName))
 	fmt.Println(cmd.String())
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
