@@ -1,8 +1,12 @@
-output: {
+package main
+
+imageReflectorController: {
+	name: "image-reflector-controller"
 	type: "worker"
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.images.imageReflectorController
+		image:           parameter.registry + "fluxcd/image-reflector-controller:v0.19.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

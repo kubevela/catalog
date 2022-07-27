@@ -1,3 +1,5 @@
+package main
+
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
@@ -12,22 +14,24 @@ output: {
 					metadata: name: "flux-system"
 				}]
 			},
+			helmController,
+			imageAutomationController,
+			imageReflectorController,
+			kustomizeController,
+			sourceController
 		]
 		policies: [
-			{
-				type: "shared-resource"
-				name: "namespace"
-				properties: rules: [{
-					selector: resourceTypes: ["Namespace"]
-				}]
-			},
 			{
 				type: "topology"
 				name: "deploy-fluxcd-ns"
 				properties: {
 					namespace: "flux-system"
-					// Deploy to all clusters.
-					clusterLabelSelector: {}
+					if parameter.clusters != _|_ {
+						clusters: parameter.clusters
+					}
+					if parameter.clusters == _|_ {
+						clusterLabelSelector: {}
+					}
 				}
 			},
 		]

@@ -1,8 +1,12 @@
-output: {
+package main
+
+sourceController: {
+	name: "source-controller"
 	type: "webservice"
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.images.sourceController
+		image:           parameter.registry + "fluxcd/source-controller:v0.25.1"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

@@ -10,4 +10,4 @@ tags:
   - Helm
 
 system:
-  vela: ">=1.5.0"
+  vela: ">=1.5.0-beta.4"

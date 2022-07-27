@@ -1,8 +1,12 @@
-output: {
+package main
+
+kustomizeController: {
+	name: "kustomize-controller"
 	type: "worker"
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.images.kustomizeController
+		image:           parameter.registry + "fluxcd/kustomize-controller:v0.26.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

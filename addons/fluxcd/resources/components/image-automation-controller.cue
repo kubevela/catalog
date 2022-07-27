@@ -1,8 +1,12 @@
-output: {
+package main
+
+imageAutomationController: {
+	name: "image-automation-controller"
 	type: "worker"
+	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.images.imageAutomationController
+		image:           parameter.registry + "fluxcd/image-automation-controller:v0.23.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
