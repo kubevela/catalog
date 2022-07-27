@@ -12,10 +12,10 @@ addons/obeservability              @zzxwill @Somefive
 addons/ocm-cluster-manager         @Somefive
 
 # Owner of addon terraform
-addons/terraform                   @zzxwill @chivalryq
-addons/terraform-alibaba           @zzxwill @chivalryq
-addons/terraform-aws               @zzxwill @chivalryq
-addons/terraform-azure             @zzxwill @chivalryq
+addons/terraform                   @chivalryq
+addons/terraform-alibaba           @chivalryq
+addons/terraform-aws               @chivalryq
+addons/terraform-azure             @chivalryq
 
 # Owner of health addon velaux
 addons/velaux                      @barnettZQG
