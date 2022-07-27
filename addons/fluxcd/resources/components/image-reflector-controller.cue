@@ -5,7 +5,7 @@ _base: string
 imageReflectorController: {
 	name: "image-reflector-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns"]
+	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/image-reflector-controller:v0.19.0"

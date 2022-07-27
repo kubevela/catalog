@@ -5,7 +5,7 @@ _base: string
 sourceController: {
 	name: "source-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns"]
+	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/source-controller:v0.25.1"

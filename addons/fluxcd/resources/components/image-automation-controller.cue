@@ -5,7 +5,7 @@ _base: string
 imageAutomationController: {
 	name: "image-automation-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns"]
+	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/image-automation-controller:v0.23.0"

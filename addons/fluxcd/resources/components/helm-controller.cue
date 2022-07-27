@@ -5,7 +5,7 @@ _base: string
 helmController: {
 	name: "helm-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns"]
+	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/helm-controller:v0.22.0"

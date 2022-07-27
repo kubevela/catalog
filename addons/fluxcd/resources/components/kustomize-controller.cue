@@ -5,7 +5,7 @@ _base: string
 kustomizeController: {
 	name: "kustomize-controller"
 	type: "webservice"
-	dependsOn: ["fluxcd-ns"]
+	dependsOn: ["fluxcd-ns", "fluxcd-rbac"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
 		image:           _base + "fluxcd/kustomize-controller:v0.26.0"
