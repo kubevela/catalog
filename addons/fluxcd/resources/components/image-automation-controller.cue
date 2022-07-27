@@ -6,7 +6,7 @@ imageAutomationController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "fluxcd/image-automation-controller:v0.23.0"
+		image:           parameter.registry + "/fluxcd/image-automation-controller:v0.23.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

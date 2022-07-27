@@ -6,7 +6,7 @@ helmController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "fluxcd/helm-controller:v0.22.0"
+		image:           parameter.registry + "/fluxcd/helm-controller:v0.22.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

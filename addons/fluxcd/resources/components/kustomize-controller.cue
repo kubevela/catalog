@@ -6,7 +6,7 @@ kustomizeController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           parameter.registry + "fluxcd/kustomize-controller:v0.26.0"
+		image:           parameter.registry + "/fluxcd/kustomize-controller:v0.26.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
