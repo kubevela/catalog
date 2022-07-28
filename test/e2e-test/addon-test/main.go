@@ -42,7 +42,7 @@ var regexPattern = "^addons.*"
 var globalRexPattern = "^.github.*|Makefile|.*.go"
 
 // This can be used for pending some error addon temporally, Please fix it as soon as posible.
-var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true, "flink-kubernetes-operator": true}
+var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true, "flink-kubernetes-operator": true, "prometheus-server": true}
 
 func main() {
 	changedFile := os.Args[1:]
@@ -171,29 +171,14 @@ func readAddonMeta(addonName string) (*AddonMeta, error) {
 // this func is so dummy now that the order is written manually, we can generated a dependency DAG workflow in the furture.
 func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
-	if changedAddon["fluxcd"] {
-		if err := enableOneAddon(fmt.Sprintf(dirPattern, "fluxcd")); err != nil {
-			return err
+	// TODO: make topology sort to auto sort the order of enable
+	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager", "vela-prism", "grafana-definitions", "grafana"} {
+		if changedAddon[addonName] {
+			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
+				return err
+			}
+			changedAddon[addonName] = false
 		}
-		changedAddon["fluxcd"] = false
-	}
-	if changedAddon["terraform"] {
-		if err := enableOneAddon(fmt.Sprintf(dirPattern, "terraform")); err != nil {
-			return err
-		}
-		changedAddon["terraform"] = false
-	}
-	if changedAddon["velaux"] {
-		if err := enableOneAddon(fmt.Sprintf(dirPattern, "velaux")); err != nil {
-			return err
-		}
-		changedAddon["velaux"] = false
-	}
-	if changedAddon["cert-manager"] {
-		if err := enableOneAddon(fmt.Sprintf(dirPattern, "cert-manager")); err != nil {
-			return err
-		}
-		changedAddon["cert-manager"] = false
 	}
 	for s, b := range changedAddon {
 		if b && !pendingAddon[s] {
