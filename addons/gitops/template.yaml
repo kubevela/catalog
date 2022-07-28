@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: gitops
+  namespace: ""
+spec:
+  components:
+    - name:
+      type:
+      properties:
+        type:
+        git:
+        image:
+

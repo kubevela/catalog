@@ -1,0 +1,23 @@
+name: gitops
+version: 1.0.0
+description: "KubeVela addon for implementing GitOps for continuous deployment using either fluxcd or argocd"
+icon: ""
+url: ""
+
+tags:
+  - gitops
+  - fluxcd
+  - argocd
+
+deployTo:
+  control_plane: # true
+  runtimeCluster: # true
+
+needNamespace:
+  - # it will need a namespace, but this will be dependent on which one is installed, whether argocd or fluxcd
+
+system:
+  vela: ">=v1.4.0"
+  kubernetes: ">=1.19.0-0"
+
+invisible: true
