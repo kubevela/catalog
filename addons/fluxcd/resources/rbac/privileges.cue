@@ -12,7 +12,8 @@ _rules: [
 			"*",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"kustomize.toolkit.fluxcd.io",
 		]
@@ -23,7 +24,8 @@ _rules: [
 			"*",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"helm.toolkit.fluxcd.io",
 		]
@@ -34,7 +36,8 @@ _rules: [
 			"*",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"image.toolkit.fluxcd.io",
 		]
@@ -45,7 +48,8 @@ _rules: [
 			"*",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"",
 		]
@@ -61,7 +65,8 @@ _rules: [
 			"watch",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"",
 		]
@@ -73,7 +78,8 @@ _rules: [
 			"patch",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"",
 		]
@@ -90,7 +96,8 @@ _rules: [
 			"delete",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"",
 		]
@@ -103,7 +110,8 @@ _rules: [
 			"patch",
 		]
 		scope: "cluster"
-	}, {
+	},
+	{
 		apiGroups: [
 			"coordination.k8s.io",
 		]
