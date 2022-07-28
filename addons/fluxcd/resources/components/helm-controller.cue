@@ -5,7 +5,8 @@ _rules: [...]
 controllerArgs: [...]
 
 helmController: {
-	// See source-controller.cue for details why changed the name.
+	// Change deployment name (different from v1.3.5) to make uograde possible.
+	// Refer to #429 for details.
 	name: "fluxcd-helm-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]

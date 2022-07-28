@@ -5,7 +5,8 @@ _rules: [...]
 controllerArgs: [...]
 
 imageReflectorController: {
-	// See source-controller.cue for details why changed the name.
+	// Change deployment name (different from v1.3.5) to make uograde possible.
+	// Refer to #429 for details.
 	name: "fluxcd-image-reflector-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
