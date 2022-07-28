@@ -1,4 +1,4 @@
 parameter: {
-		tool: *"fluxcd" | "argocd"
+		agent: *"fluxcd" | "argocd"
 		image: string
 	}
