@@ -53,15 +53,10 @@ helmController: {
 		{
 			type: "labels"
 			properties: {
-<<<<<<< HEAD
 				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "helm-controller"
-=======
-				"app.kubernetes.io/instance": "flux-system"
-				"control-plane":              "controller"
->>>>>>> 56fbdca (Feat: convert controllers to vela native components)
 			}
 		},
 		{

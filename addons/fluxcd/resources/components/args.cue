@@ -11,10 +11,11 @@ controllerArgs: [
 	//     they will wait for the leader to step down before they are ready.
 	//
 	//     Since the new pods are waiting, they are not ready. The controller will not 
-    //     gc the leader because the new ones are not ready.
+    //     gc the leader.
 	//
 	//     So the new pods will keep waiting for the previous leader to step down,
-	//     but the previous leader will not step down (being gc'ed) because the new pods are not ready.
+	//     but the previous leader will not step down (being gc'ed) 
+    //     because the new pods are not ready.
 	//
 	//     This is a deadlock.
 	//
