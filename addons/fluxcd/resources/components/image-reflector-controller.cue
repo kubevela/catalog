@@ -2,9 +2,11 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
 
 imageReflectorController: {
-	name: "image-reflector-controller"
+	// See source-controller.cue for details why changed the name.
+	name: "fluxcd-image-reflector-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
@@ -64,12 +66,7 @@ imageReflectorController: {
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
-				]
+				args: controllerArgs
 			}
 		},
 	]

@@ -2,14 +2,33 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
+_sourceControllerName: "fluxcd-source-controller"
 
 sourceController: {
-	name: "source-controller"
+	// Change deployment name to make uograde possible.
+	//
+	// Reason:
+	//     If we don't change the name, the upgrade *seems* fine, everything works,
+	//     but the actual deployment is not upgraded, which is not what we want.
+	//
+	//     Background:
+	//         The app.oam.dev/component is immutable, we cannot edit it.
+	//
+	//     The original fluxcd is in yaml, but the new ones are using webservice.
+	//     It will try to edit app.oam.dev/component. 
+	//     **This will fail.**
+	//
+	//     Instead, we change a name, to recreate pod. So that do don't modify the label.
+	//
+	//     This name-changing is only required once. After the user upgrades to webserive,
+	//     later upgrades do *not* need to change the name.
+	name: _sourceControllerName
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/source-controller:v0.25.1"
+		image:           _base + "fluxcd/source-controller:v0.25.2"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -73,13 +92,9 @@ sourceController: {
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
+				args: controllerArgs + [
 					"--storage-path=/data",
-					"--storage-adv-addr=http://source-controller." + parameter.namespace + ".svc:9090",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + parameter.namespace + ".svc:9090",
 				]
 			}
 		},

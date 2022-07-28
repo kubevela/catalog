@@ -2,9 +2,11 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
 
 kustomizeController: {
-	name: "kustomize-controller"
+	// See source-controller.cue for details why changed the name.
+	name: "fluxcd-kustomize-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
@@ -60,12 +62,7 @@ kustomizeController: {
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
-				]
+				args: controllerArgs
 			}
 		},
 	]

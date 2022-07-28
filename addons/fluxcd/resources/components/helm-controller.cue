@@ -2,9 +2,11 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
 
 helmController: {
-	name: "helm-controller"
+	// See source-controller.cue for details why changed the name.
+	name: "fluxcd-helm-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
@@ -51,21 +53,21 @@ helmController: {
 		{
 			type: "labels"
 			properties: {
+<<<<<<< HEAD
 				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "helm-controller"
+=======
+				"app.kubernetes.io/instance": "flux-system"
+				"control-plane":              "controller"
+>>>>>>> 56fbdca (Feat: convert controllers to vela native components)
 			}
 		},
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
-				]
+				args: controllerArgs
 			}
 		},
 	]
