@@ -6,23 +6,8 @@ controllerArgs: [...]
 _sourceControllerName: "fluxcd-source-controller"
 
 sourceController: {
-	// Change deployment name to make uograde possible.
-	//
-	// Reason:
-	//     If we don't change the name, the upgrade *seems* fine, everything works,
-	//     but the actual deployment is not upgraded, which is not what we want.
-	//
-	//     Background:
-	//         The app.oam.dev/component is immutable, we cannot edit it.
-	//
-	//     The original fluxcd is in yaml, but the new ones are using webservice.
-	//     It will try to edit app.oam.dev/component. 
-	//     **This will fail.**
-	//
-	//     Instead, we change a name, to recreate pod. So that do don't modify the label.
-	//
-	//     This name-changing is only required once. After the user upgrades to webserive,
-	//     later upgrades do *not* need to change the name.
+	// Change deployment name (different from v1.3.5) to make uograde possible.
+	// Refer to #429 for details.
 	name: _sourceControllerName
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
