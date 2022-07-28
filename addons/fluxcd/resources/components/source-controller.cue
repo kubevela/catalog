@@ -6,8 +6,7 @@ controllerArgs: [...]
 _sourceControllerName: "fluxcd-source-controller"
 
 sourceController: {
-	// Change deployment name (different from v1.3.5) to make uograde possible.
-	// Refer to #429 for details.
+	// About this name, refer to #429 for details.
 	name: _sourceControllerName
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
