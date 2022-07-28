@@ -2,9 +2,12 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
+_sourceControllerName: "fluxcd-source-controller"
 
 sourceController: {
-	name: "source-controller"
+	// About this name, refer to #429 for details.
+	name: _sourceControllerName
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
@@ -73,13 +76,9 @@ sourceController: {
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
+				args: controllerArgs + [
 					"--storage-path=/data",
-					"--storage-adv-addr=http://source-controller." + parameter.namespace + ".svc:9090",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + parameter.namespace + ".svc:9090",
 				]
 			}
 		},

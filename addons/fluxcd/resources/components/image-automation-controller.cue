@@ -2,9 +2,11 @@ package main
 
 _base: string
 _rules: [...]
+controllerArgs: [...]
 
 imageAutomationController: {
-	name: "image-automation-controller"
+	// About this name, refer to #429 for details.
+	name: "fluxcd-image-automation-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
@@ -60,12 +62,7 @@ imageAutomationController: {
 		{
 			type: "command"
 			properties: {
-				args: [
-					"--watch-all-namespaces",
-					"--log-level=debug",
-					"--log-encoding=json",
-					"--enable-leader-election",
-				]
+				args: controllerArgs
 			}
 		},
 	]
