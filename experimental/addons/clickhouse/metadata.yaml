@@ -1,0 +1,8 @@
+description: provides ClickHouse instance by clickhouse-operator.
+icon: "https://raw.githubusercontent.com/ClickHouse/ClickHouse/master/website/images/logo-400x240.png"
+invisible: false
+name: clickhouse
+version: 1.0.0
+url: https://clickhouse.com/
+tags:
+  - ClickHouse
