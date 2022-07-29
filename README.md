@@ -12,6 +12,9 @@ Addons here contain [verified](./addons) addons which have been tested for a lon
 
 
 * [Experimental Addons](/experimental/addons): some addons which were not well verified will be merged into the experimental addons directory, the addon will also be synced to the OSS bucket( https://addons.kubevela.net in path `experimental`) automatically. 
+  ```
+  vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
+  ```
 
 ![image](https://user-images.githubusercontent.com/2173670/160373204-80e74587-606c-4522-9802-11d4f572450b.png)
 
