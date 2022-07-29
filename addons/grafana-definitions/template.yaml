@@ -1,0 +1,7 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: grafana-definitions
+  namespace: vela-system
+spec:
+  components: []
