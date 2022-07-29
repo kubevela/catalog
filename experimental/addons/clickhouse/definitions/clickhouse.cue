@@ -1,5 +1,7 @@
 "clickhouse": {
-	annotations: {}
+	annotations: {
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/clickhouse/ckapp.yaml"
+	}
 	attributes: workload: {
 		type: "autodetects.core.oam.dev"
 	}
