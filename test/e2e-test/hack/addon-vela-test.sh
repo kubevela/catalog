@@ -34,12 +34,8 @@ done
 
 ## test ns-dependencies-addon install and unInstall
 # flink-kubernetes-operator
-kubectl create ns flink
-declare -x DEFAULT_VELA_NS=flink
 vela addon enable flink-kubernetes-operator
 vela addon disable flink-kubernetes-operator
-declare -x DEFAULT_VELA_NS=vela-system
-kubectl delete ns flink
 
 # mysql-operator addon
 kubectl create ns mysql-operator
