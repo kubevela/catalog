@@ -1,13 +1,16 @@
 package main
 
+const: {
+	// +usage=The name of the addon application
+	name: "addon-prometheus-server"
+}
+
 parameter: {
 
 	// global parameters
 
 	// +usage=The namespace of the prometheus-server to be installed
 	namespace: *"o11y-system" | string
-	// +usage=The name of the addon application
-	name: "addon-prometheus-server"
 	// +usage=The clusters to install
 	clusters?: [...string]
 
@@ -24,9 +27,11 @@ parameter: {
 	// +usage=Specify the service type for expose prometheus server. If empty, it will be not exposed.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | ""
 	// +usage=Specify the storage size to use. If empty, emptyDir will be used. Otherwise pvc will be used.
-	storage: *"" | string
+	storage?: =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
+	// +usage=Specify the storage class to use.
+	storageClassName?: string
 	// +usage=If specified, the prometheus server will mount the config map as the additional config.
-	customConfig: *"" | string
+	customConfig?: string
 	// +usage=If specified, thanos sidecar will be attached and ports will be exposed
 	thanos: *false | bool
 }

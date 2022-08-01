@@ -2,7 +2,7 @@ package main
 
 ns: {
 	type: "k8s-objects"
-	name: parameter.name + "-ns"
+	name: const.name + "-ns"
 	properties: objects: [{
 		apiVersion: "v1"
 		kind:       "Namespace"
@@ -20,7 +20,7 @@ dashboardComponents: [
 dashboardComponentNames: [ for comp in dashboardComponents {comp.name}]
 
 comps: [ns, grafanaAccess, grafana, {
-	if parameter.storage != "" {grafanaStorage}
+	if parameter.storage != _|_ {grafanaStorage}
 }]
 
 output: {

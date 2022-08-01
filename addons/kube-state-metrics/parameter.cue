@@ -1,13 +1,16 @@
 package main
 
+const: {
+	// +usage=The name of the addon application
+	name: "addon-kube-state-metrics"
+}
+
 parameter: {
 
 	// global parameters
 
 	// +usage=The namespace of the kube-state-metrics to be installed
 	namespace: *"o11y-system" | string
-	// +usage=The name of the addon application
-	name: "addon-kube-state-metrics"
 	// +usage=The clusters to install
 	clusters?: [...string]
 

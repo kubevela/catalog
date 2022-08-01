@@ -19,13 +19,13 @@ prometheusServer: {
 			name: "http"
 			port: 9090
 		}]
-		if parameter["storage"] == "" {
+		if parameter.storage == _|_ {
 			volumeMounts: emptyDir: [{
 				name:      "storage-volume"
 				mountPath: "/data"
 			}]
 		}
-		if parameter["storage"] != "" {
+		if parameter.storage != _|_ {
 			volumeMounts: pvc: [{
 				name:      "storage-volume"
 				mountPath: "/data"
@@ -37,7 +37,7 @@ prometheusServer: {
 			cmName:    "prometheus-server"
 			mountPath: "/etc/bootconfig"
 		}, {
-			if parameter.customConfig != "" {
+			if parameter.customConfig != _|_ {
 				name:      "custom-config-volume"
 				cmName:    parameter.customConfig
 				mountPath: "/etc/custom"
@@ -81,7 +81,7 @@ prometheusServer: {
 			}]
 		}
 	}, {
-		if parameter.customConfig != "" {
+		if parameter.customConfig != _|_ {
 			type: "sidecar"
 			properties: {
 				name:  "prometheus-server-configmap-reload"
