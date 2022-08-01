@@ -15,7 +15,5 @@ dependencies:
   - name: fluxcd
   - name: cert-manager
 
-needNamespace:
-  - vela-system
 
 invisible: false

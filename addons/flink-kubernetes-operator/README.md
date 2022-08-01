@@ -32,10 +32,10 @@ vela addon disable fluxcd
 - Firstly, check the flink-kubernetes-operator (and the fluxcd and cert-manager we need to deploy by helm) running status
 ```shell
 vela ls -A | grep cert-
-vela-system     addon-cert-manager              vela-system           helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:14:35 +0800 CST
+vela-system     addon-cert-manager              cert-manager           helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:14:35 +0800 CST
 vela ls -A | grep flink
 vela-system     addon-flink-kubernetes-operator flink-namespace         raw                             running healthy                                                               2022-07-30 17:36:36 +0800 CST
-vela-system     └─                              vela-system          helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:36:36 +0800 CST
+vela-system     └─                              flink-operator          helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:36:36 +0800 CST
 
 
 ```
