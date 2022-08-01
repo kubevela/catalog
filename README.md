@@ -22,6 +22,10 @@ Addons here contain [verified](./addons) addons which have been tested for a lon
 
 You can enable these addons by Vela cli or VelaUX. Please refer to [doc](https://kubevela.net/docs/reference/addons/overview) for more infos.
 
+## History addon versions
+
+Since any changes about one addon will upgrade the version, this repo's source files always are the latest version of addons, but you can find all other history versions' download url of an addon in `https://addons.kubevela.net/index.yaml`. Then you can download and enable them if you want.
+
 ## Contribution
 
 Community members are welcome to contribute this repo by putting their customize vela addons here.
