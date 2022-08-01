@@ -16,37 +16,37 @@ output: {
                                 }]
                         },
                         {
-        name: "flink-operator-helm"
-        type: "helm"
-        dependsOn: ["flink-operator-ns"]
-        type: "helm"
-        properties: {
-                repoType: "helm"
-                url:      "https://downloads.apache.org/flink/flink-kubernetes-operator-1.1.0/"
-                chart:    "flink-kubernetes-operator"
-                targetNamespace: parameter["namespace"]
-                version:  "1.1.0"
-                values: {
+                            name: "flink-operator-helm"
+                            type: "helm"
+                            dependsOn: ["flink-operator-ns"]
+                            type: "helm"
+                            properties: {
+                                    repoType: "helm"
+                                    url:      "https://downloads.apache.org/flink/flink-kubernetes-operator-1.1.0/"
+                                    chart:    "flink-kubernetes-operator"
+                                    targetNamespace: parameter["namespace"]
+                                    version:  "1.1.0"
+                                    values: {
 
-                        webhook: {
-                                create: parameter["webhook.create"]
-                                }
+                                            webhook: {
+                                                    create: parameter["webhook.create"]
+                                                    }
 
-                        image: {
-                                repository: parameter["image.repository"]
-                                tag: parameter["image.tag"]
-                        }
+                                            image: {
+                                                    repository: parameter["image.repository"]
+                                                    tag: parameter["image.tag"]
+                                            }
 
-                        jobServiceAccount: {
-                                create: parameter["jobServiceAccount.create"]
-                        }
+                                            jobServiceAccount: {
+                                                    create: parameter["jobServiceAccount.create"]
+                                            }
 
-                        operatorServiceAccount: {
-                        name: "flink-kubernetes-operator"
-                        }
-                }
-        }
-        },
+                                            operatorServiceAccount: {
+                                            name: "flink-kubernetes-operator"
+                                            }
+                                    }
+                            }
+                            },
                 ]
                 policies: [
                         {

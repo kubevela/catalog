@@ -14,3 +14,6 @@ deployTo:
 dependencies:
   - name: fluxcd
 
+system:
+  vela: ">=1.5.0-beta.3"
+
