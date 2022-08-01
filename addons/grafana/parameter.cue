@@ -27,7 +27,7 @@ parameter: {
 	// +usage=Specify the service type for expose prometheus server. Default to be ClusterIP.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Specify the storage size to use. If empty, emptyDir will be used. Otherwise pvc will be used.
-	storage?: string
+	storage?: =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
 	// +usage=Specify the storage class to use.
 	storageClassName?: string
 	// +usage=Specify the admin user for grafana
