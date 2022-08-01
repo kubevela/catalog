@@ -1,6 +1,6 @@
 parameter: {
         // +usage=Specify the target namespace for installing flink-operator
-        "tgtNs": * "flink-operator" | string
+        "tgtNs": *"vela-system" | string
         // +usage=Specify if create  the webhook or not
         "webhook.create": *false | bool
         // +usage=Specify the image repository

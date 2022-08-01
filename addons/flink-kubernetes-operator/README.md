@@ -13,8 +13,6 @@ A Kubernetes operator for Apache Flink(https://github.com/apache/flink-kubernete
 #The cert-manager can also install with pure k8s-object like this:
 #kubectl create -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml
 
-kubectl create ns flink-operator
-kubectl create ns cert-manager
 vela addon enable fluxcd
 vela addon enable cert-manager
 vela addon enable flink-kubernetes-operator
@@ -27,8 +25,6 @@ vela addon enable flink-kubernetes-operator
 vela addon disable flink-kubernetes-operator
 vela addon disable cert-manager
 vela addon disable fluxcd
-kubectl delete ns flink-operator
-kubectl delete ns cert-manager
 ```
 
 ## To check the flink-kubernetes-operator running status
@@ -36,10 +32,10 @@ kubectl delete ns cert-manager
 - Firstly, check the flink-kubernetes-operator (and the fluxcd and cert-manager we need to deploy by helm) running status
 ```shell
 vela ls -A | grep cert-
-vela-system     addon-cert-manager              cert-manager            helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:14:35 +0800 CST
+vela-system     addon-cert-manager              vela-system           helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:14:35 +0800 CST
 vela ls -A | grep flink
 vela-system     addon-flink-kubernetes-operator flink-namespace         raw                             running healthy                                                               2022-07-30 17:36:36 +0800 CST
-vela-system     └─                              flink-operator          helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:36:36 +0800 CST
+vela-system     └─                              vela-system          helm                            running healthy Fetch repository successfully, Create helm release            2022-07-30 17:36:36 +0800 CST
 
 
 ```

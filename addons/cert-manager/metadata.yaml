@@ -14,3 +14,5 @@ deployTo:
 dependencies:
   - name: fluxcd
 
+needNamespace:
+  - vela-system

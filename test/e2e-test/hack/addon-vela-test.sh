@@ -3,7 +3,6 @@
 # test dependencies-addon install
 vela addon enable fluxcd
 vela addon enable terraform
-vela addon enable cert-manager
 vela addon enable velaux
 
 
@@ -34,8 +33,10 @@ done
 
 ## test ns-dependencies-addon install and unInstall
 # flink-kubernetes-operator
+vela addon enable  cert-manager
 vela addon enable flink-kubernetes-operator
 vela addon disable flink-kubernetes-operator
+vela addon disable cert-manager
 
 # mysql-operator addon
 kubectl create ns mysql-operator
@@ -70,7 +71,6 @@ for i in $(seq 1 1 5)
 do
   echo "the $i time retry"
   vela addon disable velaux
-  vela addon disable cert-manager
   vela addon disable terraform
   vela addon disable fluxcd
   sleep 5s

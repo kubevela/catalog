@@ -2,5 +2,5 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: flink-kubernetes-operator
-  namespace: flink
+  namespace: vela-system
 spec:

@@ -1,12 +1,11 @@
 name: flink-kubernetes-operator
-version: 0.1.0
+version: 1.1.0
 description: A Kubernetes operator for Apache Flink
 icon: https://flink.apache.org/img/logo/png/500/flink_squirrel_500.png
 url: https://github.com/apache/flink-kubernetes-operator
 
 tags:
   - apache/flink-kubernetes-operator
-  - 2c166e3
 
 deployTo:
   control_plane: true
@@ -17,6 +16,6 @@ dependencies:
   - name: cert-manager
 
 needNamespace:
-  - flink
+  - vela-system
 
 invisible: false
