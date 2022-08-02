@@ -29,7 +29,7 @@ jobs:
 
   Addon-test:
     name: Addon-test
-    runs-on: ubuntu-latest
+    runs-on: aliyun
     needs: detect-noop
     if: needs.detect-noop.outputs.noop != 'true'
 
