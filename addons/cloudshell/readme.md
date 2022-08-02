@@ -18,3 +18,4 @@ This addon is based on [cloudtty](https://github.com/cloudtty/cloudtty) project.
 | CloudShell Addon| Cloud Shell Operator |         Vela CLI               |
 |-----------------|:--------------------:|:------------------------------:|
 | 0.0.1           |       v0.2.0        |       v1.5.0-beta.2             |
+| 0.0.2           |       v0.2.0        |       v1.5.0-beta.5             |
