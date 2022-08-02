@@ -10,12 +10,24 @@ if parameter.registry == "" || strings.HasSuffix(parameter.registry, "/") {
 	_base: parameter.registry
 }
 
+gitOpsController: [...] | []
+
+kustomizeResourcesCRD: [...] | []
+
+if parameter.onlyHelmComponents == false {
+	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
+}
+
+if parameter.onlyHelmComponents == false {
+	kustomizeResourcesCRD: [imagePolicyCRD, imageRepoCRD, imageUpdateCRD, kustomizeCRD]
+}
+
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	spec: {
 		components: [
-			{
+				{
 				type: "k8s-objects"
 				name: "fluxcd-ns"
 				properties: objects: [{
@@ -32,12 +44,21 @@ output: {
 					bindingClusterAdmin,
 				]
 			},
+			{
+				type: "k8s-objects"
+				name: "fluxcd-CRD"
+				properties: objects: [
+							// auto-generated from original yaml files
+							bucketCRD,
+							gitRepoCRD,
+							helmChartCRD,
+							helmReleaseCRD,
+							helmRepoCRD,
+				] + kustomizeResourcesCRD
+			},
 			helmController,
-			imageAutomationController,
-			imageReflectorController,
-			kustomizeController,
 			sourceController,
-		]
+		] + gitOpsController
 		policies: [
 			{
 				type: "shared-resource"
@@ -57,6 +78,30 @@ output: {
 					if parameter.clusters == _|_ {
 						clusterLabelSelector: {}
 					}
+				}
+			},
+			{
+				type: "garbage-collect"
+				name: "not-gc-CRD"
+				properties: {
+					rules: [{
+						selector: resourceTypes: ["CustomResourceDefinition"]
+						strategy: "never"
+					},
+					]
+				}
+			},
+			{
+				type: "apply-once"
+				name: "not-keep-CRD"
+				properties: {
+					rules: [{
+						selector: resourceTypes: ["CustomResourceDefinition"]
+						strategy: {
+							path: ["*"]
+						}
+					},
+					]
 				}
 			},
 		]
