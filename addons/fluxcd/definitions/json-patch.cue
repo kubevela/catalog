@@ -1,4 +1,4 @@
-"json-patch": {
+"kustomize-json-patch": {
 	attributes: {
 		podDisruptive: false
 	}
