@@ -27,48 +27,46 @@ output: {
                                     targetNamespace: parameter["namespace"]
                                     version:  "1.1.0"
                                     values: {
-
                                             webhook: {
-                                                    create: parameter["webhook.create"]
-                                                    }
+                                                create: parameter["webhook.create"]
+                                            }
 
                                             image: {
-                                                    repository: parameter["image.repository"]
-                                                    tag: parameter["image.tag"]
+                                                repository: parameter["image.repository"]
+                                                tag: parameter["image.tag"]
                                             }
 
                                             jobServiceAccount: {
-                                                    create: parameter["jobServiceAccount.create"]
+                                                create: parameter["jobServiceAccount.create"]
                                             }
-
                                             operatorServiceAccount: {
-                                            name: "flink-kubernetes-operator"
+                                                name: "flink-kubernetes-operator"
                                             }
                                     }
                             }
-                            },
+                        },
                 ]
                 policies: [
-                        {
-                                type: "shared-resource"
-                                name: "namespace"
-                                properties: rules: [{
-                                        selector: resourceTypes: ["Namespace"]
-                                }]
-                        },
-                        {
-                                type: "topology"
-                                name: "deploy-cert-manager-ns"
-                                properties: {
-                                        namespace: parameter.namespace
-                                        if parameter.clusters != _|_ {
-                                                clusters: parameter.clusters
-                                        }
-                                        if parameter.clusters == _|_ {
-                                                clusterLabelSelector: {}
-                                        }
-                                }
-                        },
+                    {
+                            type: "shared-resource"
+                            name: "namespace"
+                            properties: rules: [{
+                                    selector: resourceTypes: ["Namespace"]
+                            }]
+                    },
+                    {
+                            type: "topology"
+                            name: "deploy-cert-manager-ns"
+                            properties: {
+                                    namespace: parameter.namespace
+                                    if parameter.clusters != _|_ {
+                                            clusters: parameter.clusters
+                                    }
+                                    if parameter.clusters == _|_ {
+                                            clusterLabelSelector: {}
+                                    }
+                            }
+                    },
                 ]
         }
 }
