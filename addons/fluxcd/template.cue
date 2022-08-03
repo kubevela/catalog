@@ -24,13 +24,16 @@ gitOpsController: [...] | []
 
 kustomizeResourcesCRD: [...] | []
 
-if parameter.onlyHelmComponents == false {
+if parameter.onlyHelmComponents != _|_ &&  parameter.onlyHelmComponents == false {
 	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
-}
-
-if parameter.onlyHelmComponents == false {
 	kustomizeResourcesCRD: [imagePolicyCRD, imageRepoCRD, imageUpdateCRD, kustomizeCRD]
 }
+
+if parameter.onlyHelmComponents == _|_  {
+	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
+	kustomizeResourcesCRD: [imagePolicyCRD, imageRepoCRD, imageUpdateCRD, kustomizeCRD]
+}
+
 
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
