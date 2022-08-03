@@ -24,7 +24,7 @@ output: {
                                         url:      "https://charts.jetstack.io"
                                         chart:    "cert-manager"
                                         targetNamespace: parameter.namespace
-                                        version:  "v1.7.1"
+                                        version:  "v1.9.1"
                                         values: {
                                                 installCRDs: parameter.installCRDs
                                         }
