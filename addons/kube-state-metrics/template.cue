@@ -4,13 +4,13 @@ output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	metadata: {
-		name:      parameter.name
+		name:      const.name
 		namespace: "vela-system"
 	}
 	spec: {
 		components: [{
 			type: "k8s-objects"
-			name: parameter.name + "-ns"
+			name: const.name + "-ns"
 			properties: objects: [{
 				apiVersion: "v1"
 				kind:       "Namespace"

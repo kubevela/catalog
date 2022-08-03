@@ -1,13 +1,16 @@
 package main
 
+const: {
+	// +usage=The name of the grafana addon application
+	name: "addon-grafana"
+}
+
 parameter: {
 
 	// global parameters
 
 	// +usage=The namespace of the grafana to be installed
 	namespace: *"o11y-system" | string
-	// +usage=The name of the grafana addon application
-	name: "addon-grafana"
 	// +usage=The clusters to install
 	clusters?: [...string]
 
@@ -24,7 +27,9 @@ parameter: {
 	// +usage=Specify the service type for expose prometheus server. Default to be ClusterIP.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Specify the storage size to use. If empty, emptyDir will be used. Otherwise pvc will be used.
-	storage: *"" | string
+	storage?: =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
+	// +usage=Specify the storage class to use.
+	storageClassName?: string
 	// +usage=Specify the admin user for grafana
 	adminUser: *"admin" | string
 	// +usage=Specify the admin password for grafana

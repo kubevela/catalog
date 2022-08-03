@@ -80,7 +80,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(application_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"})",
+          "expr": "sum(application_phase_number{app_kubernetes_io_name=\"vela-core\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "All",
@@ -305,7 +305,7 @@ grafanaDashboardKubevelaSystemData: #"""
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"kubevela\",cluster=\"local\"}[$rate_interval])) by (container)",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"kubevela\"}[$rate_interval])) by (container)",
           "hide": false,
           "interval": "10s",
           "legendFormat": "KubeVela Controller",
@@ -318,7 +318,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"kubevela-vela-core-cluster-gateway\",cluster=\"local\"}[$rate_interval])) by (container)",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container=\"kubevela-vela-core-cluster-gateway\"}[$rate_interval])) by (container)",
           "hide": false,
           "legendFormat": "Cluster Gateway",
           "range": true,
@@ -411,7 +411,7 @@ grafanaDashboardKubevelaSystemData: #"""
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{container=\"kubevela\",cluster=\"local\"})",
+          "expr": "sum(container_memory_working_set_bytes{container=\"kubevela\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "KubeVela Controller WSS",
@@ -425,7 +425,7 @@ grafanaDashboardKubevelaSystemData: #"""
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_rss{container=\"kubevela\",cluster=\"local\"})",
+          "expr": "sum(container_memory_rss{container=\"kubevela\"})",
           "hide": true,
           "interval": "",
           "legendFormat": "KubeVela Controller RSS",
@@ -439,7 +439,7 @@ grafanaDashboardKubevelaSystemData: #"""
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_working_set_bytes{container=\"kubevela-vela-core-cluster-gateway\",cluster=\"local\"})",
+          "expr": "sum(container_memory_working_set_bytes{container=\"kubevela-vela-core-cluster-gateway\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "Cluster Gateway WSS",
@@ -453,7 +453,7 @@ grafanaDashboardKubevelaSystemData: #"""
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(container_memory_rss{container=\"kubevela-vela-core-cluster-gateway\",cluster=\"local\"})",
+          "expr": "sum(container_memory_rss{container=\"kubevela-vela-core-cluster-gateway\"})",
           "hide": true,
           "interval": "",
           "legendFormat": "Cluster Gateway RSS",
@@ -561,7 +561,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(workqueue_depth{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}) by (name)",
+          "expr": "sum(workqueue_depth{app_kubernetes_io_name=\"vela-core\"}) by (name)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{name}}",
@@ -654,7 +654,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(workqueue_adds_total{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (name)",
+          "expr": "sum(rate(workqueue_adds_total{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (name)",
           "hide": false,
           "interval": "",
           "legendFormat": "__auto",
@@ -747,7 +747,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(controller_runtime_reconcile_total{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (result, controller)",
+          "expr": "sum(rate(controller_runtime_reconcile_total{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (result, controller)",
           "legendFormat": "{{result}}: {{controller}}",
           "range": true,
           "refId": "A"
@@ -845,7 +845,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(controller_runtime_reconcile_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (controller) / sum(rate(controller_runtime_reconcile_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (controller)",
+          "expr": "sum(rate(controller_runtime_reconcile_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (controller) / sum(rate(controller_runtime_reconcile_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (controller)",
           "hide": false,
           "legendFormat": "{{controller}}",
           "range": true,
@@ -941,7 +941,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(controller_runtime_reconcile_time_seconds_sum{controller=\"application\",cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(controller_runtime_reconcile_time_seconds_count{controller=\"application\",cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(controller_runtime_reconcile_time_seconds_sum{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(controller_runtime_reconcile_time_seconds_count{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "avg",
           "range": true,
@@ -953,7 +953,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
           "hide": false,
           "legendFormat": "p95",
           "range": true,
@@ -965,7 +965,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.75, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
+          "expr": "histogram_quantile(0.75, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
           "hide": false,
           "legendFormat": "p75",
           "range": true,
@@ -1062,7 +1062,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(create_app_handler_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(create_app_handler_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(create_app_handler_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(create_app_handler_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "CreateAppHandler",
           "range": true,
@@ -1074,7 +1074,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(handle_finalizers_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(handle_finalizers_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(handle_finalizers_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(handle_finalizers_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "HandleFinalizers",
           "range": true,
@@ -1086,7 +1086,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(parse_appFile_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(parse_appFile_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(parse_appFile_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(parse_appFile_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "ParseAppFile",
           "range": true,
@@ -1098,7 +1098,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(prepare_current_appRevision_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(prepare_current_appRevision_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(prepare_current_appRevision_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(prepare_current_appRevision_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "PrepareCurrentAppRevision",
           "range": true,
@@ -1110,7 +1110,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(apply_appRevision_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(apply_appRevision_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(apply_appRevision_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(apply_appRevision_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "ApplyAppRevision",
           "range": true,
@@ -1122,7 +1122,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(apply_policies_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(apply_policies_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(apply_policies_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) / sum(rate(apply_policies_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "legendFormat": "ApplyPolicies",
           "range": true,
@@ -1231,7 +1231,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(client_request_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
+          "expr": "sum(rate(client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
           "hide": false,
           "legendFormat": "{{verb}}: {{Kind}}",
           "range": true,
@@ -1328,7 +1328,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(client_request_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb) / sum(rate(client_request_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
+          "expr": "sum(rate(client_request_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb) / sum(rate(client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
           "hide": false,
           "legendFormat": "{{verb}}: {{Kind}}",
           "range": true,
@@ -1437,7 +1437,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(application_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"})",
+          "expr": "sum(application_phase_number{app_kubernetes_io_name=\"vela-core\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "All",
@@ -1450,7 +1450,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(application_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}) by (phase)",
+          "expr": "sum(application_phase_number{app_kubernetes_io_name=\"vela-core\"}) by (phase)",
           "interval": "",
           "legendFormat": "Phase: {{phase}}",
           "range": true,
@@ -1546,7 +1546,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(workflow_step_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"})",
+          "expr": "sum(workflow_step_phase_number{app_kubernetes_io_name=\"vela-core\"})",
           "hide": false,
           "interval": "",
           "legendFormat": "All",
@@ -1559,7 +1559,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(workflow_step_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}) by (step_type)",
+          "expr": "sum(workflow_step_phase_number{app_kubernetes_io_name=\"vela-core\"}) by (step_type)",
           "interval": "",
           "legendFormat": "Type: {{step_type}}",
           "range": true,
@@ -1655,7 +1655,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(workflow_step_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}) by (phase)",
+          "expr": "sum(workflow_step_phase_number{app_kubernetes_io_name=\"vela-core\"}) by (phase)",
           "hide": false,
           "interval": "",
           "legendFormat": "Status: {{phase}}",
@@ -1668,7 +1668,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(workflow_step_phase_number{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}) by (step_type, phase)",
+          "expr": "sum(workflow_step_phase_number{app_kubernetes_io_name=\"vela-core\"}) by (step_type, phase)",
           "interval": "",
           "legendFormat": "{{step_type}}: {{phase}}",
           "range": true,
@@ -1764,7 +1764,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(workflow_initialized_num{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
+          "expr": "sum(rate(workflow_initialized_num{app_kubernetes_io_name=\"vela-core\"}[$rate_interval]))",
           "hide": false,
           "interval": "",
           "legendFormat": "Initialize Rate",
@@ -1862,7 +1862,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(workflow_finished_time_seconds_sum{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (phase) / sum(rate(workflow_finished_time_seconds_count{cluster=\"local\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (phase)",
+          "expr": "sum(rate(workflow_finished_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (phase) / sum(rate(workflow_finished_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (phase)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{phase}}",
@@ -2332,8 +2332,7 @@ grafanaDashboardKubevelaSystemData: #"""
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "text",
-                    "value": null
+                    "color": "text"
                   }
                 ]
               }
@@ -2426,8 +2425,7 @@ grafanaDashboardKubevelaSystemData: #"""
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "text",
-                    "value": null
+                    "color": "text"
                   }
                 ]
               }
@@ -2581,8 +2579,8 @@ grafanaDashboardKubevelaSystemData: #"""
       {
         "current": {
           "selected": false,
-          "text": "Prometheus",
-          "value": "Prometheus"
+          "text": "prometheus:c2",
+          "value": "prometheus:c2"
         },
         "hide": 2,
         "includeAll": false,
@@ -2678,7 +2676,7 @@ grafanaDashboardKubevelaSystemData: #"""
   "timepicker": {},
   "timezone": "",
   "title": "KubeVela System",
-  "uid": "f4DoQB37k",
+  "uid": "kubevela-system",
   "version": 1,
   "weekStart": ""
 }
