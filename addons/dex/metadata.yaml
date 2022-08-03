@@ -4,8 +4,8 @@ description: Enable dex for login
 icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/dex/horizontal/color/dex-horizontal-color.png
 
 tags:
-- auth
-- alpha
+- Official
+- OAuth
 
 dependencies:
   - name: velaux

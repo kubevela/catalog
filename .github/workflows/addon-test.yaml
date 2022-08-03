@@ -78,7 +78,7 @@ jobs:
 
       - name: Install vela cli
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.5.0-beta.6
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.5.0
 
       - name: Install vela core
         run: |
