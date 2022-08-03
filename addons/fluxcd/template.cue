@@ -3,7 +3,7 @@ package main
 import "strings"
 
 // controller images prefix
-_base: *""|string
+_base: *"" | string
 
 if parameter.registry != _|_ && parameter.registry != "" && !strings.HasSuffix(parameter.registry, "/") {
 	_base: parameter.registry + "/"
@@ -18,22 +18,19 @@ if parameter.namespace != _|_ {
 	_targetNamespace: parameter.namespace
 }
 
-
-
 gitOpsController: [...] | []
 
 kustomizeResourcesCRD: [...] | []
 
-if parameter.onlyHelmComponents != _|_ &&  parameter.onlyHelmComponents == false {
+if parameter.onlyHelmComponents != _|_ && parameter.onlyHelmComponents == false {
 	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
 	kustomizeResourcesCRD: [imagePolicyCRD, imageRepoCRD, imageUpdateCRD, kustomizeCRD]
 }
 
-if parameter.onlyHelmComponents == _|_  {
+if parameter.onlyHelmComponents == _|_ {
 	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
 	kustomizeResourcesCRD: [imagePolicyCRD, imageRepoCRD, imageUpdateCRD, kustomizeCRD]
 }
-
 
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
