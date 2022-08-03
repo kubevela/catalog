@@ -4,11 +4,11 @@ parameter: {
         //+usage=Namespace to deploy to, defaults to cert-manager
         namespace: *"flink-operator" | string
         // +usage=Specify if create  the webhook or not
-        "webhook.create": *false | bool
+        "createWebhook": *false | bool
         // +usage=Specify the image repository
-        "image.repository": *"apache/flink-kubernetes-operator" | string
+        "imageRepository": *"apache/flink-kubernetes-operator" | string
         // +usage=Specify the image tag
-        "image.tag": *"latest" | string
+        "imageTag": *"latest" | string
         // +usage=Specify if create the sa for job or not
-        "jobServiceAccount.create": *false|bool
+        "createJobServiceAccount": *false|bool
 }

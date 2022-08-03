@@ -28,16 +28,16 @@ output: {
                                     version:  "1.1.0"
                                     values: {
                                             webhook: {
-                                                create: parameter["webhook.create"]
+                                                create: parameter["createWebhook"]
                                             }
 
                                             image: {
-                                                repository: parameter["image.repository"]
-                                                tag: parameter["image.tag"]
+                                                repository: parameter["imageRepository"]
+                                                tag: parameter["imageTag"]
                                             }
 
                                             jobServiceAccount: {
-                                                create: parameter["jobServiceAccount.create"]
+                                                create: parameter["createJobServiceAccount"]
                                             }
                                             operatorServiceAccount: {
                                                 name: "flink-kubernetes-operator"
