@@ -1,6 +1,7 @@
 package main
 
-imageRepoCRD: {apiVersion: "apiextensions.k8s.io/v1"
+imageRepoCRD: {
+	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
 		annotations: "controller-gen.kubebuilder.io/version": "v0.5.0"

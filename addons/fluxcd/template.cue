@@ -3,12 +3,22 @@ package main
 import "strings"
 
 // controller images prefix
-if parameter.registry != "" && !strings.HasSuffix(parameter.registry, "/") {
+_base: *""|string
+
+if parameter.registry != _|_ && parameter.registry != "" && !strings.HasSuffix(parameter.registry, "/") {
 	_base: parameter.registry + "/"
 }
-if parameter.registry == "" || strings.HasSuffix(parameter.registry, "/") {
+if parameter.registry == _|_ || parameter.registry == "" || strings.HasSuffix(parameter.registry, "/") {
 	_base: parameter.registry
 }
+
+_targetNamespace: *"flux-system" | string
+
+if parameter.namespace != _|_ {
+	_targetNamespace: parameter.namespace
+}
+
+
 
 gitOpsController: [...] | []
 
@@ -33,7 +43,7 @@ output: {
 				properties: objects: [{
 					apiVersion: "v1"
 					kind:       "Namespace"
-					metadata: name: parameter.namespace
+					metadata: name: _targetNamespace
 				}]
 			},
 			{
@@ -71,7 +81,7 @@ output: {
 				type: "topology"
 				name: "deploy-fluxcd-ns"
 				properties: {
-					namespace: parameter.namespace
+					namespace: _targetNamespace
 					if parameter.clusters != _|_ {
 						clusters: parameter.clusters
 					}

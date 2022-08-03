@@ -1,6 +1,7 @@
 package main
 
-helmChartCRD: {apiVersion: "apiextensions.k8s.io/v1"
+helmChartCRD: {
+	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
 		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"

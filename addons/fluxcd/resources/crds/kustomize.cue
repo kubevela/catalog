@@ -1,6 +1,7 @@
 package main
 
-kustomizeCRD: {apiVersion: "apiextensions.k8s.io/v1"
+kustomizeCRD: {
+	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
 		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"

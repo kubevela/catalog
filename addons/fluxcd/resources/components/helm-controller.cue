@@ -3,6 +3,7 @@ package main
 _base: string
 _rules: [...]
 controllerArgs: [...]
+_targetNamespace: string
 
 helmController: {
 	// About this name, refer to #429 for details.
@@ -15,7 +16,7 @@ helmController: {
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: parameter.namespace
+				value: _targetNamespace
 			},
 		]
 		livenessProbe: {
