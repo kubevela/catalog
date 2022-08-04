@@ -1,5 +1,5 @@
 name: cert-manager
-version: 1.7.1
+version: 1.9.1
 description: cert-manager is a dependency addon for flink-kubernetes-operator addon
 icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/logo-small.png
 url: https://github.com/cert-manager/cert-manager
@@ -13,4 +13,7 @@ deployTo:
 
 dependencies:
   - name: fluxcd
+
+system:
+  vela: ">=1.5.0-beta.3"
 
