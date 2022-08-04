@@ -3,6 +3,7 @@ package main
 _base: string
 _rules: [...]
 controllerArgs: [...]
+_targetNamespace: string
 _sourceControllerName: "fluxcd-source-controller"
 
 sourceController: {
@@ -16,7 +17,7 @@ sourceController: {
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: parameter.namespace
+				value: _targetNamespace
 			},
 		]
 		livenessProbe: {
@@ -78,7 +79,7 @@ sourceController: {
 			properties: {
 				args: controllerArgs + [
 					"--storage-path=/data",
-					"--storage-adv-addr=http://" + _sourceControllerName + "." + parameter.namespace + ".svc:9090",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
 				]
 			}
 		},

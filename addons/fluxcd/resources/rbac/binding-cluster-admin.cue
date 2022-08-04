@@ -1,5 +1,7 @@
 package main
 
+_targetNamespace: string
+
 bindingClusterAdmin: {
 	apiVersion: "rbac.authorization.k8s.io/v1"
 	kind:       "ClusterRoleBinding"
@@ -14,10 +16,10 @@ bindingClusterAdmin: {
 	subjects: [{
 		kind:      "ServiceAccount"
 		name:      "sa-kustomize-controller"
-		namespace: parameter.namespace
+		namespace: _targetNamespace
 	}, {
 		kind:      "ServiceAccount"
 		name:      "sa-helm-controller"
-		namespace: parameter.namespace
+		namespace: _targetNamespace
 	}]
 }

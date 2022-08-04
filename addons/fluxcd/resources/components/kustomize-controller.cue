@@ -3,6 +3,7 @@ package main
 _base: string
 _rules: [...]
 controllerArgs: [...]
+_targetNamespace: string
 
 kustomizeController: {
 	// About this name, refer to #429 for details.
@@ -15,7 +16,7 @@ kustomizeController: {
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: parameter.namespace
+				value: _targetNamespace
 			},
 		]
 		livenessProbe: {

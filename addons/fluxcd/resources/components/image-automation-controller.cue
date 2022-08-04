@@ -3,6 +3,7 @@ package main
 _base: string
 _rules: [...]
 controllerArgs: [...]
+_targetNamespace: string
 
 imageAutomationController: {
 	// About this name, refer to #429 for details.
@@ -15,7 +16,7 @@ imageAutomationController: {
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
-				value: parameter.namespace
+				value: _targetNamespace
 			},
 		]
 		livenessProbe: {
