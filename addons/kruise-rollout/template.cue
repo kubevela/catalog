@@ -26,7 +26,7 @@ outputs: resourceTree: {
 		name:      "kruise-rollout-relation"
 		namespace: "vela-system"
 		labels: {
-			"rules.oam.dev/resources": "true"
+			"rules.oam.dev/resources":       "true"
 			"rules.oam.dev/resource-format": "json"
 		}
 	}
@@ -34,29 +34,29 @@ outputs: resourceTree: {
 }
 
 _kruiseRollout: {
-		group: "rollouts.kruise.io"
-		kind: "Rollout"
+	group: "rollouts.kruise.io"
+	kind:  "Rollout"
 }
 
 _batchRelease: {
-	  group: "rollouts.kruise.io"
-	  kind: "BatchRelease"
+	group: "rollouts.kruise.io"
+	kind:  "BatchRelease"
 }
 
 _batchReleaseApiVersion: {
-	    apiVersion: "rollouts.kruise.io/v1alpha1"
-		  kind: "BatchRelease"
+	apiVersion: "rollouts.kruise.io/v1alpha1"
+	kind:       "BatchRelease"
 }
 
 _deploymentApiVersion: {
 	apiVersion: "apps/v1"
-  kind: "Deployment"
+	kind:       "Deployment"
 }
 
 _rules: [{
 	parentResourceType: _kruiseRollout
 	childrenResourceType: [_batchReleaseApiVersion]
-},{
+}, {
 	parentResourceType: _batchRelease
 	childrenResourceType: [_deploymentApiVersion]
 }]
