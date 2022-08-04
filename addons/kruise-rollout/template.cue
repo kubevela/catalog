@@ -1,4 +1,4 @@
-package main
+import "encoding/json"
 
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
@@ -25,20 +25,38 @@ outputs: resourceTree: {
 	metadata: {
 		name:      "kruise-rollout-relation"
 		namespace: "vela-system"
-		labels: "rules.oam.dev/resources": "true"
+		labels: {
+			"rules.oam.dev/resources": "true"
+			"rules.oam.dev/resource-format": "json"
+		}
 	}
-	data: rules: """
-		- parentResourceType:
-		    group: rollouts.kruise.io
-		    kind: Rollout
-		  childrenResourceType:
-		    - apiVersion: rollouts.kruise.io/v1alpha1
-		      kind: BatchRelease
-		- parentResourceType:
-		    group: rollouts.kruise.io
-		    kind: BatchRelease
-		  childrenResourceType:
-		    - apiVersion: apps/v1
-		      kind: Deployment
-		"""
+	data: rules: json.Marshal(_rules)
 }
+
+_kruiseRollout: {
+		group: "rollouts.kruise.io"
+		kind: "Rollout"
+}
+
+_batchRelease: {
+	  group: "rollouts.kruise.io"
+	  kind: "BatchRelease"
+}
+
+_batchReleaseApiVersion: {
+	    apiVersion: "rollouts.kruise.io/v1alpha1"
+		  kind: "BatchRelease"
+}
+
+_deploymentApiVersion: {
+	apiVersion: "apps/v1"
+  kind: "Deployment"
+}
+
+_rules: [{
+	parentResourceType: _kruiseRollout
+	childrenResourceType: [_batchReleaseApiVersion]
+},{
+	parentResourceType: _batchRelease
+	childrenResourceType: [_deploymentApiVersion]
+}]
