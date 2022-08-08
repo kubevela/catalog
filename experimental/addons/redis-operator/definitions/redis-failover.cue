@@ -50,7 +50,6 @@ template: {
 			}
 		}
 	}
-	outputs: {}
 	parameter: {
 		//+usage=Number of replicas for redis and sentinel instances.
 		replicas: *3 | int
