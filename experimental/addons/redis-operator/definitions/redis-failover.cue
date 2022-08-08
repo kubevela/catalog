@@ -1,3 +1,5 @@
+import "encoding/base64"
+
 "redis-failover": {
 	alias: "rf"
 	annotations: {}
@@ -45,8 +47,21 @@ template: {
 			sentinel: {
 				replicas: parameter.replicas
 			}
-			if parameter.authSecret != _|_ {
-				auth: secretPath: parameter.authSecret
+			if parameter.password != _|_ {
+				auth: secretPath: context.name + "password"
+			}
+		}
+	}
+	outputs: authSecret: {
+		apiVersion: "v1"
+		kind:       "Secret"
+		type:       "Opaque"
+		metadata: {
+			name: context.name + "password"
+		}
+		data: password: {
+			if parameter.password != _|_ {
+				base64.Encode(null, parameter.password)
 			}
 		}
 	}
@@ -63,6 +78,6 @@ template: {
 			keepAfterDeletion: *false | bool
 		}
 		//+usage=Secret name that holds redis password. You need to create a secret with a password field first.
-		authSecret?: string
+		password?: string
 	}
 }

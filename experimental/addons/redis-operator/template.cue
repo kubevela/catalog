@@ -36,3 +36,5 @@ output: {
 		]
 	}
 }
+
+outputs: topology: resourceTopology

@@ -13,7 +13,7 @@ In this example, we will :
 
 Let's get started.
 
-After you enable this addon, apply this yaml:
+After you enable this addon, apply this Application yaml to create a Redis cluster:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -36,15 +36,12 @@ spec:
 Verify if we have 2 Redis instances available:
 
 ```shell
-$ kubectl get pods -l 'app.oam.dev/name=redis-operator-sample'
-NAME                            READY   STATUS    RESTARTS   AGE
-rfr-ha-redis-0                  1/1     Running   0          2m7s
-rfr-ha-redis-1                  1/1     Running   0          2m7s
-rfs-ha-redis-5c49b8947d-lcqhx   1/1     Running   0          2m7s
-rfs-ha-redis-5c49b8947d-vn6gs   1/1     Running   0          2m7s
+$ vela status redis-operator-sample --tree --detail
+# DETAIL
+# NAME: ha-redis  REDIS: 2  SENTINELS: 2
+# AGE: 17m
 ```
-
-As we can see, 2 instances are available. `rfr` refers to RedisFailoverRedis. `rfs` refers to RedisFailoverSentinel.
+As we can see, 2 instances are available. Great.
 
 Scale up/down. As an example, we will scale it down to 1:
 
@@ -65,19 +62,28 @@ spec:
 After applying this yaml, we should see we only have 1 Redis instance available now:
 
 ```shell
-$ kubectl get pods -l 'app.oam.dev/name=redis-operator-sample'
-NAME                            READY   STATUS    RESTARTS   AGE
-rfr-ha-redis-0                  1/1     Running   0          68s
-rfs-ha-redis-7fd59f4758-g6dng   1/1     Running   0          80s
+$ vela status redis-operator-sample --tree --detail
+# DETAIL
+# NAME: ha-redis  REDIS: 1  SENTINELS: 1
+# AGE: 34m
 ```
 
-Now, we will try to connect to the Redis cluster (specifically, connect to Sentinel service). To use `redis-cli`, we will attach a terminal to the `redis-cli` Pod so that we hava a `redis-cli` available.
+Now, we will try to connect to the Redis cluster (specifically, connect to Sentinel service). To connect, we need to know where to connect to first. Use vela status to get the Sentinel endpoint:
 
 ```shell
-# Launch a pod with redis-cli in it.
-kubectl run redis-cli --rm --restart=Never \
-  --image=goodsmileduck/redis-cli -it \
-  --command -- /bin/sh
+$ vela status redis-operator-sample --endpoint
+# +---------+-----------+------------------------------+----------------------------+-------+
+# | CLUSTER | COMPONENT |   REF(KIND/NAMESPACE/NAME)   |          ENDPOINT          | INNER |
+# +---------+-----------+------------------------------+----------------------------+-------+
+# | local   | ha-redis  | Service/default/rfs-ha-redis | rfs-ha-redis.default:26379 | true  |
+# +---------+-----------+------------------------------+----------------------------+-------+
+```
+
+We know the endpoint is `rfs-ha-redis.default:26379`. To use `redis-cli`, we will attach a terminal to one of the Redis pods.
+
+```shell
+vela exec redis-operator-sample -- /bin/sh
+# Choose rfr-ha-redis-0
 ```
 
 Your terminal should be attached to the Pod. Inside that terminal, type:
@@ -87,13 +93,13 @@ Your terminal should be attached to the Pod. Inside that terminal, type:
 # rfs-ha-redis is the Service name of Sentinel. 
 # Remember our Component name (ha-redis)? It is rfs-<component-name>. 
 # And the port is 26379
-redis-cli -h rfs-ha-redis.default.svc -p 26379
+redis-cli -h rfs-ha-redis.default -p 26379
 
 # You should have redis-cli connected to Sentinel now.
 # Now, find where the master is. `mymaster` is hard-coded by the operator
 SENTINEL get-master-addr-by-name mymaster
 # For example, you have results: 1) "172.17.0.6" 2) "6379"
-
+# ctrl+D to exit and
 # Use this info to connect to the master node.
 redis-cli -h 172.17.0.6
 
