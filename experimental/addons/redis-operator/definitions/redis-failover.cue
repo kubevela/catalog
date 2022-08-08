@@ -48,20 +48,20 @@ template: {
 				replicas: parameter.replicas
 			}
 			if parameter.password != _|_ {
-				auth: secretPath: context.name + "password"
+				auth: secretPath: context.name + "-password"
 			}
 		}
 	}
-	outputs: authSecret: {
-		apiVersion: "v1"
-		kind:       "Secret"
-		type:       "Opaque"
-		metadata: {
-			name: context.name + "password"
-		}
-		data: password: {
-			if parameter.password != _|_ {
-				base64.Encode(null, parameter.password)
+	outputs: {
+		if parameter.password != _|_ {
+			authSecret: {
+				apiVersion: "v1"
+				kind:       "Secret"
+				type:       "Opaque"
+				metadata: {
+					name: context.name + "-password"
+				}
+				data: password: base64.Encode(null, parameter.password)
 			}
 		}
 	}
@@ -77,7 +77,7 @@ template: {
 			//+usage=Keep pvc even if redis-failover is deleted.
 			keepAfterDeletion: *false | bool
 		}
-		//+usage=Secret name that holds redis password. You need to create a secret with a password field first.
+		//+usage=Provide a Redis password to enable authorization.
 		password?: string
 	}
 }
