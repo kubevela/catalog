@@ -45,6 +45,9 @@ template: {
 			sentinel: {
 				replicas: parameter.replicas
 			}
+			if parameter.authSecret != _|_ {
+				auth: secretPath: parameter.authSecret
+			}
 		}
 	}
 	outputs: {}
@@ -60,5 +63,7 @@ template: {
 			//+usage=Keep pvc even if redis-failover is deleted.
 			keepAfterDeletion: *false | bool
 		}
+		//+usage=Secret name that holds redis password. You need to create a secret with a password field first.
+		authSecret?: string
 	}
 }
