@@ -8,6 +8,12 @@ This addon is built based [FluxCD](https://fluxcd.io/)
 vela addon enable fluxcd
 ```
 
+If you only want to use helm type application delivery, you can use:
+
+```shell
+vela addon enable fluxcd onlyHelmComponents=true
+```
+
 ## X-Definitions
 
 Enable fluxcd addon to use these X-definitions

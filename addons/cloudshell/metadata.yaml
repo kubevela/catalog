@@ -1,5 +1,5 @@
 name: cloudshell
-version: 0.0.1
+version: 0.0.2
 description: A Friendly Kubernetes CloudShell (Web Terminal)
 url: https://github.com/cloudtty/cloudtty
 

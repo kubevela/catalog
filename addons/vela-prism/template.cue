@@ -4,7 +4,7 @@ output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	metadata: {
-		name:      parameter.name
+		name:      const.name
 		namespace: "vela-system"
 	}
 	spec: {

@@ -42,7 +42,17 @@ var regexPattern = "^addons.*"
 var globalRexPattern = "^.github.*|Makefile|.*.go"
 
 // This can be used for pending some error addon temporally, Please fix it as soon as posible.
-var pendingAddon = map[string]bool{"ocm-gateway-manager-addon": true, "model-serving": true, "flink-kubernetes-operator": true, "prometheus-server": true}
+var pendingAddon = map[string]bool{
+	"ocm-gateway-manager-addon": true,
+	"model-serving": true,
+	"flink-kubernetes-operator": true,
+	"kube-state-metrics": true,
+	"node-exporter": true,
+	"prometheus-server": true,
+	"vela-prism": true,
+	"grafana-definitions": true,
+	"grafana": true,
+}
 
 func main() {
 	changedFile := os.Args[1:]
@@ -172,7 +182,7 @@ func readAddonMeta(addonName string) (*AddonMeta, error) {
 func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
 	// TODO: make topology sort to auto sort the order of enable
-	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager", "vela-prism", "grafana-definitions", "grafana"} {
+	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager"} {
 		if changedAddon[addonName] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
 				return err

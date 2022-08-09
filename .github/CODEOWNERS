@@ -3,7 +3,7 @@
 *                                  @wangyikewxgm @wonderflow @barnettZQG
 
 # Owner of addon fluxcd
-addons/fluxcd                      @wangyikewxgm @FogDong
+addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129
 
 # Owner of addon obeservability
 addons/obeservability              @zzxwill @Somefive
@@ -19,3 +19,6 @@ addons/terraform-azure             @chivalryq
 
 # Owner of health addon velaux
 addons/velaux                      @barnettZQG
+
+# Owner of chartMuseum addon
+addons/chartmuseum                 @charlie0129 @wangyikewxgm
