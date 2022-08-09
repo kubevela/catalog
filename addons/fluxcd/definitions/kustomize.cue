@@ -2,6 +2,9 @@ kustomize: {
 	attributes: workload: type: "autodetects.core.oam.dev"
 	description: "kustomize can fetching, building, updating and applying Kustomize manifests from git repo."
 	type:        "component"
+	annotations: {
+		 "addon.oam.dev/ignore-without-component": "fluxcd-kustomize-controller"
+   }
 }
 
 template: {

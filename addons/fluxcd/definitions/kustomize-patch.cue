@@ -7,6 +7,9 @@
 		"ui-hidden": "true"
 	}
 	type: "trait"
+	annotations: {
+		"addon.oam.dev/ignore-without-component": "fluxcd-kustomize-controller"
+  }
 }
 
 template: {
