@@ -238,7 +238,7 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 
 func enableOneAddon(dir string) error {
 	cmd := exec.Command("vela", "addon", "enable", dir)
-	fmt.Println("\033[1;32m==>" + cmd.String() + "\033[0m")
+	fmt.Println("\033[1;32m==> " + cmd.String() + "\033[0m")
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
 	if err != nil {
@@ -248,17 +248,17 @@ func enableOneAddon(dir string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 40960)
+		tmp := make([]byte, 81920)
 		_, err := stdout.Read(tmp)
+		// Remove enabling countdown, otherwise we cannot see anything in CI logs.
+		// There are unprintable characters everywhere and the log is huge.
 		str := strings.Map(func(r rune) rune {
 			if unicode.IsPrint(r) || r == '\n' {
 				return r
 			}
 			return -1
 		}, string(tmp))
-		// Remove enabling countdown, otherwise we cannot see anything in CI logs.
-		// There are unprintable characters everywhere and the log is huge.
-		if strings.Contains(str, "runningWorkflow") {
+		if strings.Contains(str, "It is now in phase") {
 			continue
 		}
 		fmt.Println(str)
