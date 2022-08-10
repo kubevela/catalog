@@ -248,16 +248,9 @@ func enableOneAddon(dir string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 81920)
+		tmp := make([]byte, 102400)
 		_, err := stdout.Read(tmp)
-		// Remove enabling countdown, otherwise we cannot see anything in CI logs.
-		// There are unprintable characters everywhere and the log is huge.
-		str := strings.Map(func(r rune) rune {
-			if unicode.IsPrint(r) || r == '\n' {
-				return r
-			}
-			return -1
-		}, string(tmp))
+		str := convertToString(tmp)
 		if strings.Contains(str, "It is now in phase") {
 			continue
 		}
@@ -285,9 +278,10 @@ func disableOneAddon(addonName string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 1024)
+		tmp := make([]byte, 102400)
 		_, err := stdout.Read(tmp)
-		fmt.Print(string(tmp))
+		str := convertToString(tmp)
+		fmt.Print(str)
 		if err != nil {
 			break
 		}
@@ -346,4 +340,16 @@ func checkPodStatus(namespace string) {
 	if err = cmd.Wait(); err != nil {
 		fmt.Println(err)
 	}
+}
+
+// convertToString converts []byte to string and removes unprintable characters
+func convertToString(data []byte) string {
+	// Remove enabling countdown, otherwise we cannot see anything in CI logs.
+	// There are unprintable characters everywhere and the log is huge.
+	return strings.Map(func(r rune) rune {
+		if unicode.IsPrint(r) || r == '\n' {
+			return r
+		}
+		return -1
+	}, string(data))
 }
