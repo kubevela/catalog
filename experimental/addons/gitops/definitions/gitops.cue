@@ -19,7 +19,6 @@ template: {
 		}
 		kind: ""
 		metadata: {
-			name: context.name
 			namespace: context.namespace
 		}
 		spec: {
@@ -104,6 +103,4 @@ template: {
 		//+usage=Force instructs the controller to recreate resources when patching fails due to an immutable field change.
 		force: *false | bool
 	}
-
-	outputs: {}
 }
