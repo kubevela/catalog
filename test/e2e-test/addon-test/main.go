@@ -206,7 +206,7 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
 	// TODO: make topology sort to auto sort the order of enable
 	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager"} {
-		if changedAddon[addonName] {
+		if changedAddon[addonName] && !pendingAddon[addonName] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
 				return err
 			}
@@ -238,7 +238,7 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 
 func enableOneAddon(dir string) error {
 	cmd := exec.Command("vela", "addon", "enable", dir)
-	fmt.Println(cmd.String())
+	fmt.Println("\033[1;32m==>" + cmd.String() + "\033[0m")
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
 	if err != nil {
@@ -248,17 +248,20 @@ func enableOneAddon(dir string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 1024)
+		tmp := make([]byte, 40960)
 		_, err := stdout.Read(tmp)
-		// Remove unprintable characters, otherwise we cannot see anything in CI logs.
-		// There are unprintable characters everywhere and the log is huge.
-		text := strings.Map(func(r rune) rune {
-			if unicode.IsPrint(r) && r != ' ' {
+		str := strings.Map(func(r rune) rune {
+			if unicode.IsPrint(r) || r == '\n' {
 				return r
 			}
 			return -1
 		}, string(tmp))
-		fmt.Println(text)
+		// Remove enabling countdown, otherwise we cannot see anything in CI logs.
+		// There are unprintable characters everywhere and the log is huge.
+		if strings.Contains(str, "runningWorkflow") {
+			continue
+		}
+		fmt.Println(str)
 		if err != nil {
 			break
 		}
