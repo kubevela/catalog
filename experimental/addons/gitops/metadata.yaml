@@ -13,9 +13,6 @@ deployTo:
   control_plane: # true
   runtimeCluster: # true
 
-needNamespace:
-  - # it will need a namespace, but this will be dependent on which one is installed, whether argocd or fluxcd
-
 system:
   vela: ">=v1.4.0"
   kubernetes: ">=1.19.0-0"
