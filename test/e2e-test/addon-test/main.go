@@ -18,7 +18,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -249,8 +248,8 @@ func enableOneAddon(dir string) error {
 		return err
 	}
 	for {
-		tmp := bytes.Buffer{}
-		_, err := tmp.ReadFrom(stdout)
+		tmp := make([]byte, 1024)
+		_, err := stdout.Read(tmp)
 		// Remove unprintable characters, otherwise we cannot see anything in CI logs.
 		// There are unprintable characters everywhere and the log is huge.
 		text := strings.Map(func(r rune) rune {
@@ -258,7 +257,7 @@ func enableOneAddon(dir string) error {
 				return r
 			}
 			return -1
-		}, tmp.String())
+		}, string(tmp))
 		fmt.Println(text)
 		if err != nil {
 			break
