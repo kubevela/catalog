@@ -11,8 +11,6 @@ parameter: {
 	staging: *false | bool
 	//+usage=DNS01 Challenge config. Wildcard TLS certificates will be obtained from Let's Encrypt.
 	dns01?: {
-		//+usage=Your DNS provider to do DNS01 challenge. Now we only support Cloudflare. Contributions are welcomed.
-		dnsProvider: "cloudflare"
 		//+usage=Certificate namespace. This needs to be the same namespace as your service and ingress.
 		namespace: string
 		//+usage=Cloudflare-specific DNS01 config

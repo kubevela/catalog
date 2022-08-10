@@ -3,6 +3,7 @@ package main
 cfTokenSecret: _
 cfCertificate: _
 cfIssuer:      _
+
 if parameter.dns01 != _|_ && parameter.dns01.cloudflare != _|_ {
 	cfTokenSecret: {
 		apiVersion: "v1"
