@@ -251,8 +251,8 @@ func enableOneAddon(dir string) error {
 	for {
 		tmp := bytes.Buffer{}
 		_, err := tmp.ReadFrom(stdout)
-		// Remove unprintable characters, otherwise we cannot see anything
-		// in CI logs. There are full of unprintable characters.
+		// Remove unprintable characters, otherwise we cannot see anything in CI logs.
+		// There are unprintable characters everywhere and the log is huge.
 		text := strings.Map(func(r rune) rune {
 			if !unicode.IsPrint(r) {
 				return -1
