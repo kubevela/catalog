@@ -19,7 +19,13 @@ Enable this addon. The parameters are a bit complicated. Please Make sure you lo
 Note: use `staging=true` to use Let's Encrypt staging API, otherwise you can be rate-limited and banned. Also pay special attention to `dns01.namespace`. This needs to be the same namespace as your service and ingress.
 
 ```console
-vela addon enable cert-manager staging=true dns01.namespace="default" dns01.cloudflare.email="your-email@example.com" dns01.cloudflare.token="your-token-here" dns01.cloudflare.zone="example.com" dns01.cloudflare.domain="example.com"
+vela addon enable cert-manager                      \
+    staging=true                                    \
+    dns01.namespace="default"                       \
+    dns01.cloudflare.email="your-email@example.com" \
+    dns01.cloudflare.token="your-token-here"        \
+    dns01.cloudflare.zone="example.com"             \
+    dns01.cloudflare.domain="example.com"
 ```
 
 And... That' all you need to do! A wildcard certificate is on the way.
