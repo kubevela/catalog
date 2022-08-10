@@ -5,7 +5,10 @@ icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/lo
 url: https://github.com/cert-manager/cert-manager
 
 tags:
-  - v1.7.1
+  - Let's Encrypt
+  - TLS
+  - Certificate
+  - ACME
 
 dependencies:
   - name: fluxcd
