@@ -254,10 +254,10 @@ func enableOneAddon(dir string) error {
 		// Remove unprintable characters, otherwise we cannot see anything in CI logs.
 		// There are unprintable characters everywhere and the log is huge.
 		text := strings.Map(func(r rune) rune {
-			if !unicode.IsPrint(r) {
-				return -1
+			if unicode.IsPrint(r) && r != ' ' {
+				return r
 			}
-			return r
+			return -1
 		}, tmp.String())
 		fmt.Println(text)
 		if err != nil {
