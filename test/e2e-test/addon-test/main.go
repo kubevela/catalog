@@ -81,7 +81,7 @@ func readPendingAddons() error {
 			continue
 		}
 		pendingAddon[t] = true
-		fmt.Printf("\t\033[1;33m%s\033[1;0m\n", t)
+		fmt.Printf("  - \033[1;33m%s\033[1;0m\n", t)
 	}
 	if err := scanner.Err(); err != nil {
 		return err
@@ -261,7 +261,7 @@ func enableOneAddon(dir string) error {
 		if strings.Contains(str, "It is now in phase") {
 			continue
 		}
-		fmt.Println(str)
+		fmt.Print(str)
 		if err != nil {
 			break
 		}
