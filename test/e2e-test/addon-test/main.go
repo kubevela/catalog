@@ -41,12 +41,13 @@ type Dependency struct {
 }
 
 var file = "addons/velaux/template.yaml"
-var regexPattern = "^addons.*"
-var globalRexPattern = "^.github.*|Makefile|.*.go"
-
-const pendingAddonFilename = "test/e2e-test/addon-test/pending-addons"
-
 var pendingAddon = map[string]bool{}
+
+const (
+	regexPattern         = "^addons.*"
+	globalRexPattern     = "^.github.*|Makefile|.*.go"
+	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
+)
 
 func main() {
 	err := readPendingAddons()
@@ -71,8 +72,8 @@ func readPendingAddons() error {
 		return err
 	}
 	defer file.Close()
-	fmt.Println("\033[1;33mThese addons are ignored temporarily.\033[0m")
-	fmt.Println("\033[1;33mPlease fix them as soon as possible!\033[0m")
+	fmt.Println("\033[1;31mThese addons are ignored temporarily.\033[0m")
+	fmt.Println("\033[1;31mPlease fix them as soon as possible!\033[0m")
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		t := scanner.Text()
@@ -81,7 +82,7 @@ func readPendingAddons() error {
 			continue
 		}
 		pendingAddon[t] = true
-		fmt.Printf("\t%s\n", t)
+		fmt.Printf("\t\033[1;33m%s\033[1;0m\n", t)
 	}
 	if err := scanner.Err(); err != nil {
 		return err
@@ -251,9 +252,9 @@ func enableOneAddon(dir string) error {
 		tmp := bytes.Buffer{}
 		_, err := tmp.ReadFrom(stdout)
 		// Remove unprintable characters, otherwise we cannot see anything
-		// in CI logs.
+		// in CI logs. There are full of unprintable characters.
 		text := strings.Map(func(r rune) rune {
-			if !unicode.IsPrint(r) && r != '\n' {
+			if !unicode.IsPrint(r) {
 				return -1
 			}
 			return r
