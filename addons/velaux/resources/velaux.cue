@@ -1,12 +1,14 @@
+_version: "v1.5.0"
+
 output: {
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/velaux:" + context.metadata.version
+			image: "oamdev/velaux:" + _version
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" + "oamdev/velaux:" + context.metadata.version
+			image: parameter["repo"] + "/" + "oamdev/velaux:" + _version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
@@ -40,7 +42,7 @@ output: {
 				{
 					name:  "KUBEVELA_API_URL"
 					value: "apiserver.vela-system:8000"
-				}
+				},
 			]
 		}
 	}
