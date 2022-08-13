@@ -1,0 +1,31 @@
+name: terraform-ec
+version: 1.0.0
+description: Kubernetes Terraform Controller Provider for Elastic Cloud
+url: https://github.com/oam-dev/terraform-controller
+
+tags:
+  - Terraform Controller Provider
+  - IaC
+  - Cloud Resources
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+  - name: terraform
+
+# -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
+# provider short name
+shortCloudName: ec
+
+# The Cloud name of the provider
+completeCloudName: Elastic Cloud
+
+# When enabling a Terraform provider, these properties need to set for authentication. For Tencent Cloud,
+# name: Environment variable name when authenticating Terraform, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L59
+# secretKey: Secret key when storing authentication information in a Kubernetes, like https://github.com/oam-dev/terraform-controller/blob/master/controllers/provider/credentials.go#L109.
+cloudProperties:
+  - name: EC_API_KEY
+    secretKey: ecApiKey
+    description: Get EC_API_KEY per this guide https://registry.terraform.io/providers/elastic/ec/latest/docs
