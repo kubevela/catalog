@@ -3,7 +3,7 @@ import "strings"
 output: {
 	type: "k8s-objects"
 	properties: {
-		objects: {
+		objects: [{
 			apiVersion: "v1"
 			kind:       "Secret"
 			metadata: {
@@ -20,6 +20,6 @@ output: {
           {{- end -}}
         {{- end -}}
 			], "\n")
-		}
+		}]
 	}
 }
