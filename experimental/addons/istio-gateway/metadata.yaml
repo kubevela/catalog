@@ -1,0 +1,19 @@
+name: istio-gateway
+version: v1.0.0
+description: Simplify observability, traffic management, security, and policy with the leading service mesh.
+icon: https://github.com/istio/istio/raw/master/logo/istio-bluelogo-whitebackground-unframed.svg
+url: https://istio.io/
+
+tags:
+  - Official
+  - Gateway
+
+dependencies:
+  - name: fluxcd
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: true
+
+system:
+  vela: ">=v1.2.4"

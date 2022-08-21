@@ -1,0 +1,14 @@
+name: gateway-traits
+version: v1.0.0
+description: traits(HttpRoute, HttpsRoute, tcpRoute) for gateway
+
+tags:
+  - Gateway
+  - Trait
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: true
+
+system:
+  vela: ">=v1.2.4"
