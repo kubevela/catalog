@@ -1,5 +1,5 @@
 name: traefik
-version: v2.6.3-1
+version: v2.6.3-2
 description: The Cloud Native Application Proxy, Simplify networking complexity while designing, deploying, and operating applications.
 icon: https://traefik.io/static/traefik-proxy-logo--white-82153be41e0ce620a921b4bce974f6d8.svg
 url: https://traefik.io/traefik
