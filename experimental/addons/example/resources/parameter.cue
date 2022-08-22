@@ -1,3 +1,0 @@
-parameter: {
-  example: string
-}
