@@ -1,6 +1,9 @@
+package main
+
 _version: "v1.5.0"
 
-output: {
+velaux: {
+	name: "velaux"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
