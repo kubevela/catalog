@@ -1,0 +1,115 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Elastic Cloud Deployment
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: elastic-ec-deployment
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: |
+        terraform {
+          required_version = ">= 1.0.0"
+
+          required_providers {
+            ec = {
+              source  = "elastic/ec"
+              version = "0.4.0"
+            }
+          }
+        }
+
+        provider "ec" {
+        }
+
+        # resource
+        resource "ec_deployment" "custom-deployment-id" {
+          name                   =  var.name
+
+          region                 = var.region
+          version                = var.version
+          deployment_template_id = var.deployment_id
+
+          elasticsearch {}
+          kibana {}
+        }
+
+        # output
+        output "ES_VERSION" {
+          value = ec_deployment.custom-deployment-id.version
+        }
+
+        output "ES_CLOUD_ID" {
+          value = ec_deployment.custom-deployment-id.elasticsearch[0].cloud_id
+        }
+
+        output "ES_HTTPS_ENDPOINT" {
+          value = ec_deployment.custom-deployment-id.elasticsearch[0].https_endpoint
+        }
+
+        output "ES_USERNAME" {
+          value = ec_deployment.custom-deployment-id.elasticsearch_username
+        }
+
+        output "ES_PASSWORD" {
+          value     = ec_deployment.custom-deployment-id.elasticsearch_password
+          sensitive = true
+        }
+
+        output "KIBANA_HTTPS_ENDPOINT" {
+          value = ec_deployment.custom-deployment-id.kibana[0].https_endpoint
+        }
+
+        # variable
+        variable "region" {
+          description = "Elasticsearch Service region, full list: https://www.elastic.co/guide/en/cloud/current/ec-regions-templates-instances.html"
+          type        = string
+          default     = "aws-ap-east-1"
+        }
+
+        variable "deployment_template_id" {
+          description = "Deployment template identifier to create the deployment from, full list: https://www.elastic.co/guide/en/cloud/current/ec-regions-templates-instances.html"
+          type        = string
+          default     = "aws-compute-optimized-v3"
+        }
+
+        variable "version" {
+          description = "Elastic Stack version to use for all the deployment resources, available versions: https://www.elastic.co/guide/en/cloud/current/ec-version-policy.html#ec-version-policy-available"
+          type        = string
+        }
+
+        variable "name" {
+          description = "Name of the deployment"
+          type        = string
+          default     = "my_example_deployment"
+        }
+
+        variable "alias" {
+          description = "Deployment alias, affects the format of the resource URLs"
+          type        = string
+        }
+
+        variable "request_id" {
+          description = "Request ID to set when you create the deployment. Use it only when previous attempts return an error and request_id is returned as part of the error"
+          type        = string
+        }
+
+        variable "elasticsearch" {
+          description = "Elasticsearch cluster definition, can only be specified once. For multi-node Elasticsearch clusters, use multiple topology blocks"
+        }
+
+        variable "kibana" {
+          description = "Kibana instance definition, can only be specified once"
+        }
+      providerRef:
+        name: elastic
+        namespace: default
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta2
+      kind: Configuration
+status: {}
