@@ -11,12 +11,12 @@ spec:
         repoType: helm
         url: https://release.daocloud.io/chartrepo/cloudshell
         chart: cloudtty
-        version: 0.2.0
+        version: 0.3.0
         values:
           image:
             registry: hub.kubevela.net
             repository: oamdev/cloudshell-operator
-            tag: "v0.2.0"
+            tag: "v0.3.0"
           jobTemplate:
             image:
               registry: hub.kubevela.net
