@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: app-cloneset
+spec:
+  components:
+    - name: clone-set
+      type: cloneset
+      properties:
+        cmd:
+          - ./podinfo
+          - stress-cpu=1
+        image: stefanprodan/podinfo:4.0.3
+        port: 8080
+        updateStrategyType: InPlaceOnly
