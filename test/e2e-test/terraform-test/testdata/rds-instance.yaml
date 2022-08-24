@@ -1,0 +1,12 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: app-rds-instance
+spec:
+  components:
+    - name: sample-rds-instance
+      type: alibaba-rds-instance
+      properties:
+        instance_name: test_single_instance
+        region: cn-hangzhou
+
