@@ -26,13 +26,17 @@ spec:
         provider "ec" {
         }
 
-        # resource
+        data "ec_stack" "latest" {
+          version_regex = "latest"
+          region        = var.region
+        }
+
         resource "ec_deployment" "custom-deployment-id" {
-          name                   =  var.name
+          name                   = var.name
 
           region                 = var.region
-          version                = var.version
-          deployment_template_id = var.deployment_id
+          version                = data.ec_stack.latest.version
+          deployment_template_id = var.deployment_template_id
 
           elasticsearch {}
           kibana {}
@@ -60,10 +64,6 @@ spec:
           sensitive = true
         }
 
-        output "KIBANA_HTTPS_ENDPOINT" {
-          value = ec_deployment.custom-deployment-id.kibana[0].https_endpoint
-        }
-
         # variable
         variable "region" {
           description = "Elasticsearch Service region, full list: https://www.elastic.co/guide/en/cloud/current/ec-regions-templates-instances.html"
@@ -77,36 +77,13 @@ spec:
           default     = "aws-compute-optimized-v3"
         }
 
-        variable "version" {
-          description = "Elastic Stack version to use for all the deployment resources, available versions: https://www.elastic.co/guide/en/cloud/current/ec-version-policy.html#ec-version-policy-available"
-          type        = string
-        }
-
         variable "name" {
           description = "Name of the deployment"
           type        = string
-          default     = "my_example_deployment"
-        }
-
-        variable "alias" {
-          description = "Deployment alias, affects the format of the resource URLs"
-          type        = string
-        }
-
-        variable "request_id" {
-          description = "Request ID to set when you create the deployment. Use it only when previous attempts return an error and request_id is returned as part of the error"
-          type        = string
-        }
-
-        variable "elasticsearch" {
-          description = "Elasticsearch cluster definition, can only be specified once. For multi-node Elasticsearch clusters, use multiple topology blocks"
-        }
-
-        variable "kibana" {
-          description = "Kibana instance definition, can only be specified once"
+          default     = "example_deployment"
         }
       providerRef:
-        name: elastic
+        name: ec
         namespace: default
   workload:
     definition:
