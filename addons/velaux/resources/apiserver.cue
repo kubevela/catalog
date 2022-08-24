@@ -1,3 +1,5 @@
+package main
+
 database: *[if parameter["database"] != _|_ {
 "--datastore-database=" + parameter["database"]
 }] | []
@@ -6,7 +8,8 @@ dbURL: *[if parameter["dbURL"] != _|_ {
 "--datastore-url=" + parameter["dbURL"]
 }] | []
 
-output: {
+apiserver: {
+	name: "apiserver"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {

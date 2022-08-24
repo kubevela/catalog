@@ -1,6 +1,9 @@
-_version: "v1.5.0"
+package main
 
-output: {
+_version: context.metadata.version
+
+velaux: {
+	name: "velaux"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
