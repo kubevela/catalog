@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -24,6 +25,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"sigs.k8s.io/yaml"
 )
@@ -38,32 +40,53 @@ type Dependency struct {
 }
 
 var file = "addons/velaux/template.yaml"
-var regexPattern = "^addons.*"
-var globalRexPattern = "^.github.*|Makefile|.*.go"
+var pendingAddon = map[string]bool{}
 
-// This can be used for pending some error addon temporally, Please fix it as soon as posible.
-var pendingAddon = map[string]bool{
-	"ocm-gateway-manager-addon": true,
-	"model-serving": true,
-	"flink-kubernetes-operator": true,
-	"kube-state-metrics": true,
-	"node-exporter": true,
-	"prometheus-server": true,
-	"vela-prism": true,
-	"grafana-definitions": true,
-	"grafana": true,
-}
+const (
+	regexPattern         = "^addons.*"
+	globalRexPattern     = "^.github.*|Makefile|.*.go"
+	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
+)
 
 func main() {
+	err := readPendingAddons()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+		os.Exit(1)
+	}
 	changedFile := os.Args[1:]
 	changedAddon := determineNeedEnableAddon(changedFile)
 	if len(changedAddon) == 0 {
 		return
 	}
 	if err := enableAddonsByOrder(changedAddon); err != nil {
-		fmt.Println(err)
+		fmt.Fprintf(os.Stderr, "%s", err)
 		os.Exit(1)
 	}
+}
+
+func readPendingAddons() error {
+	file, err := os.Open(pendingAddonFilename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	fmt.Println("\033[1;31mThese addons are ignored temporarily.\033[0m")
+	fmt.Println("\033[1;31mPlease fix them as soon as possible!\033[0m")
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		t := scanner.Text()
+		// This is a comment, ignore it.
+		if t == "" || strings.HasPrefix(t, "#") {
+			continue
+		}
+		pendingAddon[t] = true
+		fmt.Printf("  - \033[1;33m%s\033[1;0m\n", t)
+	}
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // will check all needed enabled addons according to changed files.
@@ -183,7 +206,7 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
 	// TODO: make topology sort to auto sort the order of enable
 	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager"} {
-		if changedAddon[addonName] {
+		if changedAddon[addonName] && !pendingAddon[addonName] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
 				return err
 			}
@@ -215,7 +238,7 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 
 func enableOneAddon(dir string) error {
 	cmd := exec.Command("vela", "addon", "enable", dir)
-	fmt.Println(cmd.String())
+	fmt.Println("\033[1;32m==> " + cmd.String() + "\033[0m")
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
 	if err != nil {
@@ -225,9 +248,13 @@ func enableOneAddon(dir string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 1024)
+		tmp := make([]byte, 102400)
 		_, err := stdout.Read(tmp)
-		fmt.Print(string(tmp))
+		str := convertToString(tmp)
+		if strings.Contains(str, "It is now in phase") {
+			continue
+		}
+		fmt.Print(str)
 		if err != nil {
 			break
 		}
@@ -251,9 +278,10 @@ func disableOneAddon(addonName string) error {
 		return err
 	}
 	for {
-		tmp := make([]byte, 1024)
+		tmp := make([]byte, 102400)
 		_, err := stdout.Read(tmp)
-		fmt.Print(string(tmp))
+		str := convertToString(tmp)
+		fmt.Print(str)
 		if err != nil {
 			break
 		}
@@ -312,4 +340,16 @@ func checkPodStatus(namespace string) {
 	if err = cmd.Wait(); err != nil {
 		fmt.Println(err)
 	}
+}
+
+// convertToString converts []byte to string and removes unprintable characters
+func convertToString(data []byte) string {
+	// Remove enabling countdown, otherwise we cannot see anything in CI logs.
+	// There are unprintable characters everywhere and the log is huge.
+	return strings.Map(func(r rune) rune {
+		if unicode.IsPrint(r) || r == '\n' {
+			return r
+		}
+		return -1
+	}, string(data))
 }
