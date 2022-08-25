@@ -10,10 +10,11 @@ tags:
 
 dependencies:
   - name: fluxcd
+  - name: gateway-traits
 
 deployTo:
   controlPlane: true
   runtimeCluster: true
 
 system:
-  vela: ">=v1.2.4"
+  vela: ">=v1.5.0"
