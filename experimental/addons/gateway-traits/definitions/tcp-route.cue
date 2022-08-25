@@ -80,8 +80,8 @@ template: {
 			serviceName?: string
 			// +usage=Specify the service port of component.
 			port: int
-			// +usage=Specify the gatewayClassName
-			gatewayClassName: string
+			// +usage=Specify the gatewayClassName.
+			gatewayClassName: "traefik" | "istio" | string
 		}]
 	}
 }
