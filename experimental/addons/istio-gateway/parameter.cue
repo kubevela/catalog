@@ -11,10 +11,8 @@ parameter: {
 	gatewayType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Specify the gateway listeners
 	gatewayListeners: [...{
-		name:	  		string
 		hostname?: 		string
 		port:     		int
-		protocol: 		*"HTTP" | "HTTPS"
 		routeNamespace: *"All" | "Same"
 	}]
 }

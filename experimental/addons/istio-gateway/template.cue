@@ -80,12 +80,12 @@ output: {
 						listeners: [
 							for item in parameter.gatewayListeners {
 								{	
-									name: 	  item.name
+									name: 	  "web"
 									if item.hostname != _|_ {
 										hostname: item.hostname
 									}
 									port: 	  item.port
-									protocol: item.protocol
+									protocol: "HTTP"
 									allowedRoutes: namespaces: from: item.routeNamespace
 								}
 							},
