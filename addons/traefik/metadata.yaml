@@ -10,7 +10,6 @@ tags:
 
 dependencies: 
   - name: fluxcd
-  - name: gateway-traits
 
 deployTo:
   controlPlane: true
