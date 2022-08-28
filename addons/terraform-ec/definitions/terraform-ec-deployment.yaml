@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform configuration for Elastic Cloud Deployment
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: elastic-ec-deployment
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      path: ec/ec-deployment
+      providerRef:
+        name: ec
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta2
+      kind: Configuration
+status: {}

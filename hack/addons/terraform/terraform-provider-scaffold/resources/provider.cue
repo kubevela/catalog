@@ -1,7 +1,7 @@
 output: {
 	type: "k8s-objects"
 	properties: {
-		objects:
+		objects: [
 		{
 			apiVersion: "terraform.core.oam.dev/v1beta1"
 			kind:       "Provider"
@@ -28,6 +28,6 @@ output: {
 					}
 				}
 			}
-		}
+		}]
 	}
 }

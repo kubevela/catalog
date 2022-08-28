@@ -1,7 +1,5 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: velaux
+  name: terraform-ec
   namespace: vela-system
-spec:
-# component definition of resource dir .
