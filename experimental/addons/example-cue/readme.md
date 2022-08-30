@@ -2,14 +2,18 @@
 
 This addon just an example addon based [FluxCD](https://fluxcd.io/). Please use [fluxcd addon](https://github.com/kubevela/catalog/tree/master/addons/fluxcd) in production env.
 
+Compare with YAML example [addon](https://github.com/kubevela/catalog/tree/master/experimental/addons/example) this addon is defined with CUE, so you can change the image registry by set `registry` parameter as follows:
+
+```shell
+vela addon enable example-cue registry=<your own registry>
+```
+
 ## X-Definitions
 
 Enable fluxcd addon to use these X-definitions
 
 - [helm](https://kubevela.io/docs/end-user/components/helm) helps to deploy a helm chart from everywhere:
   git repo / helm repo / S3 compatible bucket.
-
-- [kustomize](https://kubevela.io/docs/end-user/components/kustomize) helps to deploy a kustomize style artifact.
 
 ## Note
 - In this Fluxcd Addon, there are five controllers to be installed by default
