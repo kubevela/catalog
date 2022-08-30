@@ -1,4 +1,4 @@
-"http-route": {
+"https-route": {
 	annotations: {}
 	attributes: {
 		appliesToWorkloads: ["*"]
@@ -12,33 +12,53 @@
 
 template: {
 	outputs: {
-		httpRoute: {
+		_gatewayName: context.name + "-gateway-tls"
+		gateway: {
+			apiVersion: "gateway.networking.k8s.io/v1alpha2"
+			kind:       "Gateway"
+			metadata: {
+				name:      _gatewayName
+				namespace: context.namespace
+			}
+			spec: {
+				gatewayClassName: "traefik"
+				listeners: [
+					for secret in parameter.secrets {
+						{
+							name:     secret.name
+							protocol: "HTTPS"
+							port:     parameter.TLSPort
+							tls: {
+								certificateRefs: [
+									{
+										kind: "Secret"
+										name: secret.name
+										if secret.namespace != _|_ {
+											namespace: secret.namespace
+										}
+										if secret.namespace == _|_ {
+											namespace: context.namespace
+										}
+									},
+								]
+							}
+						}
+					}]
+			}
+		}
+
+		httpsRoute: {
 			apiVersion: "gateway.networking.k8s.io/v1alpha2"
 			kind:       "HTTPRoute"
 			metadata: {
-				name:      context.name
+				name:      context.name + "-ssl"
 				namespace: context.namespace
 			}
 			spec: {
 				parentRefs: [{
-					if parameter.gatewayName != _|_ {
-						name: parameter.gatewayName
-					}
-					if parameter.gatewayName == _|_ {
-						name: "traefik-gateway"
-					}
-					if parameter.gatewayNamespace != _|_ {
-						namespace: parameter.gatewayNamespace
-					}
-					if parameter.gatewayNamespace == _|_ {
-						namespace: "vela-system"
-					}
-					if parameter.listenerName != _|_ {
-						sectionName: parameter.listenerName
-					}
-					if parameter.listenerName == _|_ {
-						sectionName: "web"
-					}
+					name:      _gatewayName
+					namespace: context.namespace
+					port:      parameter.TLSPort
 				}]
 				hostnames: parameter.domains
 				rules: [
@@ -72,6 +92,14 @@ template: {
 	parameter: {
 		// +usage=Specify some domains, the domain may be prefixed with a wildcard label (*.)
 		domains: [...string]
+
+		TLSPort: *8443 | int
+
+		// +usage=Specify the TLS secrets
+		secrets: [...{
+			name:       string
+			namespace?: string
+		}]
 		// +usage=Specify some HTTP matchers, filters and actions.
 		rules: [...{
 			// +usage=An HTTP request path matcher. If this field is not specified, a default prefix match on the "/" path is provided.
@@ -90,11 +118,5 @@ template: {
 			// +usage=Specify the service port of component.
 			port: int
 		}]
-		// +usage=Specify the gateway name like ***-gateway, for example traefik-gateway.
-		gatewayName?: "traefik-web-gateway" | "istio-gateway" | string
-		// +usage=Specify the gateway namespace.
-		gatewayNamespace?: *"vela-system" | string
-		// +usage=Specify the listner name of the gateway.
-		listenerName?: *"web" | string
 	}
 }

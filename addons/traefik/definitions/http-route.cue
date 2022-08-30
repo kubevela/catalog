@@ -27,12 +27,7 @@ template: {
 					if parameter.gatewayName == _|_ {
 						name: "traefik-gateway"
 					}
-					if parameter.gatewayNamespace != _|_ {
-						namespace: parameter.gatewayNamespace
-					}
-					if parameter.gatewayNamespace == _|_ {
-						namespace: "vela-system"
-					}
+					namespace: "vela-system"
 					if parameter.listenerName != _|_ {
 						sectionName: parameter.listenerName
 					}
@@ -90,11 +85,9 @@ template: {
 			// +usage=Specify the service port of component.
 			port: int
 		}]
-		// +usage=Specify the gateway name like ***-gateway, for example traefik-gateway.
-		gatewayName?: "traefik-web-gateway" | "istio-gateway" | string
-		// +usage=Specify the gateway namespace.
-		gatewayNamespace?: *"vela-system" | string
-		// +usage=Specify the listner name of the gateway.
+		// +usage=Specify the gateway name
+		gatewayName?: *"traefik-gateway" | string
+		// +usage=Specify the listner name of the gateway
 		listenerName?: *"web" | string
 	}
 }
