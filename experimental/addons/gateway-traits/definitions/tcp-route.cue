@@ -75,13 +75,13 @@ template: {
 		// +usage=Specify the TCP matchers
 		rules: [...{
 			// +usage=Specify the gateway listener port
-			gatewayPort: int
+			gatewayPort: *8060 | int
 			// +usage=Specify the service name of component, the default is component name.
 			serviceName?: string
 			// +usage=Specify the service port of component.
 			port: int
 			// +usage=Specify the gatewayClassName.
-			gatewayClassName: "traefik" | "istio" | string
+			gatewayClassName: *"traefik" | "istio"
 		}]
 	}
 }

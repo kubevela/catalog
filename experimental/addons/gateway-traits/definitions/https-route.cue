@@ -96,7 +96,7 @@ template: {
 		TLSPort: *8443 | int
 
 		// +usage=Specify the gatewayClassName.
-		gatewayClassName: "traefik" | "istio" | string
+		gatewayClassName: *"traefik" | "istio"
 
 		// +usage=Specify the TLS secrets.
 		secrets: [...{
