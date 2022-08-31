@@ -1,5 +1,6 @@
 output: {
 	type: "helm"
+	name: "traefik-gateway"
 	properties: {
 		chart:    "traefik"
 		version:  "10.24.1"

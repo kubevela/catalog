@@ -1,19 +1,20 @@
 output: {
 	type: "k8s-objects"
-	name: "traefik-web-gateway"
+	name: "traefik"
 	properties: objects: [{
 		apiVersion: "gateway.networking.k8s.io/v1alpha2"
 		kind:       "Gateway"
-		metadata:
-			name: "traefik-web-gateway"
-		    namespace: parameter.gatewayNamespace
+		metadata: {
+			name:      "traefik"
+			namespace: parameter.gatewayNamespace
+		}
 		spec: {
 			gatewayClassName: "traefik"
 			if parameter.gatewayListeners != _|_ {
 				listeners: [
 					for entry in parameter.gatewayListeners {
 						{
-							name: "web"
+							name: entry.name
 							if entry.hostname != _|_ {
 								hostname: entry.hostname
 							}

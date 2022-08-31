@@ -68,7 +68,7 @@ output: {
 				apiVersion: "gateway.networking.k8s.io/v1alpha2"
 				kind: "Gateway"
 				metadata: {
-					name: "istio-gateway"
+					name: "istio"
 					namespace: parameter.gatewayNamespace
 					annotations: {
 						"networking.istio.io/service-type": parameter.gatewayType
@@ -80,7 +80,7 @@ output: {
 						listeners: [
 							for item in parameter.gatewayListeners {
 								{	
-									name: 	  "web"
+									name: 	  item.name
 									if item.hostname != _|_ {
 										hostname: item.hostname
 									}
