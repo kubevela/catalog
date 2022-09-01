@@ -16,9 +16,11 @@ parameter: {
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-vela-core" | string
 	// +usage=Specify the service type.
-	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | "ExternalName"
+	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Specify the names of imagePullSecret for private image registry, eg. "{a,b,c}"
 	imagePullSecrets?: [...string]
 	// +usage=Specify whether to enable the dex
 	dex: *false | bool
+	// +usage=Specify the replicas.
+	replicas: *1 | int
 }
