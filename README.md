@@ -38,7 +38,7 @@ Please be aware of this contribution rules when contribute addons.
 
 - An experimental addon must meet these conditions to be promoted as a verified one.
 
-  - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can ben enabled successfully.
+  - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
 
   - This addon must have some basic but necessary information.
 
@@ -48,7 +48,7 @@ Please be aware of this contribution rules when contribute addons.
       
     - Also provide an introduction in KubeVela [documentation](https://kubevela.net/docs/reference/addons/overview).
     
-    - It's more likely to be accepted if useful examples provided in example [dir](examples/).
+    - It's more likely to be accepted if useful examples are provided in example [dir](examples/).
     
 ## Community
 
