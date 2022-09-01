@@ -36,15 +36,19 @@ Please be aware of this contribution rules when contribute addons.
 
 - A new addon added in this repo should be put in as an experimental one unless you have test for a long time in your product environment and be approved by most maintainers.
 
-- An experimental addon which has been tested for enough can promote as a verified one.
+- An experimental addon must meet these conditions can be promoted as a verified one.
 
-- A verified Addon must have some basic important information.
+  - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can ben enabled successfully.
 
-  - A accessible icon url and source url defined in addon's `metadata.yaml`
+  - This addon must have some basic but necessary information.
+
+    - An accessible icon url and source url defined in addon's `metadata.yaml`.
     
-  - A detail introduction for this addon in `README.md` for this addon as the [documentation](https://kubevela.net/docs/reference/addons/overview).
+    - A detail introduction include a basic example about how to use and what's the benefit of this addon in `README.md`.
+      
+    - Also provide an introduction in KubeVela [documentation](https://kubevela.net/docs/reference/addons/overview).
     
-  - Better provide many useful examples in [dir](examples/)
+    - Better provide more useful examples in example [dir](examples/).
     
 ## Community
 
