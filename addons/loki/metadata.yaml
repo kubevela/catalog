@@ -1,0 +1,12 @@
+name: loki
+version: v0.1.0
+description: TODO
+icon: 
+url: 
+
+tags:
+ - observability
+ - kubernetes
+ - logging
+
+invisible: false

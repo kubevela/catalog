@@ -4,11 +4,11 @@ import (
 	"strconv"
 )
 
-"install-prometheus-datasource-from-addon": {
+"install-datasource-from-addon": {
 	alias: ""
 	annotations: {}
 	attributes: podDisruptive: false
-	description: "Discover prometheus datasource from prometheus-server addon for grafana."
+	description: "Discover datasource from addon for grafana."
 	labels: "ui-hidden": "true"
 	type: "workflow-step"
 }
@@ -25,7 +25,7 @@ template: {
 		endpoints: *[] | [...{...}]
 		if resources.err == _|_ && resources.list != _|_ {
 			endpoints: [ for ep in resources.list if ep.endpoint.port == parameter.port {
-				name:    "prometheus:\(ep.cluster)"
+				name:    "\(parameter.type):\(ep.cluster)"
 				portStr: strconv.FormatInt(ep.endpoint.port, 10)
 				if ep.cluster == "local" && ep.ref.kind == "Service" {
 					url: "http://\(ep.ref.name).\(ep.ref.namespace):\(portStr)"
@@ -44,7 +44,7 @@ template: {
 					kind:       "GrafanaDatasource"
 					metadata: name: "\(ep.name)@\(parameter.grafana)"
 					spec: {
-						type:   "prometheus"
+						type:   parameter.type
 						name:   ep.name
 						url:    ep.url
 						access: "proxy"
@@ -54,6 +54,7 @@ template: {
 		}
 	} @step(2)
 	parameter: {
+		type:           *"prometheus" | string
 		addonName:      *"addon-prometheus-server" | string
 		addonNamespace: *"vela-system" | string
 		port:           *9090 | int

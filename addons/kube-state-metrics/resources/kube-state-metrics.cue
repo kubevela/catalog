@@ -24,6 +24,11 @@ kubeStateMetrics: {
 		}
 	}
 	traits: [{
+		type: "command"
+		properties: args: [
+			"--metric-labels-allowlist=deployments=[app.oam.dev/name,app.oam.dev/namespace]"
+		]
+	}, {
 		type: "service-account"
 		properties: {
 			name:   "kube-state-metrics"
