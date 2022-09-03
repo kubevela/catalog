@@ -1,0 +1,8 @@
+- jsonKey: cert
+  sort: 1
+  uiType: CertBase64
+  description: The certificate public key, Please input or upload the cert file.
+- jsonKey: key
+  sort: 11
+  uiType: CertBase64
+  description: The certificate private key, Please input or upload the key file.
