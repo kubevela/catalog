@@ -37,3 +37,24 @@ I have:
 - [ ] Updated/Added any relevant [documentation](https://kubevela.io/docs/reference/addons/overview) and [examples](https://github.com/kubevela/catalog/tree/master/examples).
 - [ ] New addon should be put in [experimental](https://github.com/kubevela/catalog/tree/master/experimental/addons).
 - [ ] Update addon should modify the `version` in `metadata.yaml` to generate a new version.
+
+### Verified Addon Contribution
+
+
+I have:
+
+- A new addon added in this repo should be put in as an experimental one unless you have test for a long time in your product environment and be approved by most maintainers.
+
+- An experimental addon must meet these conditions to be promoted as a verified one.
+
+  - [ ] This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
+
+  - This addon must have some basic but necessary information.
+
+    - [ ] An accessible icon url and source url defined in addon's `metadata.yaml`.
+    
+    - [ ] A detail introduction include a basic example about how to use and what's the benefit of this addon in `README.md`.
+      
+    - [ ] Also provide an introduction in KubeVela [documentation](https://kubevela.net/docs/reference/addons/overview).
+    
+    - [ ] It's more likely to be accepted if useful examples provided in example [dir](examples/).

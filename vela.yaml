@@ -1,0 +1,33 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: canary-demo
+  annotations:
+    app.oam.dev/publishVersion: v1
+spec:
+  components:
+  - name: canary-demo
+    type: webservice
+    properties:
+      image: barnett/canarydemo:v1
+      ports:
+      - port: 8090
+    traits:
+    - type: scaler
+      properties:
+        replicas: 5
+    - type: gateway
+      properties:
+        domain: canary-demo.com
+        http:
+          "/version": 8090
+    - type: kruise-rollout
+      properties:
+        canary:
+          steps:
+           # The first batch of Canary releases 20% Pods, and 20% traffic imported to the new version, require manual confirmation before subsequent releases are completed
+          - weight: 20
+          # The second batch of Canary releases 90% Pods, and 90% traffic imported to the new version.
+          - weight: 90
+          trafficRoutings:
+            - type: nginx

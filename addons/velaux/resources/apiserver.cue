@@ -1,11 +1,11 @@
 package main
 
-database: *[if parameter["database"] != _|_ {
-"--datastore-database=" + parameter["database"]
+database: *[ if parameter["database"] != _|_ {
+	"--datastore-database=" + parameter["database"]
 }] | []
 
-dbURL: *[if parameter["dbURL"] != _|_ {
-"--datastore-url=" + parameter["dbURL"]
+dbURL: *[ if parameter["dbURL"] != _|_ {
+	"--datastore-url=" + parameter["dbURL"]
 }] | []
 
 apiserver: {
@@ -17,7 +17,7 @@ apiserver: {
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + context.metadata.version
+			image: parameter["repo"] + "/" + "oamdev/vela-apiserver:" + context.metadata.version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
@@ -33,8 +33,11 @@ apiserver: {
 			},
 		]
 	}
-	traits:[{
-		type: "service-account"
-		properties: name: parameter["serviceAccountName"]
-	}]
+	traits: [
+		{
+			type: "service-account"
+			properties: name: parameter["serviceAccountName"]
+		},
+		{type: "scaler", properties: replicas: parameter["replicas"]},
+	]
 }
