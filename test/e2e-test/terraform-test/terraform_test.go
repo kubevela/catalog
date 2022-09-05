@@ -102,7 +102,7 @@ var _ = Describe("Terraform Test", func() {
 					return fmt.Errorf("configuration %s is not available, current status %s", cfgName, config.Status.Apply.State)
 				}
 				return nil
-			}, 10*time.Minute, 2*time.Second).Should(Succeed())
+			}, 15*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	verifyConfigurationDeleted := func(cfgName string) {
