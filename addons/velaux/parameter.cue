@@ -23,4 +23,6 @@ parameter: {
 	dex: *false | bool
 	// +usage=Specify the replicas.
 	replicas: *1 | int
+	// +usage=Specify nodeport. This will be ignored if serviceType is not NodePort.
+	nodePort: *30000 | int
 }

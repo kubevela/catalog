@@ -23,6 +23,9 @@ velaux: {
 				port:     80
 				protocol: "TCP"
 				expose:   true
+				if parameter["serviceType"] == "NodePort" {
+					nodePort: parameter["nodePort"]
+				}
 			},
 		]
 		if parameter["serviceType"] != _|_ {
