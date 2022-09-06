@@ -2,7 +2,7 @@ gitops: {
 	annotations: {}
 	attributes: workload: definition: {
 		apiVersion: "apps/v1"
-		kind: "Deployment"
+		kind: "Application"
 	}
 	description: "KubeVela addon for implementing GitOps for continuous deployment using either fluxcd or argocd"
 	type: "component"
@@ -10,140 +10,303 @@ gitops: {
 }
 
 template: {
-	output: {
+
 		if parameter.agent == "fluxcd" {
-			apiVersion: "source.toolkit.fluxcd.io/v1beta2"
-			kind: ""
-			metadata: {
-				name: context.name
-				namespace: context.namespace
-			}
-			spec: {
-				interval: parameter.pullInterval
-				sourceRef: {
-					if parameter.repoType == "git" {
-						kind: "GitRepository"
-					}
-					if parameter.repoType == "oss" {
-						kind: "Bucket"
-					}
+			output: {
+				apiVersion: "kustomize.toolkit.fluxcd.io/v1beta2"  // should I make this Kustomize? I did.
+				kind: "Kustomization"
+				metadata: {
 					name: context.name
 					namespace: context.namespace
 				}
-				path: parameter.paths.glob
-				suspend: parameter.suspend
-				prune: parameter.prune
-				pruneTimeout: parameter.pruneTimeout
-				force: parameter.force
-				if parameter.targetNamespace != _|_ {
-					targetNamespace: parameter.targetNamespace
+				spec: {
+					interval: parameter.pullInterval
+					sourceRef: {
+						if parameter.repoType == "git" {
+							kind: "GitRepository"
+						}
+						if repoType == "oss" {
+							kind: "Bucket"
+						}
+						name: context.name
+						namespace: context.namespace
+					}
+					path: parameter.path
+					suspend: parameter.suspend
+					prune: parameter.prune
+					force: parameter.force
+					if parameter.targetNamespace != _|_ {
+						targetNamespace = parameter.targetNamespace
+					}
+
+				}
+
+			}
+
+			outputs: {
+				repo: {
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					metadata: {
+						name: context.name
+						namespace: context.namespace
+					}
+					if parameter.repoType == "git" {
+							kind: "GitRepository"
+							spec: {
+								url: parameter.url
+								if parameter.git.branch != _|_ {
+									ref: branch: parameter.git.branch
+								}
+								if paramter.git.provider != _|_ {
+									if parameter.git.provider == "GitHub" {
+										gitImplementation: "go-git"
+									}
+									if parameter.git.provider == "AzureDevOps" {
+										gitImplementation: "libgit2"
+									}
+								}
+								_secret
+								_sourceCommonArgs
+							}
+					}
+					if parameter.repoType == "oss" {
+						kind: "Bucket"
+						spec: {
+							endpoint: parameter.url
+							bucketName: parameter.oss.bucketName
+							provider: parameter.oss.provider
+							if parameter.oss.region != _|_ {
+								region: parameter.oss.region
+							}
+							_secret
+							_sourceCommonArgs
+						}
+					}
+				}
+
+				if parameter.imageRepository != _|_ {
+					imageRepo: {
+						apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+						kind: "ImageRepository"
+						metadat: {
+							name: context.name
+							namespace: context.namespace
+						}
+						spec: {
+							image: parameter.imageRepository.image
+							interval: parameter.pullInterval
+							if parameter.imageRepository.secretRef != _|_ {
+								secretRef: name: parameter.imageRepository.secretRef
+							}
+						}
+					}
+
+					imagePolicy: {
+						apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+						kind: "ImagePolicy"
+						metadata: {
+							name: context.name
+							namespace: context.namespace
+						}
+						spec: {
+							imageRepositoryRef: name: context.name
+							policy: parameter.imageRepository.policy
+							if parameter.imageRepository.filterTags != _|_ {
+								filterTags: parameter.imageRepository.filterTags
+							}
+						}
+					}
+
+					imageUpdate: {
+						apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+						kind: "ImageUpdateAutomation"
+						metadata: {
+							name: context.name
+							namespace: context.namespace
+						}
+					}
+					spec: {
+						interval: parameter.pullInterval
+						sourceRed: {
+							kind: "GitRepository"
+							name: context.name
+						}
+						git: {
+							checkout:ref:branch: parameter.git.branch
+							commit: {
+								author: {
+									email: "kubevelabot@users.noreply.github.com"
+									name: "kubevelabot"
+								}
+								if parameter.imageRepository.commitMessage != _|_ {
+									messageTemplate: "Update image automatically.\n" + parameter.imageRepository.commitMessage
+								}
+								if parameter.imageRepository.commitMessage == _|_ {
+									messageTemplate: "Update image automatically."
+								}
+							}
+							push: branch: parameter.git.branch
+						}
+						update: {
+							path: parameter.path
+							strategy: "Setters"
+						}
+					}
+				}
+
+			}
+
+			_secret: {
+				if parameter.secretRef != _|_ {
+					secretRef: {
+						name: parameter.secretRef
+					}
 				}
 			}
+
+			_sourceCommonArgs: {
+				interval: parameter.pullInterval
+				if parameter.timeout != _|_ {
+					timeout: parameter.timeout
+				}
+			}
+
 		}
 
-		if parameter.agent == "argocd" {
-			apiVersion: "argoproj.io/v1alpha1"
-			kind: ""
-			metadata: {
-				name: context.name
-				namespace: context.namespace
-			}
-		}
-	}
-
-	parameter: {
-
-		// +usage=The gitops agent to be used
-		agent: *"fluxcd" | "argocd"
-		//+usage=TargetNamespace sets or overrides the default namespace, optional
-		targetNamespace?: string
-
-		repoType: *"git" | "oss"
-
-		imageRepository?: {
-			// +usage=The image url
-			image: string
-
-			// +usage=The name of the secret containing authentication credentials
-			secretRef?: string
-
-			// +usage=Policy gives the particulars of the policy to be followed in selecting the most recent image.
-			policy: {
-				// +usage=Alphabetical set of rules to use for alphabetical ordering of the tags.
-				alphabetical?: {
-					// +usage=Order specifies the sorting order of the tags.
-					// +usage=Given the letters of the alphabet as tags, ascending order would select Z, and descending order would select A.
-					order?: "asc" | "desc"
+		if parameter.agent == "argocd" {  // we probably need to find a way to install the argocd resources (the one specified on the getting started page)
+			output: {  // for installing argocd itself
+				apiVersion: "argoproj.io/v1alpha1"
+				kind: "Application"
+				metadata: {
+					name: context.name
+					namespace: context.namespace
 				}
-				// +usage=Numerical set of rules to use for numerical ordering of the tags.
-				numerical?: {
-					// +usage=Order specifies the sorting order of the tags.
-					// +usage=Given the integer values from 0 to 9 as tags, ascending order would select 9, and descending order would select 0.
-					order: "asc" | "desc"
-				}
-				// +usage=SemVer gives a semantic version range to check against the tags available.
-				semver?: {
-					// +usage=Range gives a semver range for the image tag; the highest version within the range that's a tag yields the latest image.
-					range: string
+				spec: {
+					components: {
+						project: default
+
+						source: {
+							repoURL: ""
+							targetRevision: HEAD
+							path: ""
+						}
+
+						destination: {
+							server: "https://kubernetes.default.svc"
+							if parameter.targetNamespace != _|_ {
+								targetNamespace = parameter.targetNamespace
+							}
+						}
+
+						syncPolicy: {
+							syncOptions: {
+								CreateNamespace=true
+							}
+
+							automated: {
+								selfHeal: true
+								prune: true
+							}
+						}
+
+					}
 				}
 			}
 
-			// +usage=FilterTags enables filtering for only a subset of tags based on a set of rules. If no rules are provided, all the tags from the repository will be ordered and compared.
-			filterTags?: {
-				// +usage=Extract allows a capture group to be extracted from the specified regular expression pattern, useful before tag evaluation.
-				extract?: string
-				// +usage=Pattern specifies a regular expression pattern used to filter for image tags.
-				pattern?: string
+			outputs: {  // for applications, multiple can be defined
+				// should I use what is in experimental argocd (application.cue)? It seems like there is a lot of repetition
 			}
-			// +usage=The image url
-			commitMessage?: string
+
+
+
 		}
 
-		// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
-		pullInterval: *"5m" | string
 
-		// +usage=The Git or Helm repository URL, OSS endpoint, accept HTTP/S or SSH address as git url,
-		url: string
+}
+
+
+parameter: {
+	//+usage=determines which agent is installed on the cluster for GitOps
+	agent: *"fluxcd" | "argocd"
+	//+usage=TargetNamespace sets or overrides the namespace in the kustomization.yaml file, optional
+	targetNamespace?: string
+//	syncPolicy: "manual" | string  // should things like sync policy be declared here?
+
+	// +usage=The image repository for automatically updating image to git
+	imageRepository?: {
+		// +usage=The image url
+		image: string
 
 		// +usage=The name of the secret containing authentication credentials
 		secretRef?: string
 
-		// +usage=The timeout for operations like download index/clone repository, optional
-		timeout?: string
+		// +usage=Policy gives the particulars of the policy to be followed in selecting the most recent image.
+		policy: {
 
-		git?: {
-			// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
-			branch: string
-			// +usage=Determines which git client library to use. Defaults to GitHub, it will pick go-git. AzureDevOps will pick libgit2.
-			provider?: *"GitHub" | "AzureDevOps"
+			// +usage=Alphabetical set of rules to use for alphabetical ordering of the tags.
+			alphabetical?: {
+				// +usage=Order specifies the sorting order of the tags.
+				// +usage=Given the letters of the alphabet as tags, ascending order would select Z, and descending order would select A.
+				order?: "asc" | "desc"
+			}
+
+			// +usage=Numerical set of rules to use for numerical ordering of the tags.
+			numerical?: {
+				// +usage=Order specifies the sorting order of the tags.
+				// +usage=Given the integer values from 0 to 9 as tags, ascending order would select 9, and descending order would select 0.
+				order: "asc" | "desc"
+			}
+
+			// +usage=SemVer gives a semantic version range to check against the tags available.
+			semver?: {
+
+				// +usage=Range gives a semver range for the image tag; the highest version within the range that's a tag yields the latest image.
+				range: string
+			}
 		}
 
-		oss?: {
-			// +usage=The bucket's name, required if repoType is oss
-			bucketName: string
+		// +usage=FilterTags enables filtering for only a subset of tags based on a set of rules. If no rules are provided, all the tags from the repository will be ordered and compared.
+		filterTags?: {
 
-			// +usage="generic" for Minio, Amazon S3, Google Cloud Storage, Alibaba Cloud OSS, "aws" for retrieve credentials from the EC2 service when credentials not specified, default "generic"
-			provider: *"generic" | "aws"
-
-			// +usage=The bucket region, optional
-			region?: string
+			// +usage=Extract allows a capture group to be extracted from the specified regular expression pattern, useful before tag evaluation.
+			extract?: string
+			// +usage=Pattern specifies a regular expression pattern used to filter for image tags.
+			pattern?: string
 		}
 
-		paths: {
-			// +usage=Read all YAML files from this directory or subdirectory, depending on how it is specified
-			glob: *"/**/*.{yaml,yml,json}" | string
-		}
-
-		// +usage=Determines whether previously applied objects should be pruned (deleted)
-		prune: *true | bool
-
-		// +usage=Determines whether to wait for all resources to be fully deleted after pruning, and if so, how long to wait.
-		pruneTimeout: *"3600s" | string
-
-		//+usage=This flag tells the controller to suspend subsequent kustomize executions, it does not apply to already started executions. Defaults to false.
-		suspend: *false | bool
-
-		//+usage=Force instructs the controller to recreate resources when patching fails due to an immutable field change.
-		force: *false | bool
+		// +usage=The image url
+		commitMessage?: string
 	}
+
+	// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
+	pullInterval: "5m" | string
+	// +usage=The Git or Helm repository URL, OSS endpoint, accept HTTP/S or SSH address as git url,
+	url: string
+	// +usage=The name of the secret containing authentication credentials
+	secretRef?: string
+	// +usage=The timeout for operations like download index/clone repository, optional
+	timeout?: string
+	git?: {
+		// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
+		branch: string
+		// +usage=Determines which git client library to use. Defaults to GitHub, it will pick go-git. AzureDevOps will pick libgit2.
+		provider?: *"GitHub" | "AzureDevOps"
+	}
+	oss?: {
+		// +usage=The bucket's name, required if repoType is oss
+		bucketName: string
+	// +usage="generic" for Minio, Amazon S3, Google Cloud Storage, Alibaba Cloud OSS, "aws" for retrieve credentials from the EC2 service when credentials not specified, default "generic"
+		provider: *"generic" | "aws"
+		// +usage=The bucket region, optional
+		region?: string
+	}
+
+	//+usage=Path to the directory containing the kustomization.yaml file, or the set of plain YAMLs a kustomization.yaml should be generated for.
+	path: string
+	//+usage=Whether to delete objects that have already been applyed
+	prune: *true | bool
+	//+usage=This flag tells the controller to suspend subsequent kustomize executions, it does not apply to already started executions. Defaults to false.
+	suspend: *false | bool
+	//+usage=Force instructs the controller to recreate resources when patching fails due to an immutable field change.
+	force: *false | bool
 }
