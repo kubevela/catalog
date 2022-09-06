@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	json2 "encoding/json"
 	"fmt"
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/common"
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/v1beta1"
@@ -56,14 +57,18 @@ var _ = BeforeSuite(func(done Done) {
 
 var _ = Describe("Terraform Test", func() {
 	ctx := context.Background()
-	applyApp := func(source string) {
-		By("Apply an application")
+	readApp := func(source string) v1beta1.Application {
 		var newApp v1beta1.Application
 
 		Expect(ReadYamlToObject("testdata/"+source, &newApp)).Should(BeNil())
 		if newApp.GetNamespace() == "" {
 			newApp.SetNamespace("default")
 		}
+		return newApp
+	}
+	applyApp := func(source string) {
+		By("Apply an application")
+		newApp := readApp(source)
 		Eventually(func() error {
 			return k8sClient.Create(ctx, newApp.DeepCopy())
 		}, 10*time.Second, 500*time.Millisecond).Should(Succeed())
@@ -80,9 +85,14 @@ var _ = Describe("Terraform Test", func() {
 			time.Second*30, time.Millisecond*500).ShouldNot(BeNil())
 	}
 
-	verifyConfigurationAvailable := func(cfgName string) {
+	readConf := func(cfgName string) v1beta2.Configuration {
 		var config v1beta2.Configuration
+		Expect(k8sClient.Get(ctx, client.ObjectKey{Namespace: "default", Name: cfgName}, &config)).Should(BeNil())
+		return config
+	}
+	verifyConfigurationAvailable := func(cfgName string) {
 		By("Verify Configuration is available")
+		var config v1beta2.Configuration
 		Eventually(
 			func() error {
 				if err := k8sClient.Get(ctx, client.ObjectKey{Namespace: "default", Name: cfgName}, &config); err != nil {
@@ -128,13 +138,50 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-oss")
 	})
 
-	PIt("Test RDS", func() {
+	It("Test RDS", func() {
 		applyApp("rds.yaml")
 		verifyConfigurationAvailable("sample-rds")
 		By("Delete application that create RDS")
 		deleteApp("rds.yaml")
 		verifyConfigurationDeleted("sample-rds")
 	})
+
+	It("Test Redis", func() {
+		applyApp("redis.yaml")
+		verifyConfigurationAvailable("sample-redis")
+		By("Delete application that create Redis")
+		deleteApp("redis.yaml")
+		verifyConfigurationDeleted("sample-redis")
+	})
+
+	FIt("Test rds-instance and rds-database", func() {
+		By("apply instance and database in order")
+		applyApp("rds-instance.yaml")
+		rdsConfName := "sample-rds-instance"
+		verifyConfigurationAvailable(rdsConfName)
+		cfg := readConf(rdsConfName)
+		dbApp := readApp("rds-database.yaml")
+		args := map[string]string{
+			"existing_instance_id": cfg.Status.Apply.Outputs["instance_id"].Value,
+			"region":               "cn-hangzhou",
+			"database_name":        "first_database",
+			"password":             "fake_password",
+			"account_name":         "db_account",
+		}
+		json, err := json2.Marshal(args)
+		Expect(err).Should(BeNil())
+		dbApp.Spec.Components[0].Properties = &runtime.RawExtension{Raw: json}
+		Eventually(func() error {
+			return k8sClient.Create(ctx, dbApp.DeepCopy())
+		}).Should(Succeed())
+		verifyConfigurationAvailable("sample-rds-database")
+
+		deleteApp("rds-database.yaml")
+		verifyConfigurationDeleted("sample-rds-database")
+		deleteApp("rds-instance.yaml")
+		verifyConfigurationDeleted(rdsConfName)
+	})
+
 })
 
 // ReadYamlToObject will read a yaml K8s object to runtime.Object

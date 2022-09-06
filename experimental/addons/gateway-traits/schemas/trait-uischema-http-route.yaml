@@ -1,0 +1,12 @@
+- jsonKey: rules
+  subParameters:
+    - jsonKey: path
+      sort: 1
+    - jsonKey: headers
+      sort: 3
+      subParameters: 
+        - jsonKey: type
+          disable: true
+    - jsonKey: port
+      sort: 5
+    

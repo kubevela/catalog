@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: grafana-definitions
+  name: gateway-traits
   namespace: vela-system
 spec:
-  components: []
+  components:
