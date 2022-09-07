@@ -2,17 +2,17 @@ apiVersion: core.oam.dev/v1beta1
 kind: ComponentDefinition
 metadata:
   annotations:
-    definition.oam.dev/description: Terraform configuration for VMware vSphere File Storage Resource
+    definition.oam.dev/description: Terraform configuration for VMware vSphere Folder Inventory Resource
   creationTimestamp: null
   labels:
     type: terraform
-  name: vsphere-file
+  name: vsphere-folder
   namespace: vela-system
 spec:
   schematic:
     terraform:
       configuration: https://github.com/kubevela-contrib/terraform-modules.git
-      path: vsphere/file
+      path: vsphere/folder
       providerRef:
         name: vsphere
         namespace: default
