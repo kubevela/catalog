@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-rds-database
+spec:
+  components:
+    - name: sample-rds-database
+      type: alibaba-rds-database
+      properties:
+        region: cn-hangzhou
+        existing_instance_id: FAKE_ID
+        database_name: first_database
+        password: U34rfwefwefffaked
+        account_name: first_db_account

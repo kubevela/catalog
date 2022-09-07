@@ -8,9 +8,7 @@ metadata:
     If workload type is skipped for any service defined in Appfile, it will be defaulted to `webservice` type."
 spec:
   workload:
-    definition:
-      apiVersion: apps.kruise.io/v1alpha1
-      kind: CloneSet
+    type: "autodetects.core.oam.dev"
   schematic:
     cue:
       template: |

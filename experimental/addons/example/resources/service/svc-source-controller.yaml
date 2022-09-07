@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: flux-system
     control-plane: controller
   name: source-controller
-  namespace: example-system
+  namespace: flux-system
 spec:
   ports:
     - name: http

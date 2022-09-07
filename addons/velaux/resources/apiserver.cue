@@ -1,12 +1,15 @@
-database: *[if parameter["database"] != _|_ {
-"--datastore-database=" + parameter["database"]
+package main
+
+database: *[ if parameter["database"] != _|_ {
+	"--datastore-database=" + parameter["database"]
 }] | []
 
-dbURL: *[if parameter["dbURL"] != _|_ {
-"--datastore-url=" + parameter["dbURL"]
+dbURL: *[ if parameter["dbURL"] != _|_ {
+	"--datastore-url=" + parameter["dbURL"]
 }] | []
 
-output: {
+apiserver: {
+	name: "apiserver"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
@@ -14,7 +17,7 @@ output: {
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" +"oamdev/vela-apiserver:" + context.metadata.version
+			image: parameter["repo"] + "/" + "oamdev/vela-apiserver:" + context.metadata.version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
@@ -30,8 +33,11 @@ output: {
 			},
 		]
 	}
-	traits:[{
-		type: "service-account"
-		properties: name: parameter["serviceAccountName"]
-	}]
+	traits: [
+		{
+			type: "service-account"
+			properties: name: parameter["serviceAccountName"]
+		},
+		{type: "scaler", properties: replicas: parameter["replicas"]},
+	]
 }

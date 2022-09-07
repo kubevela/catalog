@@ -102,8 +102,8 @@ jobs:
 
       - name: Addon e2e-test
         run: |
-          go run test/e2e-test/addon-test/main.go  ${{ steps.changed-files.outputs.all_changed_files }}
-
+          go build -o main test/e2e-test/addon-test/main.go
+          ./main ${{ steps.changed-files.outputs.all_changed_files }}
 
 
 

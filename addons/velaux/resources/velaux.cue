@@ -1,6 +1,9 @@
-_version: "v1.5.0"
+package main
 
-output: {
+_version: context.metadata.version
+
+velaux: {
+	name: "velaux"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
@@ -46,43 +49,43 @@ output: {
 			]
 		}
 	}
-	if parameter["domain"] != _|_ {
-		if parameter["gatewayDriver"] == "nginx" {
-			traits: [
-				{
-					type: "gateway"
-					properties: {
-						domain: parameter["domain"]
-						http: {
-							"/": 80
-						}
-						class: "nginx"
+	_nginxTrait: *[
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx" {
+			{
+				type: "gateway"
+				properties: {
+					domain: parameter["domain"]
+					http: {
+						"/": 80
 					}
-				},
-			]
-		}
-
-		httpsTrait: *[ if parameter["secretName"] != _|_ {
-			type: "https-route"
-			properties: {
-				domains: [ parameter["domain"]]
-				rules: [{port: 80}]
-				secrets: [{
-					name: parameter["secretName"]
-				}]
-			}}] | []
-
-		if parameter["gatewayDriver"] == "traefik" {
-			traits: [
-				{
-					type: "http-route"
-					properties: {
-						domains: [ parameter["domain"]]
-						rules: [{port: 80}]
-					}
-				},
-			] + httpsTrait
-		}
-	}
+					class: "nginx"
+				}
+			}
+		},
+	] | []
+	_traefikTrait: *[
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" {
+			{
+				type: "http-route"
+				properties: {
+					domains: [ parameter["domain"]]
+					rules: [{port: 80}]
+				}
+			}
+		},
+	] | []
+	_httpsTrait: *[ if parameter["secretName"] != _|_ && parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" {
+		type: "https-route"
+		properties: {
+			domains: [ parameter["domain"]]
+			rules: [{port: 80}]
+			secrets: [{
+				name: parameter["secretName"]
+			}]
+		}}] | []
+	_scalerTraits: [
+		{type: "scaler", properties: replicas: parameter["replicas"]},
+	]
+	traits: _nginxTrait + _traefikTrait + _httpsTrait + _scalerTraits
 	dependsOn: ["apiserver"]
 }

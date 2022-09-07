@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-redis
+spec:
+  components:
+    - name: sample-redis
+      type: alibaba-redis
+      properties:
+        instance_name: sample-redis
+        accounts:
+          - account_name: oamtest
+            account_password: U34rfwefwefffaked
+        writeConnectionSecretToRef:
+          name: redis-conn
