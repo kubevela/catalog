@@ -35,6 +35,7 @@ template: {
           }
         },]
         containers: [{
+          // +patchKey=name
           volumeMounts: [{
             mountPath: "/mnt/secrets-store",
             name: "secrets-store",
