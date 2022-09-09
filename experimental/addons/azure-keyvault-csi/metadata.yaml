@@ -1,5 +1,5 @@
 name: azure-keyvault-csi
-version: 0.0.1
+version: 0.0.2
 system:
   vela: ">=v1.4.0"
 description: Trait providing access to Azure Keyvault values via csi driver
