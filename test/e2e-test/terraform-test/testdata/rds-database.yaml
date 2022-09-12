@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: app-rds-database
+  name: regular-check-rds-database
 spec:
   components:
     - name: sample-rds-database

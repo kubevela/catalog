@@ -17,10 +17,10 @@ spec:
       type: k8s-objects
       properties:
         objects:
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: istio-system
+          - kind: Namespace
+            apiVersion: v1
+            metadata:
+              name: istio-system
     - name: istio
       type: helm
       properties:
