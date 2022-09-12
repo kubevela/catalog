@@ -13,39 +13,7 @@ template: {
 
 		if parameter.agent == "fluxcd" {
 			output: {
-				apiVersion: "kustomize.toolkit.fluxcd.io/v1beta2"  // should I make this Kustomize? I did.
-				kind: "Kustomization"
-				metadata: {
-					name: context.name
-					namespace: context.namespace
-				}
-				spec: {
-					interval: parameter.pullInterval
-					sourceRef: {
-						if parameter.repoType == "git" {
-							kind: "GitRepository"
-						}
-						if repoType == "oss" {
-							kind: "Bucket"
-						}
-						name: context.name
-						namespace: context.namespace
-					}
-					path: parameter.path
-					suspend: parameter.suspend
-					prune: parameter.prune
-					force: parameter.force
-					if parameter.targetNamespace != _|_ {
-						targetNamespace = parameter.targetNamespace
-					}
-
-				}
-
-			}
-
-			outputs: {
-				repo: {
-					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+				apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 					metadata: {
 						name: context.name
 						namespace: context.namespace
@@ -82,8 +50,10 @@ template: {
 							_sourceCommonArgs
 						}
 					}
-				}
 
+			}
+
+			outputs: {
 				if parameter.imageRepository != _|_ {
 					imageRepo: {
 						apiVersion: "image.toolkit.fluxcd.io/v1beta1"
@@ -174,7 +144,7 @@ template: {
 		}
 
 		if parameter.agent == "argocd" {  // we probably need to find a way to install the argocd resources (the one specified on the getting started page)
-			output: {  // for installing argocd itself
+			output: {
 				apiVersion: "argoproj.io/v1alpha1"
 				kind: "Application"
 				metadata: {
@@ -186,7 +156,7 @@ template: {
 						project: default
 
 						source: {
-							repoURL: ""
+							repoURL: parameter.url
 							targetRevision: HEAD
 							path: ""
 						}
