@@ -10,11 +10,15 @@ tags:
   - argocd
 
 deployTo:
-  control_plane: # true
-  runtimeCluster: # true
+  control_plane: true
+  runtimeCluster: true
 
 system:
   vela: ">=v1.4.0"
   kubernetes: ">=1.19.0-0"
 
 invisible: true
+
+dependencies:  # depends on which agent you choose
+  - name: fluxcd
+#  - name: experimental/addons/argocd
