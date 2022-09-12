@@ -1,0 +1,14 @@
+name: mongodb
+version: 6.0.1
+description: MongoDB(R) is a relational open source NoSQL database. Easy to use, it stores data in JSON-like documents. Automated scalability and high-performance. Ideal for developing cloud native applications.
+icon: https://raw.githubusercontent.com/mongodb/mongo/master/docs/leaf.svg
+url: https://github.com/mongodb/mongo
+
+tags:
+  - NoSQL
+
+dependencies:
+  - name: fluxcd
+
+system:
+  vela: ">=1.5.0"
