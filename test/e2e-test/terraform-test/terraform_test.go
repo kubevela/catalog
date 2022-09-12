@@ -102,7 +102,7 @@ var _ = Describe("Terraform Test", func() {
 					return fmt.Errorf("configuration %s is not available, current status %s", cfgName, config.Status.Apply.State)
 				}
 				return nil
-			}, 10*time.Minute, 2*time.Second).Should(Succeed())
+			}, 15*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	verifyConfigurationDeleted := func(cfgName string) {
@@ -154,7 +154,7 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-redis")
 	})
 
-	FIt("Test rds-instance and rds-database", func() {
+	It("Test rds-instance and rds-database", func() {
 		By("apply instance and database in order")
 		applyApp("rds-instance.yaml")
 		rdsConfName := "sample-rds-instance"
@@ -165,7 +165,7 @@ var _ = Describe("Terraform Test", func() {
 			"existing_instance_id": cfg.Status.Apply.Outputs["instance_id"].Value,
 			"region":               "cn-hangzhou",
 			"database_name":        "first_database",
-			"password":             "fake_password",
+			"password":             "U34rfwefwefffaked",
 			"account_name":         "db_account",
 		}
 		json, err := json2.Marshal(args)
