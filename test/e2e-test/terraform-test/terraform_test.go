@@ -154,7 +154,7 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-redis")
 	})
 
-	It("Test rds-instance and rds-database", func() {
+	It("Test RDS-instance and RDS-database", func() {
 		By("apply instance and database in order")
 		applyApp("rds-instance.yaml")
 		rdsConfName := "sample-rds-instance"
@@ -180,6 +180,14 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-rds-database")
 		deleteApp("rds-instance.yaml")
 		verifyConfigurationDeleted(rdsConfName)
+	})
+
+	It("Test ECS", func() {
+		applyApp("ecs.yaml")
+		verifyConfigurationAvailable("sample-ecs")
+		By("Delete application that create ECS")
+		deleteApp("ecs.yaml")
+		verifyConfigurationDeleted("sample-ecs")
 	})
 
 })

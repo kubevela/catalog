@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-ecs
+spec:
+  components:
+    - name: sample-ecs
+      type: alibaba-ecs
+      properties:
+        writeConnectionSecretToRef:
+          name: outputs-ecs
+        name: regular-check-ecs
+        instance_type: ecs.n1.tiny
+        host_name: test-terraform-vela
+        password: Test-123456!
+        internet_max_bandwidth_out: 10
+        associate_public_ip_address: true
+        instance_charge_type: PostPaid
+        user_data_url: https://raw.githubusercontent.com/wonderflow/terraform-alicloud-ecs-instance/master/frp.sh
+        ports:
+        - 8080
+        tags:
+          created_by: "Terraform-of-KubeVela"
+          created_from: "module-tf-alicloud-ecs-instance"
