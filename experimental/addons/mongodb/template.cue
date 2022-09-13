@@ -28,7 +28,12 @@ output: {
                                     version:  "13.1.2"
                                     values: {
                                             persistence: {
-                                                enabled: false
+                                                enabled: parameter.persistenceEnabled
+                                            }
+                                            if parameter.persistenceEnabled {
+                                                persistence: {
+                                                    storageClass: parameter.persistenceStorageClass
+                                                }
                                             }
                                     }
                             }
