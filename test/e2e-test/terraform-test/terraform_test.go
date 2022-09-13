@@ -154,7 +154,7 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-redis")
 	})
 
-	It("Test rds-instance and rds-database", func() {
+	It("Test RDS-instance and RDS-database", func() {
 		By("apply instance and database in order")
 		applyApp("rds-instance.yaml")
 		rdsConfName := "sample-rds-instance"
