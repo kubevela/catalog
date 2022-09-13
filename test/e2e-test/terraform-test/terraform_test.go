@@ -182,6 +182,14 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted(rdsConfName)
 	})
 
+	It("Test ECS", func() {
+		applyApp("ecs.yaml")
+		verifyConfigurationAvailable("sample-ecs")
+		By("Delete application that create ECS")
+		deleteApp("ecs.yaml")
+		verifyConfigurationDeleted("sample-ecs")
+	})
+
 })
 
 // ReadYamlToObject will read a yaml K8s object to runtime.Object
