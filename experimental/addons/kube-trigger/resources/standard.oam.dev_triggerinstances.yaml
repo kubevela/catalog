@@ -1,0 +1,117 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.0
+  creationTimestamp: null
+  name: triggerinstances.standard.oam.dev
+spec:
+  group: standard.oam.dev
+  names:
+    kind: TriggerInstance
+    listKind: TriggerInstanceList
+    plural: triggerinstances
+    singular: triggerinstance
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TriggerInstance is the Schema for the kubetriggers API.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TriggerInstanceSpec defines the desired state of TriggerInstance.
+            properties:
+              logLevel:
+                type: string
+              registrySize:
+                description: Cache size for filters and actions.
+                type: integer
+              workerConfig:
+                properties:
+                  actionRetry:
+                    type: boolean
+                  maxRetry:
+                    description: Max retry count after action failed to run.
+                    minimum: 0
+                    type: integer
+                  perWorkerQPS:
+                    description: Long-term QPS limiting per worker, this is shared
+                      between all watchers.
+                    minimum: 1
+                    type: integer
+                  queueSize:
+                    description: Queue size for running actions, this is shared between
+                      all watchers.
+                    minimum: 0
+                    type: integer
+                  retryDelay:
+                    description: First delay to retry actions in seconds, subsequent
+                      delays will grow exponentially.
+                    minimum: 0
+                    type: integer
+                  timeout:
+                    description: Timeout for each job in seconds.
+                    minimum: 1
+                    type: integer
+                  workerCount:
+                    description: Number of workers for running actions, this is shared
+                      between all watchers.
+                    minimum: 1
+                    type: integer
+                type: object
+            type: object
+          status:
+            description: TriggerInstanceStatus defines the observed state of TriggerInstance.
+            properties:
+              createdResources:
+                description: 'Important: Run "make" to regenerate code after modifying
+                  this file TODO(charlie0129): add status fields - If a kube-trigger
+                  instance is working fine - statistics - running jobs count - success
+                  jobs count - failed jobs count'
+                items:
+                  properties:
+                    apiVersion:
+                      type: string
+                    kind:
+                      type: string
+                    lastUpdateTime:
+                      format: date-time
+                      type: string
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - apiVersion
+                  - kind
+                  - lastUpdateTime
+                  - name
+                  - namespace
+                  type: object
+                type: array
+              healthy:
+                description: 'TODO: make it useful'
+                type: boolean
+            required:
+            - createdResources
+            - healthy
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

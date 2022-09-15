@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: this-will-trigger-update-1
+  namespace: default
+data:
+  content: EDIT_ME_AFTER_APPLY
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: this-will-trigger-update-2
+  namespace: default
+data:
+  content: EDIT_ME_AFTER_APPLY
+
+---
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: this-app-will-be-updated
+  namespace: default
+spec:
+  components:
+    - type: ref-objects
+      name: configmap
+      properties:
+        objects:
+          - resource: configmap
+            name: this-will-trigger-update-1
+            namespace: default
+          - resource: configmap
+            name: this-will-trigger-update-2
+            namespace: default
+    # This component is from kube-trigger addon.
+    # It allows you to bump revision of this App when
+    # resources change (in this case, it is the
+    # two CMs above).
+    - type: apprev-bumper
+      name: apprev-bumper
+      properties:
+        watchResource:
+          apiVersion: v1
+          kind: ConfigMap
+          namespace: default
+          # We only care about the two CMs above.
+          # So use a regex to match them.
+          nameRegex: this-will-trigger-update-.
