@@ -25,6 +25,7 @@ vela addon disable chaosblade-operator
 ```
 
 ## Use
+Check the chaosblade-operator status
 ```shell
 $ vela ls -A | grep chaos
 vela-system     addon-chaosblade-operator       blade-ns                k8s-objects             running healthy                                                               2022-09-14 13:50:16 +0800 CST
@@ -34,106 +35,89 @@ blade                          chaosblade-operator-b6f48fdbc-m9ff9              
 blade                          chaosblade-tool-sq7pj                               1/1     Running            0                 3m52s
 ```
 
+Check the one trait of chaosblade called delete-pod-by-names, it will be used to show demo
 ```shell
-Please access addon-chaosblade-operator from the following endpoints:low (timeout 0/600 seconds)...
-+---------+------------+-----------------------------------------+-----------------------------------------+-------+
-| CLUSTER | COMPONENT  |        REF(KIND/NAMESPACE/NAME)         |                ENDPOINT                 | INNER |
-+---------+------------+-----------------------------------------+-----------------------------------------+-------+
-| local   | blade-helm | Service/blade/chaosblade-webhook-server | https://chaosblade-webhook-server.blade | true  |
-+---------+------------+-----------------------------------------+-----------------------------------------+-------+
-
+$ vela show delete-pod-by-names
+# Specification
++-----------+------------------------------+----------+----------+---------+
+|   NAME    |         DESCRIPTION          |   TYPE   | REQUIRED | DEFAULT |
++-----------+------------------------------+----------+----------+---------+
+| bladeName | Specify the chaosblade name. | string   | true     |         |
+| podName   | Specify the pod names.       | []string | true     |         |
+| nsName    | Specify the ns names.        | []string | true     |         |
++-----------+------------------------------+----------+----------+---------+
 ```
 
+Deploy an applicatin without chaosblade
 ```shell
-cat <<EOF | kubectl up -f -
-apiVersion: chaosblade.io/v1alpha1
-kind: ChaosBlade
+cat <<EOF | vela up -f -
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: delete-pod-by-names
+  name: oeular-app
 spec:
-  experiments:
-  - scope: pod
-    target: pod
-    action: delete
-    desc: "delete pod by names"
-    matchers:
-    - name: names
-      value:
-      - "kubevela-vela-core-8699fb6d68-mrfvv"
-    - name: namespace
-      value:
-      - "vela-system"
+  components:
+  - name: nginx-demo
+    type: webservice
+    properties:
+      exposeType: ClusterIP
+      image: nginx:latest
+      ports:
+      - expose: true
+        port: 80
+        protocol: TCP
+        ports: 80
 EOF
-
-$ kubectl get blade delete-pod-by-names  -o json
-{
-    "apiVersion": "chaosblade.io/v1alpha1",
-    "kind": "ChaosBlade",
-    "metadata": {
-        "annotations": {
-            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"chaosblade.io/v1alpha1\",\"kind\":\"ChaosBlade\",\"metadata\":{\"annotations\":{},\"name\":\"delete-pod-by-names\"},\"spec\":{\"experiments\":[{\"action\":\"delete\",\"desc\":\"delete pod by names\",\"matchers\":[{\"name\":\"names\",\"value\":[\"kubevela-vela-core-8699fb6d68-mrfvv\"]},{\"name\":\"namespace\",\"value\":[\"vela-system\"]}],\"scope\":\"pod\",\"target\":\"pod\"}]}}\n"
-        },
-        "creationTimestamp": "2022-09-12T11:52:44Z",
-        "finalizers": [
-            "finalizer.chaosblade.io"
-        ],
-        "generation": 1,
-        "name": "delete-pod-by-names",
-        "resourceVersion": "17742294",
-        "uid": "ea4075cc-26a5-44ce-b20c-47b562975d84"
-    },
-    "spec": {
-        "experiments": [
-            {
-                "action": "delete",
-                "desc": "delete pod by names",
-                "matchers": [
-                    {
-                        "name": "names",
-                        "value": [
-                            "kubevela-vela-core-8699fb6d68-mrfvv"
-                        ]
-                    },
-                    {
-                        "name": "namespace",
-                        "value": [
-                            "vela-system"
-                        ]
-                    }
-                ],
-                "scope": "pod",
-                "target": "pod"
-            }
-        ]
-    },
-    "status": {
-        "expStatuses": [
-            {
-                "action": "delete",
-                "resStatuses": [
-                    {
-                        "identifier": "vela-system/cn-chengdu.10.0.0.195/kubevela-vela-core-8699fb6d68-mrfvv",
-                        "kind": "pod",
-                        "state": "Success",
-                        "success": true
-                    }
-                ],
-                "scope": "pod",
-                "state": "Success",
-                "success": true,
-                "target": "pod"
-            }
-        ],
-        "phase": "Running"
-    }
-}
-
-$ kubectl get po -n vela-system
-NAME                                        READY   STATUS    RESTARTS        AGE
-kubevela-vela-core-8699fb6d68-mrfvv         1/1     Running   0               80s
-
-$ kubectl get po -n vela-system
-NAME                                        READY   STATUS    RESTARTS        AGE
-kubevela-vela-core-8699fb6d68-58jrf         1/1     Running   0               37s
-
 ```
+
+Get the pod name to make a chaosblade
+```shell
+$ kubectl get po -n default | grep nginx
+nginx-demo-6cbfdc95df-q7vmn   1/1     Running   0                 33s
+```
+
+Deploy an applicatin with one chaosblade trait named delete-pod-by-names
+```shell
+cat <<EOF | vela up -f -
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: oeular-app
+spec:
+  components:
+  - name: nginx-demo
+    type: webservice
+    properties:
+      exposeType: ClusterIP
+      image: nginx:latest
+      ports:
+      - expose: true
+        port: 80
+        protocol: TCP
+        ports: 80
+    traits:
+    - type: delete-pod-by-names
+      properties:
+        bladeName: delete-po-chaos
+        podName:
+        - nginx-demo-6cbfdc95df-q7vmn
+        nsName:
+        - default
+
+EOF
+```
+
+Check the chaosblade we applied to the webservice component
+```shell
+$ kubectl get blade delete-po-chaos
+NAME              AGE
+delete-po-chaos   47s
+```
+
+Check the the pod of the webservice component, one new pod is recreated
+```shell
+$ kubectl get po -n default | grep nginx
+nginx-demo-6cbfdc95df-2dmjn   1/1     Running            0               67s
+```
+## Note
+In this README.md, only one trait of the chaosblade is given with demo. There are many traits in definitions can be tried.
