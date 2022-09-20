@@ -39,3 +39,4 @@ outputs:"pod-cpu-load-by-names":{
             // +usage=Specify the names
             names:[...string]
 	}
+}

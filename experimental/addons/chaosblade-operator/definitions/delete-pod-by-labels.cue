@@ -28,7 +28,7 @@ outputs:"chaosblade-delete-pod-by-labels":{
 				value: parameter.nsName
 			}, {
 				name: "evict-count"
-				value: ["2"]
+				value: parameter.counts
 			}]
 			scope:  "pod"
 			target: "pod"
@@ -36,11 +36,13 @@ outputs:"chaosblade-delete-pod-by-labels":{
 	}
 
 	parameter: {
-		            // +usage=Specify the name for ChaosBlade
+		       // +usage=Specify the name for ChaosBlade
             bladeName:string
             // +usage=Specify the labels
             labels:[...string]
             // +usage=Specify the ns names
             nsName:[...string]
+            // +usage=Specify the evict counts
+            counts:[...string]
 	}
 }

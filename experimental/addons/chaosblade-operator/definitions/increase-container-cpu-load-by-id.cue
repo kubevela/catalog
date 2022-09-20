@@ -8,33 +8,41 @@
 		podDisruptive:   false
 		workloadRefPath: ""
 	}
-	description: ""
+	description: "increase container cpu load by id"
 	labels: {}
 	type: "trait"
 }
 
 template: {
-	output: {
+       outputs:"increase-container-cpu-load-by-id":{
 		apiVersion: "chaosblade.io/v1alpha1"
 		kind:       "ChaosBlade"
-		metadata: name: "increase-container-cpu-load-by-id"
+		metadata: name: parameter.bladeName
 		spec: experiments: [{
 			action: "fullload"
 			desc:   "increase container cpu load by id"
 			matchers: [{
 				name: "container-ids"
-				value: ["2ff814b246f86"]
+				value: parameter.ids
 			}, {
 				name: "cpu-percent"
-				value: ["100"]
+				value: parameter.percent
 			}, {
 				name: "names"
-				value: ["frontend-d89756ff7-pbnnc"]
+				value: parameter.names
 			}]
 			scope:  "container"
 			target: "cpu"
 		}]
 	}
-	outputs: {}
-	parameter: {}
+        parameter: {
+            // +usage=Specify the name for ChaosBlade
+            bladeName:string
+            // +usage=Specify the ids
+            ids:[...string]
+            // +usage=Specify the percent
+            percent:[...string]
+            // +usage=Specify the names
+            names:[...string]
+        }
 }

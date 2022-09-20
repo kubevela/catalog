@@ -8,33 +8,42 @@
 		podDisruptive:   false
 		workloadRefPath: ""
 	}
-	description: ""
+	description: "kill container process by id"
 	labels: {}
 	type: "trait"
 }
 
 template: {
-	output: {
+       outputs:"kill-container-process-by-id":{
 		apiVersion: "chaosblade.io/v1alpha1"
 		kind:       "ChaosBlade"
-		metadata: name: "kill-container-process-by-id"
+		metadata: name: parameter.bladeName
 		spec: experiments: [{
 			action: "kill"
 			desc:   "kill container process by id"
 			matchers: [{
 				name: "container-ids"
-				value: ["f1de335b4eeaf"]
+				value: parameter.ids
 			}, {
 				name: "process"
-				value: ["top"]
+				value: parameter.process
 			}, {
 				name: "names"
-				value: ["frontend-d89756ff7-tl4xl"]
+				value: parameter.names
 			}]
 			scope:  "container"
 			target: "process"
 		}]
 	}
-	outputs: {}
-	parameter: {}
+
+        parameter: {
+            // +usage=Specify the name for ChaosBlade
+            bladeName:string
+            // +usage=Specify the ids
+            ids:[...string]
+            // +usage=Specify the process
+            process:[...string]
+            // +usage=Specify the names
+            names:[...string]
+        }
 }

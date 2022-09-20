@@ -8,33 +8,41 @@
 		podDisruptive:   false
 		workloadRefPath: ""
 	}
-	description: ""
+	description: "remove container by id"
 	labels: {}
 	type: "trait"
 }
 
 template: {
-	output: {
+outputs:"remove-container-by-id":{
 		apiVersion: "chaosblade.io/v1alpha1"
 		kind:       "ChaosBlade"
-		metadata: name: "remove-container-by-id"
+		metadata: name: parameter.bladeName
 		spec: experiments: [{
 			action: "remove"
 			desc:   "remove container by id"
 			matchers: [{
 				name: "container-ids"
-				value: ["072aa6bbf2e2e2"]
+				value: parameter.ids
 			}, {
 				name: "names"
 				value: ["frontend-d89756ff7-szblb"]
 			}, {
 				name: "namespace"
-				value: ["default"]
+				value: parameter.namespaces
 			}]
 			scope:  "container"
 			target: "container"
 		}]
 	}
-	outputs: {}
-	parameter: {}
+        parameter: {
+            // +usage=Specify the name for ChaosBlade
+            bladeName:string
+            // +usage=Specify the ids
+            ids:[...string]
+            // +usage=Specify the names
+            names:[...string]
+            // +usage=Specify the namespaces
+            namespaces:[...string]
+        }
 }
