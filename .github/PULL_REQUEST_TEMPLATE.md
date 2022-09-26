@@ -31,8 +31,7 @@ describe the testing that has already been done or which is planned.
 ### Checklist
 
 <!--
-Please run through the below readiness checklist. The first two items are
-relevant to every OAM catalog pull request.
+Please run through the below readiness checklist. 
 -->
 
 I have:
