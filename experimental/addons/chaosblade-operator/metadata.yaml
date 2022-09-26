@@ -1,0 +1,14 @@
+name: chaosblade-operator
+version: 1.7.0
+description: A Chaos Engineering Tool for Cloud-native
+icon: https://chaosblade.oss-cn-hangzhou.aliyuncs.com/doc/image/chaosblade-logo.png
+url: https://github.com/chaosblade-io/chaosblade-operator
+
+tags:
+  - chaosblade operator for kubernetes experiments
+
+dependencies:
+  - name: fluxcd
+
+system:
+  vela: ">=1.5.0"
