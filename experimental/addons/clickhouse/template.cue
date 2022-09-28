@@ -10,6 +10,9 @@ output: {
 	spec: {
 		components: [
 			dashboard, operator,
+			if parameter.grafanaDashbord {
+				grafanaDashboardClickhouseOperator
+			},
 		]
 		policies: [{
 			type: "topology"
