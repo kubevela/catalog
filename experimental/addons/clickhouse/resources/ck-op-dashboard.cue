@@ -1,5 +1,8 @@
-output: {
+package main
+
+dashboard: {
 	type: "webservice"
+	name: "ck-dashboard"
 	properties: {
 		image: "ghcr.io/altinity/altinity-dashboard:v0.1.4"
 
@@ -15,5 +18,30 @@ output: {
 			},
 		]
 	}
+	traits: [{
+		type: "service-account"
+		properties: {
+			name:   "clickhouse-dashboard"
+			create: true
+			privileges: [ for p in _clusterPrivileges {
+				scope: "cluster"
+				{p}
+			}]
+		}
+	}]
 	dependsOn: ["ck-op"]
 }
+
+_clusterPrivileges: [{
+	apiGroups: [""]
+	resources: ["pods"]
+	verbs: ["list", "watch"]
+}, {
+	apiGroups: ["extensions", "apps"]
+	resources: ["deployments"]
+	verbs: ["list", "watch"]
+}, {
+	apiGroups: ["clickhouse.altinity.com"]
+	resources: ["clickhouseinstallations"]
+	verbs: ["list", "watch"]
+}]
