@@ -20,3 +20,4 @@ This addon is based on [cloudtty](https://github.com/cloudtty/cloudtty) project.
 | 0.0.1           |       v0.2.0        |       v1.5.0-beta.5             |
 | 0.0.2           |       v0.2.0        |       v1.5.0                    |
 | 0.0.3           |       v0.3.0        |       v1.5.0                    |
+| 0.0.4           |       v0.3.0        |       v1.5.6                    |
