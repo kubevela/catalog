@@ -8,6 +8,27 @@ output: {
 		namespace: "vela-system"
 	}
 	spec: {
+		components: [
+			dashboard, operator,
+		]
+		policies: [{
+			type: "topology"
+			name: "deploy-topology"
+			properties: {
+				if parameter.clusters != _|_ {
+					clusters: parameter.clusters
+				}
+				if parameter.clusters == _|_ {
+					clusters: ["local"]
+				}
+				namespace: "kube-system"
+			}
+		}]
+		workflow: steps: [{
+			type: "deploy"
+			name: "deploy-ck"
+			properties: policies: ["deploy-topology"]
+		}]
 	}
 }
 

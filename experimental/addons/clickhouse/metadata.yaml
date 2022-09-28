@@ -2,7 +2,7 @@ description: provides ClickHouse instance by clickhouse-operator.
 icon: "https://raw.githubusercontent.com/ClickHouse/clickhouse-presentations/master/images/logo-400x240.png"
 invisible: false
 name: clickhouse
-version: 1.0.0
+version: 1.0.1
 url: https://clickhouse.com/
 tags:
   - ClickHouse

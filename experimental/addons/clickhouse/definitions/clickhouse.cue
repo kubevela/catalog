@@ -29,7 +29,7 @@ template: {
 				distributedDDL: profile: "default"
 				templates: {
 					serviceTemplate: context.name + "-svc-templ"
-					if parameter.storage == _|_ {
+					if parameter.storage != _|_ {
 						dataVolumeClaimTemplate: context.name + "-vol-templ"
 					}
 				}
@@ -39,12 +39,12 @@ template: {
 					name: context.name + "-svc-templ"
 					metadata: {
 						labels: {
-							for k, v in parameter.svclabel {
+							if parameter.labels != _|_ for k, v in parameter.labels {
 								"\(k)": v
 							}
 						}
 						annotations: {
-							for k, v in parameter.svcann {
+							if parameter.annotations != _|_ for k, v in parameter.annotations {
 								"\(k)": v
 							}
 						}
@@ -63,7 +63,7 @@ template: {
 						type: parameter.svcPortType
 					}
 				}]
-				if parameter.storage == _|_ {
+				if parameter.storage != _|_ {
 					volumeClaimTemplates: [{
 						name: context.name + "-vol-templ"
 						spec: {
@@ -77,8 +77,8 @@ template: {
 		}
 	}
 	parameter: {
-		svcann: [string]:   string | null
-		svclabel: [string]: string | null
+		annotations?: [string]: string
+		labels?: [string]:      string
 		svcPortType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 		storage?: {
 			size:  string
