@@ -18,12 +18,6 @@ parameter: {
 
 	// +usage=Specify the image of loki
 	image: *"grafana/loki" | string
-	// +usage=Specify the type of log agents, if empty, no agent will be installed
-	agent: *"vector" | "promtail" | ""
-	// +usage=Specify the image of promtail
-	promtailImage: *"grafana/promtail" | string
-	// +usage=Specify the image of vector
-	vectorImage: *"timberio/vector:0.24.0-distroless-libc" | string
 	// +usage=Specify the imagePullPolicy of the image
 	imagePullPolicy: *"IfNotPresent" | "Never" | "Always"
 	// +usage=Specify the service type for expose loki. If empty, it will be not exposed.
@@ -32,4 +26,13 @@ parameter: {
 	storage?: =~"^([1-9][0-9]{0,63})(E|P|T|G|M|K|Ei|Pi|Ti|Gi|Mi|Ki)$"
 	// +usage=Specify the storage class to use.
 	storageClassName?: string
+
+	// agent parameters
+
+	// +usage=Specify the type of log agents, if empty, no agent will be installed
+	agent: *"vector" | "promtail" | ""
+	// +usage=Specify the image of promtail
+	promtailImage: *"grafana/promtail" | string
+	// +usage=Specify the image of vector
+	vectorImage: *"timberio/vector:0.24.0-distroless-libc" | string
 }
