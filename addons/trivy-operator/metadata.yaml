@@ -7,10 +7,6 @@ url: https://github.com/devopstales/trivy-operator
 tags:
   - trivy-operator
 
-deployTo:
-  control_plane: true
-  runtime_cluster: true
-
 dependencies:
   - name: fluxcd
 
