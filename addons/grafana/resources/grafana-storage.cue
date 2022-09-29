@@ -13,7 +13,9 @@ grafanaStorage: {
 			}
 			accessModes: ["ReadWriteOnce"]
 			volumeMode: "Filesystem"
-			resources: requests: storage: parameter["storage"]
+			if parameter.storage != _|_ {
+				resources: requests: storage: parameter["storage"]
+			}
 		}
 	}]
 }
