@@ -9,5 +9,6 @@ tags:
 
 dependencies:
   - name: fluxcd
+  - name: prometheus-server
 
 invisible: false
