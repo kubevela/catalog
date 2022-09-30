@@ -15,10 +15,6 @@ prometheusServer: {
 			path: "/-/ready"
 			port: 9090
 		}
-		ports: [{
-			name: "http"
-			port: 9090
-		}]
 		if parameter.storage == _|_ {
 			volumeMounts: emptyDir: [{
 				name:      "storage-volume"
@@ -44,6 +40,25 @@ prometheusServer: {
 			}
 		}]
 		volumeMounts: configMap: [ for cm in _cms if cm.name != _|_ {cm}]
+		_ports: [{
+			if !parameter.thanos {
+				port: 9090
+				name: "http"
+				expose: true
+			}
+		}, {
+			if parameter.thanos {
+				port: 10902
+				expose: true
+			}
+		}, {
+			if parameter.thanos {
+				port: 10901
+				expose: true
+			}
+		}]
+		ports: [for p in _ports if p.port != _|_ {p}]
+		exposeType: parameter.serviceType
 	}
 	traits: [ for trait in _traits if trait.type != _|_ {trait}]
 	_traits: [{
@@ -146,25 +161,6 @@ prometheusServer: {
 		properties: {
 			cpu:    parameter["cpu"]
 			memory: parameter["memory"]
-		}
-	}, {
-		type: "expose"
-		properties: {
-			_ports: [{
-				if !parameter.thanos {
-					port: 9090
-				}
-			}, {
-				if parameter.thanos {
-					port: 10902
-				}
-			}, {
-				if parameter.thanos {
-					port: 10901
-				}
-			}]
-			port: [ for p in _ports if p.port != _|_ {p.port}]
-			type: parameter.serviceType
 		}
 	}]
 }

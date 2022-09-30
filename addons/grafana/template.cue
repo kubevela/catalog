@@ -15,6 +15,7 @@ dashboardComponents: [
 	grafanaDashboardKubevelaSystem,
 	grafanaDashboardApplicationOverview,
 	grafanaDashboardDeploymentOverview,
+	grafanaDashboardKubernetesPod,
 ]
 
 dashboardComponentNames: [ for comp in dashboardComponents {comp.name}]
@@ -69,8 +70,15 @@ output: {
 				type: "install-kubernetes-api-datasource"
 				name: "install-kubernetes-api-datasource"
 			}, {
-				type: "install-prometheus-datasource-from-addon"
+				type: "install-datasource-from-addon"
 				name: "install-prometheus-datasource-from-addon"
+			}, {
+				type: "install-datasource-from-addon"
+				name: "install-loki-datasource-from-addon"
+				properties: {
+					type: "loki"
+					addonName: "addon-loki"
+				}
 			}, {
 				type: "deploy"
 				name: "deploy-dashboards"

@@ -1231,7 +1231,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
+          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
           "hide": false,
           "legendFormat": "{{verb}}: {{Kind}}",
           "range": true,
@@ -1328,7 +1328,7 @@ grafanaDashboardKubevelaSystemData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(client_request_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb) / sum(rate(client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
+          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_sum{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb) / sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (Kind, verb)",
           "hide": false,
           "legendFormat": "{{verb}}: {{Kind}}",
           "range": true,
