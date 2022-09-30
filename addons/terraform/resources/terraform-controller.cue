@@ -5,6 +5,8 @@ output: {
 		url:      "https://charts.kubevela.net/addons"
 		chart:    "terraform-controller"
 		version:  "0.7.7"
-		values: {}
+		if parameter.values != _|_ {
+			values: parameter.values
+		}
 	}
 }
