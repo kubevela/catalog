@@ -1,2 +1,7 @@
 parameter: {
+	values: #values
+}
+
+#values: {
+	...
 }
