@@ -36,11 +36,13 @@ grafana: {
 				key:  "password"
 			}
 		}]
+		ports: [{
+			expose: true
+			port: 3000
+		}]
+		exposeType: parameter.serviceType
 	}
 	traits: [{
-		type: "expose"
-		properties: port: [3000]
-	}, {
 		type: "service-account"
 		properties: {
 			name:   "grafana"

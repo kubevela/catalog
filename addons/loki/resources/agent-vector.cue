@@ -94,9 +94,11 @@ vectorConfig: {
 				    request:
 				      concurrency: 10
 				    labels:
+				      agent: vector
 				      cluster: $CLUSTER
-				      log_type: stdout
+				      stream: "{{ stream }}"
 				      forward: daemon
+				      filename: "{{ file }}"
 				      pod: "{{ kubernetes.pod_name }}"
 				      namespace: "{{ kubernetes.pod_namespace }}"
 				      container: "{{ kubernetes.container_name }}"

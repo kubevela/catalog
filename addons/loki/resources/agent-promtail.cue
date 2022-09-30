@@ -92,50 +92,16 @@ promtailConfig: {
 				    pipeline_stages:
 				      - cri: {}
 				      - static_labels:
+				          agent: promtail
 				          cluster: $CLUSTER
+				          forward: daemon
 				    kubernetes_sd_configs:
 				      - role: pod
 				    relabel_configs:
-				      - source_labels:
-				          - __meta_kubernetes_pod_controller_name
-				        regex: ([0-9a-z-.]+?)(-[0-9a-f]{8,10})?
-				        action: replace
-				        target_label: __tmp_controller_name
-				      - source_labels:
-				          - __meta_kubernetes_pod_label_app_kubernetes_io_name
-				          - __meta_kubernetes_pod_label_app
-				          - __tmp_controller_name
-				          - __meta_kubernetes_pod_name
-				        regex: ^;*([^;]+)(;.*)?$
-				        action: replace
-				        target_label: app
-				      - source_labels:
-				          - __meta_kubernetes_pod_label_app_kubernetes_io_instance
-				          - __meta_kubernetes_pod_label_release
-				        regex: ^;*([^;]+)(;.*)?$
-				        action: replace
-				        target_label: instance
-				      - source_labels:
-				          - __meta_kubernetes_pod_label_app_kubernetes_io_component
-				          - __meta_kubernetes_pod_label_component
-				        regex: ^;*([^;]+)(;.*)?$
-				        action: replace
-				        target_label: component
-				      - action: replace
-				        source_labels:
-				        - __meta_kubernetes_pod_node_name
-				        target_label: node_name
 				      - action: replace
 				        source_labels:
 				        - __meta_kubernetes_namespace
 				        target_label: namespace
-				      - action: replace
-				        replacement: $1
-				        separator: /
-				        source_labels:
-				        - namespace
-				        - app
-				        target_label: job
 				      - action: replace
 				        source_labels:
 				        - __meta_kubernetes_pod_name

@@ -1,12 +1,15 @@
 name: loki
 version: v0.1.0
-description: TODO
-icon: 
-url: 
+description: Loki is a log aggregation system designed to store and query logs from all your applications and infrastructure.
+icon: https://grafana.com/static/img/logos/logo-loki.svg
+url: https://grafana.com/oss/loki/
 
 tags:
- - observability
- - kubernetes
- - logging
+ - Observability
+ - Kubernetes
+ - Logging
 
 invisible: false
+
+system:
+  vela: ">=v1.6.0-alpha.4"

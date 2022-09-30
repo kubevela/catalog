@@ -78,7 +78,6 @@ output: {
 				properties: {
 					type: "loki"
 					addonName: "addon-loki"
-					port: 3100
 				}
 			}, {
 				type: "deploy"

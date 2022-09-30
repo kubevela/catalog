@@ -24,15 +24,11 @@ template: {
 	status: {
 		endpoints: *[] | [...{...}]
 		if resources.err == _|_ && resources.list != _|_ {
-			endpoints: [ for ep in resources.list if ep.endpoint.port == parameter.port {
+			_endpoints: [for ep in resources.list if ep.endpoint.portName != _|_ {ep}]
+			endpoints: [ for ep in _endpoints if ep.endpoint.portName == parameter.portName {
 				name:    "\(parameter.type):\(ep.cluster)"
 				portStr: strconv.FormatInt(ep.endpoint.port, 10)
-				if ep.cluster == "local" && ep.ref.kind == "Service" {
-					url: "http://\(ep.ref.name).\(ep.ref.namespace):\(portStr)"
-				}
-				if ep.cluster != "local" || ep.ref.kind != "Service" {
-					url: "http://\(ep.endpoint.host):\(portStr)"
-				}
+				url: "http://\(ep.endpoint.host):\(portStr)"
 			}]
 		}
 	}
@@ -57,7 +53,7 @@ template: {
 		type:           *"prometheus" | string
 		addonName:      *"addon-prometheus-server" | string
 		addonNamespace: *"vela-system" | string
-		port:           *9090 | int
+		portName:       *"http" | string
 		grafana:        *"default" | string
 	}
 }
