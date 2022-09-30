@@ -11,3 +11,4 @@ vela-prism
 grafana-definitions
 grafana
 cert-manager
+trivy-operator
