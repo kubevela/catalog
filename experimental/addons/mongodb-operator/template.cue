@@ -8,7 +8,7 @@ output: {
                 components: [
                         {
                                 type: "k8s-objects"
-                                name: "mongodb-ns"
+                                name: "mongodb-operator-ns"
                                 properties: objects: [{
                                         apiVersion: "v1"
                                         kind:       "Namespace"
@@ -16,26 +16,15 @@ output: {
                                 }]
                         },
                         {
-                            name: "mongodb-helm"
-                            type: "helm"
-                            dependsOn: ["mongodb-ns"]
+                            name: "mongodb-operator-helm"
+                            dependsOn: ["mongodb-operator-ns"]
                             type: "helm"
                             properties: {
                                     repoType: "helm"
-                                    url:      "https://charts.bitnami.com/bitnami"
-                                    chart:    "mongodb"
+                                    url:      "https://ot-container-kit.github.io/helm-charts/"
+                                    chart:    "mongodb-operator"
                                     targetNamespace: parameter["namespace"]
-                                    version:  "13.1.2"
-                                    values: {
-                                            persistence: {
-                                                enabled: parameter.persistenceEnabled
-                                            }
-                                            if parameter.persistenceEnabled {
-                                                persistence: {
-                                                    storageClass: parameter.persistenceStorageClass
-                                                }
-                                            }
-                                    }
+                                    version:  "v0.3.0"
                             }
                         },
                 ]
@@ -49,7 +38,7 @@ output: {
                     },
                     {
                             type: "topology"
-                            name: "mongodb-ns"
+                            name: "mongodb-operator-ns"
                             properties: {
                                     namespace: parameter.namespace
                                     if parameter.clusters != _|_ {

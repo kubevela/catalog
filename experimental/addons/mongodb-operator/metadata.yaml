@@ -1,0 +1,14 @@
+name: mongodb-operator
+version: v0.3.0
+description: MongoDB Operator is an operator created in Golang to create, update, and manage MongoDB standalone, replicated, and arbiter replicated setup on Kubernetes and Openshift clusters. This operator is capable of doing the setup for MongoDB with all the required best practices.
+icon: https://raw.githubusercontent.com/OT-CONTAINER-KIT/mongodb-operator/main/static/mongodb-operator-logo.svg
+url: https://github.com/OT-CONTAINER-KIT/mongodb-operator
+
+tags:
+  - NoSQL
+
+dependencies:
+  - name: fluxcd
+
+system:
+  vela: ">=1.5.0"
