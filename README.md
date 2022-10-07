@@ -30,7 +30,7 @@ Since any changes about one addon will upgrade the version, this repo's source f
 
 Community members are welcome to contribute this repo by putting their customize vela addons here.
 
->This [doc](https://kubevela.net/docs/platform-engineers/addon/intro) will introduce how to make an KuebVela addon and the mechanism behind it.
+>This [doc](https://kubevela.net/docs/platform-engineers/addon/intro) will introduce how to make an KubeVela addon and the mechanism behind it.
 
 Please be aware of this contribution rules when contribute addons.
 
