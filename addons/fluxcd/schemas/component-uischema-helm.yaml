@@ -31,8 +31,8 @@
   sort: 4
   label: Version
   validate:
-    required: true
-    defaultValue: ""
+    required: false
+    defaultValue: "*"
   conditions:
     - jsonKey: repoType
       value: "helm"
@@ -62,7 +62,7 @@
   description: Set the custom values configuration.
   sort: 7
   validate:
-    required: true
+    required: false
   conditions:
     - jsonKey: version
       op: "!="
