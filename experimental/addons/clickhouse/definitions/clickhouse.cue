@@ -2,8 +2,20 @@
 	annotations: {
 		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/clickhouse/ckapp.yaml"
 	}
-	attributes: workload: {
-		type: "autodetects.core.oam.dev"
+	attributes: {
+		workload: {
+			type: "autodetects.core.oam.dev"
+		}
+		status: {
+			healthPolicy: #"""
+				if context.output.status == _|_ {
+				isHealth: false
+				}
+				if context.output.status != _|_ {
+				isHealth: context.output.status.status == "Completed"
+				}
+				"""#
+		}
 	}
 	description: "Clickhouse Component provision a clickhouse cluster."
 	labels: {}
