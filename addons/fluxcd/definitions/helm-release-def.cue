@@ -177,7 +177,7 @@ template: {
 
 		git?: {
 			// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
-			branch: string
+			branch?: *"master" | string
 		}
 		oss?: {
 			// +usage=The bucket's name, required if repoType is oss
