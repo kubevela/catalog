@@ -9,7 +9,7 @@ trivyHelm: {
 		repoType:        "helm"
 		url:             "https://devopstales.github.io/helm-charts"
 		chart:           "trivy-operator"
-		version:         "2.3.2"
+		version:         "2.4.3"
 		targetNamespace: parameter.namespace
 		values: {
 			image: {
