@@ -12,21 +12,17 @@ spec:
         image: docker.io/nginxinc/nginx-unprivileged:latest
   workflow:
     steps:
-      # 构建镜像
       - name: apply-comp
         type: apply-component
         properties:
           component: frontend
-      # 镜像扫描
       - name: image-scan
         type: trivy-check
         outputs:
           - name: image-scan-result
             valueFrom: result.message
         properties:
-          url: http://116.62.199.204:30192/metrics
           image: "docker.io/nginxinc/nginx-unprivileged:latest"
-      # 消息通知
       - name: notification
         type: notification
         inputs:
@@ -36,4 +32,4 @@ spec:
         properties:
           slack:
             url:
-              value: https://hooks.slack.com/services/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
+              value: <slack-url>
