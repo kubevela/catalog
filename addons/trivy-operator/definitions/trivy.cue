@@ -7,7 +7,9 @@ import (
 
 "trivy-check": {
 	type: "workflow-step"
-	annotations: {}
+	annotations: {
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/trivy-operator/trivy-check-example.yaml"
+	}
 	labels: {}
 	description: ""
 }
