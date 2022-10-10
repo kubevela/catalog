@@ -8,13 +8,13 @@ helm: {
 			customStatus: #"""
 					repoMessage:    *"" | string
 					releaseMessage: *"Wating repository ready" | string
-					if context.outputs == _|_ {
+					if context.outputs.repo == _|_ {
 						repoMessage: "Use existed repository"
 					}
-					if context.outputs != _|_ && context.outputs.repo.status == _|_ {
+					if context.outputs.repo != _|_ && context.outputs.repo.status == _|_ {
 						repoMessage:    "Fetching repository"
 					}
-					if context.outputs != _|_ && context.outputs.repo.status != _|_ {
+					if context.outputs.repo != _|_ && context.outputs.repo.status != _|_ {
 						repoStatus: context.outputs.repo.status
 						if len(repoStatus.conditions) == 0 || repoStatus.conditions[0]["type"] != "Ready" {
 							repoMessage: "Fetch repository fail"
