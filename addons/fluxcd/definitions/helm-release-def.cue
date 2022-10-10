@@ -176,8 +176,8 @@ template: {
 		installTimeout: *"10m" | string
 
 		git?: {
-			// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
-			branch: string
+			// +usage=The Git reference to checkout and monitor for changes, defaults to main branch
+			branch: *"main" | string
 		}
 		oss?: {
 			// +usage=The bucket's name, required if repoType is oss
