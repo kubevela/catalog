@@ -10,16 +10,13 @@ agentInitContainer: {
 			NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
 			KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 			DEPLOYNAME=$(echo $HOSTNAME | sed -r 's/(.+)-[^-]+/\1/g')
-			LOKIURL=$(cat /etc/loki-endpoint/url)
 			curl -sSk -H "Authorization: Bearer $KUBE_TOKEN" \
 			        https://kubernetes.default/apis/apps/v1/namespaces/$NAMESPACE/daemonsets/$DEPLOYNAME \
 			    | grep "\"app.oam.dev/cluster\"" | sed -r 's/.+:\s+"(.*)",/\1/g' > /etc/config/cluster.name \
 			&& CLS=$(cat /etc/config/cluster.name) \
 			&& CLUSTER="${CLS:-local}" \
 			&& echo "cluster: $CLUSTER" \
-			&& echo "loki-host: $LOKIHOST" \
-			&& sed s/\$CLUSTER/$CLUSTER/g /etc/bootconfig/agent.yaml > /etc/config/agent.yaml.tmp \
-			&& sed s~\$LOKIURL~$LOKIURL~g /etc/config/agent.yaml.tmp > /etc/config/agent.yaml
+			&& sed s/\$CLUSTER/$CLUSTER/g /etc/bootconfig/agent.yaml > /etc/config/agent.yaml
 			"""##]
 		mountName:     "config-volume"
 		appMountPath:  "/etc/config"
@@ -27,9 +24,6 @@ agentInitContainer: {
 		extraVolumeMounts: [{
 			name:      "bootconfig-volume"
 			mountPath: "/etc/bootconfig"
-		}, {
-			name:      "loki-endpoint-volume"
-			mountPath: "/etc/loki-endpoint"
 		}]
 	}
 }

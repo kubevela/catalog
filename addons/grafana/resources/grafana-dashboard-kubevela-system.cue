@@ -2573,7 +2573,7 @@ grafanaDashboardKubevelaSystemData: #"""
   "refresh": "1m",
   "schemaVersion": 36,
   "style": "dark",
-  "tags": [],
+  "tags": ["kubevela", "system"],
   "templating": {
     "list": [
       {

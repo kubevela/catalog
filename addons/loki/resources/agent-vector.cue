@@ -30,10 +30,6 @@ vector: {
 				name:      "bootconfig-volume"
 				mountPath: "/etc/bootconfig"
 				cmName:    "vector"
-			}, {
-				name:      "loki-endpoint-volume"
-				mountPath: "/etc/loki-endpoint"
-				cmName:    "loki-endpoint"
 			}]
 			hostPath: [{
 				name:      "data"
@@ -89,7 +85,7 @@ vectorConfig: {
 				    type: loki
 				    inputs:
 				      - kubernetes-logs
-				    endpoint: $LOKIURL
+				    endpoint: http://loki:3100/
 				    compression: none
 				    request:
 				      concurrency: 10

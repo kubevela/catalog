@@ -11,6 +11,35 @@ grafanaDashboardApplicationOverview: {
 
 grafanaDashboardApplicationOverviewData: #"""
 {
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 6,
+  "iteration": 1665385954616,
+  "links": [],
+  "liveNow": false,
   "panels": [
     {
       "gridPos": {
@@ -921,7 +950,7 @@ grafanaDashboardApplicationOverviewData: #"""
                   {
                     "targetBlank": true,
                     "title": "Details",
-                    "url": "/d/deployment-overview/kubernetes-deployment?orgId=1&${__data.fields.URLParams}"
+                    "url": "/d/${__data.fields.DashboardID}${__data.fields.URLParams}"
                   }
                 ]
               }
@@ -929,8 +958,8 @@ grafanaDashboardApplicationOverviewData: #"""
           },
           {
             "matcher": {
-              "id": "byName",
-              "options": "URLParams"
+              "id": "byRegexp",
+              "options": "URLParams|DashboardID"
             },
             "properties": [
               {
@@ -999,14 +1028,19 @@ grafanaDashboardApplicationOverviewData: #"""
               "name": "Name"
             },
             {
-              "jsonPath": "$.status.appliedResources[*].(kind = 'Deployment' ? 'Detail' : '')",
+              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'DaemonSet' or kind = 'Pod' or kind = 'GrafanaDashboard') ? 'Detail' : '')",
               "language": "jsonata",
               "name": "Dashboard"
             },
             {
-              "jsonPath": "$.status.appliedResources[*].('var-cluster=' & (cluster ? cluster : 'local') & '&var-namespace=' & (namespace ? namespace : '-') & '&var-name=' & name)",
+              "jsonPath": "$.status.appliedResources[*].(kind = 'GrafanaDashboard' ? '' : ('?var-cluster=' & (cluster ? cluster : 'local') & '&var-namespace=' & (namespace ? namespace : '-') & '&var-name=' & name))",
               "language": "jsonata",
               "name": "URLParams"
+            },
+            {
+              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'DaemonSet' or kind = 'Pod') ? ('kubernetes-' & $lowercase(kind) & '/kubernetes-' & $lowercase(kind)) : (kind = 'GrafanaDashboard' ? $split(name, '@')[0] : ''))",
+              "language": "jsonata",
+              "name": "DashboardID"
             }
           ],
           "method": "GET",
@@ -1405,7 +1439,7 @@ grafanaDashboardApplicationOverviewData: #"""
   "refresh": "",
   "schemaVersion": 36,
   "style": "dark",
-  "tags": [],
+  "tags": ["kubevela", "application"],
   "templating": {
     "list": [
       {

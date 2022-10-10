@@ -1764,7 +1764,7 @@ grafanaDashboardKubernetesAPIServerData: #"""
   "refresh": false,
   "schemaVersion": 36,
   "style": "dark",
-  "tags": [],
+  "tags": ["kubernetes", "system"],
   "templating": {
     "list": [
       {
