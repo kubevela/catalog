@@ -3,41 +3,43 @@ helm: {
 		workload: type: "autodetects.core.oam.dev"
 		status: {
 			healthPolicy: #"""
-				isHealth: len(context.outputs.release.status.conditions) != 0 && context.outputs.release.status.conditions[0]["status"]=="True"
+				isHealth: len(context.output.status.conditions) != 0 && context.output.status.conditions[0]["status"]=="True"
 				"""#
 			customStatus: #"""
 					repoMessage:    *"" | string
-					releaseMessage: *"" | string
-					if context.output.status == _|_ {
-						repoMessage:    "Fetching repository"
-						releaseMessage: "Wating repository ready"
+					releaseMessage: *"Wating repository ready" | string
+					if context.outputs.repo == _|_ {
+						repoMessage: "Use existed repository"
 					}
-					if context.output.status != _|_ {
-						repoStatus: context.output.status
+					if context.outputs.repo != _|_ && context.outputs.repo.status == _|_ {
+						repoMessage:    "Fetching repository"
+					}
+					if context.outputs.repo != _|_ && context.outputs.repo.status != _|_ {
+						repoStatus: context.outputs.repo.status
 						if len(repoStatus.conditions) == 0 || repoStatus.conditions[0]["type"] != "Ready" {
 							repoMessage: "Fetch repository fail"
 						}
 						if len(repoStatus.conditions) != 0 && repoStatus.conditions[0]["type"] == "Ready" {
 							repoMessage: "Fetch repository successfully"
 						}
-
-						if context.outputs.release.status == _|_ {
+					}
+					if context.output.status == _|_ {
 							releaseMessage: "Creating helm release"
-						}
-						if context.outputs.release.status != _|_ {
-							if context.outputs.release.status.conditions[0]["message"] == "Release reconciliation succeeded" {
+					}
+					if context.output.status != _|_ {
+							releaseStatus: context.output.status
+							if releaseStatus.conditions[0]["message"] == "Release reconciliation succeeded" {
 								releaseMessage: "Create helm release successfully"
 							}
-							if context.outputs.release.status.conditions[0]["message"] != "Release reconciliation succeeded" {
-								releaseBasicMessage: "Delivery helm release in progress, message: " + context.outputs.release.status.conditions[0]["message"]
-								if len(context.outputs.release.status.conditions) == 1 {
-									releaseMessage: releaseBasicMessage
-								}
-								if len(context.outputs.release.status.conditions) > 1 {
-									releaseMessage: releaseBasicMessage + ", " + context.outputs.release.status.conditions[1]["message"]
-								}
+							if releaseStatus.conditions[0]["message"] != "Release reconciliation succeeded" {
+									releaseBasicMessage: "Delivery helm release in progress, message: " + releaseStatus.conditions[0]["message"]
+									if len(releaseStatus.conditions) == 1 {
+											releaseMessage: releaseBasicMessage
+									}
+									if len(releaseStatus.conditions) > 1 {
+											releaseMessage: releaseBasicMessage + ", " + releaseStatus.conditions[1]["message"]
+									}
 							}
-						}
 					}
 					message: repoMessage + ", " + releaseMessage
 				"""#
@@ -48,49 +50,52 @@ helm: {
 }
 
 template: {
-	output: {
-		apiVersion: "source.toolkit.fluxcd.io/v1beta2"
-		metadata: {
-			name: context.name
-		}
-		if parameter.repoType == "git" {
-			kind: "GitRepository"
-			spec: {
-				url: parameter.url
-				if parameter.git.branch != _|_ {
-					ref: branch: parameter.git.branch
+	outputs: {
+		if parameter.sourceName == _|_ {
+			repo: {
+				apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+				metadata: {
+					name: context.name
 				}
-				_secret
-				_sourceCommonArgs
-			}
-		}
-		if parameter.repoType == "oss" {
-			kind: "Bucket"
-			spec: {
-				endpoint:   parameter.url
-				bucketName: parameter.oss.bucketName
-				provider:   parameter.oss.provider
-				if parameter.oss.region != _|_ {
-					region: parameter.oss.region
+				if parameter.repoType == "git" {
+					kind: "GitRepository"
+					spec: {
+						url: parameter.url
+						if parameter.git.branch != _|_ {
+							ref: branch: parameter.git.branch
+						}
+						_secret
+						_sourceCommonArgs
+					}
 				}
-				_secret
-				_sourceCommonArgs
-			}
-		}
-		if parameter.repoType == "helm" || parameter.repoType == "oci" {
-			kind: "HelmRepository"
-			spec: {
-				url: parameter.url
-				if parameter.repoType == "oci" {
-					type: "oci"
+				if parameter.repoType == "oss" {
+					kind: "Bucket"
+					spec: {
+						endpoint:   parameter.url
+						bucketName: parameter.oss.bucketName
+						provider:   parameter.oss.provider
+						if parameter.oss.region != _|_ {
+							region: parameter.oss.region
+						}
+						_secret
+						_sourceCommonArgs
+					}
 				}
-				_secret
-				_sourceCommonArgs
+				if parameter.repoType == "helm" || parameter.repoType == "oci" {
+					kind: "HelmRepository"
+					spec: {
+						url: parameter.url
+						if parameter.repoType == "oci" {
+							type: "oci"
+						}
+						_secret
+						_sourceCommonArgs
+					}
+				}
 			}
 		}
 	}
-
-	outputs: release: {
+	output: {
 		apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
 		kind:       "HelmRelease"
 		metadata: {
@@ -113,7 +118,12 @@ template: {
 						if parameter.repoType == "oss" {
 							kind: "Bucket"
 						}
-						name: context.name
+						if parameter.sourceName == _|_ {
+							name: context.name
+						}
+						if parameter.sourceName != _|_ {
+							name: parameter.sourceName
+						}
 					}
 					interval: parameter.interval
 					if parameter["valuesFiles"] != _|_ {
@@ -174,6 +184,8 @@ template: {
 		timeout?: string
 		// +usage=The timeout for operation `helm install`, optional
 		installTimeout: *"10m" | string
+		// +usage=The name of the source already existed
+		sourceName?: string
 
 		git?: {
 			// +usage=The Git reference to checkout and monitor for changes, defaults to main branch
