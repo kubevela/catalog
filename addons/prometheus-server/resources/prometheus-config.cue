@@ -29,6 +29,8 @@ prometheusConfig: {
                   static_configs:
                   - targets:
                     - localhost:9090
+                    labels:
+                      cluster: $CLUSTER
                 - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
                   job_name: kubernetes-apiservers
                   kubernetes_sd_configs:
@@ -40,6 +42,8 @@ prometheusConfig: {
                     - __meta_kubernetes_namespace
                     - __meta_kubernetes_service_name
                     - __meta_kubernetes_endpoint_port_name
+                  - replacement: $CLUSTER
+                    target_label: cluster
                   scheme: https
                   tls_config:
                     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -58,6 +62,8 @@ prometheusConfig: {
                     source_labels:
                     - __meta_kubernetes_node_name
                     target_label: __metrics_path__
+                  - replacement: $CLUSTER
+                    target_label: cluster
                   scheme: https
                   tls_config:
                     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -76,6 +82,8 @@ prometheusConfig: {
                     source_labels:
                     - __meta_kubernetes_node_name
                     target_label: __metrics_path__
+                  - replacement: $CLUSTER
+                    target_label: cluster
                   scheme: https
                   tls_config:
                     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -127,6 +135,8 @@ prometheusConfig: {
                     source_labels:
                     - __meta_kubernetes_pod_node_name
                     target_label: node
+                  - replacement: $CLUSTER
+                    target_label: cluster
                 - honor_labels: true
                   job_name: kubernetes-service-endpoints-slow
                   kubernetes_sd_configs:
@@ -170,6 +180,8 @@ prometheusConfig: {
                     source_labels:
                     - __meta_kubernetes_pod_node_name
                     target_label: node
+                  - replacement: $CLUSTER
+                    target_label: cluster
                   scrape_interval: 5m
                   scrape_timeout: 30s
                 - honor_labels: true
@@ -181,6 +193,8 @@ prometheusConfig: {
                     regex: pushgateway
                     source_labels:
                     - __meta_kubernetes_service_annotation_prometheus_io_probe
+                  - replacement: $CLUSTER
+                    target_label: cluster
                 - honor_labels: true
                   job_name: kubernetes-services
                   kubernetes_sd_configs:
@@ -210,6 +224,8 @@ prometheusConfig: {
                   - source_labels:
                     - __meta_kubernetes_service_name
                     target_label: service
+                  - replacement: $CLUSTER
+                    target_label: cluster
                 - honor_labels: true
                   job_name: kubernetes-pods
                   kubernetes_sd_configs:
@@ -257,6 +273,8 @@ prometheusConfig: {
                     regex: Pending|Succeeded|Failed|Completed
                     source_labels:
                     - __meta_kubernetes_pod_phase
+                  - replacement: $CLUSTER
+                    target_label: cluster
                 - honor_labels: true
                   job_name: kubernetes-pods-slow
                   kubernetes_sd_configs:
@@ -300,6 +318,8 @@ prometheusConfig: {
                     regex: Pending|Succeeded|Failed|Completed
                     source_labels:
                     - __meta_kubernetes_pod_phase
+                  - replacement: $CLUSTER
+                    target_label: cluster
                   scrape_interval: 5m
                   scrape_timeout: 30s
                 alerting:

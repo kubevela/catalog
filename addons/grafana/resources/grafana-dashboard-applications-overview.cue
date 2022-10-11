@@ -11,35 +11,6 @@ grafanaDashboardApplicationOverview: {
 
 grafanaDashboardApplicationOverviewData: #"""
 {
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
-        "type": "dashboard"
-      }
-    ]
-  },
-  "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "id": 6,
-  "iteration": 1665385954616,
-  "links": [],
-  "liveNow": false,
   "panels": [
     {
       "gridPos": {
@@ -1028,7 +999,7 @@ grafanaDashboardApplicationOverviewData: #"""
               "name": "Name"
             },
             {
-              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'DaemonSet' or kind = 'Pod' or kind = 'GrafanaDashboard') ? 'Detail' : '')",
+              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'StatefulSet' or kind = 'DaemonSet' or kind = 'Pod' or kind = 'GrafanaDashboard') ? 'Detail' : '')",
               "language": "jsonata",
               "name": "Dashboard"
             },
@@ -1038,7 +1009,7 @@ grafanaDashboardApplicationOverviewData: #"""
               "name": "URLParams"
             },
             {
-              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'DaemonSet' or kind = 'Pod') ? ('kubernetes-' & $lowercase(kind) & '/kubernetes-' & $lowercase(kind)) : (kind = 'GrafanaDashboard' ? $split(name, '@')[0] : ''))",
+              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'StatefulSet' or kind = 'DaemonSet' or kind = 'Pod') ? ('kubernetes-' & $lowercase(kind) & '/kubernetes-' & $lowercase(kind)) : (kind = 'GrafanaDashboard' ? $split(name, '@')[0] : ''))",
               "language": "jsonata",
               "name": "DashboardID"
             }

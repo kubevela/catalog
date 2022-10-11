@@ -1,18 +1,24 @@
 package main
 
-grafanaDashboardDaemonSetOverview: {
-	name: "grafana-dashboard-daemonset-overview"
+grafanaDashboardStatefulSetOverview: {
+	name: "grafana-dashboard-statefulset-overview"
 	type: "grafana-dashboard"
 	properties: {
-		uid:  "kubernetes-daemonset"
-		data: grafanaDashboardDaemonSetOverviewData
+		uid:  "kubernetes-statefulset"
+		data: grafanaDashboardStatefulSetOverviewData
 	}
 }
 
-grafanaDashboardDaemonSetOverviewData: #"""
+grafanaDashboardStatefulSetOverviewData: #"""
 {
-  "description": "Kubernetes DaemonSet Overview",
+  "description": "Kubernetes StatefulSet Overview",
   "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 9,
+  "iteration": 1665649215803,
+  "links": [],
+  "liveNow": false,
   "panels": [
     {
       "gridPos": {
@@ -81,14 +87,14 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "kube_daemonset_created{cluster=\"$cluster\",namespace=\"$namespace\",daemonset=\"$name\"}",
+          "expr": "kube_statefulset_created{cluster=\"$cluster\",namespace=\"$namespace\",statefulset=\"$name\"}",
           "instant": true,
           "legendFormat": "$name",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "DaemonSet Name",
+      "title": "StatefulSet Name",
       "type": "stat"
     },
     {
@@ -96,7 +102,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "Number of desired replicas to schedule.",
+      "description": "Number of desired replicas.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -149,7 +155,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "kube_daemonset_status_desired_number_scheduled{cluster=\"$cluster\",namespace=\"$namespace\",daemonset=\"$name\"}",
+          "expr": "kube_statefulset_replicas{cluster=\"$cluster\",namespace=\"$namespace\",statefulset=\"$name\"}",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -259,7 +265,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "kube_daemonset_status_number_ready{cluster=\"$cluster\",namespace=\"$namespace\",daemonset=\"$name\"} / kube_daemonset_status_desired_number_scheduled{cluster=\"$cluster\",namespace=\"$namespace\",daemonset=\"$name\"}",
+          "expr": "kube_statefulset_status_replicas_ready{cluster=\"$cluster\",namespace=\"$namespace\",statefulset=\"$name\"} / kube_statefulset_replicas{cluster=\"$cluster\",namespace=\"$namespace\",statefulset=\"$name\"}",
           "hide": false,
           "instant": true,
           "legendFormat": "Percentage",
@@ -350,7 +356,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "(kube_daemonset_metadata_generation{cluster=\"$cluster\",daemonset=\"$name\",namespace=\"$namespace\"} - kube_daemonset_status_observed_generation{cluster=\"$cluster\",daemonset=\"$name\",namespace=\"$namespace\"}) ^ 2 + (kube_daemonset_status_desired_number_scheduled{cluster=\"$cluster\",daemonset=\"$name\",namespace=\"$namespace\"} - kube_daemonset_status_updated_number_scheduled{cluster=\"$cluster\",daemonset=\"$name\",namespace=\"$namespace\"}) ^ 2",
+          "expr": "(kube_statefulset_metadata_generation{cluster=\"$cluster\",statefulset=\"$name\",namespace=\"$namespace\"} - kube_statefulset_status_observed_generation{cluster=\"$cluster\",statefulset=\"$name\",namespace=\"$namespace\"}) ^ 2 + (kube_statefulset_replicas{cluster=\"$cluster\",statefulset=\"$name\",namespace=\"$namespace\"} - kube_statefulset_status_replicas_updated{cluster=\"$cluster\",statefulset=\"$name\",namespace=\"$namespace\"}) ^ 2",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -365,7 +371,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "The image of the container in daemonset pods. If multiple images exist, a random one will be displayed.",
+      "description": "The image of the container in statefulset pods. If multiple images exist, a random one will be displayed.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -417,7 +423,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (uid)\n* on(uid) group_right() sum(kube_pod_container_info{cluster=\"$cluster\",namespace=\"$namespace\"}) by (uid, image)",
+          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (uid)\n* on(uid) group_right() sum(kube_pod_container_info{cluster=\"$cluster\",namespace=\"$namespace\"}) by (uid, image)",
           "format": "time_series",
           "instant": true,
           "legendFormat": "{{image}}",
@@ -439,7 +445,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "The pod name of the daemonset. If multiple pods exist, a random one will be displayed.",
+      "description": "The pod name of the statefulset. If multiple pods exist, a random one will be displayed.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -491,7 +497,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod, uid)",
+          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod, uid)",
           "instant": true,
           "legendFormat": "{{pod}}",
           "range": false,
@@ -512,7 +518,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "Time since daemonset created.",
+      "description": "Time since statefulset created.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -565,7 +571,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "time() - kube_daemonset_created{cluster=\"$cluster\",namespace=\"$namespace\",daemonset=\"$name\"}",
+          "expr": "time() - kube_statefulset_created{cluster=\"$cluster\",namespace=\"$namespace\",statefulset=\"$name\"}",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -762,7 +768,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (uid, pod, pod_ip, node)",
+          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (uid, pod, pod_ip, node)",
           "format": "table",
           "hide": false,
           "instant": true,
@@ -1011,7 +1017,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "max(kube_daemonset_status_desired_number_scheduled{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
+          "expr": "max(kube_statefulset_replicas{statefulset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
           "intervalFactor": 1,
           "legendFormat": "Desired",
           "range": true,
@@ -1024,7 +1030,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "max(kube_daemonset_status_current_number_scheduled{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
+          "expr": "max(kube_statefulset_status_replicas_current{statefulset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
           "intervalFactor": 1,
           "legendFormat": "Current",
           "range": true,
@@ -1037,7 +1043,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "min(kube_daemonset_status_number_ready{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
+          "expr": "min(kube_statefulset_status_replicas_ready{statefulset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
           "intervalFactor": 1,
           "legendFormat": "Ready",
           "range": true,
@@ -1050,7 +1056,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "min(kube_daemonset_status_number_available{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
+          "expr": "min(kube_statefulset_status_replicas_available{statefulset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
           "intervalFactor": 1,
           "legendFormat": "Available",
           "range": true,
@@ -1063,25 +1069,11 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "min(kube_daemonset_status_updated_number_scheduled{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
+          "expr": "min(kube_statefulset_status_replicas_updated{statefulset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
           "intervalFactor": 1,
           "legendFormat": "Updated",
           "range": true,
           "refId": "E",
-          "step": 30
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "min(kube_daemonset_status_number_unavailable{daemonset=\"$name\",namespace=\"$namespace\",cluster=\"$cluster\"}) without (instance, pod)",
-          "hide": false,
-          "intervalFactor": 1,
-          "legendFormat": "Unavailable",
-          "range": true,
-          "refId": "F",
           "step": 30
         }
       ],
@@ -1167,7 +1159,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1253,7 +1245,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod)",
+          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -1328,7 +1320,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1414,7 +1406,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod)",
+          "expr": "sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod)",
           "legendFormat": "{{pod}}",
           "range": true,
           "refId": "A"
@@ -1488,7 +1480,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_spec_memory_limit_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_spec_memory_limit_bytes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1563,7 +1555,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_spec_cpu_quota{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}/100000) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_spec_cpu_quota{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}/100000) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1640,7 +1632,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1726,7 +1718,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "legendFormat": "In",
           "range": true,
           "refId": "A"
@@ -1737,7 +1729,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "-sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "-sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "hide": false,
           "legendFormat": "Out",
           "range": true,
@@ -1815,7 +1807,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_reads_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_reads_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -1901,7 +1893,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_reads_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_reads_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "legendFormat": "Read",
           "range": true,
           "refId": "A"
@@ -1912,7 +1904,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "-sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_writes_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "-sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_writes_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "hide": false,
           "legendFormat": "Write",
           "range": true,
@@ -1990,7 +1982,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\"}[5m])) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2067,7 +2059,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_writes_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(rate(container_fs_writes_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2144,7 +2136,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_processes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_processes{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2221,7 +2213,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_threads{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_threads{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2298,7 +2290,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_sockets{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_sockets{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2376,7 +2368,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_cache{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() sum(container_memory_cache{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}) by (pod))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2454,7 +2446,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "avg(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() (sum(rate(container_cpu_user_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod) / sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod)))",
+          "expr": "avg(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() (sum(rate(container_cpu_user_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod) / sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",container!=\"\"}[5m])) by (pod)))",
           "intervalFactor": 2,
           "refId": "A",
           "step": 600
@@ -2521,7 +2513,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"DaemonSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() (sum(container_network_receive_errors_total{cluster=\"$cluster\",namespace=\"$namespace\"}) by (pod) + sum(container_network_transmit_errors_total{cluster=\"$cluster\",namespace=\"$namespace\"}) by (pod)))",
+          "expr": "sum(sum(kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",created_by_kind=\"StatefulSet\",created_by_name=\"$name\"}) by (pod)\n* on(pod) group_right() (sum(container_network_receive_errors_total{cluster=\"$cluster\",namespace=\"$namespace\"}) by (pod) + sum(container_network_transmit_errors_total{cluster=\"$cluster\",namespace=\"$namespace\"}) by (pod)))",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -2622,7 +2614,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "local",
           "value": "local"
         },
@@ -2630,7 +2622,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(kube_daemonset_metadata_generation, cluster)",
+        "definition": "label_values(kube_statefulset_metadata_generation, cluster)",
         "hide": 0,
         "includeAll": false,
         "label": "Cluster",
@@ -2638,7 +2630,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(kube_daemonset_metadata_generation, cluster)",
+          "query": "label_values(kube_statefulset_metadata_generation, cluster)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2650,15 +2642,15 @@ grafanaDashboardDaemonSetOverviewData: #"""
       {
         "allValue": "",
         "current": {
-          "selected": true,
-          "text": "o11y-system",
-          "value": "o11y-system"
+          "selected": false,
+          "text": "default",
+          "value": "default"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(kube_daemonset_metadata_generation, namespace)",
+        "definition": "label_values(kube_statefulset_metadata_generation, namespace)",
         "hide": 0,
         "includeAll": false,
         "label": "Namespace",
@@ -2666,7 +2658,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
         "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(kube_daemonset_metadata_generation, namespace)",
+          "query": "label_values(kube_statefulset_metadata_generation, namespace)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2680,23 +2672,23 @@ grafanaDashboardDaemonSetOverviewData: #"""
       {
         "allValue": "",
         "current": {
-          "selected": true,
-          "text": "vector",
-          "value": "vector"
+          "selected": false,
+          "text": "web",
+          "value": "web"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(kube_daemonset_metadata_generation{namespace=\"$namespace\"}, daemonset)",
+        "definition": "label_values(kube_statefulset_metadata_generation{namespace=\"$namespace\"}, statefulset)",
         "hide": 0,
         "includeAll": false,
-        "label": "DaemonSet",
+        "label": "StatefulSet",
         "multi": false,
         "name": "name",
         "options": [],
         "query": {
-          "query": "label_values(kube_daemonset_metadata_generation{namespace=\"$namespace\"}, daemonset)",
+          "query": "label_values(kube_statefulset_metadata_generation{namespace=\"$namespace\"}, statefulset)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2739,9 +2731,9 @@ grafanaDashboardDaemonSetOverviewData: #"""
     ]
   },
   "timezone": "browser",
-  "title": "Kubernetes DaemonSet",
-  "uid": "kubernetes-daemonset",
-  "version": 10,
+  "title": "Kubernetes StatefulSet",
+  "uid": "kubernetes-statefulset",
+  "version": 1,
   "weekStart": ""
 }
 """#

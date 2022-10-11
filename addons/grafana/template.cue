@@ -15,6 +15,7 @@ dashboardComponents: [
 	grafanaDashboardKubevelaSystem,
 	grafanaDashboardApplicationOverview,
 	grafanaDashboardDeploymentOverview,
+	grafanaDashboardStatefulSetOverview,
 	grafanaDashboardDaemonSetOverview,
 	grafanaDashboardKubernetesPod,
 ]
