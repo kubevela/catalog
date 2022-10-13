@@ -1,21 +1,15 @@
 import "strings"
 
-"terraform-azure": {
-	type: "component"
-	annotations: {
-		"alias.config.oam.dev": "Terraform Provider for Azure"
-	}
-	labels: {
-		"catalog.config.oam.dev": "velacore-config"
-		"type.config.oam.dev": "terraform-provider"
-		"multi-cluster.config.oam.dev": "false"
-	}
+metadata: {
+	name:        "terraform-azure"
+	alias:       "Terraform Provider for Azure"
 	description: "Terraform Provider for Azure"
-	attributes: workload: type: "autodetects.core.oam.dev"
+	sensitive:   true
+	scope:       "system"
 }
 
 template: {
-	output: {
+	outputs: {"provider": {
 		apiVersion: "terraform.core.oam.dev/v1beta1"
 		kind:       "Provider"
 		metadata: {
@@ -28,26 +22,24 @@ template: {
 			credentials: {
 				source: "Secret"
 				secretRef: {
-					namespace: "vela-system"
-					name:      parameter.name + "-account-creds"
+					namespace: context.namespace
+					name:      context.name
 					key:       "credentials"
 				}
 			}
 		}
-	}
+	}}
 
-	outputs: {
-		"credential": {
-			apiVersion: "v1"
-			kind:       "Secret"
-			metadata: {
-				name:      parameter.name + "-account-creds"
-				namespace: "vela-system"
-				labels:    l
-			}
-			type: "Opaque"
-			stringData: credentials: strings.Join([creds1, creds2, creds3, creds4], "\n")
+	output: {
+		apiVersion: "v1"
+		kind:       "Secret"
+		metadata: {
+			name:      context.name
+			namespace: context.namespace
+			labels:    l
 		}
+		type: "Opaque"
+		stringData: credentials: strings.Join([creds1, creds2, creds3, creds4], "\n")
 	}
 
 	creds1: "armClientID: " + parameter.ARM_CLIENT_ID
@@ -56,7 +48,7 @@ template: {
 	creds4: "armTenantID: " + parameter.ARM_TENANT_ID
 
 	l: {
-		"config.oam.dev/catalog": "velacore-config"
+		"config.oam.dev/catalog":  "velacore-config"
 		"config.oam.dev/type":     "terraform-provider"
 		"config.oam.dev/provider": "terraform-azure"
 	}

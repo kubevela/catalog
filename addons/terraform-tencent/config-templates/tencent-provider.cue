@@ -1,54 +1,47 @@
 import "strings"
 
-"terraform-tencent": {
-	type: "component"
-	annotations: {
-		"alias.config.oam.dev": "Terraform Provider for Tencent Cloud"
-	}
-	labels: {
-		"catalog.config.oam.dev":       "velacore-config"
-		"type.config.oam.dev":          "terraform-provider"
-		"multi-cluster.config.oam.dev": "false"
-	}
+metadata: {
+	name:        "terraform-tencent"
+	alias:       "Terraform Provider for Tencent Cloud"
 	description: "Terraform Provider for Tencent Cloud"
-	attributes: workload: type: "autodetects.core.oam.dev"
+	sensitive:   true
+	scope:       "system"
 }
 
 template: {
-	output: {
-		apiVersion: "terraform.core.oam.dev/v1beta1"
-		kind:       "Provider"
-		metadata: {
-			name:      parameter.name
-			namespace: "default"
-			labels:    l
-		}
-		spec: {
-			provider: "tencent"
-			region:   parameter.TENCENTCLOUD_REGION
-			credentials: {
-				source: "Secret"
-				secretRef: {
-					namespace: "vela-system"
-					name:      parameter.name + "-account-creds"
-					key:       "credentials"
+	outputs: {
+		"provider": {
+			apiVersion: "terraform.core.oam.dev/v1beta1"
+			kind:       "Provider"
+			metadata: {
+				name:      parameter.name
+				namespace: "default"
+				labels:    l
+			}
+			spec: {
+				provider: "tencent"
+				region:   parameter.TENCENTCLOUD_REGION
+				credentials: {
+					source: "Secret"
+					secretRef: {
+						name:      context.name
+						namespace: context.namespace
+						key:       "credentials"
+					}
 				}
 			}
 		}
 	}
-
-	outputs: {
-		"credential": {
-			apiVersion: "v1"
-			kind:       "Secret"
-			metadata: {
-				name:      parameter.name + "-account-creds"
-				namespace: "vela-system"
-				labels:    l
-			}
-			type: "Opaque"
-			stringData: credentials: strings.Join([creds1, creds2], "\n")
+	output: {
+		apiVersion: "v1"
+		kind:       "Secret"
+		metadata: {
+			name:      context.name
+			namespace: context.namespace
+			labels:    l
 		}
+		type: "Opaque"
+		stringData: credentials: strings.Join([creds1, creds2], "\n")
 	}
 
 	creds1: "secretID: " + parameter.TENCENTCLOUD_SECRET_ID

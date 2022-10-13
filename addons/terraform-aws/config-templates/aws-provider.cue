@@ -1,54 +1,47 @@
 import "strings"
 
-"terraform-aws": {
-	type: "component"
-	annotations: {
-		"alias.config.oam.dev": "Terraform Provider for AWS"
-	}
-	labels: {
-		"catalog.config.oam.dev":       "velacore-config"
-		"type.config.oam.dev":          "terraform-provider"
-		"multi-cluster.config.oam.dev": "false"
-	}
+metadata: {
+	name:        "terraform-aws"
+	alias:       "Terraform Provider for AWS"
 	description: "Terraform Provider for AWS"
-	attributes: workload: type: "autodetects.core.oam.dev"
+	sensitive:   false
+	scope:       "system"
 }
 
 template: {
-	output: {
-		apiVersion: "terraform.core.oam.dev/v1beta1"
-		kind:       "Provider"
-		metadata: {
-			name:      parameter.name
-			namespace: "default"
-			labels:    l
-		}
-		spec: {
-			provider: "aws"
-			region:   parameter.AWS_DEFAULT_REGION
-			credentials: {
-				source: "Secret"
-				secretRef: {
-					namespace: "vela-system"
-					name:      parameter.name + "-account-creds"
-					key:       "credentials"
-				}
-			}
-		}
-	}
-
 	outputs: {
-		"credential": {
-			apiVersion: "v1"
-			kind:       "Secret"
+		"provider": {
+			apiVersion: "terraform.core.oam.dev/v1beta1"
+			kind:       "Provider"
 			metadata: {
-				name:      parameter.name + "-account-creds"
-				namespace: "vela-system"
+				name:      parameter.name
+				namespace: "default"
 				labels:    l
 			}
-			type: "Opaque"
-			stringData: credentials: strings.Join([creds1, creds2, creds3], "\n")
+			spec: {
+				provider: "aws"
+				region:   parameter.AWS_DEFAULT_REGION
+				credentials: {
+					source: "Secret"
+					secretRef: {
+						namespace: context.namespace
+						name:      context.name
+						key:       "credentials"
+					}
+				}
+			}
+		}}
+
+	output: {
+		apiVersion: "v1"
+		kind:       "Secret"
+		metadata: {
+			name:      context.name
+			namespace: context.namespace
+			labels:    l
 		}
+		type: "Opaque"
+		stringData: credentials: strings.Join([creds1, creds2, creds3], "\n")
 	}
 
 	creds1: "awsAccessKeyID: " + parameter.AWS_ACCESS_KEY_ID

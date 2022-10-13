@@ -1,16 +1,9 @@
-"config-helm-repository": {
-	annotations: {
-		"alias.config.oam.dev": "Helm Repository"
-	}
-	attributes: workload: type: "autodetects.core.oam.dev"
+metadata: {
+	name:        "helm-repository"
+	alias:       "Helm Repository"
 	description: "Config information to authenticate helm chart repository"
-	labels: {
-		"ui-hidden":                    "true"
-		"catalog.config.oam.dev":       "velacore-config"
-		"multi-cluster.config.oam.dev": "true"
-		"type.config.oam.dev":          "helm-repository"
-	}
-	type: "component"
+	sensitive:   false
+	scope:       "project"
 }
 
 template: {

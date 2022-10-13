@@ -68,14 +68,22 @@
   subParameters:
     - jsonKey: issuer
       sort: 1
+      style:
+        colSpan: 12
     - jsonKey: clientID
       uiType: Password
       sort: 3
+      style:
+        colSpan: 12
     - jsonKey: clientSecret
       uiType: Password
       sort: 5
+      style:
+        colSpan: 12
     - jsonKey: redirectURI
       sort: 7
+      style:
+        colSpan: 12
 - jsonKey: saml
   sort: 11
   uiType: Ignore
@@ -85,6 +93,26 @@
     - jsonKey: type
       op: "=="
       value: "saml"
+  subParameters:
+    - jsonKey: usernameAttr
+      sort: 10
+      style:
+        colSpan: 12
+    - jsonKey: emailAttr
+      sort: 12
+      style:
+        colSpan: 12
+    - jsonKey: redirectURI
+      sort: 14
+      style:
+        colSpan: 12
+    - jsonKey: ssoURL
+      sort: 16
+      style:
+        colSpan: 12
+    - jsonKey: ca
+      sort: 18
+
 - jsonKey: ldap
   sort: 13
   uiType: Ignore

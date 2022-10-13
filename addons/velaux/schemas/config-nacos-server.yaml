@@ -1,0 +1,43 @@
+- sort: 100
+  jsonKey: servers
+  subParameters:
+  - sort: 100
+    label: IPAddr
+    jsonKey: ipAddr
+  - sort: 101
+    label: Port
+    jsonKey: port
+  - sort: 102
+    label: GRPCPort
+    jsonKey: grpcPort
+- sort: 101
+  jsonKey: client
+  subParameters:
+  - sort: 100
+    jsonKey: endpoint
+  - sort: 101
+    jsonKey: accessKey
+    uiType: Password
+  - sort: 102
+    jsonKey: secretKey
+    uiType: Password
+  - sort: 104
+    style:
+      colSpan: 12
+    jsonKey: regionId
+  - sort: 109
+    style:
+      colSpan: 12
+    jsonKey: openKMS
+    uiType: Switch
+    
+  - sort: 110
+    jsonKey: username
+    uiType: Input
+    style:
+      colSpan: 12
+  - sort: 113
+    jsonKey: password
+    uiType: Password
+    style:
+      colSpan: 12
