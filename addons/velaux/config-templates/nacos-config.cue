@@ -10,8 +10,8 @@ template: {
 	nacos: {
 		// The endpoint can not references the parameter.
 		endpoint: {
-			name:      "nacos"
-			namespace: "vela-system"
+			// Users must create a config base the nacos-server template firstly.
+			name: "nacos"
 		}
 		format: parameter.contentType
 
@@ -29,7 +29,7 @@ template: {
 				tenant: parameter.tenant
 			}
 			if parameter.tag != _|_ {
-				tenant: parameter.tag
+				tag: parameter.tag
 			}
 		}
 		content: parameter.content
