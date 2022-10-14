@@ -38,7 +38,7 @@ Please be aware of this contribution rules when contribute addons.
 
 - An experimental addon must meet these conditions to be promoted as a verified one.
 
-  - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
+  - This addon must be tested by addon's [e2e-test](./test/e2e-test/0b addon-test) to guarantee this addon can be enabled successfully.
 
   - This addon must have some basic but necessary information.
 
