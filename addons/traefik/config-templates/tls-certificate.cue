@@ -17,6 +17,14 @@
 	type: "component"
 }
 
+metadata: {
+	name:       "tls-certificate"
+	alias:      "TLS Certificate"
+	definition: "Manage the TLS certificate"
+	scope:      "project"
+	sensitive:  true
+}
+
 template: {
 	output: {
 		apiVersion: "v1"
@@ -24,12 +32,7 @@ template: {
 		metadata: {
 			name:      context.name
 			namespace: context.namespace
-			labels: {
-				"config.oam.dev/type":          "tls-certificate"
-				"config.oam.dev/multi-cluster": "true"
-			}
 		}
-		type: "Opaque"
 		data: {
 			"tls.crt": parameter.cert
 			"tls.key": parameter.key
