@@ -3,7 +3,7 @@ import (
 	"path"
 )
 
-"collect-logs": {
+"log-collect-file": {
 	annotations: {}
 	attributes: {
 		appliesToWorkloads: [
@@ -73,7 +73,7 @@ template: {
 			]
 			volumeMounts: [
 				{
-					mountPath: _dir
+					mountPath: "/data" + _dir
 					name:      "container-log"
 				},
 				{
@@ -107,7 +107,7 @@ template: {
 			my_source_id: {
 				type:              "file"
 				ignore_older_secs: 600
-				include: [parameter.path]
+				include: "/data/" + [parameter.path]
 				read_from: "beginning"
 			}
 		}

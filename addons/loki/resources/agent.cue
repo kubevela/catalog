@@ -58,6 +58,9 @@ vector: {...}
 vectorConfig: {...}
 promtail: {...}
 promtailConfig: {...}
+vectorController: {...}
+vectorControllerAgentConfig: {...}
+vectorControllerAgent:{...}
 
 if parameter.agent == "vector" {
 	agent:       vector
@@ -69,12 +72,18 @@ if parameter.agent == "promtail" {
 	agentConfig: promtailConfig
 }
 
+if parameter.agent == "vector-controller-agent" {
+	agent:       vectorControllerAgent
+  agentConfig: vectorControllerAgentConfig
+  vectorController: vectorController
+}
+
 if parameter.agent != "" {
-	agentComponents: [agent, agentConfig]
+	agentComponents: [agent, agentConfig]  + [vectorController]
 	agentPolicies: [{
 		type: "override"
 		name: "agent-components"
-		properties: selector: [agent.name, agentConfig.name]
+		properties: selector: [for comp in agentComponents if comp.name != _|_ {comp.name}]
 	}]
 	agentWorkflowSteps: [{
 		type: "deploy"
