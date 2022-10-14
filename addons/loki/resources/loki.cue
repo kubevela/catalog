@@ -39,9 +39,6 @@ loki: {
 			name:   "http"
 			port:   3100
 			expose: true
-		}, {
-			port:   7946
-			expose: true
 		}]
 		exposeType: parameter.serviceType
 	}

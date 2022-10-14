@@ -51,6 +51,20 @@ output: {
 			}
 		}, {
 			type: "topology"
+			name: "deploy-multi-cluster-exclude-local"
+			properties: {
+				if parameter.clusters != _|_ {
+					clusters: [ for c in parameter.clusters if c != "local" {c}]
+				}
+				if parameter.clusters == _|_ {
+					clusterLabelSelector: {
+						"cluster.core.oam.dev/control-plane": "false"
+					}
+				}
+				namespace: parameter.namespace
+			}
+		}, {
+			type: "topology"
 			name: "deploy-local"
 			properties: {
 				clusters: ["local"]
@@ -85,20 +99,27 @@ output: {
 				outer:    parameter.serviceType != "ClusterIP"
 			}
 			outputs: [{
-				name:      "url"
-				valueFrom: "value.url"
+				name:      "host"
+				valueFrom: "value.endpoint.host"
+			}, {
+				name:      "port"
+				valueFrom: "value.endpoint.port"
 			}]
 		}, {
-			type: "export-data"
-			name: "export-data"
+			type: "export-service"
+			name: "export-service"
 			properties: {
-				name:      "loki-endpoint"
+				name:      "loki"
 				namespace: parameter.namespace
-				topology:  "deploy-multi-cluster"
+				topology:  "deploy-multi-cluster-exclude-local"
+				port:      3100
 			}
 			inputs: [{
-				from:         "url"
-				parameterKey: "data.url"
+				from:         "host"
+				parameterKey: "ip"
+			}, {
+				from:         "port"
+				parameterKey: "targetPort"
 			}]
 		}] + agentWorkflowSteps
 	}

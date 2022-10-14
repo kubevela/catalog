@@ -15,6 +15,8 @@ dashboardComponents: [
 	grafanaDashboardKubevelaSystem,
 	grafanaDashboardApplicationOverview,
 	grafanaDashboardDeploymentOverview,
+	grafanaDashboardStatefulSetOverview,
+	grafanaDashboardDaemonSetOverview,
 	grafanaDashboardKubernetesPod,
 ]
 
@@ -76,8 +78,9 @@ output: {
 				type: "install-datasource-from-addon"
 				name: "install-loki-datasource-from-addon"
 				properties: {
-					type: "loki"
+					type:      "loki"
 					addonName: "addon-loki"
+					port:      3100
 				}
 			}, {
 				type: "deploy"

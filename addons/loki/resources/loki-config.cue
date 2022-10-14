@@ -56,6 +56,10 @@ lokiConfig: {
 				table_manager:
 				  retention_deletes_enabled: false
 				  retention_period: 0s
+				frontend:
+				  max_outstanding_per_tenant: 4096
+				query_range:
+				  parallelise_shardable_queries: false
 				"""#
 		}
 	}]

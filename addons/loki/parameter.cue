@@ -17,7 +17,7 @@ parameter: {
 	// loki parameters
 
 	// +usage=Specify the image of loki
-	image: *"grafana/loki" | string
+	image: *"grafana/loki:2.6.1" | string
 	// +usage=Specify the imagePullPolicy of the image
 	imagePullPolicy: *"IfNotPresent" | "Never" | "Always"
 	// +usage=Specify the service type for expose loki. If empty, it will be not exposed.

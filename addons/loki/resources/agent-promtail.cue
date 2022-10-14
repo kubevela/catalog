@@ -18,10 +18,6 @@ promtail: {
 				name:      "bootconfig-volume"
 				mountPath: "/etc/bootconfig"
 				cmName:    "promtail"
-			}, {
-				name:      "loki-endpoint-volume"
-				mountPath: "/etc/loki-endpoint"
-				cmName:    "loki-endpoint"
 			}]
 			hostPath: [{
 				name:      "run"
@@ -81,7 +77,7 @@ promtailConfig: {
 				  http_listen_port: 3101
 
 				clients:
-				  - url: $LOKIURL/loki/api/v1/push
+				  - url: http://loki:3100/loki/api/v1/push
 				
 				positions:
 				  filename: /run/promtail/positions.yaml
