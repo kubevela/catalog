@@ -34,8 +34,18 @@ spec:
       type: clickhouse
       properties:
         storage:
-          size: "6Gi"
+          size: "10Gi"
+      traits:
+        - type: gateway
+          properties:
+            class: traefik
+            domain: 47.251.8.82.nip.io
+            http:
+              "/play": 8123
+              "/": 8123
 ```
+
+The default password for default user is `default`.
 
 2. Check the application status and topology provided by [velaux](https://kubevela.net/docs/reference/addons/velaux).
 

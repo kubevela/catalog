@@ -8,4 +8,12 @@ spec:
       type: clickhouse
       properties:
         storage:
-          size: "6Gi"
+          size: "10Gi"
+      traits:
+        - type: gateway
+          properties:
+            class: traefik
+            domain: 47.251.8.82.nip.io
+            http:
+              "/play": 8123
+              "/": 8123

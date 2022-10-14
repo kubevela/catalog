@@ -28,6 +28,10 @@ template: {
 		kind:       "ClickHouseInstallation"
 		spec: {
 			configuration: {
+				users: {
+					"default/password":             parameter.password
+					"default/networks/host_regexp": ".*"
+				}
 				clusters: [{
 					name: context.name
 					layout: {
@@ -96,5 +100,6 @@ template: {
 			size:  string
 			class: *"local-path" | string
 		}
+		password: *"default" | string
 	}
 }
