@@ -3,13 +3,17 @@ package main
 import "strings"
 
 // controller images prefix
-_base: *"" | string
-
-if parameter.registry != "" && !strings.HasSuffix(parameter.registry, "/") {
-	_base: parameter.registry + "/"
+_base:    *"" | string
+registry: *"" | string
+if parameter.registry != _|_ {
+	registry: parameter.registry
 }
-if parameter.registry == "" || strings.HasSuffix(parameter.registry, "/") {
-	_base: parameter.registry
+
+if registry != "" && !strings.HasSuffix(registry, "/") {
+	_base: registry + "/"
+}
+if registry == "" || strings.HasSuffix(registry, "/") {
+	_base: registry
 }
 
 _targetNamespace: parameter.namespace

@@ -77,7 +77,7 @@ spec:
         				}
         			}
 
-        			volumeMounts: [ for v in parameter.storage {
+        			volumeMounts: [ if parameter.storage != _|_ for v in parameter.storage {
         				{
         					if v.pvcRef != _|_ {
         						mountPath: v.pvcRef.mountPath
@@ -175,7 +175,7 @@ spec:
         	}
         }
         outputs: {
-        	for v in parameter.storage if v.pvcRef == _|_ {
+        	if parameter.storage != _|_ for v in parameter.storage if v.pvcRef == _|_ {
         		"pvc-\(v.name)": {
         			apiVersion: "v1"
         			kind:       "PersistentVolumeClaim"
@@ -193,13 +193,13 @@ spec:
         					storageClassName: v.storageClassName
         				}
 
-        				if v.resources.requests.storage == _|_ {
+        				if v.resources.requests == _|_ {
         					resources: requests: storage: "1Gi"
         				}
-        				if v.resources.requests.storage != _|_ {
+        				if v.resources.requests != _|_ {
         					resources: requests: storage: v.resources.requests.storage
         				}
-        				if v.resources.limits.storage != _|_ {
+        				if v.resources.limits != _|_ {
         					resources: limits: storage: v.resources.limits.storage
         				}
         				if v.dataSourceRef != _|_ {
@@ -217,7 +217,7 @@ spec:
         }
         parameter: {
         	// +usage=The training framework to use
-        	framework: "tensorflow" | "pytorch" | "mpi" | "xgboost" | "mxnet"
+        	framework: *"tensorflow" | "pytorch" | "mpi" | "xgboost" | "mxnet"
         	// +usage=If you want to train the model in distributed mode, specify here
         	distribution?: {
         		// +usage=The number of PS replicas, suits for tensorflow model
