@@ -63,6 +63,7 @@ template: {
               .message = parse_nginx_log!(.message, "combined")
               """
 						}
+						if parameter.parser != _|_ &&
 					}
 				}
 				sinks:
@@ -1287,7 +1288,7 @@ template: {
 				}
 				editorMode:   "code"
 				expr:         "topk(10, sum by (message_client) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_client != \"\"  __error__=\"\" [$__interval])))"
-				legendFormat: "{{remote_addr}}"
+				legendFormat: "{{message_client}}"
 				queryType:    "range"
 				refId:        "A"
 			}]
