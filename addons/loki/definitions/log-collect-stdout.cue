@@ -102,8 +102,8 @@ template: {
 			annotations: {
 				"app.oam.dev/last-applied-configuration": "-"
 			}
+			name: "\(context.name)@\(parameter.grafana)"
 		}
-		name: "\(context.name)@\(parameter.grafana)"
 		spec: nginx_dashboard_config
 	}
 
@@ -1383,7 +1383,7 @@ template: {
 				}
 				editorMode:   "code"
 				expr:         "topk(5,sum by (message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_path != \"\"  __error__=\"\" [$__interval])))"
-				legendFormat: "{{request_uri}}"
+				legendFormat: "{{message_path}}"
 				queryType:    "range"
 				refId:        "A"
 			}]
@@ -1467,7 +1467,6 @@ template: {
 		timezone:  ""
 		title:     "KubeVela application " + context.appName + " log analytics"
 		uid:       context.appName + "log-dashboard"
-		version:   2
 		weekStart: ""
 	}
 
