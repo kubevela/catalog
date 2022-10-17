@@ -62,11 +62,6 @@ _service: {
 	kind:       "Service"
 }
 
-_seldon: {
-	group: "machinelearning.seldon.io"
-	kind:  "SeldonDeployment"
-}
-
 _rule1: {
 	parentResourceType: _clickhouse
 	childrenResourceType: [_statefulset, _service]
