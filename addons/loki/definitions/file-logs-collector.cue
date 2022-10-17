@@ -3,7 +3,7 @@ import (
 	"path"
 )
 
-"log-collect-file": {
+"file-logs-collector": {
 	annotations: {}
 	attributes: {
 		appliesToWorkloads: [

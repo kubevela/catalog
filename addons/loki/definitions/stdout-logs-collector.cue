@@ -3,7 +3,7 @@
 // - https://kubevela.net/docs/platform-engineers/cue/definition-edit
 // - https://kubevela.net/docs/platform-engineers/addon/intro#definitions-directoryoptional
 
-"log-collect-stdout": {
+"stdout-logs-collector": {
 	alias: "lt"
 	annotations: {}
 	attributes: {
