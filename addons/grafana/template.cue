@@ -22,7 +22,7 @@ dashboardComponents: [
 
 dashboardComponentNames: [ for comp in dashboardComponents {comp.name}]
 
-comps: [ns, grafanaAccess, grafana, {
+comps: [ns, grafanaAccount, grafana, {
 	if parameter.storage != _|_ {grafanaStorage}
 }]
 
@@ -55,38 +55,84 @@ output: {
 		}, {
 			type: "override"
 			name: "grafana-core"
-			properties: selector: [ns.name, grafanaAccess.name, grafana.name]
+			properties: selector: [ns.name, grafanaAccount.name, grafana.name]
 		}, {
 			type: "override"
 			name: "grafana-dashboards"
 			properties: selector: dashboardComponentNames
 		}]
-		workflow: steps: [{
-			type: "deploy"
-			name: "deploy-ns"
-			properties: policies: ["deploy-topology", "grafana-core"]
-		}, {
-			type: "step-group"
-			name: "install-datasources"
-			subSteps: [{
-				type: "install-kubernetes-api-datasource"
-				name: "install-kubernetes-api-datasource"
-			}, {
-				type: "install-datasource-from-addon"
-				name: "install-prometheus-datasource-from-addon"
-			}, {
-				type: "install-datasource-from-addon"
-				name: "install-loki-datasource-from-addon"
-				properties: {
-					type:      "loki"
-					addonName: "addon-loki"
-					port:      3100
+		workflow: steps: [
+			if (parameter.install) {
+				{
+					type: "deploy"
+					name: "deploy-grafana"
+					properties: policies: ["deploy-topology", "grafana-core"]
 				}
-			}, {
-				type: "deploy"
-				name: "deploy-dashboards"
-				properties: policies: ["deploy-topology", "grafana-dashboards"]
+				{
+					type: "collect-service-endpoints"
+					name: "get-grafana-endpoint"
+					properties: {
+						name:      const.name
+						namespace: "vela-system"
+						components: [grafana.name]
+						portName: "port-3000"
+						outer:    parameter.serviceType != "ClusterIP"
+					}
+					outputs: [{
+						name:      "url"
+						valueFrom: "value.url"
+					}]
+				}, {
+					type: "create-config"
+					name: "grafana-server-register"
+					properties: {
+						name:     parameter.grafanaName
+						template: "grafana"
+						config: {
+							auth: {
+								username: parameter.adminUser
+								password: parameter.adminPassword
+							}
+						}
+					}
+					inputs: [
+						{
+							from:         "url"
+							parameterKey: "config.endpoint"
+						},
+					]
+				}
+			},
+			{
+				type: "step-group"
+				name: "install-datasources"
+				subSteps: [
+					{
+						type: "install-kubernetes-api-datasource"
+						name: "install-kubernetes-api-datasource"
+						properties: {
+							grafana: parameter.grafanaName
+						}
+					}, {
+						type: "install-datasource-from-config"
+						name: "install-prometheus-datasource-from-config"
+						properties: {
+							type:    "prometheus-server"
+							grafana: parameter.grafanaName
+						}
+					}, {
+						type: "install-datasource-from-config"
+						name: "install-loki-datasource-from-config"
+						properties: {
+							type:    "loki"
+							grafana: parameter.grafanaName
+						}
+					}, {
+						type: "deploy"
+						name: "deploy-dashboards"
+						properties: policies: ["deploy-topology", "grafana-dashboards"]
+					},
+				]
 			}]
-		}]
 	}
 }

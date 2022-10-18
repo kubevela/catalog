@@ -3,11 +3,18 @@ package main
 const: {
 	// +usage=The name of the grafana addon application
 	name: "addon-grafana"
+
+	secretName: "grafana.account"
 }
 
 parameter: {
 
 	// global parameters
+
+	// +usage=You should create a grafana config and provide the name if want't install the grafana.
+	install: true | bool
+
+	grafanaName: "default" | string
 
 	// +usage=The namespace of the grafana to be installed
 	namespace: *"o11y-system" | string
