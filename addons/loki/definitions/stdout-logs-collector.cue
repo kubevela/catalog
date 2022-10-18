@@ -63,7 +63,6 @@ template: {
               .message = parse_nginx_log!(.message, "combined")
               """
 						}
-						if parameter.parser != _|_ &&
 					}
 				}
 				sinks:
