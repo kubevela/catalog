@@ -70,7 +70,7 @@ template: {
 
 	model: {
 		for k, v in source {
-			if k != "uid" && k != "title" && k != "__inputs" && k != "__requires" && k != "templating" && k != "__elements" {
+			if k != "uid" && k != "title" && k != "__inputs" && k != "__requires" && k != "templating" && k != "__elements" && k != "id" && k != "version" {
 				"\(k)": v
 			}
 		}

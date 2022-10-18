@@ -38,7 +38,7 @@ grafanaDashboardApplicationOverviewData: #"""
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "#5f5f5f",
                 "value": null
               }
             ]
@@ -48,13 +48,13 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       "gridPos": {
         "h": 3,
-        "w": 7,
+        "w": 12,
         "x": 0,
         "y": 1
       },
       "id": 12,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -64,6 +64,9 @@ grafanaDashboardApplicationOverviewData: #"""
           ],
           "fields": "/.*/",
           "values": true
+        },
+        "text": {
+          "valueSize": 32
         },
         "textMode": "auto"
       },
@@ -105,74 +108,7 @@ grafanaDashboardApplicationOverviewData: #"""
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 5,
-        "x": 7,
-        "y": 1
-      },
-      "id": 26,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/.*/",
-          "values": true
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "8.5.3",
-      "targets": [
-        {
-          "cacheDurationSeconds": 300,
-          "datasource": {
-            "type": "marcusolsson-json-datasource",
-            "uid": "kubernetes-api"
-          },
-          "fields": [
-            {
-              "jsonPath": "$.metadata.namespace",
-              "language": "jsonata"
-            }
-          ],
-          "method": "GET",
-          "queryParams": "",
-          "refId": "A",
-          "urlPath": "/apis/core.oam.dev/v1beta1/namespaces/$namespace/applications/$application"
-        }
-      ],
-      "title": "Namespace",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "marcusolsson-json-datasource",
-        "uid": "kubernetes-api"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text",
+                "color": "#5f5f5f",
                 "value": null
               }
             ]
@@ -189,7 +125,7 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       "id": 15,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -200,7 +136,9 @@ grafanaDashboardApplicationOverviewData: #"""
           "fields": "/.*/",
           "values": false
         },
-        "text": {},
+        "text": {
+          "valueSize": 32
+        },
         "textMode": "auto"
       },
       "pluginVersion": "8.5.3",
@@ -243,7 +181,7 @@ grafanaDashboardApplicationOverviewData: #"""
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "#5f5f5f",
                 "value": null
               }
             ]
@@ -259,7 +197,7 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       "id": 22,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -270,7 +208,9 @@ grafanaDashboardApplicationOverviewData: #"""
           "fields": "/.*/",
           "values": false
         },
-        "text": {},
+        "text": {
+          "valueSize": 32
+        },
         "textMode": "auto"
       },
       "pluginVersion": "8.5.3",
@@ -311,8 +251,14 @@ grafanaDashboardApplicationOverviewData: #"""
             {
               "options": {
                 "false": {
-                  "color": "text",
-                  "index": 0
+                  "color": "purple",
+                  "index": 0,
+                  "text": "False"
+                },
+                "true": {
+                  "color": "blue",
+                  "index": 1,
+                  "text": "True"
                 }
               },
               "type": "value"
@@ -339,7 +285,7 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       "id": 27,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -350,7 +296,9 @@ grafanaDashboardApplicationOverviewData: #"""
           "fields": "/.*/",
           "values": false
         },
-        "text": {},
+        "text": {
+          "valueSize": 32
+        },
         "textMode": "auto"
       },
       "pluginVersion": "8.5.3",
@@ -391,9 +339,25 @@ grafanaDashboardApplicationOverviewData: #"""
           "mappings": [
             {
               "options": {
+                "deleting": {
+                  "color": "purple",
+                  "index": 4,
+                  "text": "Deleting"
+                },
+                "rendering": {
+                  "color": "yellow",
+                  "index": 2,
+                  "text": "Rendering"
+                },
                 "running": {
                   "color": "green",
-                  "index": 0
+                  "index": 0,
+                  "text": "Running"
+                },
+                "runningWorkflow": {
+                  "color": "yellow",
+                  "index": 1,
+                  "text": "RunningWorkflow"
                 }
               },
               "type": "value"
@@ -403,7 +367,7 @@ grafanaDashboardApplicationOverviewData: #"""
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "#F2495C",
                 "value": null
               }
             ]
@@ -419,7 +383,7 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       "id": 16,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -430,7 +394,9 @@ grafanaDashboardApplicationOverviewData: #"""
           "fields": "/.*/",
           "values": false
         },
-        "text": {},
+        "text": {
+          "valueSize": 32
+        },
         "textMode": "auto"
       },
       "pluginVersion": "8.5.3",
@@ -887,17 +853,7 @@ grafanaDashboardApplicationOverviewData: #"""
             "displayMode": "color-text",
             "inspect": false
           },
-          "mappings": [
-            {
-              "options": {
-                "Detail": {
-                  "color": "yellow",
-                  "index": 0
-                }
-              },
-              "type": "value"
-            }
-          ],
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -924,18 +880,77 @@ grafanaDashboardApplicationOverviewData: #"""
                     "url": "/d/${__data.fields.DashboardID}${__data.fields.URLParams}"
                   }
                 ]
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": ".+",
+                      "result": {
+                        "color": "blue",
+                        "index": 0
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              },
+              {
+                "id": "custom.align",
+                "value": "auto"
               }
             ]
           },
           {
             "matcher": {
               "id": "byRegexp",
-              "options": "URLParams|DashboardID"
+              "options": "URLParams|DashboardID|APIVersion"
             },
             "properties": [
               {
                 "id": "custom.hidden",
                 "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Cluster"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 80
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Namespace"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Kind"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 140
               }
             ]
           }
@@ -959,7 +974,7 @@ grafanaDashboardApplicationOverviewData: #"""
         "showHeader": true,
         "sortBy": [
           {
-            "desc": true,
+            "desc": false,
             "displayName": "Cluster"
           }
         ]
@@ -999,9 +1014,9 @@ grafanaDashboardApplicationOverviewData: #"""
               "name": "Name"
             },
             {
-              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'StatefulSet' or kind = 'DaemonSet' or kind = 'Pod' or kind = 'GrafanaDashboard') ? 'Detail' : '')",
+              "jsonPath": "$.status.appliedResources[*].((kind = 'Deployment' or kind = 'StatefulSet' or kind = 'DaemonSet' or kind = 'Pod' or kind = 'GrafanaDashboard') ? 'Details' : '')",
               "language": "jsonata",
-              "name": "Dashboard"
+              "name": " Link"
             },
             {
               "jsonPath": "$.status.appliedResources[*].(kind = 'GrafanaDashboard' ? '' : ('?var-cluster=' & (cluster ? cluster : 'local') & '&var-namespace=' & (namespace ? namespace : '-') & '&var-name=' & name))",
@@ -1021,7 +1036,27 @@ grafanaDashboardApplicationOverviewData: #"""
         }
       ],
       "title": "Managed Resources",
-      "transformations": [],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              " Link": 0,
+              "APIVersion": 3,
+              "Cluster": 5,
+              "DashboardID": 7,
+              "Kind": 4,
+              "Name": 1,
+              "Namespace": 2,
+              "URLParams": 6
+            },
+            "renameByName": {
+              " Link": "Dashboard"
+            }
+          }
+        }
+      ],
       "type": "table"
     },
     {
@@ -1410,7 +1445,10 @@ grafanaDashboardApplicationOverviewData: #"""
   "refresh": "",
   "schemaVersion": 36,
   "style": "dark",
-  "tags": ["kubevela", "application"],
+  "tags": [
+    "kubevela",
+    "application"
+  ],
   "templating": {
     "list": [
       {
@@ -1448,7 +1486,7 @@ grafanaDashboardApplicationOverviewData: #"""
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "addon-grafana",
           "value": "addon-grafana"
         },
@@ -1486,11 +1524,7 @@ grafanaDashboardApplicationOverviewData: #"""
     "from": "now-30m",
     "to": "now"
   },
-  "timepicker": {},
-  "timezone": "",
   "title": "KubeVela Applications",
-  "uid": "application-overview",
-  "version": 1,
-  "weekStart": ""
+  "uid": "application-overview"
 }
 """#
