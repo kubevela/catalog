@@ -61,6 +61,7 @@ promtailConfig: {...}
 vectorController: {...}
 vectorControllerAgentConfig: {...}
 vectorControllerAgent:{...}
+vectorCRDComponent: {...}
 
 if parameter.agent == "vector" {
 	agent:       vector
@@ -76,10 +77,11 @@ if parameter.agent == "vector-controller-agent" {
 	agent:       vectorControllerAgent
   agentConfig: vectorControllerAgentConfig
   vectorController: vectorController
+  vectorCRDComponent: vectorCRDComponent
 }
 
 if parameter.agent != "" {
-	agentComponents: [agent, agentConfig]  + [vectorController]
+	agentComponents: [agent, agentConfig]  + [vectorController, vectorCRDComponent]
 	agentPolicies: [{
 		type: "override"
 		name: "agent-components"

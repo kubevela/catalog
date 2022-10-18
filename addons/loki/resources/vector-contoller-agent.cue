@@ -8,6 +8,9 @@ vectorControllerAgent: {
 	properties: {
 		image:           parameter.vectorImage
 		imagePullPolicy: parameter.imagePullPolicy
+		labels: {
+			 "vector.oam.dev/agent": "true"
+		}
 		env: [{
 			name: "VECTOR_SELF_NODE_NAME"
 			valueFrom: fieldRef: fieldPath: "spec.nodeName"
@@ -79,6 +82,7 @@ vectorControllerAgentConfig: {
 				sources:
 				  kubernetes-logs:
 				    type: kubernetes_logs
+				    extra_label_selector: "vector.oam.dev/agent!=true"
 				sinks:
 				  console:
 				    type: console
@@ -90,6 +94,14 @@ vectorControllerAgentConfig: {
 				"""#
 		}
 	}]
+}
+
+vectorCRDComponent: {
+	name: "vector-crd"
+  type: "k8s-objects"
+  properties: objects: [
+  	 vectorControllerCRD,
+  ]
 }
 
 
