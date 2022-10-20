@@ -5,7 +5,7 @@ output: {
 	kind:       "Application"
 	metadata: {
 		name:      const.name
-		namespace: parameter.namespace
+		namespace: const.namespace
 	}
 	spec: {
 		components: [
@@ -17,7 +17,7 @@ output: {
 					url:             "https://charts.kubevela.net/core"
 					chart:           "vela-workflow"
 					version:         "0.2"
-					targetNamespace: parameter.namespace
+					targetNamespace: const.namespace
 					releaseName:     "vela-workflow"
 				}
 			},
