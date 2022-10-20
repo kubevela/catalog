@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1alpha1
+kind: WorkflowRun
+metadata:
+  name: test-error
+  namespace: vela-system
+spec:
+  workflowSpec:
+    steps:
+      - name: not-exist
+        type: addon-operation
+        properties:
+          addonName: vela-prism
+      - name: clean-job
+        type: clean-workflow-run-jobs
