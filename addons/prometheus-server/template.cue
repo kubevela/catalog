@@ -80,7 +80,12 @@ output: {
 			properties: {
 				name:      const.name
 				namespace: "vela-system"
-				components: [prometheusServer.name]
+				if parameter.thanos {
+					components: [thanosQuery.name]
+				}
+				if !parameter.thanos {
+					components: [prometheusServer.name]
+				}
 				portName: "http"
 				outer:    parameter.serviceType != "ClusterIP"
 			}
