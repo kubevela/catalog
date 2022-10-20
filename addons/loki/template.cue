@@ -62,6 +62,7 @@ output: {
 					}
 				}
 				namespace: parameter.namespace
+				allowEmpty: true
 			}
 		}, {
 			type: "topology"
