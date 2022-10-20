@@ -37,7 +37,7 @@ spec:
           args:
             - serviceType=LoadBalancer
       - name: clean-job
-        type: clean-workflow-run-jobs
+        type: clean-jobs
       - name: print-message
         type: print-message-in-status
         properties:

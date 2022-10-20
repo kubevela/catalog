@@ -11,4 +11,8 @@ spec:
         properties:
           addonName: vela-prism
       - name: clean-job
-        type: clean-workflow-run-jobs
+        type: clean-jobs
+      - name: print-message
+        type: print-message-in-status
+        properties:
+          message: "All addons have been enabled successfully, you can use 'vela addon list' to check them."
