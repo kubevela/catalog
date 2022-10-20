@@ -9,6 +9,10 @@ spec:
       - name: not-exist
         type: addon-operation
         properties:
-          addonName: vela-prism
+          addonName: not-exist
       - name: clean-job
-        type: clean-workflow-run-jobs
+        type: clean-jobs
+      - name: print-message
+        type: print-message-in-status
+        properties:
+          message: "All addons have been enabled successfully, you can use 'vela addon list' to check them."
