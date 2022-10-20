@@ -13,4 +13,4 @@ dependencies:
   - name: fluxcd
 
 system:
-  vela: ">=v1.6.0"
+  vela: ">=v1.6.0-alpha.4"
