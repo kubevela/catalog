@@ -16,7 +16,7 @@ output: {
 					repoType:        "helm"
 					url:             "https://charts.kubevela.net/core"
 					chart:           "vela-workflow"
-					version:         "0.2"
+					version:         "0.3"
 					targetNamespace: const.namespace
 					releaseName:     "vela-workflow"
 				}
