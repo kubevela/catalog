@@ -13,3 +13,4 @@ grafana-definitions
 grafana
 cert-manager
 trivy-operator
+vela-workflow

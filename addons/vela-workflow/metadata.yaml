@@ -1,0 +1,16 @@
+name: vela-workflow
+version: v1.6.0
+description: "vela-workflow provides the capability to run a standalone workflow"
+icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
+url: "https://github.com/kubevela/workflow"
+
+tags:
+  - Official
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
+
+system:
+  vela: ">=v1.6.0-alpha.4"
