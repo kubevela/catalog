@@ -9,7 +9,7 @@ spec:
       - name: not-exist
         type: addon-operation
         properties:
-          addonName: vela-prism
+          addonName: not-exist
       - name: clean-job
         type: clean-jobs
       - name: print-message
