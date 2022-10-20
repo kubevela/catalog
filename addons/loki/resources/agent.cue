@@ -47,41 +47,23 @@ agentServiceAccount: {
 	}
 }
 
-agent:              *{} | {...}
-agentConfig:        *{} | {...}
 agentComponents:    *[] | [...{...}]
 agentPolicies:      *[] | [...{...}]
 agentWorkflowSteps: *[] | [...{...}]
-loki: {...}
-
-vector: {...}
-vectorConfig: {...}
-promtail: {...}
-promtailConfig: {...}
-vectorController: {...}
-vectorControllerAgentConfig: {...}
-vectorControllerAgent:{...}
-vectorCRDComponent: {...}
 
 if parameter.agent == "vector" {
-	agent:       vector
-	agentConfig: vectorConfig
+	agentComponents: [vector, vectorConfig]
 }
 
 if parameter.agent == "promtail" {
-	agent:       promtail
-	agentConfig: promtailConfig
+	agentComponents: [promtail, promtailConfig]
 }
 
-if parameter.agent == "vector-controller-agent" {
-	agent:       vectorControllerAgent
-  agentConfig: vectorControllerAgentConfig
-  vectorController: vectorController
-  vectorCRDComponent: vectorCRDComponent
+if parameter.agent == "vector-controller" {
+	agentComponents: [vectorControllerAgent, vectorControllerAgentConfig, vectorController, vectorCRDComponent]
 }
 
 if parameter.agent != "" {
-	agentComponents: [agent, agentConfig]  + [vectorController, vectorCRDComponent]
 	agentPolicies: [{
 		type: "override"
 		name: "agent-components"

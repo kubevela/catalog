@@ -30,7 +30,7 @@ parameter: {
 	// agent parameters
 
 	// +usage=Specify the type of log agents, if empty, no agent will be installed
-	agent: *"" | "vector" | "promtail" | "vector-controller-agent"
+	agent: *"" | "vector" | "promtail" | "vector-controller"
 	// +usage=Specify the image of promtail
 	promtailImage: *"grafana/promtail" | string
 	// +usage=Specify the image of vector
