@@ -5,8 +5,8 @@ import (
 "addon-operation": {
 	type: "workflow-step"
 	annotations: {
-  		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/vela-workflow/observerbility.yaml"
-  }
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/vela-workflow/observerbility.yaml"
+	}
 	labels: {
 		"ui-hidden": "true"
 	}
@@ -26,7 +26,7 @@ template: {
 				}
 			}
 			spec: {
-				backoffLimit: 0
+				backoffLimit: 3
 				template: {
 					metadata: {
 						labels: {
