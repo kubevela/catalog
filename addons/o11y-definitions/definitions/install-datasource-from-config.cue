@@ -31,14 +31,14 @@ template: {
 									user:     config.config.auth.username
 									password: config.config.auth.password
 								}
-								type:   "prometheus"
-								access: "proxy"
+								type: "prometheus"
 							}
 							if parameter.type == "loki" {
 								type: "loki"
 							}
-							url:  config.config.url
-							name: config.name
+							access: "proxy"
+							url:    config.config.url
+							name:   config.name
 						}
 					}
 				}
