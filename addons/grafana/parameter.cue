@@ -12,9 +12,9 @@ parameter: {
 	// global parameters
 
 	// +usage=You should create a grafana config and provide the name if want't install the grafana.
-	install: true | bool
+	install: *true | bool
 
-	grafanaName: "default" | string
+	grafanaName: *"default" | string
 
 	// +usage=The namespace of the grafana to be installed
 	namespace: *"o11y-system" | string

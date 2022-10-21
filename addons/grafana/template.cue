@@ -68,6 +68,8 @@ output: {
 					name: "deploy-grafana"
 					properties: policies: ["deploy-topology", "grafana-core"]
 				}
+			},
+			if (parameter.install) {
 				{
 					type: "collect-service-endpoints"
 					name: "get-grafana-endpoint"
@@ -82,7 +84,10 @@ output: {
 						name:      "url"
 						valueFrom: "value.url"
 					}]
-				}, {
+				}
+			},
+			if (parameter.install) {
+				{
 					type: "create-config"
 					name: "grafana-server-register"
 					properties: {
