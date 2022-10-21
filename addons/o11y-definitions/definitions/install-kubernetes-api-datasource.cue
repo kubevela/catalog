@@ -53,7 +53,7 @@ template: {
 			spec: {
 				type:            "marcusolsson-json-datasource"
 				name:            "KubernetesAPIServer"
-				url:             "https://kubernetes.default"
+				url:             parameter.endpoint
 				access:          "proxy"
 				uid:             "kubernetes-api"
 				withCredentials: true
@@ -73,5 +73,6 @@ template: {
 		namespace:          *"o11y-system" | string
 		uid:                *"kubernetes-api" | string
 		grafana:            *"default" | string
+		endpoint:           *"https://kubernetes.default" | string
 	}
 }

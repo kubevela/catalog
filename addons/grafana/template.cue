@@ -117,6 +117,9 @@ output: {
 						name: "install-kubernetes-api-datasource"
 						properties: {
 							grafana: parameter.grafanaName
+							if parameter.kubeEndpoint != _|_ {
+								endpoint: parameter.kubeEndpoint
+							}
 						}
 					}, {
 						type: "install-datasource-from-config"
