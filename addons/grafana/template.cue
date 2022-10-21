@@ -24,6 +24,7 @@ dashboardComponentNames: [ for comp in dashboardComponents {comp.name}]
 
 comps: [ns, grafanaAccount, grafana, {
 	if parameter.storage != _|_ {grafanaStorage}
+	if !parameter.install != _|_ {grafanaReaderRoleAndBinding}
 }]
 
 output: {
@@ -53,6 +54,13 @@ output: {
 				namespace: parameter.namespace
 			}
 		}, {
+			type: "topology"
+			name: "deploy-hub"
+			properties: {
+				clusters: ["local"]
+				namespace: parameter.namespace
+			}
+		}, {
 			type: "override"
 			name: "grafana-core"
 			properties: selector: [ns.name, grafanaAccount.name, grafana.name]
@@ -60,19 +68,23 @@ output: {
 			type: "override"
 			name: "grafana-dashboards"
 			properties: selector: dashboardComponentNames
+		}, {
+			type: "override"
+			name: "grafana-kubernetes-role"
+			properties: selector: ["grafana-cluster-role"]
 		}]
 		workflow: steps: [
 			if (parameter.install) {
 				{
 					type: "deploy"
-					name: "deploy-grafana"
+					name: "Deploy Grafana"
 					properties: policies: ["deploy-topology", "grafana-core"]
 				}
 			},
 			if (parameter.install) {
 				{
 					type: "collect-service-endpoints"
-					name: "get-grafana-endpoint"
+					name: "Get Grafana Endpoint"
 					properties: {
 						name:      const.name
 						namespace: "vela-system"
@@ -89,7 +101,7 @@ output: {
 			if (parameter.install) {
 				{
 					type: "create-config"
-					name: "grafana-server-register"
+					name: "Register Grafana Config"
 					properties: {
 						name:     parameter.grafanaName
 						template: "grafana"
@@ -108,13 +120,20 @@ output: {
 					]
 				}
 			},
+			if (!parameter.install) {
+				{
+					type: "deploy"
+					name: "Deploy RoleAndBinding"
+					properties: policies: ["grafana-kubernetes-role", "deploy-hub"]
+				}
+			},
 			{
 				type: "step-group"
-				name: "install-datasources"
+				name: "Install Datasources"
 				subSteps: [
 					{
 						type: "install-kubernetes-api-datasource"
-						name: "install-kubernetes-api-datasource"
+						name: "Install Kubernetes API Datasource"
 						properties: {
 							grafana: parameter.grafanaName
 							if parameter.kubeEndpoint != _|_ {
@@ -123,24 +142,25 @@ output: {
 						}
 					}, {
 						type: "install-datasource-from-config"
-						name: "install-prometheus-datasource-from-config"
+						name: "Install Prometheus Datasources"
 						properties: {
 							type:    "prometheus-server"
 							grafana: parameter.grafanaName
 						}
 					}, {
 						type: "install-datasource-from-config"
-						name: "install-loki-datasource-from-config"
+						name: "Install Loki Datasources"
 						properties: {
 							type:    "loki"
 							grafana: parameter.grafanaName
 						}
-					}, {
-						type: "deploy"
-						name: "deploy-dashboards"
-						properties: policies: ["deploy-topology", "grafana-dashboards"]
 					},
 				]
+			},
+			{
+				type: "deploy"
+				name: "Install Dashboards"
+				properties: policies: ["deploy-topology", "grafana-dashboards"]
 			}]
 	}
 }
