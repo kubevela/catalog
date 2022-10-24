@@ -1,0 +1,13 @@
+- jsonKey: name
+  sort: 10
+- jsonKey: ARM_SUBSCRIPTION_ID
+  sort: 20
+- jsonKey: ARM_TENANT_ID
+  sort: 30
+- jsonKey: ARM_CLIENT_ID
+  sort: 40
+  uiType: Password
+- jsonKey: ARM_CLIENT_SECRET
+  sort: 50
+  uiType: Password
+

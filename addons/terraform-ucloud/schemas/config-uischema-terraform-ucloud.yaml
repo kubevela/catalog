@@ -1,0 +1,12 @@
+- jsonKey: name
+  sort: 10
+- jsonKey: UCLOUD_PROJECT_ID
+  sort: 20
+- jsonKey: UCLOUD_REGION
+  sort: 30
+- jsonKey: UCLOUD_PUBLIC_KEY
+  sort: 40
+  uiType: Password
+- jsonKey: UCLOUD_PRIVATE_KEY
+  sort: 50
+  uiType: Password

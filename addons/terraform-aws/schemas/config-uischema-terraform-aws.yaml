@@ -1,0 +1,12 @@
+- jsonKey: name
+  sort: 10
+
+- jsonKey: AWS_DEFAULT_REGION
+  sort: 20
+
+- jsonKey: AWS_ACCESS_KEY_ID
+  sort: 30
+  uiType: Password
+- jsonKey: AWS_SECRET_ACCESS_KEY
+  sort: 40
+  uiType: Password

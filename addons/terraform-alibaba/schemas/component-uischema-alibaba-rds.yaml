@@ -8,14 +8,35 @@
 - jsonKey: instance_name
   label: InstanceName
   sort: 1
+  validate:
+    required: true
+  style: 
+    colSpan: 12
 - jsonKey: database_name
   label: DatabaseName
+  validate:
+    required: true
   sort: 2
+  style: 
+    colSpan: 12
 - jsonKey: account_name
   label: AccountName
+  validate:
+    required: true
   sort: 3
+  style: 
+    colSpan: 12
 - jsonKey: password
+  uiType: Password
+  description: Account password. Uppercase, lowercase, numbers, and special characters account for three types, with a length of 8-32 digits;
   sort: 4
+  style: 
+    colSpan: 12
+  validate:
+    required: true
+    minLength: 8
+    maxLength: 32
+    pattern: ^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$
 - jsonKey: allocate_public_connection
   label: AllocatePublicConnection
   sort: 5
