@@ -6,3 +6,5 @@ version: 1.0.1
 url: https://clickhouse.com/
 tags:
   - ClickHouse
+system:
+  vela: ">=v1.6.0-alpha.1"
