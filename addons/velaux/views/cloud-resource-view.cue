@@ -12,7 +12,7 @@ resources: ql.#ListResourcesInApp & {
 		name:      parameter.appName
 		namespace: parameter.appNs
 		filter: {
-			"apiVersion": "terraform.core.oam.dev/v1beta1"
+			"apiVersion": "terraform.core.oam.dev/v1beta2"
 			"kind":       "Configuration"
 		}
 		withStatus: true
