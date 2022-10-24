@@ -1,0 +1,174 @@
+- jsonKey: type
+  sort: 1
+- jsonKey: github
+  sort: 3
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "github"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: redirectURI
+      sort: 5
+- jsonKey: gitlab
+  sort: 5
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "gitlab"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: baseURL
+      sort: 5
+    - jsonKey: redirectURI
+      sort: 7
+- jsonKey: google
+  sort: 7
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "google"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 1
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 3
+    - jsonKey: redirectURI
+      sort: 5
+- jsonKey: oidc
+  sort: 9
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "oidc"
+  subParameters:
+    - jsonKey: issuer
+      sort: 1
+      style:
+        colSpan: 12
+    - jsonKey: clientID
+      uiType: Password
+      sort: 3
+      style:
+        colSpan: 12
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 5
+      style:
+        colSpan: 12
+    - jsonKey: redirectURI
+      sort: 7
+      style:
+        colSpan: 12
+- jsonKey: saml
+  sort: 11
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "saml"
+  subParameters:
+    - jsonKey: usernameAttr
+      sort: 10
+      style:
+        colSpan: 12
+    - jsonKey: emailAttr
+      sort: 12
+      style:
+        colSpan: 12
+    - jsonKey: redirectURI
+      sort: 14
+      style:
+        colSpan: 12
+    - jsonKey: ssoURL
+      sort: 16
+      style:
+        colSpan: 12
+    - jsonKey: ca
+      sort: 18
+
+- jsonKey: ldap
+  sort: 13
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "ldap"
+  subParameters:
+    - jsonKey: host
+      sort: 1
+      style:
+        colSpan: 24
+    - jsonKey: userSearch
+      sort: 3
+      style:
+        colSpan: 24
+      subParameters:
+      - jsonKey: baseDN
+        style:
+          colSpan: 12
+      - jsonKey: emailAttr
+        style:
+          colSpan: 12
+      - jsonKey: idAttr
+        style:
+          colSpan: 12
+      - jsonKey: username
+        style:
+          colSpan: 12
+      - jsonKey: filter
+        style:
+          colSpan: 12
+      - jsonKey: nameAttr
+        style:
+          colSpan: 12
+        sort: 103
+    - jsonKey: insecureNoSSL
+      sort: 5
+      style:
+        colSpan: 24
+    - jsonKey: rootCA
+      style:
+        colSpan: 24
+    - jsonKey: usernamePrompt
+      style:
+        colSpan: 24
+    - jsonKey: bindDN
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: bindPW
+      sort: 9
+      uiType: Password
+      style:
+        colSpan: 12
+    - jsonKey: startTLS
+      sort: 103

@@ -1,0 +1,9 @@
+- jsonKey: name
+  sort: 10
+- jsonKey: GOOGLE_REGION
+  sort: 20
+- jsonKey: GOOGLE_PROJECT
+  sort: 30
+- jsonKey: GOOGLE_CREDENTIALS
+  sort: 40
+  uiType: Password

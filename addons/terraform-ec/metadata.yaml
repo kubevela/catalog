@@ -1,5 +1,5 @@
 name: terraform-ec
-version: 1.0.0
+version: 1.0.1
 description: Kubernetes Terraform Controller Provider for Elastic Cloud
 url: https://github.com/oam-dev/terraform-controller
 
@@ -13,6 +13,9 @@ deployTo:
 
 dependencies:
   - name: terraform
+
+system:
+  vela: ">=v1.6.0-alpha.6"
 
 # -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
 # provider short name

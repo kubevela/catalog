@@ -105,7 +105,24 @@ output: {
 			}, {
 				name:      "port"
 				valueFrom: "value.endpoint.port"
+			}, {
+				name:      "lokiURL"
+				valueFrom: "value.url"
 			}]
+		}, {
+			type: "create-config"
+			name: "loki-server-register"
+			properties: {
+				name:     "loki-vela"
+				template: "loki"
+				config: {}
+			}
+			inputs: [
+				{
+					from:         "lokiURL"
+					parameterKey: "config.url"
+				},
+			]
 		}, {
 			type: "export-service"
 			name: "export-service"

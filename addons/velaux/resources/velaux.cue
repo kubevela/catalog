@@ -1,6 +1,6 @@
 package main
 
-_version: context.metadata.version
+_version: "v1.6.0-beta.1"
 
 velaux: {
 	name: "velaux"

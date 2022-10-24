@@ -9,7 +9,7 @@ node-exporter
 prometheus-server
 loki
 vela-prism
-grafana-definitions
+o11y-definitions
 grafana
 cert-manager
 trivy-operator

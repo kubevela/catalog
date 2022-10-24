@@ -1,0 +1,14 @@
+- jsonKey: dataId
+  sort: 1
+  style: 
+    colSpan: 8
+- jsonKey: group
+  sort: 3
+  style: 
+    colSpan: 8
+- jsonKey: contentType
+  sort: 5
+  style: 
+    colSpan: 8
+- jsonKey: content
+  sort: 7

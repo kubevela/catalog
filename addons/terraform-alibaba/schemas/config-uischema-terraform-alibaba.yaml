@@ -1,0 +1,10 @@
+- jsonKey: name
+  sort: 1
+- jsonKey: ALICLOUD_REGION
+  sort: 2
+- jsonKey: ALICLOUD_ACCESS_KEY
+  sort: 3
+  uiType: Password
+- jsonKey: ALICLOUD_SECRET_KEY
+  sort: 4
+  uiType: Password

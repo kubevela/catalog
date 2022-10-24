@@ -1,5 +1,5 @@
 name: terraform-azure
-version: 1.0.1
+version: 1.0.2
 description: Kubernetes Terraform Controller for Azure
 icon: https://avatars3.githubusercontent.com/azure
 url: https://registry.terraform.io/providers/hashicorp/azurerm/latest
@@ -15,5 +15,5 @@ dependencies:
 - name: terraform
 
 system:
-  vela: ">=v1.3.0"
+  vela: ">=v1.6.0-alpha.6"
 

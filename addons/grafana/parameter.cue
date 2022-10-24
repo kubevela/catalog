@@ -3,19 +3,29 @@ package main
 const: {
 	// +usage=The name of the grafana addon application
 	name: "addon-grafana"
+
+	secretName: "grafana.account"
 }
 
 parameter: {
 
 	// global parameters
 
+	// +usage=You should create a grafana config and provide the name if want't install the grafana and only init the dashboards.
+	install: *true | bool
+
+	// +usage=The grafana config name.
+	grafanaName: *"default" | string
+
+	// +usage=The endpoint of the Kube APIServer could be connected by Grafana. You need to create the RoleBinding for the grafana ServiceAccount.
+	kubeEndpoint?: string
+
+	// The parameters for installing the Grafana
+
 	// +usage=The namespace of the grafana to be installed
 	namespace: *"o11y-system" | string
 	// +usage=The clusters to install
 	clusters?: [...string]
-
-	// grafana parameters
-
 	// +usage=Specify the image of kube-state-metrics
 	image: *"grafana/grafana:8.5.3" | string
 	// +usage=Specify the imagePullPolicy of the image

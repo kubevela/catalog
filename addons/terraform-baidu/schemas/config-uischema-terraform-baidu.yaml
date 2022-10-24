@@ -1,0 +1,11 @@
+- jsonKey: name
+  sort: 10
+- jsonKey: BAIDUCLOUD_REGION
+  sort: 20
+- jsonKey: BAIDUCLOUD_ACCESS_KEY
+  sort: 30
+  uiType: Password
+- jsonKey: BAIDUCLOUD_SECRET_KEY
+  sort: 40
+  uiType: Password
+

@@ -1,0 +1,5 @@
+- jsonKey: name
+  sort: 10
+- jsonKey: EC_API_KEY
+  sort: 20
+  uiType: Password

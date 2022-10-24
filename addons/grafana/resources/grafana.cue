@@ -26,19 +26,19 @@ grafana: {
 		env: [{
 			name: "GF_SECURITY_ADMIN_USER"
 			valueFrom: secretKeyRef: {
-				name: "grafana.default"
+				name: const.secretName
 				key:  "username"
 			}
 		}, {
 			name: "GF_SECURITY_ADMIN_PASSWORD"
 			valueFrom: secretKeyRef: {
-				name: "grafana.default"
+				name: const.secretName
 				key:  "password"
 			}
 		}]
 		ports: [{
 			expose: true
-			port: 3000
+			port:   3000
 		}]
 		exposeType: parameter.serviceType
 	}

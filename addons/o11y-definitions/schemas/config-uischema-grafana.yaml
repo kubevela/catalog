@@ -1,0 +1,11 @@
+- jsonKey: auth
+  sort: 200
+  subParameters:
+  - jsonKey: username
+    sort: 10
+  - jsonKey: password
+    sort: 20
+    uiType: Password
+  - jsonKey: token
+    sort: 30
+    uiType: Password

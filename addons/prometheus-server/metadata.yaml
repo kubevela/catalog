@@ -12,5 +12,8 @@ tags:
 
 invisible: false
 
+dependencies:
+ - name: o11y-definitions
+
 system:
   vela: ">=v1.5.0"
