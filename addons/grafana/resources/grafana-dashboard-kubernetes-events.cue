@@ -240,7 +240,7 @@ grafanaDashboardKubernetesEventsData: #"""
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki:local"
+        "uid": "${logsource}"
       },
       "fieldConfig": {
         "defaults": {
@@ -296,7 +296,6 @@ grafanaDashboardKubernetesEventsData: #"""
             "uid": "${logsource}"
           },
           "expr": "sum(count_over_time({pod=~\"^event-log.*\"}|= \"Error: ImagePullBackOff\"| json |  __error__=\"\" | line_format \"{{.message}}\" | __error__=\"\"  | json | __error__=\"\" reason = \"Failed\"| __error__=\"\"[$__interval]))",
-          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -976,8 +975,8 @@ grafanaDashboardKubernetesEventsData: #"""
   },
   "timezone": "",
   "title": "Kubernetes Events Dashboard",
-  "uid": "kU9VjusMk",
-  "version": 5,
+  "uid": "kubernetes-events",
+  "version": 1,
   "weekStart": ""
 }
 """#
