@@ -70,7 +70,7 @@ template: {
 
 	fail: op.#Steps & {
 		if job.value.status.failed != _|_ {
-			if job.value.status.failed > 0 {
+			if job.value.status.failed > 2 {
 				breakWorkflow: op.#Fail & {
 					message: "enable addon failed"
 				}
