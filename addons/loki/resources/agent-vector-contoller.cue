@@ -82,13 +82,24 @@ vectorControllerAgentConfig: {
 				sources:
 				  kubernetes-logs:
 				    type: kubernetes_logs
-				    extra_label_selector: "vector.oam.dev/agent!=true"
+				    extra_label_selector: "kube-event-logger=true"
 				sinks:
-				  console:
-				    type: console
+				  loki:
+				    type: loki
 				    inputs:
 				      - kubernetes-logs
-				    target: stdout
+				    endpoint: http://loki:3100
+				    compression: none
+				    labels:
+				      agent: vector
+				      stream: "{{ stream }}"
+				      forward: daemon
+				      filename: "{{ file }}"
+				      pod: "{{ kubernetes.pod_name }}"
+				      namespace: "{{ kubernetes.pod_namespace }}"
+				      container: "{{ kubernetes.container_name }}"
+				    request:
+				       concurrency: 10
 				    encoding:
 				      codec: json
 				"""#
@@ -211,5 +222,29 @@ vectorControllerCRD: {
 		}
 		conditions: []
 		storedVersions: []
+	}
+}
+
+eventLogger: {
+	name: "event-log"
+	type: "webservice"
+	properties: {
+		image: "maxrocketinternet/k8s-event-logger:1.7"
+		labels: "kube-event-logger": "true"
+	}
+	traits: [eventLogServiceAccount]
+}
+
+eventLogServiceAccount: {
+	type: "service-account"
+	properties: {
+		name:   "log-event"
+		create: true
+		privileges: [{
+			scope: "cluster"
+			apiGroups: [""]
+			resources: ["events"]
+			verbs: ["*"]
+		}]
 	}
 }

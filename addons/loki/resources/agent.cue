@@ -60,7 +60,7 @@ if parameter.agent == "promtail" {
 }
 
 if parameter.agent == "vector-controller" {
-	agentComponents: [vectorControllerAgent, vectorControllerAgentConfig, vectorController, vectorCRDComponent]
+	agentComponents: [vectorControllerAgent, vectorControllerAgentConfig, vectorController, vectorCRDComponent, eventLogger]
 }
 
 if parameter.agent != "" {
