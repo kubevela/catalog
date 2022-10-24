@@ -52,11 +52,11 @@ agentPolicies:      *[] | [...{...}]
 agentWorkflowSteps: *[] | [...{...}]
 
 if parameter.agent == "vector" {
-	agentComponents: [vector, vectorConfig]
+	agentComponents: [vector, vectorConfig, eventLogger]
 }
 
 if parameter.agent == "promtail" {
-	agentComponents: [promtail, promtailConfig]
+	agentComponents: [promtail, promtailConfig, eventLogger]
 }
 
 if parameter.agent == "vector-controller" {
