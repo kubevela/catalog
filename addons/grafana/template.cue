@@ -17,6 +17,7 @@ dashboardComponents: [
 	grafanaDashboardDeploymentOverview,
 	grafanaDashboardStatefulSetOverview,
 	grafanaDashboardDaemonSetOverview,
+	grafanaDashboardKubernetesEvents,
 	grafanaDashboardKubernetesPod,
 ]
 
