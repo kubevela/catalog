@@ -17,7 +17,7 @@ spec:
       - name: Enable o11y
         type: addon-operation
         properties:
-          addonName: grafana-definitions
+          addonName: o11y-definitions
           operation: enable
           args:
           - --override-definitions
