@@ -3,6 +3,7 @@ package main
 prometheusStorage: {
 	name: "prometheus-storage"
 	type: "k8s-objects"
+	dependsOn: [o11yNamespace.name]
 	properties: objects: [{
 		apiVersion: "v1"
 		kind:       "PersistentVolumeClaim"
