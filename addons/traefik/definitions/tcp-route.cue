@@ -7,7 +7,7 @@
 	}
 	description: "defines TCP rules for mapping requests from a Gateway to Application."
 	labels: {
-		
+
 	}
 	type: "trait"
 }
@@ -15,14 +15,11 @@
 template: {
 	outputs: {
 		for rule in parameter.rules {
-			_gatewayName:  context.name + "-gateway-tcp-\(rule.gatewayPort)"
-			_listenerName: "listener-tcp-\(rule.gatewayPort)"
-			_ruleName:     "tcp-route-\(rule.gatewayPort)"
 			"gateway-tcp-\(rule.gatewayPort)": {
 				apiVersion: "gateway.networking.k8s.io/v1alpha2"
 				kind:       "Gateway"
 				metadata: {
-					name:      _gatewayName
+					name:      context.name + "-gateway-tcp-\(rule.gatewayPort)"
 					namespace: context.namespace
 				}
 				spec: {
@@ -33,11 +30,11 @@ template: {
 								from: "Same"
 							}
 							kinds: [{
-								kind: "TCPRoute"
+								kind:  "TCPRoute"
 								group: "gateway.networking.k8s.io"
 							}]
 						}
-						name:     _listenerName
+						name:     "listener-tcp-\(rule.gatewayPort)"
 						port:     rule.gatewayPort
 						protocol: "TCP"
 					}]
@@ -47,14 +44,14 @@ template: {
 				apiVersion: "gateway.networking.k8s.io/v1alpha2"
 				kind:       "TCPRoute"
 				metadata: {
-					name:      _ruleName
+					name:      "tcp-route-\(rule.gatewayPort)"
 					namespace: context.namespace
 				}
 				spec: {
 					parentRefs: [{
-						name:        _gatewayName
+						name:        context.name + "-gateway-tcp-\(rule.gatewayPort)"
 						namespace:   context.namespace
-						sectionName: _listenerName
+						sectionName: "listener-tcp-\(rule.gatewayPort)"
 					}]
 					rules: [{
 						backendRefs: [{
