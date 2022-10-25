@@ -5,7 +5,7 @@ import (
 "addon-operation": {
 	type: "workflow-step"
 	annotations: {
-		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/vela-workflow/observerbility.yaml"
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/vela-workflow/observability.yaml"
 	}
 	labels: {
 		"ui-hidden": "true"
@@ -19,10 +19,13 @@ template: {
 			apiVersion: "batch/v1"
 			kind:       "Job"
 			metadata: {
-				name:      context.name + "-" + context.stepName + "-" + context.stepSessionID + "-enable-addon-job"
+				name:      context.name + "-" + context.stepSessionID + "-enable-addon-job"
 				namespace: context.namespace
 				labels: {
 					"enable-addon.oam.dev": context.name
+				}
+				annotations: {
+					"workflowrun.oam.dev/step": context.stepName
 				}
 			}
 			spec: {
@@ -31,8 +34,10 @@ template: {
 					metadata: {
 						labels: {
 							"workflowrun.oam.dev/name":    context.name
-							"workflowrun.oam.dev/step":    context.stepName
 							"workflowrun.oam.dev/session": context.stepSessionID
+						}
+						annotations: {
+							"workflowrun.oam.dev/step": context.stepName
 						}
 					}
 					spec: {
@@ -62,7 +67,6 @@ template: {
 		source: {
 			resources: [{labelSelector: {
 				"workflowrun.oam.dev/name":    context.name
-				"workflowrun.oam.dev/step":    context.stepName
 				"workflowrun.oam.dev/session": context.stepSessionID
 			}}]
 		}
@@ -88,7 +92,7 @@ template: {
 		// +usage=Specify addon enable args.
 		args?: [...string]
 		// +usage=Specify the image
-		image: *"oamdev/vela-cli:v1.6.0-alpha.6" | string
+		image: *"oamdev/vela-cli:v1.6.0-beta.1" | string
 		// +usage=operation for the addon
 		operation: *"enable" | "upgrade" | "disable"
 		// +usage=specify serviceAccountName want to use
