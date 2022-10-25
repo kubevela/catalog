@@ -3,6 +3,7 @@ package main
 nodeExporter: {
 	name: "node-exporter"
 	type: "daemon"
+	dependsOn: [o11yNamespace.name]
 	properties: {
 		image:           parameter["image"]
 		imagePullPolicy: parameter["imagePullPolicy"]

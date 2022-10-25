@@ -3,7 +3,7 @@ package main
 prometheusServer: {
 	name: "prometheus-server"
 	type: "webservice"
-	dependsOn: ["prometheus-config"]
+	dependsOn: [prometheusConfig.name]
 	properties: {
 		image:           parameter["image"]
 		imagePullPolicy: parameter["imagePullPolicy"]
@@ -40,24 +40,21 @@ prometheusServer: {
 			}
 		}]
 		volumeMounts: configMap: [ for cm in _cms if cm.name != _|_ {cm}]
-		_ports: [{
+		ports: [
 			if !parameter.thanos {
-				port: 9090
-				name: "http"
+				port:   9090
+				name:   "http"
 				expose: true
-			}
-		}, {
+			},
 			if parameter.thanos {
-				port: 10902
-				expose: true
-			}
-		}, {
+				port:   10902
+			},
 			if parameter.thanos {
-				port: 10901
+				port:   10901
+				name:   "grpc"
 				expose: true
-			}
-		}]
-		ports: [for p in _ports if p.port != _|_ {p}]
+			},
+		]
 		exposeType: parameter.serviceType
 	}
 	traits: [ for trait in _traits if trait.type != _|_ {trait}]
@@ -76,17 +73,17 @@ prometheusServer: {
 			name:  "init-config"
 			image: "curlimages/curl"
 			args: ["sh", "-c", ##"""
-                NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-                KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-                DEPLOYNAME=$(echo $HOSTNAME | sed -r 's/(.+)-[^-]+-[^-]+/\1/g')
-                curl -sSk -H "Authorization: Bearer $KUBE_TOKEN" \
-                        https://kubernetes.default/apis/apps/v1/namespaces/$NAMESPACE/deployments/$DEPLOYNAME \
-                    | grep "\"app.oam.dev/cluster\"" | sed -r 's/.+:\s+"(.*)",/\1/g' > /etc/config/cluster.name \
-                && CLS=$(cat /etc/config/cluster.name) \
-                && CLUSTER="${CLS:-local}" \
-                && echo "cluster: $CLUSTER" \
-                && sed s/\$CLUSTER/$CLUSTER/g /etc/bootconfig/prometheus.yml > /etc/config/prometheus.yml
-                """##]
+				NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+				KUBE_TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+				DEPLOYNAME=$(echo $HOSTNAME | sed -r 's/(.+)-[^-]+-[^-]+/\1/g')
+				curl -sSk -H "Authorization: Bearer $KUBE_TOKEN" \
+				        https://kubernetes.default/apis/apps/v1/namespaces/$NAMESPACE/deployments/$DEPLOYNAME \
+				    | grep "\"app.oam.dev/cluster\"" | sed -r 's/.+:\s+"(.*)",/\1/g' > /etc/config/cluster.name \
+				&& CLS=$(cat /etc/config/cluster.name) \
+				&& CLUSTER="${CLS:-local}" \
+				&& echo "cluster: $CLUSTER" \
+				&& sed s/\$CLUSTER/$CLUSTER/g /etc/bootconfig/prometheus.yml > /etc/config/prometheus.yml
+				"""##]
 			mountName:     "config-volume"
 			appMountPath:  "/etc/config"
 			initMountPath: "/etc/config"
@@ -184,9 +181,5 @@ _clusterPrivileges: [{
 }, {
 	apiGroups: ["cluster.core.oam.dev"]
 	resources: ["clustergateways", "clustergateways/proxy"]
-	verbs: ["get", "list"]
-}, {
-	apiGroups: [""]
-	resources: ["services"]
 	verbs: ["get", "list"]
 }]

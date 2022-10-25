@@ -1,5 +1,5 @@
 name: node-exporter
-version: v0.1.0
+version: v0.2.0
 description: Prometheus exporter for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors.
 icon: https://artifacthub.io/image/0503add5-3fce-4b63-bbf3-b9f649512a86@1x
 url: https://github.com/prometheus/node_exporter
@@ -13,4 +13,4 @@ tags:
 invisible: false
 
 system:
-  vela: ">=v1.5.0-beta.4"
+  vela: ">=v1.6.0-beta.1"
