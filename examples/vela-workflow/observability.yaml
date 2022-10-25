@@ -92,7 +92,6 @@ spec:
             operation: enable
             args:
               - install=false
-              - kubeEndpoint="https://60.205.92.179:6443"
 
       - name: Clean
         type: clean-jobs
