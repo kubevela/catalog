@@ -2622,7 +2622,7 @@ grafanaDashboardKubernetesPodData: #"""
 	  },
 	  "timepicker": {},
 	  "timezone": "",
-	  "title": "Kuberentes Pod",
+	  "title": "Kubernetes Pod",
 	  "uid": "kubernetes-pod",
 	  "version": 2,
 	  "weekStart": ""
