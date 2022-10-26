@@ -1,14 +1,15 @@
 package main
 
-agentInitContainer: {...}
-agentServiceAccount: {...}
-
 vector: {
 	name: "vector"
 	type: "daemon"
+	dependsOn: [o11yNamespace.name, vectorConfig.name]
 	properties: {
 		image:           parameter.vectorImage
 		imagePullPolicy: parameter.imagePullPolicy
+		if parameter.agent == "vector-controller" {
+			labels: "vector.oam.dev/agent": "true"
+		}
 		env: [{
 			name: "VECTOR_SELF_NODE_NAME"
 			valueFrom: fieldRef: fieldPath: "spec.nodeName"
@@ -26,11 +27,18 @@ vector: {
 			value: "/host/sys"
 		}]
 		volumeMounts: {
-			configMap: [{
-				name:      "bootconfig-volume"
-				mountPath: "/etc/bootconfig"
-				cmName:    "vector"
-			}]
+			configMap: [
+				{
+					name:      "bootconfig-volume"
+					mountPath: "/etc/bootconfig"
+					cmName:    "vector"
+				},
+				if parameter.agent == "vector-controller" {
+					name:      "vector-controller-config"
+					mountPath: "/etc/vector-controller-config"
+					cmName:    "vector-controller"
+				},
+			]
 			hostPath: [{
 				name:      "data"
 				path:      "/var/lib/vector"
@@ -60,47 +68,89 @@ vector: {
 	}
 	traits: [{
 		type: "command"
-		properties: args: ["--config-dir", "/etc/config/"]
-	}] + [agentInitContainer, {
+		_configDir: *"/etc/config/" | string
+		if parameter.agent == "vector-controller" {
+			_configDir: "/etc/config/,/etc/vector-controller-config/"
+		},
+		properties: args: [
+			"--config-dir",
+			_configDir,
+			"-w"
+		]
+	}, {
 		agentServiceAccount
 		properties: name: "vector"
-	}]
+	}, agentInitContainer]
 }
 
 vectorConfig: {
 	name: "vector-config"
 	type: "k8s-objects"
+	dependsOn: [o11yNamespace.name]
 	properties: objects: [{
 		apiVersion: "v1"
 		kind:       "ConfigMap"
 		metadata: name: "vector"
-		data: {
-			"agent.yaml": #"""
-				data_dir: /vector-data-dir
-				sources:
-				  kubernetes-logs:
-				    type: kubernetes_logs
-				sinks:
-				  loki:
-				    type: loki
-				    inputs:
-				      - kubernetes-logs
-				    endpoint: http://loki:3100/
-				    compression: none
-				    request:
-				      concurrency: 10
-				    labels:
-				      agent: vector
-				      cluster: $CLUSTER
-				      stream: "{{ stream }}"
-				      forward: daemon
-				      filename: "{{ file }}"
-				      pod: "{{ kubernetes.pod_name }}"
-				      namespace: "{{ kubernetes.pod_namespace }}"
-				      container: "{{ kubernetes.container_name }}"
-				    encoding:
-				      codec: json
-				"""#
+		if parameter.agent == "vector" {
+			data: {
+				"agent.yaml": #"""
+					data_dir: /vector-data-dir
+					sources:
+					  kubernetes-logs:
+					    type: kubernetes_logs
+					sinks:
+					  loki:
+					    type: loki
+					    inputs:
+					      - kubernetes-logs
+					    endpoint: http://loki:3100/
+					    compression: none
+					    request:
+					      concurrency: 10
+					    labels:
+					      agent: vector
+					      cluster: $CLUSTER
+					      stream: "{{ stream }}"
+					      forward: daemon
+					      filename: "{{ file }}"
+					      pod: "{{ kubernetes.pod_name }}"
+					      namespace: "{{ kubernetes.pod_namespace }}"
+					      container: "{{ kubernetes.container_name }}"
+					    encoding:
+					      codec: json
+					"""#
+			}
+		}
+		if parameter.agent == "vector-controller" {
+			data: {
+				"agent.yaml": #"""
+					data_dir: /vector-data-dir
+					sources:
+					  kubernetes-logs:
+					    type: kubernetes_logs
+					    extra_label_selector: "kube-event-logger=true"
+					sinks:
+					  loki:
+					    type: loki
+					    inputs:
+					      - kubernetes-logs
+					    endpoint: http://loki:3100/
+					    compression: none
+					    request:
+					      concurrency: 10
+					    labels:
+					      agent: vector
+					      cluster: $CLUSTER
+					      stream: "{{ stream }}"
+					      forward: daemon
+					      filename: "{{ file }}"
+					      pod: "{{ kubernetes.pod_name }}"
+					      namespace: "{{ kubernetes.pod_namespace }}"
+					      container: "{{ kubernetes.container_name }}"
+					    encoding:
+					      codec: json
+					"""#
+			}
 		}
 	}]
 }

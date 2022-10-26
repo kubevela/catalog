@@ -13,7 +13,36 @@ grafanaDashboardKubernetesPod: {
 grafanaDashboardKubernetesPodData: #"""
 	{
 	  "description": "Kubernetes Pod Overview",
-	  "editable": true,
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": false,
+	    "tags": [
+	      "kubevela",
+	      "application"
+	    ],
+	    "targetBlank": false,
+	    "title": "KubeVela",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": true,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "resource"
+	    ],
+	    "targetBlank": false,
+	    "title": "Kubernetes Resources",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "collapsed": false,
@@ -80,7 +109,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -149,7 +178,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -249,7 +278,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -350,7 +379,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -419,7 +448,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "kube_pod_owner{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",owner_kind!=\"\",owner_name!=\"\"}",
@@ -485,7 +514,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",node!=\"\"}",
@@ -550,7 +579,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",pod_ip!=\"\"}",
@@ -615,7 +644,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "kube_pod_info{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",host_ip!=\"\"}",
@@ -857,7 +886,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -1153,7 +1182,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"})",
@@ -1245,7 +1274,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(container_memory_working_set_bytes{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}) by (container)",
@@ -1313,7 +1342,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}[5m]))",
@@ -1405,7 +1434,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(rate(container_cpu_usage_seconds_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}[5m])) by (container)",
@@ -1539,7 +1568,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(container_spec_cpu_quota{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}/100000)",
@@ -1694,7 +1723,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(rate(container_network_receive_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}[5m]))",
@@ -1705,7 +1734,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "-sum(rate(container_network_transmit_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\"}[5m]))",
@@ -1861,7 +1890,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "sum(rate(container_fs_reads_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}[5m]))",
@@ -1872,7 +1901,7 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "expr": "-sum(rate(container_fs_writes_bytes_total{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container!=\"\"}[5m]))",
@@ -2459,9 +2488,9 @@ grafanaDashboardKubernetesPodData: #"""
 	        {
 	          "datasource": {
 	            "type": "loki",
-	            "uid": "loki:local"
+	            "uid": "${logsource}"
 	          },
-	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container=\"$container\"}",
+	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=\"$pod\",container=\"$container\"} | json | line_format \"{{.message}}\"",
 	          "queryType": "range",
 	          "refId": "A"
 	        }
@@ -2470,17 +2499,11 @@ grafanaDashboardKubernetesPodData: #"""
 	      "type": "logs"
 	    }
 	  ],
-	  "schemaVersion": 36,
 	  "style": "dark",
 	  "tags": ["kubernetes", "resource"],
 	  "templating": {
 	    "list": [
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "prometheus:local",
-	          "value": "prometheus:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "label": "Data Source",
@@ -2494,11 +2517,6 @@ grafanaDashboardKubernetesPodData: #"""
 	        "type": "datasource"
 	      },
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "loki:local",
-	          "value": "loki:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "label": "Log Source",
@@ -2620,11 +2638,7 @@ grafanaDashboardKubernetesPodData: #"""
 	    "from": "now-30m",
 	    "to": "now"
 	  },
-	  "timepicker": {},
-	  "timezone": "",
 	  "title": "Kuberentes Pod",
-	  "uid": "kubernetes-pod",
-	  "version": 2,
-	  "weekStart": ""
+	  "uid": "kubernetes-pod"
 	}
 	"""#

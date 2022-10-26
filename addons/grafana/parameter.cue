@@ -3,8 +3,6 @@ package main
 const: {
 	// +usage=The name of the grafana addon application
 	name: "addon-grafana"
-
-	secretName: "grafana.account"
 }
 
 parameter: {
@@ -16,6 +14,8 @@ parameter: {
 
 	// +usage=The grafana config name.
 	grafanaName: *"default" | string
+	// +usage=The config name to register
+	configName: *"grafana-vela" | string
 
 	// +usage=The endpoint of the Kube APIServer could be connected by Grafana. You need to create the RoleBinding for the grafana ServiceAccount.
 	kubeEndpoint?: string

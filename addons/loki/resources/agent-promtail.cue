@@ -1,11 +1,9 @@
 package main
 
-agentInitContainer: {...}
-agentServiceAccount: {...}
-
 promtail: {
 	name: "promtail"
 	type: "daemon"
+	dependsOn: [o11yNamespace.name, promtailConfig.name]
 	properties: {
 		image:           parameter.promtailImage
 		imagePullPolicy: parameter.imagePullPolicy
@@ -66,6 +64,7 @@ promtail: {
 promtailConfig: {
 	name: "promtail-config"
 	type: "k8s-objects"
+	dependsOn: [o11yNamespace.name]
 	properties: objects: [{
 		apiVersion: "v1"
 		kind:       "ConfigMap"
