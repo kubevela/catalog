@@ -149,13 +149,6 @@ template: {
 			}
 			id: 24
 			panels: []
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				refId: "A"
-			}]
 			title: "KPI's"
 			type:  "row"
 		}, {
@@ -167,7 +160,6 @@ template: {
 			fieldConfig: {
 				defaults: {
 					color: mode: "thresholds"
-					decimals: 0
 					mappings: []
 					thresholds: {
 						mode: "absolute"
@@ -176,25 +168,27 @@ template: {
 							value: null
 						}]
 					}
+					unit: "short"
 				}
 				overrides: []
 			}
 			gridPos: {
 				h: 4
-				w: 6
+				w: 5
 				x: 0
 				y: 1
 			}
-			id:       22
-			interval: "1h"
+			hideTimeOverride: false
+			id:               4
+			maxDataPoints:    300
 			options: {
 				colorMode:   "background"
-				graphMode:   "none"
-				justifyMode: "auto"
+				graphMode:   "area"
+				justifyMode: "center"
 				orientation: "auto"
 				reduceOptions: {
 					calcs: [
-						"mean",
+						"sum",
 					]
 					fields: ""
 					values: false
@@ -204,18 +198,12 @@ template: {
 			}
 			pluginVersion: "8.5.3"
 			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "count(sum by (message_client) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  __error__=\"\" [$__interval])))"
-				legendFormat: "{{message_client}}"
-				queryType:    "range"
+				expr:         "sum by(host) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} [$__interval]))  "
+				legendFormat: ""
 				refId:        "A"
 			}]
-			timeFrom: "1h"
-			title:    "Unique user visits "
+			timeFrom: "12h"
+			title:    "Total requests  "
 			transformations: []
 			type: "stat"
 		}, {
@@ -229,10 +217,13 @@ template: {
 					color: mode: "thresholds"
 					mappings: []
 					thresholds: {
-						mode: "absolute"
+						mode: "percentage"
 						steps: [{
-							color: "light-blue"
+							color: "rgba(110, 157, 228, 0.76)"
 							value: null
+						}, {
+							color: "rgba(73, 124, 202, 1)"
+							value: 20
 						}]
 					}
 					unit: "short"
@@ -240,13 +231,13 @@ template: {
 				overrides: []
 			}
 			gridPos: {
-				h: 12
+				h: 8
 				w: 7
-				x: 6
+				x: 5
 				y: 1
 			}
-			id:       5
-			interval: "30s"
+			id:            5
+			maxDataPoints: 20
 			options: {
 				colorMode:   "background"
 				graphMode:   "area"
@@ -266,12 +257,12 @@ template: {
 			targets: [{
 				datasource: {
 					type: "loki"
-					uid:  "loki:local"
+					uid:  "loki-vela"
 				}
-				editorMode:   "code"
-				expr:         "sum by (message_status) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"}| json |  message_status != \"\"  __error__=\"\" [$__interval]))"
-				legendFormat: "{{message_status}}"
-				queryType:    "range"
+				expr:         "sum by (message_status) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  __error__=\"\" | message_status != \"\" [$__interval]))"
+				instant:      false
+				legendFormat: " {{message_status}}"
+				range:        true
 				refId:        "A"
 			}]
 			title: "Requests per status code"
@@ -285,215 +276,27 @@ template: {
 			description: ""
 			fieldConfig: {
 				defaults: {
-					mappings: []
-					thresholds: {
-						mode: "absolute"
-						steps: [{
-							color: "green"
-							value: null
-						}, {
-							color: "red"
-							value: 80
-						}]
-					}
-					unit: "short"
-				}
-				overrides: []
-			}
-			gridPos: {
-				h: 4
-				w: 9
-				x: 13
-				y: 1
-			}
-			id:       4
-			interval: "30s"
-			options: {
-				colorMode:   "background"
-				graphMode:   "none"
-				justifyMode: "auto"
-				orientation: "auto"
-				reduceOptions: {
-					calcs: [
-						"lastNotNull",
-					]
-					fields: ""
-					values: false
-				}
-				textMode: "auto"
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "sum by(message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"}|json | message_path != \"\" [$__interval]))  "
-				legendFormat: "{{message_path}}"
-				queryType:    "range"
-				refId:        "A"
-			}]
-			timeFrom: "24h"
-			title:    "Total requests  "
-			transformations: []
-			type: "stat"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
 					color: mode: "thresholds"
 					decimals: 0
 					mappings: []
 					thresholds: {
 						mode: "absolute"
 						steps: [{
-							color: "purple"
+							color: "semi-dark-orange"
 							value: null
 						}]
 					}
-				}
-				overrides: []
-			}
-			gridPos: {
-				h: 4
-				w: 6
-				x: 0
-				y: 5
-			}
-			id:       31
-			interval: "24h"
-			options: {
-				colorMode:   "background"
-				graphMode:   "none"
-				justifyMode: "auto"
-				orientation: "auto"
-				reduceOptions: {
-					calcs: [
-						"mean",
-					]
-					fields: ""
-					values: false
-				}
-				text: {}
-				textMode: "value"
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "count(sum by (message_client) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"}| json |  __error__=\"\" [$__interval])))"
-				legendFormat: ""
-				queryType:    "range"
-				refId:        "A"
-			}]
-			timeFrom: "24h"
-			title:    "Unique user visits "
-			transformations: []
-			type: "stat"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
-					color: mode: "thresholds"
-					mappings: []
-					max: 100
-					min: 0
-					thresholds: {
-						mode: "absolute"
-						steps: [{
-							color: "purple"
-							value: null
-						}, {
-							color: "red"
-							value: 80
-						}]
-					}
-					unit: "percent"
+					unit: "decbytes"
 				}
 				overrides: []
 			}
 			gridPos: {
 				h: 4
 				w: 5
-				x: 13
-				y: 5
+				x: 12
+				y: 1
 			}
-			id: 19
-			links: []
-			maxDataPoints: 1
-			options: {
-				colorMode:   "background"
-				graphMode:   "none"
-				justifyMode: "center"
-				orientation: "auto"
-				reduceOptions: {
-					calcs: [
-						"mean",
-					]
-					fields: ""
-					values: false
-				}
-				text: {}
-				textMode: "value"
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         " sum(rate({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_status >= 500 |__error__=\"\"[$__interval])) / (sum(rate({pod=\"$pod\"} | json | __error__=\"\" [$__interval])) / 100)"
-				legendFormat: ""
-				queryType:    "range"
-				refId:        "A"
-			}]
-			title: "% of 5xx requests "
-			type:  "stat"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
-					color: mode: "thresholds"
-					mappings: []
-					max: 100
-					min: 0
-					thresholds: {
-						mode: "absolute"
-						steps: [{
-							color: "purple"
-							value: null
-						}]
-					}
-					unit: "percent"
-				}
-				overrides: []
-			}
-			gridPos: {
-				h: 4
-				w: 4
-				x: 18
-				y: 5
-			}
-			id:       18
-			interval: "10m"
-			links: []
+			id:            30
 			maxDataPoints: 1
 			options: {
 				colorMode:   "background"
@@ -502,88 +305,24 @@ template: {
 				orientation: "auto"
 				reduceOptions: {
 					calcs: [
-						"last",
+						"sum",
 					]
 					fields: ""
 					values: false
 				}
 				text: {}
-				textMode: "value"
+				textMode: "auto"
 			}
 			pluginVersion: "8.5.3"
 			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         " sum(rate(({app=\"$appName\", appNamespace=\"$appNamespace\"} != \"Googlebot\")[$__interval])) / (sum(rate(({app=\"$appName\", appNamespace=\"$appNamespace\"} != \"Googlebot\")[$__interval])) / 100)"
-				legendFormat: ""
-				queryType:    "range"
+				expr:         "bytes_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"}[$__interval])"
+				instant:      true
+				legendFormat: "$label_value"
+				range:        false
 				refId:        "A"
 			}]
-			title: "% of requests by not Googlebot"
+			title: "NGINX logs in bytes"
 			type:  "stat"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
-					color: mode: "thresholds"
-					decimals: 0
-					mappings: []
-					thresholds: {
-						mode: "absolute"
-						steps: [{
-							color: "purple"
-							value: null
-						}]
-					}
-				}
-				overrides: []
-			}
-			gridPos: {
-				h: 4
-				w: 6
-				x: 0
-				y: 9
-			}
-			id:       32
-			interval: "48h"
-			options: {
-				colorMode:   "background"
-				graphMode:   "none"
-				justifyMode: "auto"
-				orientation: "auto"
-				reduceOptions: {
-					calcs: [
-						"mean",
-					]
-					fields: ""
-					values: false
-				}
-				text: {}
-				textMode: "value"
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "count(sum by (message_client) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  __error__=\"\" [$__interval])))"
-				legendFormat: ""
-				queryType:    "range"
-				refId:        "A"
-			}]
-			timeFrom: "48h"
-			title:    "Unique user visits "
-			transformations: []
-			type: "stat"
 		}, {
 			datasource: {
 				type: "loki"
@@ -607,12 +346,12 @@ template: {
 			}
 			gridPos: {
 				h: 4
-				w: 9
-				x: 13
-				y: 9
+				w: 5
+				x: 17
+				y: 1
 			}
-			id:       8
-			interval: "10m"
+			id:            8
+			maxDataPoints: 1
 			options: {
 				colorMode:   "background"
 				graphMode:   "none"
@@ -632,144 +371,193 @@ template: {
 			targets: [{
 				datasource: {
 					type: "loki"
-					uid:  "loki:local"
+					uid:  "loki-vela"
 				}
-				editorMode:   "code"
-				expr:         "sum_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_status=200 | unwrap message_size |  __error__=\"\" [$__interval])"
+				expr:         "sum_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | unwrap message_size |  __error__=\"\" [$__interval])"
+				instant:      true
 				legendFormat: "Bytes sent"
-				queryType:    "range"
+				range:        false
 				refId:        "A"
 			}]
 			title: "Total Bytes Sent"
-			transformations: [{
-				id: "reduce"
-				options: reducers: [
-					"sum",
-				]
-			}, {
-				id: "organize"
-				options: {
-					excludeByName: {}
-					indexByName: {}
-					renameByName: Total: "Bytes Sent"
-				}
-			}]
+			transformations: []
 			type: "stat"
-		}, {
-			collapsed: false
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			gridPos: {
-				h: 1
-				w: 24
-				x: 0
-				y: 13
-			}
-			id: 26
-			panels: []
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				refId: "A"
-			}]
-			title: "Request statistics over time"
-			type:  "row"
 		}, {
 			datasource: {
 				type: "loki"
 				uid:  "${logsource}"
 			}
 			description: ""
-			gridPos: {
-				h: 16
-				w: 11
-				x: 0
-				y: 14
-			}
-			id: 11
-			options: {
-				dedupStrategy:      "none"
-				enableLogDetails:   true
-				prettifyLogMessage: false
-				showCommonLabels:   false
-				showLabels:         false
-				showTime:           false
-				sortOrder:          "Descending"
-				wrapLogMessage:     false
-			}
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
+			fieldConfig: {
+				defaults: {
+					color: mode: "thresholds"
+					mappings: []
+					thresholds: {
+						mode: "absolute"
+						steps: [{
+							color: "purple"
+							value: null
+						}]
+					}
 				}
-				editorMode:   "code"
-				expr:         "{app=\"$appName\", appNamespace=\"$appNamespace\"}| json | message_status != \"\" "
+				overrides: []
+			}
+			gridPos: {
+				h: 4
+				w: 5
+				x: 0
+				y: 5
+			}
+			id:       22
+			interval: "5m"
+			options: {
+				colorMode:   "background"
+				graphMode:   "none"
+				justifyMode: "auto"
+				orientation: "auto"
+				reduceOptions: {
+					calcs: [
+						"mean",
+					]
+					fields: ""
+					values: false
+				}
+				text: {}
+				textMode: "value"
+			}
+			pluginVersion: "8.5.3"
+			targets: [{
+				expr:         "count(sum by (message_client) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  __error__=\"\" [$__interval])))"
+				instant:      true
 				legendFormat: ""
-				queryType:    "range"
+				range:        false
 				refId:        "A"
 			}]
-			title: "Recent requests"
-			type:  "logs"
+			timeFrom: "5m"
+			title:    "Realtime visitors "
+			transformations: []
+			type: "stat"
 		}, {
 			datasource: {
 				type: "loki"
 				uid:  "${logsource}"
 			}
+			description: ""
 			fieldConfig: {
 				defaults: {
-					color: mode: "palette-classic"
-					custom: hideFrom: {
-						legend:  false
-						tooltip: false
-						viz:     false
-					}
+					color: mode: "thresholds"
+					decimals: 0
 					mappings: []
+					thresholds: {
+						mode: "absolute"
+						steps: [{
+							color: "semi-dark-orange"
+							value: null
+						}]
+					}
+					unit: "short"
 				}
 				overrides: []
 			}
 			gridPos: {
-				h: 16
-				w: 11
-				x: 11
-				y: 14
+				h: 4
+				w: 5
+				x: 12
+				y: 5
 			}
-			id: 34
+			id:            31
+			maxDataPoints: 1
 			options: {
-				legend: {
-					displayMode: "list"
-					placement:   "bottom"
-					showLegend:  true
-				}
-				pieType: "pie"
+				colorMode:   "background"
+				graphMode:   "none"
+				justifyMode: "auto"
+				orientation: "auto"
 				reduceOptions: {
 					calcs: [
-						"lastNotNull",
+						"sum",
 					]
 					fields: ""
 					values: false
 				}
-				tooltip: {
-					mode: "single"
-					sort: "none"
-				}
+				text: {}
+				textMode: "auto"
 			}
+			pluginVersion: "8.5.3"
+			targets: [{
+				expr:    "count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"}[$__interval])"
+				instant: true
+				range:   false
+				refId:   "A"
+			}]
+			title: "# NGINX log lines"
+			type:  "stat"
+		}, {
+			datasource: {
+				type: "loki"
+				uid:  "${logsource}"
+			}
+			description: ""
+			fieldConfig: {
+				defaults: {
+					color: mode: "thresholds"
+					decimals: 1
+					mappings: []
+					max: 100
+					min: 0
+					thresholds: {
+						mode: "absolute"
+						steps: [{
+							color: "purple"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
+					}
+					unit: "percent"
+				}
+				overrides: []
+			}
+			gridPos: {
+				h: 4
+				w: 5
+				x: 17
+				y: 5
+			}
+			hideTimeOverride: true
+			id:               19
+			links: []
+			maxDataPoints: 1
+			options: {
+				colorMode:   "background"
+				graphMode:   "none"
+				justifyMode: "center"
+				orientation: "auto"
+				reduceOptions: {
+					calcs: [
+						"max",
+					]
+					fields: ""
+					values: false
+				}
+				text: {}
+				textMode: "value"
+			}
+			pluginVersion: "8.5.3"
 			targets: [{
 				datasource: {
 					type: "loki"
-					uid:  "loki:local"
+					uid:  "loki-vela"
 				}
-				editorMode:   "code"
-				expr:         "sum by (message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_path != \"\" [$__interval]))"
-				legendFormat: "{{message_path}}"
-				queryType:    "range"
+				expr:         "sum(count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_status >= 500 |__error__=\"\"[$__interval])) / (sum(count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | __error__=\"\"[$__interval]))/ 100)"
+				instant:      false
+				legendFormat: ""
+				range:        true
 				refId:        "A"
 			}]
-			title: "Panel Title"
-			type:  "piechart"
+			timeFrom: "1h"
+			title:    "% of 5xx requests "
+			type:     "stat"
 		}, {
 			datasource: {
 				type: "loki"
@@ -807,13 +595,13 @@ template: {
 					mappings: []
 					thresholds: {
 						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
+						steps: [{
+							color: "green"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
 					}
 					unit: "short"
 				}
@@ -856,10 +644,10 @@ template: {
 				}]
 			}
 			gridPos: {
-				h: 9
+				h: 16
 				w: 11
 				x: 0
-				y: 30
+				y: 9
 			}
 			id:       2
 			interval: "30s"
@@ -896,108 +684,57 @@ template: {
 				type: "loki"
 				uid:  "${logsource}"
 			}
-			description: ""
 			fieldConfig: {
 				defaults: {
 					color: mode: "palette-classic"
-					custom: {
-						axisLabel:     ""
-						axisPlacement: "auto"
-						barAlignment:  0
-						drawStyle:     "line"
-						fillOpacity:   100
-						gradientMode:  "opacity"
-						hideFrom: {
-							legend:  false
-							tooltip: false
-							viz:     false
-						}
-						lineInterpolation: "linear"
-						lineWidth:         1
-						pointSize:         5
-						scaleDistribution: type: "linear"
-						showPoints: "never"
-						spanNulls:  false
-						stacking: {
-							group: "A"
-							mode:  "none"
-						}
-						thresholdsStyle: mode: "off"
+					custom: hideFrom: {
+						legend:  false
+						tooltip: false
+						viz:     false
 					}
 					mappings: []
-					thresholds: {
-						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
-					}
-					unit: "decbytes"
 				}
-				overrides: [{
-					matcher: {
-						id:      "byName"
-						options: "Bytes sent"
-					}
-					properties: [{
-						id: "color"
-						value: {
-							fixedColor: "light-blue"
-							mode:       "fixed"
-						}
-					}]
-				}, {
-					matcher: {
-						id:      "byName"
-						options: "appfelstrudel"
-					}
-					properties: [{
-						id: "color"
-						value: {
-							fixedColor: "yellow"
-							mode:       "fixed"
-						}
-					}]
-				}]
+				overrides: []
 			}
 			gridPos: {
-				h: 9
+				h: 16
 				w: 11
 				x: 11
-				y: 30
+				y: 9
 			}
-			id:       9
-			interval: "30s"
+			id: 34
 			options: {
 				legend: {
-					calcs: []
 					displayMode: "list"
 					placement:   "bottom"
 					showLegend:  true
 				}
+				pieType: "pie"
+				reduceOptions: {
+					calcs: [
+						"lastNotNull",
+					]
+					fields: ""
+					values: false
+				}
 				tooltip: {
-					mode: "multi"
+					mode: "single"
 					sort: "none"
 				}
 			}
-			pluginVersion: "9.1.6"
 			targets: [{
 				datasource: {
 					type: "loki"
 					uid:  "loki:local"
 				}
 				editorMode:   "code"
-				expr:         "sum by (message_host) (sum_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_status=200 | unwrap message_size |  __error__=\"\" [$__interval]))"
-				legendFormat: "Bytes sent"
+				expr:         "sum by (message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_path != \"\" [$__interval]))"
+				legendFormat: "{{message_path}}"
 				queryType:    "range"
 				refId:        "A"
 			}]
-			title: "Bytes Sent"
-			transformations: []
-			type: "timeseries"
+			title: "Panel Title"
+			type:  "piechart"
 		}, {
 			collapsed: false
 			datasource: {
@@ -1008,7 +745,7 @@ template: {
 				h: 1
 				w: 24
 				x: 0
-				y: 39
+				y: 25
 			}
 			id: 28
 			panels: []
@@ -1039,13 +776,205 @@ template: {
 					mappings: []
 					thresholds: {
 						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
+						steps: [{
+							color: "green"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
+					}
+				}
+				overrides: [{
+					matcher: {
+						id:      "byName"
+						options: "Total"
+					}
+					properties: [{
+						id:    "custom.width"
+						value: 300
+					}, {
+						id:    "custom.displayMode"
+						value: "gradient-gauge"
+					}, {
+						id: "color"
+						value: mode: "continuous-BlPu"
+					}]
+				}]
+			}
+			gridPos: {
+				h: 7
+				w: 11
+				x: 0
+				y: 26
+			}
+			id:       12
+			interval: "5m"
+			options: {
+				footer: {
+					fields: ""
+					reducer: [
+						"sum",
+					]
+					show: false
+				}
+				showHeader: true
+				sortBy: [{
+					desc:        true
+					displayName: "Total"
+				}]
+			}
+			pluginVersion: "8.5.3"
+			targets: [{
+				datasource: {
+					type: "loki"
+					uid:  "loki:local"
+				}
+				editorMode:   "code"
+				expr:         "topk(5,sum by (message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_path != \"\"  __error__=\"\" [$__interval])))"
+				legendFormat: "{{message_path}}"
+				queryType:    "range"
+				refId:        "A"
+			}]
+			title: "Top Requested Pages"
+			transformations: [{
+				id: "reduce"
+				options: reducers: [
+					"sum",
+				]
+			}, {
+				id: "organize"
+				options: {
+					excludeByName: {}
+					indexByName: {}
+					renameByName: {
+						Field: "Page"
+						Total: ""
+					}
+				}
+			}]
+			type: "table"
+		}, {
+			datasource: {
+				type: "loki"
+				uid:  "loki-vela"
+			}
+			description: ""
+			fieldConfig: {
+				defaults: {
+					color: mode: "thresholds"
+					custom: {
+						align:       "auto"
+						displayMode: "auto"
+						filterable:  false
+						inspect:     false
+					}
+					mappings: []
+					thresholds: {
+						mode: "absolute"
+						steps: [{
+							color: "green"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
+					}
+				}
+				overrides: [{
+					matcher: {
+						id:      "byName"
+						options: "Requests"
+					}
+					properties: [{
+						id:    "custom.width"
+						value: 300
+					}, {
+						id:    "custom.displayMode"
+						value: "gradient-gauge"
+					}, {
+						id: "color"
+						value: mode: "continuous-BlPu"
+					}]
+				}]
+			}
+			gridPos: {
+				h: 7
+				w: 11
+				x: 11
+				y: 26
+			}
+			id:       6
+			interval: "1h"
+			options: {
+				footer: {
+					fields: ""
+					reducer: [
+						"sum",
+					]
+					show: false
+				}
+				showHeader: true
+				sortBy: [{
+					desc:        true
+					displayName: "Requests"
+				}]
+			}
+			pluginVersion: "8.5.3"
+			targets: [{
+				datasource: {
+					type: "loki"
+					uid:  "loki-vela"
+				}
+				editorMode:   "code"
+				expr:         "topk(20, sum by (message_referer) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  message_referer != \"\" and message_referer !~ \".*?$host.*?\" | __error__=\"\" [$__interval])))"
+				legendFormat: "{{message_referer}}"
+				queryType:    "range"
+				refId:        "A"
+			}]
+			title: "Top HTTP Referers"
+			transformations: [{
+				id: "reduce"
+				options: reducers: [
+					"sum",
+				]
+			}, {
+				id: "organize"
+				options: {
+					excludeByName: {}
+					indexByName: {}
+					renameByName: {
+						Field: "Referer"
+						Total: "Requests"
+					}
+				}
+			}]
+			type: "table"
+		}, {
+			datasource: {
+				type: "loki"
+				uid:  "${logsource}"
+			}
+			description: ""
+			fieldConfig: {
+				defaults: {
+					color: mode: "thresholds"
+					custom: {
+						align:       "auto"
+						displayMode: "auto"
+						filterable:  false
+						inspect:     false
+					}
+					mappings: []
+					thresholds: {
+						mode: "absolute"
+						steps: [{
+							color: "green"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
 					}
 				}
 				overrides: [{
@@ -1069,7 +998,7 @@ template: {
 				h: 7
 				w: 11
 				x: 0
-				y: 40
+				y: 33
 			}
 			id:       7
 			interval: ""
@@ -1135,13 +1064,13 @@ template: {
 					mappings: []
 					thresholds: {
 						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
+						steps: [{
+							color: "green"
+							value: null
+						}, {
+							color: "red"
+							value: 80
+						}]
 					}
 				}
 				overrides: [{
@@ -1165,103 +1094,7 @@ template: {
 				h: 7
 				w: 11
 				x: 11
-				y: 40
-			}
-			id:       6
-			interval: "1h"
-			options: {
-				footer: {
-					fields: ""
-					reducer: [
-						"sum",
-					]
-					show: false
-				}
-				showHeader: true
-				sortBy: [{
-					desc:        true
-					displayName: "Requests"
-				}]
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "topk(20, sum by (message_referer) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json |  message_referer != \"\" and message_referer !~ \".*?$host.*?\" | __error__=\"\" [$__interval])))"
-				legendFormat: "{{http_referer}}"
-				queryType:    "range"
-				refId:        "A"
-			}]
-			title: "Top HTTP Referers"
-			transformations: [{
-				id: "reduce"
-				options: reducers: [
-					"sum",
-				]
-			}, {
-				id: "organize"
-				options: {
-					excludeByName: {}
-					indexByName: {}
-					renameByName: {
-						Field: "Referer"
-						Total: "Requests"
-					}
-				}
-			}]
-			type: "table"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
-					color: mode: "thresholds"
-					custom: {
-						align:       "auto"
-						displayMode: "auto"
-						filterable:  false
-						inspect:     false
-					}
-					mappings: []
-					thresholds: {
-						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
-					}
-				}
-				overrides: [{
-					matcher: {
-						id:      "byName"
-						options: "Requests"
-					}
-					properties: [{
-						id:    "custom.width"
-						value: 300
-					}, {
-						id:    "custom.displayMode"
-						value: "gradient-gauge"
-					}, {
-						id: "color"
-						value: mode: "continuous-BlPu"
-					}]
-				}]
-			}
-			gridPos: {
-				h: 7
-				w: 11
-				x: 0
-				y: 47
+				y: 33
 			}
 			id:       3
 			interval: "30m"
@@ -1305,102 +1138,6 @@ template: {
 					renameByName: {
 						Field: "IP Address"
 						Total: "Requests"
-					}
-				}
-			}]
-			type: "table"
-		}, {
-			datasource: {
-				type: "loki"
-				uid:  "${logsource}"
-			}
-			description: ""
-			fieldConfig: {
-				defaults: {
-					color: mode: "thresholds"
-					custom: {
-						align:       "auto"
-						displayMode: "auto"
-						filterable:  false
-						inspect:     false
-					}
-					mappings: []
-					thresholds: {
-						mode: "absolute"
-						steps: [
-							{
-								color: "green"
-							}, {
-								color: "red"
-								value: 80
-							}]
-					}
-				}
-				overrides: [{
-					matcher: {
-						id:      "byName"
-						options: "Total"
-					}
-					properties: [{
-						id:    "custom.width"
-						value: 300
-					}, {
-						id:    "custom.displayMode"
-						value: "gradient-gauge"
-					}, {
-						id: "color"
-						value: mode: "continuous-BlPu"
-					}]
-				}]
-			}
-			gridPos: {
-				h: 7
-				w: 11
-				x: 11
-				y: 47
-			}
-			id:       12
-			interval: "5m"
-			options: {
-				footer: {
-					fields: ""
-					reducer: [
-						"sum",
-					]
-					show: false
-				}
-				showHeader: true
-				sortBy: [{
-					desc:        true
-					displayName: "Total"
-				}]
-			}
-			pluginVersion: "8.5.3"
-			targets: [{
-				datasource: {
-					type: "loki"
-					uid:  "loki:local"
-				}
-				editorMode:   "code"
-				expr:         "topk(5,sum by (message_path) (count_over_time({app=\"$appName\", appNamespace=\"$appNamespace\"} | json | message_path != \"\"  __error__=\"\" [$__interval])))"
-				legendFormat: "{{message_path}}"
-				queryType:    "range"
-				refId:        "A"
-			}]
-			title: "Top Requested Pages"
-			transformations: [{
-				id: "reduce"
-				options: reducers: [
-					"sum",
-				]
-			}, {
-				id: "organize"
-				options: {
-					excludeByName: {}
-					indexByName: {}
-					renameByName: {
-						Field: "Page"
-						Total: ""
 					}
 				}
 			}]
