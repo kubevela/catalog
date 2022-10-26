@@ -1,5 +1,5 @@
 name: loki
-version: v0.1.5
+version: v0.1.6
 description: Loki is a log aggregation system designed to store and query logs from all your applications and infrastructure.
 icon: https://grafana.com/static/img/logos/logo-loki.svg
 url: https://grafana.com/oss/loki/
