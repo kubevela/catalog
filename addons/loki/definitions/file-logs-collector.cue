@@ -59,7 +59,7 @@ template: {
 		// +patchKey=name
 		spec: template: spec: containers: [{
 			name:  "vector-log"
-			image: "timberio/vector:0.23.3-distroless-libc"
+			image: "timberio/vector:0.23.3-alpine"
 			args: ["--config-dir", "/etc/vector/"]
 			env: [
 				{
@@ -107,7 +107,7 @@ template: {
 			my_source_id: {
 				type:              "file"
 				ignore_older_secs: 600
-				include: "/data/" + [parameter.path]
+				include: ["/data" + parameter.path]
 				read_from: "beginning"
 			}
 		}
