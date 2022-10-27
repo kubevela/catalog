@@ -42,7 +42,7 @@ template: {
 			role: "daemon"
 			targetConfigMap: {
 				namespace: "o11y-system"
-				name:      "vector"
+				name:      "vector-controller"
 			}
 			vectorConfig: {
 				sources: "\(sourceName)": {
@@ -52,16 +52,15 @@ template: {
 				transforms: {
 					"\(parserName)": {
 						inputs: [sourceName]
-						type: "remap"
-						if parameter.parser != _|_ && parameter.parser == "apache" {
-							source: """
-              .message = parse_apache_log!(.message, format: "common")
-              """
-						}
-						if parameter.parser != _|_ && parameter.parser == "nginx" {
-							source: """
-              .message = parse_nginx_log!(.message, "combined")
-              """
+						type:   "remap"
+						source: *"true" | string
+						if parameter.parser != _|_ {
+							if parameter.parser == "apache" {
+								source: ".message = parse_apache_log!(.message, format: \"common\")"
+							}
+							if parameter.parser == "nginx" {
+								source: ".message = parse_nginx_log!(.message, \"combined\")"
+							}
 						}
 					}
 				}
@@ -80,14 +79,13 @@ template: {
 							filename:  "{{ file }}"
 							namespace: "{{ kubernetes.pod_namespace }}"
 							pod:       "{{ kubernetes.pod_name }}"
-							if parameter.parser != _|_ && parameter.parser == "nginx" {
-								parser: "nginx"
-							}
-							if parameter.parser != _|_ && parameter.parser == "apache" {
-								parser: "apache"
+							container: "{{ kubernetes.container_name }}"
+							if parameter.parser != _|_ {
+								parser: parameter.parser
 							}
 							app:          context.appName
 							appNamespace: context.namespace
+							cluster:      context.cluster
 						}
 						encoding: codec: "json"
 					}
@@ -95,16 +93,22 @@ template: {
 		}
 	}
 
-	outputs: nginx_dashboard: {
-		apiVersion: "o11y.prism.oam.dev/v1alpha1"
-		kind:       "GrafanaDashboard"
-		metadata: {
-			annotations: {
-				"app.oam.dev/last-applied-configuration": "-"
+	outputs: {
+		if parameter.parser != _|_ {
+			if parameter.parser == "nginx" {
+				nginx_dashboard: {
+					apiVersion: "o11y.prism.oam.dev/v1alpha1"
+					kind:       "GrafanaDashboard"
+					metadata: {
+						annotations: {
+							"app.oam.dev/last-applied-configuration": "-"
+						}
+						name: "\(context.name)@\(parameter.grafana)"
+					}
+					spec: nginx_dashboard_config
+				}
 			}
-			name: "\(context.name)@\(parameter.grafana)"
 		}
-		spec: nginx_dashboard_config
 	}
 
 	nginx_dashboard_config: {

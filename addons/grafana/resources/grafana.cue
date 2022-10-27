@@ -3,6 +3,7 @@ package main
 grafana: {
 	name: "grafana"
 	type: "webservice"
+	dependsOn: [o11yNamespace.name, grafanaAccess.name]
 	properties: {
 		image:           parameter["image"]
 		imagePullPolicy: parameter["imagePullPolicy"]
@@ -26,13 +27,13 @@ grafana: {
 		env: [{
 			name: "GF_SECURITY_ADMIN_USER"
 			valueFrom: secretKeyRef: {
-				name: const.secretName
+				name: "grafana.\(parameter.grafanaName)"
 				key:  "username"
 			}
 		}, {
 			name: "GF_SECURITY_ADMIN_PASSWORD"
 			valueFrom: secretKeyRef: {
-				name: const.secretName
+				name: "grafana.\(parameter.grafanaName)"
 				key:  "password"
 			}
 		}]

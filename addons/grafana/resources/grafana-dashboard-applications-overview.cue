@@ -12,6 +12,37 @@ grafanaDashboardApplicationOverview: {
 
 grafanaDashboardApplicationOverviewData: #"""
 	{
+	  "description": "KubeVela Application Overview",
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubevela",
+	      "system"
+	    ],
+	    "targetBlank": true,
+	    "title": "KubeVela System",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "system"
+	    ],
+	    "targetBlank": true,
+	    "title": "Kubernetes System",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "gridPos": {
@@ -1443,8 +1474,6 @@ grafanaDashboardApplicationOverviewData: #"""
 	      "type": "row"
 	    }
 	  ],
-	  "refresh": "",
-	  "schemaVersion": 36,
 	  "style": "dark",
 	  "tags": [
 	    "kubevela",

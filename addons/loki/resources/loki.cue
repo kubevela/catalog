@@ -3,6 +3,7 @@ package main
 loki: {
 	name: "loki"
 	type: "webservice"
+	dependsOn: [o11yNamespace.name]
 	properties: {
 		image:           parameter.image
 		imagePullPolicy: parameter.imagePullPolicy

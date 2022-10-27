@@ -13,7 +13,36 @@ grafanaDashboardKubernetesAPIServer: {
 grafanaDashboardKubernetesAPIServerData: #"""
 	{
 	  "description": "Latency and QPS for Kubernetes apiserver. ",
-	  "editable": true,
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubevela",
+	      "system"
+	    ],
+	    "targetBlank": true,
+	    "title": "KubeVela System",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": true,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "resource"
+	    ],
+	    "targetBlank": false,
+	    "title": "Kubernetes Resources",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "collapsed": false,
@@ -1762,8 +1791,6 @@ grafanaDashboardKubernetesAPIServerData: #"""
 	      }
 	    }
 	  ],
-	  "refresh": false,
-	  "schemaVersion": 36,
 	  "style": "dark",
 	  "tags": ["kubernetes", "system"],
 	  "templating": {
@@ -1872,10 +1899,7 @@ grafanaDashboardKubernetesAPIServerData: #"""
 	      "1d"
 	    ]
 	  },
-	  "timezone": "",
 	  "title": "Kubernetes APIServer",
-	  "uid": "kubernetes-apiserver",
-	  "version": 1,
-	  "weekStart": ""
+	  "uid": "kubernetes-apiserver"
 	}
 	"""#

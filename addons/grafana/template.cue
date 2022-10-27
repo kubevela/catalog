@@ -1,16 +1,6 @@
 package main
 
-ns: {
-	type: "k8s-objects"
-	name: const.name + "-ns"
-	properties: objects: [{
-		apiVersion: "v1"
-		kind:       "Namespace"
-		metadata: name: parameter.namespace
-	}]
-}
-
-dashboardComponents: [
+grafanaDashboardComponents: [
 	grafanaDashboardKubernetesAPIServer,
 	grafanaDashboardKubevelaSystem,
 	grafanaDashboardApplicationOverview,
@@ -21,112 +11,33 @@ dashboardComponents: [
 	grafanaDashboardKubernetesPod,
 ]
 
-dashboardComponentNames: [ for comp in dashboardComponents {comp.name}]
-
-comps: [ns, grafanaAccount, grafana, {
-	if parameter.storage != _|_ {grafanaStorage}
-	if !parameter.install != _|_ {grafanaReaderRoleAndBinding}
-}]
-
 output: {
 	spec: {
-		components: [ for comp in comps if comp.name != _|_ {comp}] + dashboardComponents
-		policies: [{
-			type: "shared-resource"
-			name: "namespace"
-			properties: rules: [{selector: resourceTypes: ["Namespace"]}]
-		}, {
-			type: "garbage-collect"
-			name: "ignore-recycle-pvc"
-			properties: rules: [{
-				selector: resourceTypes: ["PersistentVolumeClaim"]
-				strategy: "never"
-			}]
-		}, {
-			type: "topology"
-			name: "deploy-topology"
-			properties: {
-				if parameter.clusters != _|_ {
-					clusters: parameter.clusters
-				}
-				if parameter.clusters == _|_ {
-					clusters: ["local"]
-				}
-				namespace: parameter.namespace
-			}
-		}, {
-			type: "topology"
-			name: "deploy-hub"
-			properties: {
-				clusters: ["local"]
-				namespace: parameter.namespace
-			}
-		}, {
+		components: [
+				o11yNamespace,
+				grafanaAccess,
+				grafana,
+				if parameter.storage != _|_ {grafanaStorage},
+				if !parameter.install {grafanaReaderRoleAndBinding},
+		] + grafanaDashboardComponents
+		policies: commonPolicies + [{
 			type: "override"
 			name: "grafana-core"
-			properties: selector: [ns.name, grafanaAccount.name, grafana.name]
+			properties: selector: [o11yNamespace.name, grafanaAccess.name, grafana.name]
 		}, {
 			type: "override"
 			name: "grafana-dashboards"
-			properties: selector: dashboardComponentNames
+			properties: selector: [ for comp in grafanaDashboardComponents {comp.name}]
 		}, {
 			type: "override"
 			name: "grafana-kubernetes-role"
-			properties: selector: ["grafana-cluster-role"]
+			properties: selector: [grafanaReaderRoleAndBinding.name]
 		}]
 		workflow: steps: [
-			if (parameter.install) {
-				{
-					type: "deploy"
-					name: "Deploy Grafana"
-					properties: policies: ["deploy-topology", "grafana-core"]
-				}
-			},
-			if (parameter.install) {
-				{
-					type: "collect-service-endpoints"
-					name: "Get Grafana Endpoint"
-					properties: {
-						name:      const.name
-						namespace: "vela-system"
-						components: [grafana.name]
-						portName: "port-3000"
-						outer:    parameter.serviceType != "ClusterIP"
-					}
-					outputs: [{
-						name:      "url"
-						valueFrom: "value.url"
-					}]
-				}
-			},
-			if (parameter.install) {
-				{
-					type: "create-config"
-					name: "Register Grafana Config"
-					properties: {
-						name:     parameter.grafanaName
-						template: "grafana"
-						config: {
-							auth: {
-								username: parameter.adminUser
-								password: parameter.adminPassword
-							}
-						}
-					}
-					inputs: [
-						{
-							from:         "url"
-							parameterKey: "config.endpoint"
-						},
-					]
-				}
-			},
-			if (!parameter.install) {
-				{
-					type: "deploy"
-					name: "Deploy RoleAndBinding"
-					properties: policies: ["grafana-kubernetes-role", "deploy-hub"]
-				}
+					if parameter.install {
+				type: "deploy"
+				name: "Deploy Grafana"
+				properties: policies: ["deploy-topology", "grafana-core"]
 			},
 			{
 				type: "step-group"
@@ -162,6 +73,7 @@ output: {
 				type: "deploy"
 				name: "Install Dashboards"
 				properties: policies: ["deploy-topology", "grafana-dashboards"]
-			}]
+			},
+		] + postDeploySteps
 	}
 }

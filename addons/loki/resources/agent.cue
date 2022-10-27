@@ -60,18 +60,21 @@ if parameter.agent == "promtail" {
 }
 
 if parameter.agent == "vector-controller" {
-	agentComponents: [vectorControllerAgent, vectorControllerAgentConfig, vectorController, vectorCRDComponent, eventLogger]
+	agentComponents: [vector, vectorConfig, vectorController, vectorControllerExtraResources, eventLogger]
 }
 
 if parameter.agent != "" {
 	agentPolicies: [{
 		type: "override"
 		name: "agent-components"
-		properties: selector: [for comp in agentComponents if comp.name != _|_ {comp.name}]
+		properties: selector: [
+			o11yNamespace.name,
+			for comp in agentComponents if comp.name != _|_ {comp.name},
+		]
 	}]
 	agentWorkflowSteps: [{
 		type: "deploy"
 		name: "deploy-agent"
-		properties: policies: ["deploy-multi-cluster", "agent-components"]
+		properties: policies: ["topology-distributed", "agent-components"]
 	}]
 }
