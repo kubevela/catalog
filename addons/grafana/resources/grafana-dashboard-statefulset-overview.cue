@@ -13,13 +13,36 @@ grafanaDashboardStatefulSetOverview: {
 grafanaDashboardStatefulSetOverviewData: #"""
 	{
 	  "description": "Kubernetes StatefulSet Overview",
-	  "editable": true,
-	  "fiscalYearStartMonth": 0,
-	  "graphTooltip": 0,
-	  "id": 9,
-	  "iteration": 1665649215803,
-	  "links": [],
-	  "liveNow": false,
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": false,
+	    "tags": [
+	      "kubevela",
+	      "application"
+	    ],
+	    "targetBlank": false,
+	    "title": "KubeVela",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": true,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "resource"
+	    ],
+	    "targetBlank": false,
+	    "title": "Kubernetes Resources",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "gridPos": {
@@ -84,7 +107,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -152,7 +175,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -353,7 +376,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -420,7 +443,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -494,7 +517,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -568,7 +591,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -2563,9 +2586,9 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "loki",
-	            "uid": "loki:local"
+	            "uid": "${logsource}"
 	          },
-	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+\"}",
+	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+\"} | json | line_format \"{{.message}}\"",
 	          "refId": "A"
 	        }
 	      ],
@@ -2573,18 +2596,11 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	      "type": "logs"
 	    }
 	  ],
-	  "refresh": "",
-	  "schemaVersion": 36,
 	  "style": "dark",
 	  "tags": ["kubernetes", "resource"],
 	  "templating": {
 	    "list": [
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "prometheus:local",
-	          "value": "prometheus:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2597,11 +2613,6 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        "type": "datasource"
 	      },
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "loki:local",
-	          "value": "loki:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2651,7 +2662,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_statefulset_metadata_generation, namespace)",
+	        "definition": "label_values(kube_statefulset_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "Namespace",
@@ -2659,7 +2670,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        "name": "namespace",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_statefulset_metadata_generation, namespace)",
+	          "query": "label_values(kube_statefulset_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2681,7 +2692,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_statefulset_metadata_generation{namespace=\"$namespace\"}, statefulset)",
+	        "definition": "label_values(kube_statefulset_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, statefulset)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "StatefulSet",
@@ -2689,7 +2700,7 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	        "name": "name",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_statefulset_metadata_generation{namespace=\"$namespace\"}, statefulset)",
+	          "query": "label_values(kube_statefulset_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, statefulset)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2733,8 +2744,6 @@ grafanaDashboardStatefulSetOverviewData: #"""
 	  },
 	  "timezone": "browser",
 	  "title": "Kubernetes StatefulSet",
-	  "uid": "kubernetes-statefulset",
-	  "version": 1,
-	  "weekStart": ""
+	  "uid": "kubernetes-statefulset"
 	}
 	"""#

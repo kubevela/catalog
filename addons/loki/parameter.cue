@@ -34,6 +34,6 @@ parameter: {
 	// +usage=Specify the image of promtail
 	promtailImage: *"grafana/promtail" | string
 	// +usage=Specify the image of vector
-	vectorImage: *"timberio/vector:0.24.0-distroless-libc" | string
+	vectorImage:           *"timberio/vector:0.24.0-distroless-libc" | string
 	vectorControllerImage: *"oamdev/vector-controller:0.2.2" | string
 }

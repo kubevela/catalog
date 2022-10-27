@@ -13,7 +13,36 @@ grafanaDashboardDaemonSetOverview: {
 grafanaDashboardDaemonSetOverviewData: #"""
 	{
 	  "description": "Kubernetes DaemonSet Overview",
-	  "editable": true,
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": false,
+	    "tags": [
+	      "kubevela",
+	      "application"
+	    ],
+	    "targetBlank": false,
+	    "title": "KubeVela",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": true,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "resource"
+	    ],
+	    "targetBlank": false,
+	    "title": "Kubernetes Resources",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "gridPos": {
@@ -78,7 +107,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -146,7 +175,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -347,7 +376,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -414,7 +443,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -488,7 +517,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -562,7 +591,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -2571,9 +2600,9 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "loki",
-	            "uid": "loki:local"
+	            "uid": "${logsource}"
 	          },
-	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+\"}",
+	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+\"} | json | line_format \"{{.message}}\"",
 	          "refId": "A"
 	        }
 	      ],
@@ -2588,11 +2617,6 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	  "templating": {
 	    "list": [
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "prometheus:local",
-	          "value": "prometheus:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2605,11 +2629,6 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        "type": "datasource"
 	      },
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "loki:local",
-	          "value": "loki:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2659,7 +2678,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_daemonset_metadata_generation, namespace)",
+	        "definition": "label_values(kube_daemonset_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "Namespace",
@@ -2667,7 +2686,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        "name": "namespace",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_daemonset_metadata_generation, namespace)",
+	          "query": "label_values(kube_daemonset_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2689,7 +2708,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_daemonset_metadata_generation{namespace=\"$namespace\"}, daemonset)",
+	        "definition": "label_values(kube_daemonset_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, daemonset)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "DaemonSet",
@@ -2697,7 +2716,7 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	        "name": "name",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_daemonset_metadata_generation{namespace=\"$namespace\"}, daemonset)",
+	          "query": "label_values(kube_daemonset_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, daemonset)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2741,8 +2760,6 @@ grafanaDashboardDaemonSetOverviewData: #"""
 	  },
 	  "timezone": "browser",
 	  "title": "Kubernetes DaemonSet",
-	  "uid": "kubernetes-daemonset",
-	  "version": 10,
-	  "weekStart": ""
+	  "uid": "kubernetes-daemonset"
 	}
 	"""#

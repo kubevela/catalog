@@ -30,6 +30,12 @@ Install agents to all clusters and collect all logs.
 vela addon enable loki agent=vector serviceType=LoadBalancer
 ```
 
+Install vector agents to all clusters and use [vector controller](https://github.com/kubevela/vector-controller) to manage your log collection rules in detail.
+
+```shell
+vela addon enable loki agent=vector-controller serviceType=LoadBalancer
+```
+
 Install loki with persistent storage.
 
 ```shell

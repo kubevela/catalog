@@ -13,7 +13,36 @@ grafanaDashboardDeploymentOverview: {
 grafanaDashboardDeploymentOverviewData: #"""
 	{
 	  "description": "Kubernetes Deployment Overview",
-	  "editable": true,
+	  "editable": false,
+	  "links": [{
+	    "asDropdown": false,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": false,
+	    "tags": [
+	      "kubevela",
+	      "application"
+	    ],
+	    "targetBlank": false,
+	    "title": "KubeVela",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }, {
+	    "asDropdown": true,
+	    "icon": "external link",
+	    "includeVars": false,
+	    "keepTime": true,
+	    "tags": [
+	      "kubernetes",
+	      "resource"
+	    ],
+	    "targetBlank": false,
+	    "title": "Kubernetes Resources",
+	    "tooltip": "",
+	    "type": "dashboards",
+	    "url": ""
+	  }],
 	  "panels": [
 	    {
 	      "gridPos": {
@@ -78,7 +107,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -146,7 +175,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -256,7 +285,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -361,7 +390,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -428,7 +457,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -502,7 +531,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -576,7 +605,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "prometheus",
-	            "uid": "prometheus:local"
+	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
 	          "exemplar": false,
@@ -2577,9 +2606,9 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        {
 	          "datasource": {
 	            "type": "loki",
-	            "uid": "loki:local"
+	            "uid": "${logsource}"
 	          },
-	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+-[a-z0-9]+\"}",
+	          "expr": "{cluster=\"$cluster\",namespace=\"$namespace\",pod=~\"$name-[a-z0-9]+-[a-z0-9]+\"} | json | line_format \"{{.message}}\"",
 	          "refId": "A"
 	        }
 	      ],
@@ -2587,17 +2616,11 @@ grafanaDashboardDeploymentOverviewData: #"""
 	      "type": "logs"
 	    }
 	  ],
-	  "schemaVersion": 36,
 	  "style": "dark",
 	  "tags": ["kubernetes", "resource"],
 	  "templating": {
 	    "list": [
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "prometheus:local",
-	          "value": "prometheus:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2610,11 +2633,6 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        "type": "datasource"
 	      },
 	      {
-	        "current": {
-	          "selected": false,
-	          "text": "loki:local",
-	          "value": "loki:local"
-	        },
 	        "hide": 2,
 	        "includeAll": false,
 	        "multi": false,
@@ -2664,7 +2682,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_deployment_metadata_generation, namespace)",
+	        "definition": "label_values(kube_deployment_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "Namespace",
@@ -2672,7 +2690,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        "name": "namespace",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_deployment_metadata_generation, namespace)",
+	          "query": "label_values(kube_deployment_metadata_generation{cluster=\"$cluster\"}, namespace)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2694,7 +2712,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	          "type": "prometheus",
 	          "uid": "${datasource}"
 	        },
-	        "definition": "label_values(kube_deployment_metadata_generation{namespace=\"$namespace\"}, deployment)",
+	        "definition": "label_values(kube_deployment_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, deployment)",
 	        "hide": 0,
 	        "includeAll": false,
 	        "label": "Deployment",
@@ -2702,7 +2720,7 @@ grafanaDashboardDeploymentOverviewData: #"""
 	        "name": "name",
 	        "options": [],
 	        "query": {
-	          "query": "label_values(kube_deployment_metadata_generation{namespace=\"$namespace\"}, deployment)",
+	          "query": "label_values(kube_deployment_metadata_generation{cluster=\"$cluster\", namespace=\"$namespace\"}, deployment)",
 	          "refId": "StandardVariableQuery"
 	        },
 	        "refresh": 1,
@@ -2746,8 +2764,6 @@ grafanaDashboardDeploymentOverviewData: #"""
 	  },
 	  "timezone": "browser",
 	  "title": "Kubernetes Deployment",
-	  "uid": "deployment-overview",
-	  "version": 3,
-	  "weekStart": ""
+	  "uid": "deployment-overview"
 	}
 	"""#
