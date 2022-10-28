@@ -24,7 +24,8 @@ template: {
 
 	parameter: {
 		grafana:      *"default" | string
-		parser?:      "nginx" | "apache"
+		parser?:      "nginx" | "apache" | "customize"
+		customizeParserVrl?: string
 		lokiEndpoint: *"http://loki:3100/" | string
 	}
 
@@ -60,6 +61,9 @@ template: {
 							}
 							if parameter.parser == "nginx" {
 								source: ".message = parse_nginx_log!(.message, \"combined\")"
+							}
+							if parameter.parser == "customize" && parameter.customizeParserVrl != _|_ {
+								source: parameter.customizeParserVrl
 							}
 						}
 					}
