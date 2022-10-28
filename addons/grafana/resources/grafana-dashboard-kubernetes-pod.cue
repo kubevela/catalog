@@ -2638,7 +2638,11 @@ grafanaDashboardKubernetesPodData: #"""
 	    "from": "now-30m",
 	    "to": "now"
 	  },
-	  "title": "Kuberentes Pod",
-	  "uid": "kubernetes-pod"
+	  "timepicker": {},
+	  "timezone": "",
+	  "title": "Kubernetes Pod",
+	  "uid": "kubernetes-pod",
+	  "version": 2,
+	  "weekStart": ""
 	}
 	"""#
