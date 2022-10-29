@@ -15,6 +15,6 @@ spec:
         - type: stdout-logs-collector
           properties:
             parser: customize
-            customizeParserVrl: |
+            VRL: |
               .message = parse_nginx_log!(.message, "combined")
               .new_field = "new value"
