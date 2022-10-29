@@ -19,8 +19,8 @@ template: {
 			apiVersion: "batch/v1"
 			kind:       "Job"
 			metadata: {
-				name:      context.name + "-" + context.stepSessionID + "-enable-addon-job"
-				namespace: context.namespace
+				name:      context.name + "-" + context.stepSessionID
+				namespace: "vela-system"
 				labels: {
 					"enable-addon.oam.dev": context.name
 				}
