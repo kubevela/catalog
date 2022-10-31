@@ -12,7 +12,7 @@ spec:
           - port: 80
             expose: true
       traits:
-        - type: stdout-logs-collector
+        - type: stdout-logs
           properties:
             parser: customize
             VRL: |

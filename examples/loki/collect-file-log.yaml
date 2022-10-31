@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: app-vector
+  namespace: default
+spec:
+  components:
+    - name: my-biz
+      type: webservice
+      properties:
+        cmd:
+          - flog
+          - -t
+          - log
+          - -o
+          - /data/daily.log
+          - -d
+          - 10s
+          - -w
+        image: mingrammer/flog
+      traits:
+        - properties:
+            path: "/data/daily.log"
+          type: file-logs
