@@ -37,6 +37,6 @@ template: {
 		// +usage=Specify the path to be scraped
 		path: *"/metrics" | string
 		selector?: [string]: string
-		type?: *"ClusterIP" | string
+		type: *"ClusterIP" | string
 	}
 }
