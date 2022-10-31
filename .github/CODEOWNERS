@@ -22,3 +22,7 @@ addons/velaux                      @barnettZQG
 
 # Owner of chartMuseum addon
 addons/chartmuseum                 @charlie0129 @wangyikewxgm
+addons/loki                        @Somefive @wangyikewxgm
+addons/grafana                     @Somefive @wangyikewxgm
+addons/o11y-definitions            @Somefive @barnettZQG
+addons/prometheus-server           @Somefive @wangyikewxgm

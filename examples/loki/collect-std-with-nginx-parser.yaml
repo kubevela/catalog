@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: nginx-app-2
+spec:
+  components:
+    - name: nginx-comp
+      type: webservice
+      properties:
+        image: nginx:1.14.2
+        ports:
+          - port: 80
+            expose: true
+      traits:
+        - type: stdout-logs-collector
+          properties:
+            parser: nginx
