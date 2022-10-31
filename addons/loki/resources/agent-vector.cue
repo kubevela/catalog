@@ -7,7 +7,7 @@ vector: {
 	properties: {
 		image:           parameter.vectorImage
 		imagePullPolicy: parameter.imagePullPolicy
-		if parameter.agent == "vector-controller" {
+		if parameter.agent == "vector" && parameter.stdout == "" {
 			labels: "vector.oam.dev/agent": "true"
 		}
 		env: [{
@@ -33,7 +33,7 @@ vector: {
 					mountPath: "/etc/bootconfig"
 					cmName:    "vector"
 				},
-				if parameter.agent == "vector-controller" {
+				if parameter.agent == "vector" && parameter.stdout == "" {
 					name:      "vector-controller-config"
 					mountPath: "/etc/vector-controller-config"
 					cmName:    "vector-controller"
@@ -69,7 +69,7 @@ vector: {
 	traits: [{
 		type: "command"
 		_configDir: *"/etc/config/" | string
-		if parameter.agent == "vector-controller" {
+		if parameter.agent == "vector" && parameter.stdout == "" {
 			_configDir: "/etc/config/,/etc/vector-controller-config/"
 		},
 		properties: args: [
@@ -91,7 +91,7 @@ vectorConfig: {
 		apiVersion: "v1"
 		kind:       "ConfigMap"
 		metadata: name: "vector"
-		if parameter.agent == "vector" {
+		if parameter.agent == "vector" && parameter.stdout == "all" {
 			data: {
 				"agent.yaml": #"""
 					data_dir: /vector-data-dir
@@ -121,7 +121,7 @@ vectorConfig: {
 					"""#
 			}
 		}
-		if parameter.agent == "vector-controller" {
+		if parameter.agent == "vector" && parameter.stdout == "" {
 			data: {
 				"agent.yaml": #"""
 					data_dir: /vector-data-dir

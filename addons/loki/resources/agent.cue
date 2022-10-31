@@ -52,15 +52,16 @@ agentPolicies:      *[] | [...{...}]
 agentWorkflowSteps: *[] | [...{...}]
 
 if parameter.agent == "vector" {
-	agentComponents: [vector, vectorConfig, eventLogger]
+	if parameter.stdout == "all" {
+		agentComponents: [vector, vectorConfig, eventLogger]
+	}
+	if parameter.stdout == "" {
+	  agentComponents: [vector, vectorConfig, vectorController, vectorControllerExtraResources, eventLogger]
+	}
 }
 
 if parameter.agent == "promtail" {
 	agentComponents: [promtail, promtailConfig, eventLogger]
-}
-
-if parameter.agent == "vector-controller" {
-	agentComponents: [vector, vectorConfig, vectorController, vectorControllerExtraResources, eventLogger]
 }
 
 if parameter.agent != "" {
