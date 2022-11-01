@@ -1,6 +1,6 @@
 package main
 
-_version: "v1.6.0-beta.2"
+_version: "v1.6.0-beta.3"
 
 velaux: {
 	name: "velaux"
