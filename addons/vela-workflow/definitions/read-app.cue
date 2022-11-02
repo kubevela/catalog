@@ -10,7 +10,7 @@ import (
 	attributes: {}
 	description: "Read application from the cluster"
 	labels: {
-		"origin": "WorkflowRun"
+		"scope": "WorkflowRun"
 	}
 	type: "workflow-step"
 }

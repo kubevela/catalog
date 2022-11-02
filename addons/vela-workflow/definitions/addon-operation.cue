@@ -9,7 +9,7 @@ import (
 	}
 	labels: {
 		"ui-hidden": "true"
-		"origin":    "WorkflowRun"
+		"scope":     "WorkflowRun"
 	}
 	description: "Enable a KubeVela addon"
 }

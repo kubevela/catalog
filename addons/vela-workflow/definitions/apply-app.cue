@@ -9,7 +9,7 @@ import (
 	attributes: {}
 	description: "Apply application from data or ref to the cluster"
 	labels: {
-		"origin": "WorkflowRun"
+		"scope": "WorkflowRun"
 	}
 	type: "workflow-step"
 }
