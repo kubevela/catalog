@@ -1,6 +1,7 @@
 import (
 	"vela/op"
 	"strconv"
+	"strings"
 )
 
 "install-datasource-from-config": {
@@ -24,7 +25,8 @@ template: {
 					value: {
 						apiVersion: "o11y.prism.oam.dev/v1alpha1"
 						kind:       "GrafanaDatasource"
-						metadata: name: "\(config.name)@\(parameter.grafana)"
+						_name:      strings.Replace(config.name, "-", "_", -1)
+						metadata: name: "\(_name)@\(parameter.grafana)"
 						spec: {
 							if parameter.type == "prometheus-server" {
 								if config.config.auth != _|_ {
