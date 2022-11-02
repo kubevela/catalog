@@ -7,6 +7,7 @@ import (
 	annotations: {}
 	labels: {
 		"ui-hidden": "true"
+		"origin":    "WorkflowRun"
 	}
 	description: "clean workflow run applied jobs"
 }

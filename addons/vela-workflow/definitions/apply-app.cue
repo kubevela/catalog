@@ -8,7 +8,9 @@ import (
 	annotations: {}
 	attributes: {}
 	description: "Apply application from data or ref to the cluster"
-	labels: {}
+	labels: {
+		"origin": "WorkflowRun"
+	}
 	type: "workflow-step"
 }
 
