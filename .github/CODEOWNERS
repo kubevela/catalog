@@ -26,3 +26,4 @@ addons/loki                        @Somefive @wangyikewxgm
 addons/grafana                     @Somefive @wangyikewxgm
 addons/o11y-definitions            @Somefive @barnettZQG
 addons/prometheus-server           @Somefive @wangyikewxgm
+addons/vela-workflow               @FogDong @barnettZQG
