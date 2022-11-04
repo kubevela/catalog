@@ -2,7 +2,7 @@
 	attributes: {
 		podDisruptive: false
 	}
-	description: "Patch labels for helm component's workloads"
+	description: "Patch labels for pod created by workload define in helm chart"
 	labels: {
 		"ui-hidden": "true"
 	}
@@ -18,8 +18,8 @@ template: {
 			apiVersion: parameter.apiVersion
 			kind:       parameter.kind
 			metadata: {
-				name:      context.name
-				namespace: context.namespace
+				name:      parameter.name
+				namespace: parameter.namespace
 			}
 			spec: template: metadata: labels: {
 				 "app.oam.dev/component": context.name
@@ -35,6 +35,7 @@ template: {
 		apiVersion: *"apps/v1" | string
 		kind:       *"Deployment" | string
 		name:       *context.name | string
+		namespace:  *context.namespace | string
 		labels?:    [string]: string
 	}
 }
