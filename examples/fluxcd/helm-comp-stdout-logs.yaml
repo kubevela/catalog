@@ -15,7 +15,7 @@ spec:
           service:
             type: ClusterIP
       traits:
-        - type: patch-labels-helm
+        - type: helm-labels
         - type: stdout-logs
           properties:
             parser: nginx

@@ -1,4 +1,4 @@
-"patch-labels-helm": {
+"helm-labels": {
 	attributes: {
 		podDisruptive: false
 	}
