@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: nginx-helm
+  namespace: default
+spec:
+  components:
+    - name: nginx-helm
+      type: helm
+      properties:
+        repoType: "helm"
+        url: https://charts.bitnami.com/bitnami
+        chart:  nginx
+        values:
+          service:
+            type: ClusterIP
+      traits:
+        - type: patch-labels-helm
+        - type: stdout-logs
+          properties:
+            parser: nginx
