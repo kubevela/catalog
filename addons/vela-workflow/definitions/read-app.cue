@@ -9,7 +9,9 @@ import (
 	annotations: {}
 	attributes: {}
 	description: "Read application from the cluster"
-	labels: {}
+	labels: {
+		"scope": "WorkflowRun"
+	}
 	type: "workflow-step"
 }
 

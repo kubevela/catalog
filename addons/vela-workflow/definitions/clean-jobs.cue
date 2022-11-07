@@ -6,7 +6,7 @@ import (
 	type: "workflow-step"
 	annotations: {}
 	labels: {
-		"ui-hidden": "true"
+		"scope": "WorkflowRun"
 	}
 	description: "clean workflow run applied jobs"
 }

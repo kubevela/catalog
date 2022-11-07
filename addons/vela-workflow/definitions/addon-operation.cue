@@ -8,7 +8,7 @@ import (
 		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/catalog/master/examples/vela-workflow/observability.yaml"
 	}
 	labels: {
-		"ui-hidden": "true"
+		"scope": "WorkflowRun"
 	}
 	description: "Enable a KubeVela addon"
 }
