@@ -28,17 +28,19 @@ helm: {
 					}
 					if context.output.status != _|_ {
 							releaseStatus: context.output.status
-							if releaseStatus.conditions[0]["message"] == "Release reconciliation succeeded" {
-								releaseMessage: "Create helm release successfully"
-							}
-							if releaseStatus.conditions[0]["message"] != "Release reconciliation succeeded" {
-									releaseBasicMessage: "Delivery helm release in progress, message: " + releaseStatus.conditions[0]["message"]
-									if len(releaseStatus.conditions) == 1 {
-											releaseMessage: releaseBasicMessage
-									}
-									if len(releaseStatus.conditions) > 1 {
-											releaseMessage: releaseBasicMessage + ", " + releaseStatus.conditions[1]["message"]
-									}
+							if releaseStatus.conditions != _|_ {
+								if releaseStatus.conditions[0]["message"] == "Release reconciliation succeeded" {
+									releaseMessage: "Create helm release successfully"
+								}
+								if releaseStatus.conditions[0]["message"] != "Release reconciliation succeeded" {
+										releaseBasicMessage: "Delivery helm release in progress, message: " + releaseStatus.conditions[0]["message"]
+										if len(releaseStatus.conditions) == 1 {
+												releaseMessage: releaseBasicMessage
+										}
+										if len(releaseStatus.conditions) > 1 {
+												releaseMessage: releaseBasicMessage + ", " + releaseStatus.conditions[1]["message"]
+										}
+								}
 							}
 					}
 					message: repoMessage + ", " + releaseMessage
