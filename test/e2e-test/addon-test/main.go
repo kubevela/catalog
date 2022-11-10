@@ -205,7 +205,7 @@ func readAddonMeta(addonName string) (*AddonMeta, error) {
 func enableAddonsByOrder(changedAddon map[string]bool) error {
 	dirPattern := "addons/%s"
 	// TODO: make topology sort to auto sort the order of enable
-	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager"} {
+	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager", "vela-prism", "o11y-definitions", "prometheus-server"} {
 		if changedAddon[addonName] && !pendingAddon[addonName] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
 				return err
@@ -218,26 +218,22 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, s)); err != nil {
 				return err
 			}
-			if err := disableOneAddon(s); err != nil {
-				return err
-			}
-			switch s {
-			case "dex":
-				if err := disableOneAddon("velaux"); err != nil {
-					return err
-				}
-			case "flink-kubernetes-operator":
-				if err := disableOneAddon("cert-manager"); err != nil {
-					return err
-				}
-			}
 		}
 	}
 	return nil
 }
 
 func enableOneAddon(dir string) error {
-	cmd := exec.Command("vela", "addon", "enable", dir)
+	var cmd *exec.Cmd
+	switch {
+	case strings.Contains(dir, "fluxcd"):
+		cmd = exec.Command("vela", "addon", "enable", dir, "onlyHelmComponents=true")
+	case strings.Contains(dir, "loki"):
+		cmd = exec.Command("vela", "addon", "enable", dir, "serviceType=NodePort")
+	default:
+		cmd = exec.Command("vela", "addon", "enable", dir)
+	}
+
 	fmt.Println("\033[1;32m==> " + cmd.String() + "\033[0m")
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout

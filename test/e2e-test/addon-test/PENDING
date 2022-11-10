@@ -3,14 +3,3 @@
 
 ocm-gateway-manager-addon
 model-serving
-flink-kubernetes-operator
-kube-state-metrics
-node-exporter
-prometheus-server
-loki
-vela-prism
-o11y-definitions
-grafana
-cert-manager
-trivy-operator
-vela-workflow
