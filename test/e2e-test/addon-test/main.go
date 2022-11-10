@@ -218,6 +218,9 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, s)); err != nil {
 				return err
 			}
+			if err := disableOneAddon(s); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
