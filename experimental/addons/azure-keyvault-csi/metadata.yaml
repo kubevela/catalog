@@ -1,7 +1,7 @@
 name: azure-keyvault-csi
-version: 0.0.2
+version: 0.0.3
 system:
-  vela: ">=v1.4.0"
+  vela: ">=v1.6.0"
 description: Trait providing access to Azure Keyvault values via csi driver
 url: https://github.com/Azure/secrets-store-csi-driver-provider-azure
 

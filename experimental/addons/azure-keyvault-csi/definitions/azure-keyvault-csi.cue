@@ -16,7 +16,11 @@ import "strings"
 template: {
     kvObjects: [
         for v in parameter.keys {
-            "  objectName: " + v.name + "\n" + "  objectType: " + v.type
+            let object= "  objectName: " + v.name + "\n  objectType: " + v.type
+            {
+              if v.alias != _|_ { object +"\n  objectAlias: " + v.alias }
+              if v.alias == _|_ { object }
+            }
         },
     ]
 
@@ -73,6 +77,8 @@ template: {
         name: string
         // +usage="secret" (default).  Or "key" or "cert" if key contains a certificate - see https://azure.github.io/secrets-store-csi-driver-provider-azure/docs/configurations/getting-certs-and-keys/#how-to-obtain-the-certificate
         type: *"secret" | "key" | "cert"
+        // +usage=changed name to use for mounted secret file, if omitted, will be value of name
+        alias?: string
       }]
       // +usage=The Azure KeyVault to connect to
       keyvaultName:           string
