@@ -182,6 +182,14 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted(rdsConfName)
 	})
 
+	It("Test dedicated kubernetes", func() {
+		applyApp("dedecated-kubernetes.yaml")
+		verifyConfigurationAvailable("sample-ack")
+		By("Delete application that create ACK")
+		deleteApp("dedecated-kubernetes.yaml")
+		verifyConfigurationDeleted("sample-ack")
+	})
+
 	It("Test ECS", func() {
 		applyApp("ecs.yaml")
 		verifyConfigurationAvailable("sample-ecs")
