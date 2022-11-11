@@ -2,7 +2,7 @@
 	attributes: {
 		podDisruptive: false
 	}
-	description: "Patch labels for pod created by workload define in helm chart"
+	description: "Patch labels of Pods created by workloads defined in Helm Charts."
 	labels: {
 		"ui-hidden": "true"
 	}
