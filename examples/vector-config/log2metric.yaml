@@ -12,7 +12,7 @@ spec:
         files:
           - /path/to/file.log
         parseMode: json
-        # parseMode: true # Uncomment this line to print structure of parsed event to stdout
+        # parseDebug: true # Uncomment this line to print structure of parsed event to stdout
         # internalMetrics: true # Uncomment this line to scrape internal metrics periodically
         streams:
           - metrics:
