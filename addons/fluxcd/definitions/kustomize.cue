@@ -24,7 +24,12 @@ template: {
 				if parameter.repoType == "oss" {
 					kind: "Bucket"
 				}
-				name:      context.name
+				if parameter.sourceName == _|_ {
+					name: context.name
+				}
+				if parameter.sourceName != _|_ {
+					name: parameter.sourceName
+				}
 				namespace: context.namespace
 			}
 			path:    parameter.path
@@ -38,42 +43,44 @@ template: {
 	}
 
 	outputs: {
-		repo: {
-			apiVersion: "source.toolkit.fluxcd.io/v1beta2"
-			metadata: {
-				name:      context.name
-				namespace: context.namespace
-			}
-			if parameter.repoType == "git" {
-				kind: "GitRepository"
-				spec: {
-					url: parameter.url
-					if parameter.git.branch != _|_ {
-						ref: branch: parameter.git.branch
-					}
-					if parameter.git.provider != _|_ {
-						if parameter.git.provider == "GitHub" {
-							gitImplementation: "go-git"
-						}
-						if parameter.git.provider == "AzureDevOps" {
-							gitImplementation: "libgit2"
-						}
-					}
-					_secret
-					_sourceCommonArgs
+		if parameter.sourceName == _|_ {
+			repo: {
+				apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+				metadata: {
+					name:      context.name
+					namespace: context.namespace
 				}
-			}
-			if parameter.repoType == "oss" {
-				kind: "Bucket"
-				spec: {
-					endpoint:   parameter.url
-					bucketName: parameter.oss.bucketName
-					provider:   parameter.oss.provider
-					if parameter.oss.region != _|_ {
-						region: parameter.oss.region
+				if parameter.repoType == "git" {
+					kind: "GitRepository"
+					spec: {
+						url: parameter.url
+						if parameter.git.branch != _|_ {
+							ref: branch: parameter.git.branch
+						}
+						if parameter.git.provider != _|_ {
+							if parameter.git.provider == "GitHub" {
+								gitImplementation: "go-git"
+							}
+							if parameter.git.provider == "AzureDevOps" {
+								gitImplementation: "libgit2"
+							}
+						}
+						_secret
+						_sourceCommonArgs
 					}
-					_secret
-					_sourceCommonArgs
+				}
+				if parameter.repoType == "oss" {
+					kind: "Bucket"
+					spec: {
+						endpoint:   parameter.url
+						bucketName: parameter.oss.bucketName
+						provider:   parameter.oss.provider
+						if parameter.oss.region != _|_ {
+							region: parameter.oss.region
+						}
+						_secret
+						_sourceCommonArgs
+					}
 				}
 			}
 		}
@@ -209,6 +216,9 @@ template: {
 		secretRef?: string
 		// +usage=The timeout for operations like download index/clone repository, optional
 		timeout?: string
+		// +usage=The name of the source already existed
+		sourceName?: string
+
 		git?: {
 			// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
 			branch: string
