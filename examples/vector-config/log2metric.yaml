@@ -6,7 +6,7 @@ metadata:
 spec:
   components:
     - name: gateway-monitor
-      type: vector-config-log2metric
+      type: log2metric
       properties:
         source: file
         files:
