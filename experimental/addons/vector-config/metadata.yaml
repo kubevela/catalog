@@ -1,0 +1,18 @@
+name: vector-config
+version: v0.1.0
+description: Vector is a lightweight, ultra-fast tool for building observability pipelines.
+url: https://vector.dev/
+
+tags:
+ - Observability
+ - Prometheus
+ - Metrics
+ - Logging
+
+invisible: false
+
+dependencies:
+  - name: loki
+
+system:
+  vela: ">=v1.6.0-beta.1"
