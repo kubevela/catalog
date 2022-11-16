@@ -1,8 +1,8 @@
 import ("strings")
 
-"vector-config-log2metric": {
+"vector-log2metric": {
 	type: "component"
-	attributes: {}
+	attributes: workload: type: "autodetects.core.oam.dev"
 }
 
 template: {
