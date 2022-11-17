@@ -95,7 +95,7 @@ template: {
 				}
 				spec: {
 					image:    parameter.imageRepository.image
-					interval: parameter.pullInterval
+					interval: parameter.imageRepository.interval
 					if parameter.imageRepository.secretRef != _|_ {
 						secretRef: name: parameter.imageRepository.secretRef
 					}
@@ -126,7 +126,7 @@ template: {
 					namespace: context.namespace
 				}
 				spec: {
-					interval: parameter.pullInterval
+					interval: parameter.imageRepository.interval
 					sourceRef: {
 						kind: "GitRepository"
 						name: context.name
@@ -207,6 +207,8 @@ template: {
 			}
 			// +usage=The image url
 			commitMessage?: string
+			// +uasge=Interval is the length of time to wait between scans of the image repository.
+			interval: *"5m" | string
 		}
 		// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
 		pullInterval: *"5m" | string
