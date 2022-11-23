@@ -1,10 +1,12 @@
 "prometheus-scrape": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
+	attributes: {
+		podDisruptive: false
+		appliesToWorkloads: ["*"]
+	}
 	description: "Expose port and allow prometheus to scrape the service."
-	labels: "ui-hidden": "true"
-	type: "trait"
+	type:        "trait"
 }
 
 template: {
@@ -36,7 +38,9 @@ template: {
 		port: *8080 | int
 		// +usage=Specify the path to be scraped
 		path: *"/metrics" | string
+		// +usage=Specify the selector of the service. In most cases, you don't need to set it.
 		selector?: [string]: string
+		// +usage=Specify the service type.
 		type: *"ClusterIP" | string
 	}
 }
