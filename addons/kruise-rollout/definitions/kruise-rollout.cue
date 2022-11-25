@@ -5,7 +5,7 @@
 	description: "Rollout workload by kruise controller."
 	attributes: {
 		podDisruptive: true
-		appliesToWorkloads: ["autodetects.core.oam.dev"]
+		appliesToWorkloads: ["*"]
 		status: {
 			customStatus: #"""
 				message: context.outputs.rollout.status.message
@@ -113,12 +113,12 @@ template: {
 								if parameter.auto {
 									duration: 0
 								}
-								if parameter.stepPartition != _|_  {
-									if k <= parameter.stepPartition - 1 {
-									    duration: 0
+								if parameter.stepPartition != _|_ {
+									if k <= parameter.stepPartition-1 {
+										duration: 0
 									}
 								}
-								if !parameter.auto && v.duration != _|_ && parameter.stepPartition == _|_{
+								if !parameter.auto && v.duration != _|_ && parameter.stepPartition == _|_ {
 									duration: v.duration
 								}
 							}
