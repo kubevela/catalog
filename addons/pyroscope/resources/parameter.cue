@@ -18,23 +18,23 @@ parameter: {
 	"ingress.tls": *[] | [...string]
 
 	// +usage=Specify persistence access modes
- 	"persistence.accessModes": *"ReadWriteOnce" | string
- 	// +usage=Specify use persistent volume to store data
-  "persistence.enabled": *false | bool
-  // +usage=Specify persistentVolumeClaim finalizers
-  "persistence.finalizers": *["kubernetes.io/pvc-protection"] | [...string]
-  // +usage=Specify size of persistent volume claim
-  "persistence.size": *"10Gi" | string
+	"persistence.accessModes": *"ReadWriteOnce" | string
+	// +usage=Specify use persistent volume to store data
+	"persistence.enabled": *false | bool
+	// +usage=Specify persistentVolumeClaim finalizers
+	"persistence.finalizers": *["kubernetes.io/pvc-protection"] | [...string]
+	// +usage=Specify size of persistent volume claim
+	"persistence.size": *"10Gi" | string
 
-  // +usage=Specify pyroscope server configuration. Please refer to https://pyroscope.io/docs/server-configuration
-	"pyroscopeConfigs":*{} | #map
+	// +usage=Specify pyroscope server configuration. Please refer to https://pyroscope.io/docs/server-configuration
+	"pyroscopeConfigs": *{} | #map
 
 	// +usage=Specify extra rules for created cluster role
 	"rbac.clusterRole.extraRules": *[] | [...string]
 	// +usage=Specify cluster role name. If not set, the fully qualified app name is used
 	"rbac.clusterRole.name": *"" | string
 	// +usage=Specify cluster role binding name. If not set, the fully qualified app name is used
-	"rbac.clusterRoleBinding.name":*"" | string
+	"rbac.clusterRoleBinding.name": *"" | string
 	// +usage=Specify creates Pyroscope cluster role and binds service account to it; requires service account to be created
 	"rbac.create": *false | bool
 
@@ -45,16 +45,16 @@ parameter: {
 	// +usage=Specify create service account
 	"serviceAccount.create": *true | bool
 	// +usage=Specify service account name to use, when empty will be set to created account if serviceAccount.create is set else to default
-	"serviceAccount.name": * "" | string
+	"serviceAccount.name": *"" | string
 }
 
 #host: [...{
-	"host": *"chart-example.local" | string
+	"host":  *"chart-example.local" | string
 	"paths": #paths
 }]
 
 #paths: [...{
-	"path": *"/" | string
+	"path":     *"/" | string
 	"pathType": *"Prefix" | string
 }]
 
