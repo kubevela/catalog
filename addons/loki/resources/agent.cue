@@ -56,7 +56,7 @@ if parameter.agent == "vector" {
 		agentComponents: [vector, vectorConfig, eventLogger]
 	}
 	if parameter.stdout == "" {
-	  agentComponents: [vector, vectorConfig, vectorController, vectorControllerExtraResources, eventLogger]
+		agentComponents: [vector, vectorConfig, vectorController, vectorControllerExtraResources, eventLogger]
 	}
 }
 

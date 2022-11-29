@@ -34,4 +34,7 @@ parameter: {
 	customConfig?: string
 	// +usage=If specified, thanos sidecar will be attached and ports will be exposed
 	thanos: *false | bool
+
+	// +usage=The interval for scraping pods, services, endpoints.
+	scrapeInterval: *"15s" | =~"^([1-9][0-9]?)(s|m)$"
 }
