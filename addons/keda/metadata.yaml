@@ -1,0 +1,10 @@
+name: keda
+tags:
+  - Scaler
+  - AutoScaler
+version: 2.8.2
+dependencies:
+  - name: fluxcd
+description: An AutoScaler addon for KubeVela.
+icon: "https://keda.sh/img/logos/keda-horizontal-color.png"
+invisible: false
