@@ -12,6 +12,8 @@ harbor: {
 		releaseName:     "harbor"
 		values: {
 			expose: type: parameter.serviceType
+			expose: tls: enabled: false
+			externalURL: parameter.externalURL
 		}
 	}
 }
