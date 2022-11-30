@@ -4,37 +4,51 @@ This addon is built based [Pyroscope](https://github.com/pyroscope-io/pyroscope)
 
 ## install
 
-```shell
-vela addon enable pyroscope
+Add experimental registry
+
 ```
-After enable pyroscope successfully, you can execute command to expose the port `4040` for Dashboard UI.
+vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
+```
+
+Enable this addon:
 ```shell
+vela addon enable experimental/pyroscope service.type=NodePort
+```
+
+After enable pyroscope successfully, you can execute command to expose the port `4040` for Dashboard UI.
+
+- Get the endpoint by:
+
+```shell
+vela status addon-pyroscope --endpoint -n vela-system
+```
+
+- You can also use port-forward if you don't have accessible IP
+
+```
 vela port-forward addon-pyroscope -n vela-system
 ```
 
 # How to start
+
 Use a component typed webservice to start, keep the following to pyroscope-demo.yaml, then vela up -f app-demo.yaml
+
 ```yaml
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: pyroscope-app
-  namespace: fourier
 spec:
   components:
     - name: pyroscope-comp-01
       type: webservice
       properties:
-        image: nginx:latest
-        ports:
-          - expose: true
-            port: 80
-            protocol: TCP
+        image: <your-pyroscope-demo-image>
         imagePullPolicy: IfNotPresent
       traits:
         - type: pyroscope
           properties:
-            server: "http://pyroscope-server:9084"
+            server: "<pyroscope-ip-port>"
             logger: "pyroscope.StandardLogger"
             appName: "pyroscope-test"
         - type: scaler
