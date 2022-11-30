@@ -4,8 +4,15 @@ This addon is built based [Pyroscope](https://github.com/pyroscope-io/pyroscope)
 
 ## install
 
+Add experimental registry
+
+```
+vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
+```
+
+Enable this addon:
 ```shell
-vela addon enable pyroscope service.type=NodePort
+vela addon enable experimental/pyroscope service.type=NodePort
 ```
 
 After enable pyroscope successfully, you can execute command to expose the port `4040` for Dashboard UI.

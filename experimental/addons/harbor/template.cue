@@ -25,7 +25,7 @@ output: {
 		}]
 		workflow: steps: [{
 			type: "deploy"
-			name: "deploy-ck"
+			name: "deploy-harbor"
 			properties: policies: ["deploy-topology"]
 		}]
 	}
