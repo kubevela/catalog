@@ -41,7 +41,7 @@ parameter: {
 	// +usage=Specify kubernetes port where service is exposed
 	"service.port": *4040 | int
 	// +usage=Specify service type
-	"service.type": *"ClusterIP" | string
+	"serviceType": *"ClusterIP" | string
 	// +usage=Specify create service account
 	"serviceAccount.create": *true | bool
 	// +usage=Specify service account name to use, when empty will be set to created account if serviceAccount.create is set else to default

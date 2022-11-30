@@ -1,11 +1,11 @@
 pyroscope: {
-        attributes: {
-                appliesToWorkloads: ["*"]
-                podDisruptive:   false
-        }
-        description: ""
-        labels: {}
-        type: "trait"
+	attributes: {
+		appliesToWorkloads: ["*"]
+		podDisruptive: false
+	}
+	description: ""
+	labels: {}
+	type: "trait"
 }
 
 template: {
@@ -13,26 +13,26 @@ template: {
 	patch: spec: template: spec: containers: [{
 		env: [
 			{
-					name: "server"
-					value: parameter.server
-		 	},
-		 	{
-					name: "appName"
-					if parameter.appName != _|_ {
- 						value: parameter.appName
-					}
-					if parameter.appName == _|_ {
- 						value: context.name
-					}
-		 	},
-		 	{
-					name: "logger"
-					value: parameter.logger
-		 	}]
-	},...]
+				name:  "PYROSCOPE_SERVER_ADDRESS"
+				value: parameter.server
+			},
+			{
+				name: "PYROSCOPE_APP_NAME"
+				if parameter.appName != _|_ {
+					value: parameter.appName
+				}
+				if parameter.appName == _|_ {
+					value: context.name
+				}
+			},
+			{
+				name:  "PYROSCOPE_LOGGER"
+				value: parameter.logger
+			}]
+	}, ...]
 	parameter: {
-		server: string
+		server:   string
 		appName?: string
-		logger: string
+		logger:   string
 	}
 }
