@@ -138,9 +138,7 @@ kubectl get deploy frontend -w
 
 Video:
 
-
 https://user-images.githubusercontent.com/30918851/205019270-45f1ed87-9949-44db-afbc-f04283f342d5.mp4
-
 
 
 The triggers and their spec aligns with [the official docs](https://keda.sh/docs/2.8/scalers/).
