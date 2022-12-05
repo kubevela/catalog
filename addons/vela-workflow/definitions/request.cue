@@ -5,7 +5,9 @@ import (
 
 request: {
 	alias: ""
-	annotations: {}
+	annotations: {
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/workflow/main/examples/workflow-run/request.yaml"
+	}
 	attributes: {}
 	description: "Send request to the url"
 	labels: {}

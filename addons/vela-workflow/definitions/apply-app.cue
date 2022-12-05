@@ -5,7 +5,9 @@ import (
 
 "apply-app": {
 	alias: ""
-	annotations: {}
+	annotations: {
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/workflow/main/examples/workflow-run/apply-applications.yaml"
+	}
 	attributes: {}
 	description: "Apply application from data or ref to the cluster"
 	labels: {

@@ -6,7 +6,9 @@ import (
 
 "read-app": {
 	alias: ""
-	annotations: {}
+	annotations: {
+		"definition.oam.dev/example-url": "https://raw.githubusercontent.com/kubevela/workflow/main/examples/workflow-run/apply-applications.yaml"
+	}
 	attributes: {}
 	description: "Read application from the cluster"
 	labels: {

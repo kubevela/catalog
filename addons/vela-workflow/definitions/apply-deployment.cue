@@ -6,7 +6,7 @@ import (
 	alias: ""
 	annotations: {}
 	attributes: {}
-	description: ""
+	description: "Apply deployment with specified image and cmd."
 	labels: {}
 	type: "workflow-step"
 }
