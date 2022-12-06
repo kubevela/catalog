@@ -51,12 +51,7 @@ template: {
 		}
 	}
 	check: op.#ConditionalWait & {
-		if apply.value.status != _|_ && apply.value.status.apply != _|_ {
-			continue: apply.value.status.apply.state == "Available"
-		}
-		if apply.value.status == _|_ || apply.value.status.apply != _|_ {
-			continue: false
-		}
+		continue: apply.value.status != _|_ && apply.value.status.apply != _|_ && apply.value.status.apply.state == "Available"
 	}
 	parameter: {
 		// +usage=specify the source of the terraform configuration
