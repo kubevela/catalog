@@ -135,5 +135,9 @@ Use the following command to check the replica change:
 ```
 kubectl get deploy frontend -w
 ```
+**video demo**
 
-The triggers and their spec aligns with [the official docs](https://keda.sh/docs/2.8/scalers/).
+<video src="https://user-images.githubusercontent.com/30918851/205060056-65135b93-cdea-4b34-95b1-57a72c65ee02.mp4"></video>
+
+
+The triggers and their spec align with [the official docs](https://keda.sh/docs/2.8/scalers/).
