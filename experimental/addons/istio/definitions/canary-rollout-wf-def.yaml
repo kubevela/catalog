@@ -52,7 +52,7 @@ spec:
                                    subsets: [
                                         for i, t in parameter.traffic.weightedTargets {
                                                 name: t.revision
-                                                labels: {"app.oam.dev/revision": t.revision}
+                                                labels: {"service.istio.io/canonical-name": t.revision}
                                         },
                                 ]}
                         }

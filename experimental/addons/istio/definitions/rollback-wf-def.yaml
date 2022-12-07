@@ -60,7 +60,7 @@ spec:
                 subsets: [
                   {
                     name: _sourceRevision
-                    labels: {"app.oam.dev/revision": _sourceRevision}
+                    labels: {"service.istio.io/canonical-name": _sourceRevision}
                   },
                 ]
               }
