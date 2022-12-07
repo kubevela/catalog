@@ -24,7 +24,7 @@ template: {
 				credentials: {
 					source: "Secret"
 					secretRef: {
-						namespace: "vela-system"
+						namespace: context.namespace
 						name:      context.name
 						key:       "credentials"
 					}
