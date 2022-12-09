@@ -16,10 +16,17 @@ commonPolicies: [{
 	properties: rules: [{selector: resourceTypes: ["Namespace"]}]
 }, {
 	type: "garbage-collect"
-	name: "ignore-recycle-pvc"
+	name: "ignore-recycle-pvc-and-crd"
 	properties: rules: [{
-		selector: resourceTypes: ["PersistentVolumeClaim"]
+		selector: resourceTypes: ["PersistentVolumeClaim", "CustomResourceDefinition"]
 		strategy: "never"
+	}]
+}, {
+	type: "apply-once"
+	name: "not-keep-crd"
+	properties: rules: [{
+		selector: resourceTypes: ["CustomResourceDefinition"]
+		strategy: path: ["*"]
 	}]
 }, {
 	type: "topology"
