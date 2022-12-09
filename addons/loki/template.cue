@@ -24,20 +24,6 @@ output: {
 				loki.name,
 				if parameter.storage != _|_ {lokiStorage.name},
 			]
-		}, {
-			type: "garbage-collect"
-			name: "not-gc-crd"
-			properties: rules: [{
-				selector: resourceTypes: ["CustomResourceDefinition"]
-				strategy: "never"
-			}]
-		}, {
-			type: "apply-once"
-			name: "not-keep-crd"
-			properties: rules: [{
-				selector: resourceTypes: ["CustomResourceDefinition"]
-				strategy: path: ["*"]
-			}]
 		}] + agentPolicies
 
 		workflow: steps: [{
