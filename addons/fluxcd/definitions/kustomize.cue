@@ -3,8 +3,8 @@ kustomize: {
 	description: "kustomize can fetching, building, updating and applying Kustomize manifests from git repo."
 	type:        "component"
 	annotations: {
-		 "addon.oam.dev/ignore-without-component": "fluxcd-kustomize-controller"
-   }
+		"addon.oam.dev/ignore-without-component": "fluxcd-kustomize-controller"
+	}
 }
 
 template: {
@@ -129,7 +129,12 @@ template: {
 					interval: parameter.imageRepository.interval
 					sourceRef: {
 						kind: "GitRepository"
-						name: context.name
+						if parameter.sourceName == _|_ {
+							name: context.name
+						}
+						if parameter.sourceName != _|_ {
+							name: parameter.sourceName
+						}
 					}
 					git: {
 						checkout: ref: branch: parameter.git.branch
