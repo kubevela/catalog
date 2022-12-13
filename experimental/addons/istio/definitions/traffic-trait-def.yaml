@@ -58,7 +58,7 @@ spec:
                   host: context.name
                   subsets: [{
                      name: context.revision
-                     labels: {"app.oam.dev/revision": context.revision}
+                     labels: {"service.istio.io/canonical-name": context.revision}
                   }]
                }
         }
