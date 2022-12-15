@@ -1,0 +1,15 @@
+name: process-exporter
+version: v0.1.0
+description: Prometheus exporter that mines /proc to report on selected processes.
+url: https://github.com/ncabatoff/process-exporter
+
+tags:
+  - Observability
+  - Kubernetes
+  - Metrics
+  - Prometheus
+
+invisible: false
+
+system:
+  vela: ">=v1.6.0-beta.1"
