@@ -1,6 +1,6 @@
 #   Istio
 
-This addon provides istio support for vela rollout.
+This addon provides istio for service mesh.
 
 ##  Directory Structure
 ```shell
