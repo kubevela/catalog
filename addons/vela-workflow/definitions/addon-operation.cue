@@ -33,11 +33,11 @@ template: {
 				template: {
 					metadata: {
 						labels: {
-							"workflowrun.oam.dev/name":    context.name
-							"workflowrun.oam.dev/session": context.stepSessionID
+							"workflow.oam.dev/name":    context.name
+							"workflow.oam.dev/session": context.stepSessionID
 						}
 						annotations: {
-							"workflowrun.oam.dev/step": context.stepName
+							"workflow.oam.dev/step": context.stepName
 						}
 					}
 					spec: {
@@ -66,8 +66,8 @@ template: {
 	log: op.#Log & {
 		source: {
 			resources: [{labelSelector: {
-				"workflowrun.oam.dev/name":    context.name
-				"workflowrun.oam.dev/session": context.stepSessionID
+				"workflow.oam.dev/name":    context.name
+				"workflow.oam.dev/session": context.stepSessionID
 			}}]
 		}
 	}
