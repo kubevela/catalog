@@ -9,7 +9,7 @@ spec:
       type: webservice
       properties:
         port: 8000
-        image: docker.io/nginxinc/nginx-unprivileged:latest
+        image: fogdong/simple-web-demo:v1
   workflow:
     steps:
       - name: apply-comp
@@ -22,7 +22,8 @@ spec:
           - name: image-scan-result
             valueFrom: result.message
         properties:
-          image: "docker.io/nginxinc/nginx-unprivileged:latest"
+          resource:
+            name: frontend
       - name: notification
         type: notification
         inputs:
@@ -32,4 +33,4 @@ spec:
         properties:
           slack:
             url:
-              value: <slack-url>
+              value: <your slack>

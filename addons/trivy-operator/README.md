@@ -2,7 +2,7 @@
 
 # description
 - This addon provides a vulnerability scanner that continuously scans containers deployed in a Kubernetes cluster.
-- More Info is here: https://github.com/devopstales/trivy-operator/blob/main/README.md
+- For detail, please checkout [AquaSecurity Trivy Operator](https://github.com/aquasecurity/trivy-operator).
     
 ## Install
 
@@ -30,18 +30,7 @@ local     ─┬─ -            ─── Namespace/trivy-system               
                                                                                                          Status: stored artifact for revision 'd120de77328f9ccbaaf5bfe8737220cac718bf34e98493d63b94ae20a4d0b92d'
 ```
 
-Create a new namespace for image-scan or use your exist namespace:
-
-```shell
-vela env init image-scan --namespace image-scan
-```
-
-Set the scan label for your namespace:
-
-```shell
-vela env set image-scan --labels trivy-operator-validation=true
-vela env set image-scan --labels trivy-scan=true
-```
+Aqua Trivy Operator will scan all the workloads in the cluster.
 
 Apply an application to scan your image, following application will first deploy a `webservice` with a risky image, then scan the image and send the image result with notification.
 
@@ -52,14 +41,14 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: example
-  namespace: image-scan
+  namespace: default
 spec:
   components:
     - name: frontend
       type: webservice
       properties:
         port: 8000
-        image: docker.io/nginxinc/nginx-unprivileged:latest
+        image: fogdong/simple-web-demo:v1
   workflow:
     steps:
       - name: apply-comp
@@ -72,7 +61,8 @@ spec:
           - name: image-scan-result
             valueFrom: result.message
         properties:
-          image: docker.io/nginxinc/nginx-unprivileged:latest
+          resource:
+            name: frontend
       - name: notification
         type: notification
         inputs:
@@ -82,7 +72,7 @@ spec:
         properties:
           slack:
             url:
-              value: <slack-url>
+              value: <your slack>
 ```
 
 Deploy this application:
@@ -97,10 +87,10 @@ Checkout the application status:
 $ vela status example
 About:
 
-  Name:      	example
-  Namespace: 	image-scan
-  Created at:	2022-11-04 12:04:10 +0800 CST
-  Status:    	running
+  Name:         example                      
+  Namespace:    default                      
+  Created at:   2022-12-22 16:12:11 +0800 CST
+  Status:       running                      
 
 Workflow:
 
@@ -109,23 +99,23 @@ Workflow:
   Suspend: false
   Terminated: false
   Steps
-  - id: dr6vd9i5dz
+  - id: z26279ngn1
     name: apply-comp
     type: apply-component
-    phase: succeeded
-  - id: skvs1l1m9z
+    phase: succeeded 
+  - id: 92xcnw1dvc
     name: image-scan
     type: trivy-check
-    phase: succeeded
-  - id: 3gvsx3bsc9
+    phase: succeeded 
+  - id: i64nsj12sg
     name: notification
     type: notification
-    phase: succeeded
+    phase: succeeded 
 
 Services:
 
-  - Name: frontend
-    Cluster: local  Namespace: image-scan
+  - Name: frontend  
+    Cluster: local  Namespace: default
     Type: webservice
     Healthy Ready:1/1
     No trait applied
@@ -133,22 +123,16 @@ Services:
 
 All the steps are successful! Trivy-operator will scan the image and send the result with CVE info to your slack channel like:
 
-![](../../examples/trivy-operator/trivy.png)
+![](../../examples/trivy-operator/aqua-trivy.png)
 
 ## More
 
-If you want to check out the scan data in raw, you can check the metrics of trivy:
+If you want to check out the scan data in raw, you can check the `vuln` in the cluster:
 
 ```shell
-kubectl port-forward service/trivy-system-trivy-system-helm-trivy-operator 9999:9115 -n trivy-system
-Forwarding from 127.0.0.1:9999 -> 9115
-Forwarding from [::1]:9999 -> 9115
-
-curl -s http://localhost:9115/metrics | grep trivy_vulnerabilities
-
-curl -s http://localhost:9115/metrics | grep ac_vulnerabilities 
+kubectl get vuln
 ```
 
 ## Reference
 
-https://github.com/devopstales/trivy-operator
+https://github.com/aquasecurity/trivy-operator

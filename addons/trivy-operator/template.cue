@@ -14,7 +14,7 @@ output: {
 					metadata: name: parameter.namespace
 				}]
 			},
-			trivyHelm,
+			aquaTrivyHelm,
 		]
 		policies: [
 			{
