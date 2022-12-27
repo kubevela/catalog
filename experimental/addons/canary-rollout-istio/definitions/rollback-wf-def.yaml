@@ -9,31 +9,21 @@ spec:
       template: |-
         import ("vela/op")
 
-        parameter: {...}
+        parameter: {
+          rollbackVersion: string
+        }
 
         comps: op.#Load
         compNames: [ for name, c in comps.value {name}]
         firstcomp: compNames[0]
-
-        rolloutObj: op.#Read & {
-          value: {
-            apiVersion: "standard.oam.dev/v1alpha1"
-            kind:       "Rollout"
-            metadata: {
-              name:      firstcomp
-              namespace: context.namespace
-            }
-          }
-        }
-
-        _sourceRevision: rolloutObj.value.status.LastSourceRevision
 
         apply: op.#ApplyComponent & {
           value: comps.value[firstcomp]
           patch: {
             traits: "rollout": {
               spec: {
-                targetRevisionName: _sourceRevision
+                // +patchStrategy=retainKeys
+                targetRevisionName: parameter.rollbackVersion
               }
             }
 
@@ -45,7 +35,7 @@ spec:
                     route: [{
                       destination: {
                         host:   firstcomp
-                        subset: _sourceRevision
+                        subset: parameter.rollbackVersion
                       }
                       weight: 100
                     }]
@@ -59,8 +49,8 @@ spec:
                 host: firstcomp
                 subsets: [
                   {
-                    name: _sourceRevision
-                    labels: {"service.istio.io/canonical-name": _sourceRevision}
+                    name: parameter.rollbackVersion
+                    labels: {"service.istio.io/canonical-name": parameter.rollbackVersion}
                   },
                 ]
               }
