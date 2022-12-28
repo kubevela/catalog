@@ -1,0 +1,9 @@
+description: An cron hpa addon for KubeVela.
+icon: ""
+invisible: false
+name: cronhpa
+tags:
+  - Scaler
+  - AutoScaler
+  - Cron
+version: 1.4.1

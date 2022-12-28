@@ -1,0 +1,131 @@
+- sort: 100
+  label: ImagePullPolicy
+  description: Specify the imagePullPolicy of the image
+  validate:
+    required: true
+    defaultValue: Always
+    immutable: false
+  jsonKey: imagePullPolicy
+  uiType: Input
+- sort: 101
+  label: ImageTag
+  description: Specify the image tag of cronhpa controller, eg. "v1.4.1"
+  validate:
+    required: true
+    defaultValue: v1.4.1-b8cd52c-aliyun
+    immutable: false
+  jsonKey: imageTag
+  uiType: Input
+- sort: 102
+  label: Namespace
+  description: Specify the namespace to install
+  validate:
+    required: true
+    defaultValue: vela-system
+    immutable: false
+  jsonKey: namespace
+  uiType: Input
+- sort: 103
+  label: Registry
+  description: Specify the image registry of cronhpa controller, eg. "registry.aliyuncs.com/acs"
+  validate:
+    required: true
+    defaultValue: registry.aliyuncs.com
+    immutable: false
+  jsonKey: registry
+  uiType: Input
+- sort: 104
+  label: Replicas
+  description: Specify the replicas.
+  validate:
+    required: true
+    defaultValue: 1
+    immutable: false
+  jsonKey: replicas
+  uiType: Number
+- sort: 105
+  label: Repository
+  description:  Specify the image repository of cronhpa controller, eg. "kubernetes-cronhpa-controller"
+  validate:
+    required: true
+    defaultValue: acs/kubernetes-cronhpa-controller
+    immutable: false
+  jsonKey: repository
+  uiType: Input
+- sort: 106
+  label: Resources
+  description: Specifies the attributes of the resource required
+  validate:
+    required: true
+    immutable: false
+  jsonKey: resources
+  uiType: Group
+  subParameters:
+    - sort: 100
+      label: Limits
+      description: ''
+      validate:
+        required: true
+        immutable: false
+      jsonKey: limits
+      uiType: Group
+      subParameters:
+        - sort: 100
+          label: Cpu
+          description: ''
+          validate:
+            required: true
+            defaultValue: 1
+            immutable: false
+          jsonKey: cpu
+          uiType: Number
+        - sort: 101
+          label: Memory
+          description: ''
+          validate:
+            required: true
+            defaultValue: 100Mi
+            immutable: false
+          jsonKey: memory
+          uiType: Input
+    - sort: 101
+      label: Requests
+      description: ''
+      validate:
+        required: true
+        immutable: false
+      jsonKey: requests
+      uiType: Group
+      subParameters:
+        - sort: 100
+          label: Cpu
+          description: ''
+          validate:
+            required: true
+            defaultValue: 1
+            immutable: false
+          jsonKey: cpu
+          uiType: Number
+        - sort: 101
+          label: Memory
+          description: ''
+          validate:
+            required: true
+            defaultValue: 100Mi
+            immutable: false
+          jsonKey: memory
+          uiType: Input
+- sort: 107
+  label: Clusters
+  description: Specify the clusters to install
+  validate:
+    immutable: false
+  jsonKey: clusters
+  uiType: Strings
+- sort: 108
+  label: ImagePullSecrets
+  description: Specify the names of imagePullSecret for private image registry, eg. "{a,b,c}"
+  validate:
+    immutable: false
+  jsonKey: imagePullSecrets
+  uiType: Strings
