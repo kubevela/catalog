@@ -27,6 +27,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/pkg/errors"
 	"sigs.k8s.io/yaml"
 )
 
@@ -49,11 +50,11 @@ const (
 )
 
 func main() {
-	err := readPendingAddons()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s", err)
-		os.Exit(1)
-	}
+	//err := readPendingAddons()
+	//if err != nil {
+	//	fmt.Fprintf(os.Stderr, "%s", err)
+	//	os.Exit(1)
+	//}
 	changedFile := os.Args[1:]
 	changedAddon := determineNeedEnableAddon(changedFile)
 	if len(changedAddon) == 0 {
@@ -262,6 +263,11 @@ func enableOneAddon(dir string) error {
 		checkAppStatus(dir)
 		return err
 	}
+	fmt.Printf("Enable addon %s successfully, try to test definition in the addon \n", dir)
+	err = testDefinitionsInAddons(dir)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed tp test definition of addon %s", dir))
+	}
 	return nil
 }
 
@@ -351,4 +357,32 @@ func convertToString(data []byte) string {
 		}
 		return -1
 	}, string(data))
+}
+
+func testDefinitionsInAddons(addons string) error {
+	cmd := exec.Command("go", "test", "-v", "test/e2e-test/addon-test/definition-test/suit_test.go")
+	fmt.Println(cmd.String())
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, fmt.Sprintf("AFFECTED_ADDONS=%s", addons))
+	stdout, err := cmd.StdoutPipe()
+	cmd.Stderr = cmd.Stdout
+	if err != nil {
+		panic(err)
+	}
+	if err = cmd.Start(); err != nil {
+		fmt.Println(err)
+	}
+	for {
+		tmp := make([]byte, 4096)
+		_, err := stdout.Read(tmp)
+		fmt.Print(string(tmp))
+		if err != nil {
+			break
+		}
+	}
+	if err = cmd.Wait(); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }
