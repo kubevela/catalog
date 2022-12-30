@@ -47,14 +47,15 @@ const (
 	regexPattern         = "^addons.*"
 	globalRexPattern     = "^.github.*|Makefile|.*.go"
 	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
+	defTestDir           = "test/e2e-test/addon-test/definition-test/"
 )
 
 func main() {
-	//err := readPendingAddons()
-	//if err != nil {
-	//	fmt.Fprintf(os.Stderr, "%s", err)
-	//	os.Exit(1)
-	//}
+	err := readPendingAddons()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+		os.Exit(1)
+	}
 	changedFile := os.Args[1:]
 	changedAddon := determineNeedEnableAddon(changedFile)
 	if len(changedAddon) == 0 {
@@ -360,6 +361,15 @@ func convertToString(data []byte) string {
 }
 
 func testDefinitionsInAddons(addons string) error {
+	addonName := filepath.Base(addons)
+	_, err := os.Stat(defTestDir + addonName)
+	if os.IsNotExist(err) {
+		fmt.Println("There is no test cases for this addon, skip the test.")
+		return nil
+	}
+	if err != nil {
+		return err
+	}
 	cmd := exec.Command("go", "test", "-v", "test/e2e-test/addon-test/definition-test/suit_test.go")
 	fmt.Println(cmd.String())
 	cmd.Env = os.Environ()

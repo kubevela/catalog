@@ -65,11 +65,11 @@ var _ = BeforeSuite(func(done Done) {
 	}
 	By("Finished setting up test environment")
 	close(done)
-})
+}, 30)
 
 var _ = AfterSuite(func() {
 	By("Tearing down test environment")
-	// TearDownSuite()
+
 	By("Finished tearing down test environment")
 })
 
