@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/Masterminds/semver/v3 v3.1.1
 	github.com/Masterminds/sprig/v3 v3.2.2
+	github.com/fatih/color v1.12.0
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/oam-dev/kubevela-core-api v1.5.2
 	github.com/oam-dev/terraform-controller v0.4.6
@@ -13,6 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	helm.sh/helm/v3 v3.7.2
 	k8s.io/apimachinery v0.23.1
+	k8s.io/client-go v0.23.1
 	sigs.k8s.io/controller-runtime v0.11.0
 	sigs.k8s.io/yaml v1.3.0
 )
@@ -74,6 +76,8 @@ require (
 	github.com/klauspost/compress v1.11.13 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mitchellh/copystructure v1.1.1 // indirect
 	github.com/mitchellh/reflectwalk v1.0.1 // indirect
@@ -142,7 +146,6 @@ require (
 	k8s.io/api v0.23.1 // indirect
 	k8s.io/apiserver v0.23.1 // indirect
 	k8s.io/cli-runtime v0.23.1 // indirect
-	k8s.io/client-go v0.23.1 // indirect
 	k8s.io/component-base v0.23.1 // indirect
 	k8s.io/klog v1.0.0 // indirect
 	k8s.io/klog/v2 v2.30.0 // indirect
