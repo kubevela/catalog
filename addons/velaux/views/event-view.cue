@@ -6,12 +6,28 @@ parameter: {
 	name:      string
 	namespace: string
 	cluster:   *"" | string
+	type:      string
+}
+
+schema: {
+	"deployment": {
+		apiVersion: "apps/v1"
+		kind:       "Deployment"
+	}
+	"statefulset": {
+		apiVersion: "apps/v1"
+		kind:       "StatefulSet"
+	}
+	"pod": {
+		apiVersion: "v1"
+		kind:       "Pod"
+	}
 }
 
 pod: ql.#Read & {
 	value: {
-		apiVersion: "apps/v1"
-		kind:       "Deployment"
+		apiVersion: schema[parameter.type].apiVersion
+		kind:       schema[parameter.type].kind
 		metadata: {
 			name:      parameter.name
 			namespace: parameter.namespace
@@ -22,8 +38,8 @@ pod: ql.#Read & {
 
 eventList: ql.#SearchEvents & {
 	value: {
-		apiVersion: "apps/v1"
-		kind:       "Deployment"
+		apiVersion: schema[parameter.type].apiVersion
+		kind:       schema[parameter.type].kind
 		metadata: pod.value.metadata
 	}
 	cluster: parameter.cluster
