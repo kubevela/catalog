@@ -102,7 +102,7 @@ var _ = Describe("Terraform Test", func() {
 					return fmt.Errorf("configuration %s is not available, current status %s", cfgName, config.Status.Apply.State)
 				}
 				return nil
-			}, 15*time.Minute, 2*time.Second).Should(Succeed())
+			}, 20*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	verifyConfigurationDeleted := func(cfgName string) {
@@ -183,10 +183,10 @@ var _ = Describe("Terraform Test", func() {
 	})
 
 	It("Test dedicated kubernetes", func() {
-		applyApp("dedecated-kubernetes.yaml")
+		applyApp("dedicated-kubernetes.yaml")
 		verifyConfigurationAvailable("sample-ack")
 		By("Delete application that create ACK")
-		deleteApp("dedecated-kubernetes.yaml")
+		deleteApp("dedicated-kubernetes.yaml")
 		verifyConfigurationDeleted("sample-ack")
 	})
 
