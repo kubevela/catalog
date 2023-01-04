@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: regular-check-ecs
+  name: regular-check-ack
 spec:
   components:
     - name: sample-ack
