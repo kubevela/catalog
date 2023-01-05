@@ -8,7 +8,6 @@ output: {
 		namespace: "vela-system"
 	}
 	spec: {
-		components: [adaptor, backstage]
-		policies: []
+		components: [adaptor, backstageapp]
 	}
 }

@@ -1,6 +1,6 @@
 package main
 
-backstage: {
+backstageapp: {
 	type: "webservice"
 	name: "backstage"
 	properties: {
