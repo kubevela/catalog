@@ -25,4 +25,6 @@ parameter: {
 	replicas: *1 | int
 	// +usage=Specify nodeport. This will be ignored if serviceType is not NodePort.
 	nodePort: *30000 | int
+	// +usage=Enable impersonation means impersonating the login user to request the KubeAPI.
+	enableImpersonation: true | *false
 }
