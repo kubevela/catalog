@@ -174,3 +174,24 @@ spec:
       dependsOn:
         - backstage-plugin-vela
 ```
+
+* You can remove the backstage app and enable the addon with plugin proxy only:
+	```	
+	vela addon enable backstage pluginOnly=true serviceType=NodePort
+	```	
+	Then you can run the backstage app in other place pointing the endpoint configured.
+  
+  Configure the `vela.host` and `backend.reading.allow` below, pointing to the kubevela plugin endpoint.
+  ```
+  vela:
+    host: "http://47.254.33.41:32505"
+    # frequency is the refresh rate for the Vela API, default to 60 seconds, the unit is seconds
+    frequency: 30
+    # timeout is the timeout limit for the Vela API, default to 600 seconds, the unit is seconds
+    timeout: 60
+
+  backend:
+    reading:
+      allow:
+        - host: 47.254.33.41:32505
+  ```      
