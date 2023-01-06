@@ -2,6 +2,11 @@
 
 This is a backstage addon for KubeVela.
 
+## Related Component Repo
+
+- [Backstage Plugin KubeVela](https://github.com/kubevela-contrib/backstage-plugin-kubevela)
+- [Backstage Demo App](https://github.com/wonderflow/vela-backstage-demo)
+
 ## Installation
 
 ```shell
