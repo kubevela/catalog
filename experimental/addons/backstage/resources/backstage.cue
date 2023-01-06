@@ -17,5 +17,12 @@ backstageapp: {
 			},
 		]
 	}
+	traits: [{
+		type: "resource"
+		properties: {
+			cpu:    parameter.backstageapp["cpu"]
+			memory: parameter.backstageapp["memory"]
+		}
+	}]
 	dependsOn: ["backstage-plugin-vela"]
 }

@@ -4,7 +4,7 @@ adaptor: {
 	type: "webservice"
 	name: "backstage-plugin-vela"
 	properties: {
-		image: "wonderflow/backstage-plugin-kubevela:v0.1"
+		image: "wonderflow/backstage-plugin-kubevela:v0.2"
 
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
@@ -26,6 +26,12 @@ adaptor: {
 				scope: "cluster"
 				{p}
 			}]
+		}
+	}, {
+		type: "resource"
+		properties: {
+			cpu:    parameter["cpu"]
+			memory: parameter["memory"]
 		}
 	}]
 }
