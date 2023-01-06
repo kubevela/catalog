@@ -2,8 +2,11 @@ info: string
 
 if !parameter.pluginOnly {
 	info: """
-		By default, the backstage app is strictly serving in the domain `127.0.0.1:7007`, you must build your own backstage app if you want to use it in other domains.
-		You can remove the backstage app and expose the service by:
+		By default, the backstage app is strictly serving in the domain `127.0.0.1:7007`, check it by:
+		            
+		    vela port-forward addon-backstage -n vela-system
+		
+		You can build your own backstage app if you want to use it in other domains. You can remove the backstage app and expose the service by:
 		
 		    vela addon enable backstage pluginOnly=true serviceType=NodePort
 		
