@@ -8,6 +8,10 @@ output: {
 		namespace: "vela-system"
 	}
 	spec: {
-		components: [adaptor, backstageapp]
+		components: [adaptor,
+			if !parameter.pluginOnly {
+				backstageapp
+			},
+		]
 	}
 }

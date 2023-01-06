@@ -6,5 +6,6 @@ parameter: {
 	name:        "addon-backstage"
 	// +usage=The clusters to install
 	clusters?: [...string]
-	image: *"wonderflow/backstage:v0.1" | string
+	image:      *"wonderflow/backstage:v0.1" | string
+	pluginOnly: *false | bool
 }
