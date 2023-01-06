@@ -1,0 +1,7 @@
+description: Backstage addon for KubeVela.
+icon: "https://backstage.io/logo_assets/svg/Icon_Teal.svg"
+invisible: false
+name: backstage
+tags:
+  - Backstage
+version: 1.0.0

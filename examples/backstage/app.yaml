@@ -1,0 +1,41 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: first-vela-app
+  annotations:
+    backstage.oam.dev/owner: "team:my-team"
+    backstage.oam.dev/domain: "vela-demo"
+    backstage.oam.dev/description: "This is a sample application."
+    backstage.oam.dev/title: "First Vela App"
+    backstage.oam.dev/tags: "first-demo, vela"
+spec:
+  components:
+    - name: express-server
+      type: webservice
+      properties:
+        image: oamdev/hello-world
+        ports:
+          - port: 8000
+            expose: true
+      traits:
+        - type: backstage
+          properties:
+            typeAlias: website
+            lifecycle: production
+            owner: wonderflow
+            description: "This is the hello world app."
+            title: "Hello World"
+            tags:
+              - "hello-world"
+            annotations:
+              backstage.io/view-url: https://github.com/kubevela-contrib/backstage-plugin-kubevela/blob/main/examples/app.yaml
+              backstage.io/edit-url: https://github.com/kubevela-contrib/backstage-plugin-kubevela/edit/main/examples/app.yaml
+              backstage.io/source-location: url:https://github.com/kubevela-contrib/backstage-plugin-kubevela
+              github.com/project-slug: kubevela-contrib/backstage-plugin-kubevela
+              github.com/team-slug: kubevela/maintainers
+            labels:
+              velaapp: demo
+            links:
+              - url: "https://kubevela.net/"
+                title: "vela-doc"
+                type: "docs"
