@@ -7,7 +7,7 @@ backstage: {
 		appliesToWorkloads: ["*"]
 		podDisruptive: false
 	}
-	description: "Mark backstage information to help better integration."
+	description: "Mark backstage component information to help better integration."
 	labels: {}
 	type: "trait"
 }
@@ -26,7 +26,9 @@ template: {
 
 	parameter: {
 		// +usage=Specify the type of this backstage component
-		typeAlias?: string
+		type?: string
+		// +usage=Specify the system of this backstage component
+		system?: string
 		// +usage=Specify the lifecycle of this backstage component
 		lifecycle?: string
 		// +usage=Specify the owner of this backstage component

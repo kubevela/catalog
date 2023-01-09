@@ -70,7 +70,7 @@ spec:
       traits:
         - type: backstage
           properties:
-            typeAlias: website
+            type: website
             lifecycle: production
             owner: wonderflow
             description: "This is the hello world app."
@@ -90,6 +90,41 @@ spec:
                 title: "vela-doc"
                 type: "docs"
 ```
+
+You can also config `backstage-location` as the trait, then it will sync the backstage entity from the location targets:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: vela-app-location
+  annotations:
+    backstage.oam.dev/owner: "vela-maintainers"
+    backstage.oam.dev/domain: "vela-backstage-demo"
+    backstage.oam.dev/description: "This is a sample application."
+    backstage.oam.dev/title: "Vela App Location"
+    backstage.oam.dev/tags: "backstage-location-demo, vela"
+spec:
+  components:
+    - name: express-server-2
+      type: webservice
+      properties:
+        image: oamdev/hello-world
+        ports:
+          - port: 8000
+            expose: true
+      traits:
+        - type: backstage-location
+          properties:
+            type: url
+            targets:
+              - "https://raw.githubusercontent.com/kubevela-contrib/backstage-plugin-kubevela/main/examples/backstage-group.yaml"
+              - "https://raw.githubusercontent.com/kubevela-contrib/backstage-plugin-kubevela/main/examples/backstage-user.yaml"
+              - "https://raw.githubusercontent.com/kubevela-contrib/backstage-plugin-kubevela/main/examples/backstage-domain.yaml"
+              - "https://raw.githubusercontent.com/kubevela-contrib/backstage-plugin-kubevela/main/examples/backstage-api.yaml"
+```
+
+>Please make sure your backstage app has the permission(`catalog.rules` and `backend.reading.allow`), check [this PR](https://github.com/wonderflow/vela-backstage-demo/pull/3/files) for details.
 
 ## How to build my own backstage app with this integration?
 

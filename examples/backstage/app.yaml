@@ -3,8 +3,8 @@ kind: Application
 metadata:
   name: first-vela-app
   annotations:
-    backstage.oam.dev/owner: "team:my-team"
-    backstage.oam.dev/domain: "vela-demo"
+    backstage.oam.dev/owner: "vela-maintainers"
+    backstage.oam.dev/domain: "vela-backstage-demo"
     backstage.oam.dev/description: "This is a sample application."
     backstage.oam.dev/title: "First Vela App"
     backstage.oam.dev/tags: "first-demo, vela"
@@ -20,7 +20,7 @@ spec:
       traits:
         - type: backstage
           properties:
-            typeAlias: website
+            type: website
             lifecycle: production
             owner: wonderflow
             description: "This is the hello world app."
