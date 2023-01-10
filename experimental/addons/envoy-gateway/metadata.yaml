@@ -1,0 +1,15 @@
+name: envoy-gateway
+version: latest
+description: Manages Envoy Proxy as a standalone or Kubernetes-based application gateway.
+icon: https://raw.githubusercontent.com/envoyproxy/envoy-website/main/img/envoy-icon.svg
+url: https://gateway.envoyproxy.io/
+
+tags:
+  - Gateway
+
+deployTo:
+  runtimeCluster: true
+
+system:
+  vela: ">=v1.5.0"
+  kubernetes: ">=v1.24"
