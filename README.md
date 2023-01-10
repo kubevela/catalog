@@ -1,55 +1,76 @@
 # KubeVela Catalog
 
+KubeVela is a modern software delivery control plane to make deploying and operating applications across today's hybrid, multi-cloud environments easier, faster and more reliable. 
+
+One of the core goals of KubeVela is to build an open, inclusive, and vibrant OSS developer community focused on solving real-world application delivery and operation problems, sharing the reusable building blocks and best practices.
+
+Here's the catalog of the shared resources, we called them `addon`.
+
 ## Introduction
 
-This is repo of source files of community KubeVela [addons](https://kubevela.net/docs/reference/addons/overview) which extend the capability of platform. An addoon can be a kubernetes operator and its [X-definition](https://kubevela.net/docs/getting-started/definition) such as [Fluxcd](addons/fluxcd) or other useful components for KubeVela such as [VelaUX](addons/velaux).
+This repo is a catalog of [addons](https://kubevela.net/docs/reference/addons/overview) which extend the capability of KubeVela control plane. Generally, an addon consists of Kubernetes CRD and corresponding [X-definition](https://kubevela.net/docs/getting-started/definition), but none of them is necessary. For example, the [fluxcd](addons/fluxcd) addon consists of FluxCD controller and the `helm` component definition, while [VelaUX](addons/velaux) just deploy a web server without any CRD or Definitions.
 
-Addons here contain [verified](./addons) addons which have been tested for a long time can be used in product environment and [experimental](experimental/addons) addons which isn't general available yet.
+There're basically two kinds of addons according to maturity. They're [verified addons](./addons) which have been tested for a long time can be used in product environment and [experimental addons](experimental/addons) which contain new features but still need more verification.
 
-* [Verified Addons](/addons): when a pull Request of addons were merged to this directory, the addon will automatically synced to the OSS bucket( https://addons.kubevela.net ). This will be displayed in vela CLI by `vela addon list` or VelaUX by default.
+Community users can install and use these addons by the following way:
 
-![image](https://user-images.githubusercontent.com/2173670/160372119-3e62044c-ce93-428d-9681-a91f0742bbaf.png)
+* [Verified Addons](/addons): when a pull request merged, the changes of these addon will be automatically synced to the OSS bucket, and serving in the [official addon registry](https://addons.kubevela.net). This will be displayed in vela CLI by `vela addon list` or VelaUX as follows.
+  ![image](https://user-images.githubusercontent.com/2173670/160372119-3e62044c-ce93-428d-9681-a91f0742bbaf.png)
 
 
-* [Experimental Addons](/experimental/addons): some addons which were not well verified will be merged into the experimental addons directory, the addon will also be synced to the OSS bucket( https://addons.kubevela.net in path `experimental`) automatically. 
+* [Experimental Addons](/experimental/addons): the experimental addons will also be synced to the OSS bucket automatically, but in the  `experimental` folder, you need to add the experimental registry manually to use it. 
   ```
   vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
   ```
 
-![image](https://user-images.githubusercontent.com/2173670/160373204-80e74587-606c-4522-9802-11d4f572450b.png)
+  ![image](https://user-images.githubusercontent.com/2173670/160373204-80e74587-606c-4522-9802-11d4f572450b.png)
 
 ## How to use
 
-You can enable these addons by Vela cli or VelaUX. Please refer to [doc](https://kubevela.net/docs/reference/addons/overview) for more infos.
+You can enable these addons by vela command line by:
 
-## History addon versions
+```
+vela addon enable <official-addon-name>
+vela addon enable experimental/<experimental-addon-name>
+```
 
-Since any changes about one addon will upgrade the version, this repo's source files always are the latest version of addons, but you can find all other history versions' download url of an addon in `https://addons.kubevela.net/index.yaml`. Then you can download and enable them if you want.
+You can also enable addons by click the page on VelaUX.
 
-## Contribution
+Please refer to [doc](https://kubevela.net/docs/reference/addons/overview) for more infos.
 
-Community members are welcome to contribute this repo by putting their customize vela addons here.
+## History versions
 
->This [doc](https://kubevela.net/docs/platform-engineers/addon/intro) will introduce how to make an KubeVela addon and the mechanism behind it.
+All versions of addons will be reserved in the OSS bucket, you can check the old versions and download in this page: https://addons.kubevela.net/index.yaml.
 
-Please be aware of this contribution rules when contribute addons.
+## Create an addon
 
-- A new addon added in this repo should be put in as an experimental one unless you have test for a long time in your product environment and be approved by most maintainers.
+To create an addon, you can use the following command to create an addon scaffold:
+
+```
+vela addon init <addon-name>
+```
+
+The best way to learn how to build an addon is follow existing examples:
+
+- Addons consist of CRD controllers as helm chart, refer to [keda](./addons/keda/), [kruise-rollout](./addons/kruise-rollout/) or [trivy-operator](./addons/trivy-operator/) as examples.
+- Addons consist of CRD controllers as a bunch of YAML files, refer to [vela-workflow](./addons/vela-workflow/)(written in CUE), [argocd](./experimental/addons/argocd/)(just YAMLs) and [clickhouse](./experimental/addons/clickhouse/)(reference URL) as examples.
+- Addons consist of container images, refer to [vela](./addons/velaux/) and [backstage](./experimental/addons/backstage/) as examples.
+
+You can refer [this doc](https://kubevela.net/docs/platform-engineers/addon/intro) to learn all details of how to make an addon and the mechanism behind it.
+
+## Contribute an addon
+
+All contributions are welcome, just send a pull request to this repo following the below rules:
+
+- A new addon should be accepted as experimental one first with the following necessary information:
+  - An accessible icon url and source url defined in addon's `metadata.yaml`.
+  - A detail introduction include a basic example about how to use and what's the benefit of this addon in `README.md`.
+  - It's more likely to be accepted if useful examples are provided in example [dir](examples/).
 
 - An experimental addon must meet these conditions to be promoted as a verified one.
-
   - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
-
-  - This addon must have some basic but necessary information.
-
-    - An accessible icon url and source url defined in addon's `metadata.yaml`.
-    
-    - A detail introduction include a basic example about how to use and what's the benefit of this addon in `README.md`.
-      
-    - Also provide an introduction in KubeVela [documentation](https://kubevela.net/docs/reference/addons/overview).
-    
-    - It's more likely to be accepted if useful examples are provided in example [dir](examples/).
+  - Provide an introduction in KubeVela [official addon documentation](https://kubevela.net/docs/reference/addons/overview).
     
 ## Community
 
-Welcome to KubeVela community. Refer to [here](https://github.com/kubevela/kubevela#community) for more info.
+Welcome to KubeVela community for discussion, please refer to [the community repo](https://github.com/kubevela/community).
