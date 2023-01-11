@@ -14,11 +14,11 @@ There're basically two kinds of addons according to maturity. They're [verified 
 
 Community users can install and use these addons by the following way:
 
-* [Verified Addons](/addons): when a pull request merged, the changes of these addon will be automatically synced to the OSS bucket, and serving in the [official addon registry](https://addons.kubevela.net). This will be displayed in vela CLI by `vela addon list` or VelaUX as follows.
+* [Verified Addons](/addons): when a pull request merged, the changes of these addon will be automatically packaged and synced to the OSS bucket, and serving in the [official addon registry](https://addons.kubevela.net). This will be displayed in vela CLI by `vela addon list` or VelaUX as follows.
   ![image](https://user-images.githubusercontent.com/2173670/160372119-3e62044c-ce93-428d-9681-a91f0742bbaf.png)
 
 
-* [Experimental Addons](/experimental/addons): the experimental addons will also be synced to the OSS bucket automatically, but in the  `experimental` folder, you need to add the experimental registry manually to use it. 
+* [Experimental Addons](/experimental/addons): the experimental addons will also be packaged and synced to the OSS bucket automatically, but in the  `experimental` folder, you need to add the experimental registry manually to use it. 
   ```
   vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
   ```
@@ -70,6 +70,8 @@ All contributions are welcome, just send a pull request to this repo following t
 - An experimental addon must meet these conditions to be promoted as a verified one.
   - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
   - Provide an introduction in KubeVela [official addon documentation](https://kubevela.net/docs/reference/addons/overview).
+
+- If you come across with any addon problems, feel free to raise a github issue or just send pull requests to fix them. Please make sure to update the addon version in your pull request.
     
 ## Community
 
