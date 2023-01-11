@@ -39,9 +39,7 @@ apiserver: {
 			},
 		]
 	}
-	if parameter["enableImpersonation"] {
-		dependsOn: ["velaux-additional-privileges"]
-	}
+	dependsOn: ["velaux-additional-privileges"]
 	traits: [
 		{
 			type: "service-account"
