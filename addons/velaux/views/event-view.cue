@@ -6,7 +6,7 @@ parameter: {
 	name:      string
 	namespace: string
 	cluster:   *"" | string
-	type:      string
+	type:      "deployment" | "statefulset" | "pod"
 }
 
 schema: {
@@ -47,7 +47,7 @@ eventList: ql.#SearchEvents & {
 
 status: {
 	if eventList.err == _|_ {
-			events: eventList.list
+		events: eventList.list
 	}
 	if eventList.err != _|_ {
 		error: eventList.err
