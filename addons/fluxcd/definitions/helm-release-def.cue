@@ -14,7 +14,7 @@ helm: {
 					if context.outputs.repo != _|_ && context.outputs.repo.status == _|_ {
 						repoMessage:    "Fetching repository"
 					}
-					if context.outputs.repo != _|_ && context.outputs.repo.status != _|_ && context.outputs.repo.conditions != _|_ {
+					if context.outputs.repo != _|_ && context.outputs.repo.status != _|_ && context.outputs.repo.status.conditions != _|_ {
 						repoStatus: context.outputs.repo.status
 						if len(repoStatus.conditions) == 0 || repoStatus.conditions[0]["type"] != "Ready" {
 							repoMessage: "Fetch repository fail"
