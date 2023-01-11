@@ -27,6 +27,9 @@ template: {
 					}
 				}
 			}
+			wait: op.#ConditionalWait & {
+				continue: deployment.value.status != _|_ && deployment.value.status.updatedReplicas == deployment.value.status.availableReplicas && deployment.value.status.observedGeneration == deployment.value.metadata.generation
+			}
 			rs: op.#List & {
 				resource: {
 					apiVersion: "apps/v1"
@@ -40,8 +43,10 @@ template: {
 			resourceType: "ReplicaSet"
 			if rs.list != _|_ {
 				if rs.list.items != _|_ {
-					if len(rs.list.items) > 0 {
-						resourceName: rs.list.items[0].metadata.name
+					for _, item in rs.list.items {
+						if item.status.replicas == deployment.value.status.availableReplicas {
+							resourceName: item.metadata.name
+						}
 					}
 				}
 			}

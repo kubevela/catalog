@@ -43,7 +43,7 @@ template: {
 		}
 	}
 	wait: op.#ConditionalWait & {
-		continue: app.apply.value.status.status == "running"
+		continue: app.apply.value.status.status == "running" && app.apply.value.status.observedGeneration == app.apply.value.metadata.generation
 	}
 	parameter: close({
 		data?: {...}

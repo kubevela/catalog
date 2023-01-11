@@ -1,5 +1,5 @@
 name: vela-workflow
-version: v0.3.7
+version: v0.4.0
 description: "vela-workflow provides the capability to run a standalone workflow"
 icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
 url: "https://github.com/kubevela/workflow"
