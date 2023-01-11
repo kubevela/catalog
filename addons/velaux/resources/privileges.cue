@@ -17,7 +17,34 @@ additionalPrivileges: {
 				kind:     "Group"
 				name:     "kubevela:ux"
 				apiGroup: "rbac.authorization.k8s.io"
+			}, {
+				kind:      "ServiceAccount"
+				name:      parameter["serviceAccountName"]
+				namespace: "vela-system"
 			}]
+		},
+		{
+			apiVersion: "v1"
+			kind:       "ServiceAccount"
+			metadata: {
+				name:      parameter["serviceAccountName"]
+				namespace: "vela-system"
+			}
+			secrets: [
+				{
+					name: parameter["serviceAccountName"] + "-token"
+				},
+			]
+		},
+		{
+			apiVersion: "v1"
+			kind:       "Secret"
+			metadata: {
+				name:      parameter["serviceAccountName"] + "-token"
+				namespace: "vela-system"
+				annotations: "kubernetes.io/service-account.name": parameter["serviceAccountName"]
+			}
+			type: "kubernetes.io/service-account-token"
 		},
 	]
 }

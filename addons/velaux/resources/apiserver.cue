@@ -11,7 +11,7 @@ dbURL: *[ if parameter["dbURL"] != _|_ {
 }] | []
 
 enableImpersonation: *[ if parameter["enableImpersonation"] {
-	"--feature-gates EnableImpersonation=true"
+	"--feature-gates=EnableImpersonation=true"
 }] | []
 
 apiserver: {
@@ -39,6 +39,7 @@ apiserver: {
 			},
 		]
 	}
+	dependsOn: ["velaux-additional-privileges"]
 	traits: [
 		{
 			type: "service-account"

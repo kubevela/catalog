@@ -14,7 +14,7 @@ parameter: {
 	// +usage=Specify the gateway type.
 	gatewayDriver: *"nginx" | "traefik"
 	// +usage=Specify the serviceAccountName for apiserver
-	serviceAccountName: *"kubevela-vela-core" | string
+	serviceAccountName: *"kubevela-ux" | string
 	// +usage=Specify the service type.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer"
 	// +usage=Specify the names of imagePullSecret for private image registry, eg. "{a,b,c}"
