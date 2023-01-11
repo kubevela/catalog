@@ -71,7 +71,7 @@ All contributions are welcome, just send a pull request to this repo following t
   - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
   - Provide an introduction in KubeVela [official addon documentation](https://kubevela.net/docs/reference/addons/overview).
 
-- If you come across any issues with the addon, feel free to fix them. Also, please make sure to update the addon version in your pull request.
+- If you come across with any addon problems, feel free to raise a github issue or just send pull requests to fix them. Please make sure to update the addon version in your pull request.
     
 ## Community
 
