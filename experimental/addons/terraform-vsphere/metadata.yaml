@@ -1,0 +1,36 @@
+name: terraform-vsphere
+version: 1.0.0
+description: Kubernetes Terraform Controller Provider for VMware vSphere
+url: https://github.com/oam-dev/terraform-controller
+
+tags:
+  - Terraform Provider
+  - Cloud Resource
+
+deployTo:
+  control_plane: true
+  runtime_cluster: false
+
+dependencies:
+  - name: terraform
+
+# -------------------------------------Configuration Metadata for a Terraform Addon-------------------------------------
+# provider short name
+shortCloudName: vsphere
+
+# The Cloud name of the provider
+completeCloudName: VMware vSphere
+
+cloudProperties:
+  - name: VSPHERE_USER
+    secretKey: vSphereUser
+    description: Get VSPHERE_USER per this guide https://registry.terraform.io/providers/hashicorp/vsphere/latest/docs
+  - name: VSPHERE_PASSWORD
+    secretKey: vSpherePassword
+    description: Get VSPHERE_PASSWORD per this guide https://registry.terraform.io/providers/hashicorp/vsphere/latest/docs
+  - name: VSPHERE_SERVER
+    secretKey: vSphereServer
+    description: Get VSPHERE_SERVER per this guide https://registry.terraform.io/providers/hashicorp/vsphere/latest/docs
+  - name: VSPHERE_ALLOW_UNVERIFIED_SSL
+    secretKey: vSphereAllowUnverifiedSSL
+    description: Get VSPHERE_ALLOW_UNVERIFIED_SSL per this guide https://registry.terraform.io/providers/hashicorp/vsphere/latest/docs

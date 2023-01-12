@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Terraform configuration for VMware vSphere File Storage Resource
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: vsphere-file
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/kubevela-contrib/terraform-modules.git
+      path: vsphere/file
+      providerRef:
+        name: vsphere
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta2
+      kind: Configuration
+status: {}
