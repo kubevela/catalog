@@ -3,6 +3,7 @@
 In the root directory of this project, run:
 
 ```shell
-$ go run hack/addons/gen-addon-ui-schema.go
+make terraform-ui-gen
+
 Successfully generated terraform schema files
 ```

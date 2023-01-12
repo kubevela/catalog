@@ -33,13 +33,13 @@ jobs:
 
       - name: copy script to dir
         run: |
-          cp ./hack/addons/syn_addon_package.go ./addons/
-          cp ./hack/addons/syn_addon_package.go ./experimental/addons/
+          cp ./hack/addons/sync_addon_package.go ./addons/
+          cp ./hack/addons/sync_addon_package.go ./experimental/addons/
 
       - name: package-addon-gen-index
         run: |
           cd ./addons/
-          go run ./syn_addon_package.go ./ ${{ env.URL }}
+          go run ./sync_addon_package.go ./ ${{ env.URL }}
           ls ./
           cat ./index.yaml
           mkdir -p addons/
@@ -49,7 +49,7 @@ jobs:
       - name: package-addon-gen-index-experimental
         run: |
           cd ./experimental/addons/
-          go run ./syn_addon_package.go ./ ${{ env.URL }}/experimental
+          go run ./sync_addon_package.go ./ ${{ env.URL }}/experimental
           ls ./
           cat ./index.yaml
           mkdir -p addons/
