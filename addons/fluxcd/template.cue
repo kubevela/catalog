@@ -67,14 +67,21 @@ output: {
 		policies: [
 			{
 				type: "shared-resource"
-				name: "namespace"
+				name: "shared-CRD-namespace"
 				properties: rules: [{
-					selector: resourceTypes: ["Namespace"]
+					selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
+				}]
+			},
+			{
+				type: "take-over"
+				name: "take-over-CRD-namespace"
+				properties: rules: [{
+					selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
 				}]
 			},
 			{
 				type: "topology"
-				name: "deploy-fluxcd-ns"
+				name: "deploy-fluxcd"
 				properties: {
 					namespace: _targetNamespace
 					if parameter.clusters != _|_ {
@@ -87,10 +94,10 @@ output: {
 			},
 			{
 				type: "garbage-collect"
-				name: "not-gc-CRD"
+				name: "not-gc-CRD-namespace"
 				properties: {
 					rules: [{
-						selector: resourceTypes: ["CustomResourceDefinition"]
+						selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
 						strategy: "never"
 					},
 					]
