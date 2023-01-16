@@ -86,7 +86,7 @@ var _ = Describe("Test definition of addons", func() {
 			}
 			addon := filepath.Base(addonPath)
 			fmt.Printf("Begin test addon %s \n", addon)
-			dir := filepath.Join("./", addon)
+			dir := filepath.Join("./testdata/", addon)
 			files, err := os.ReadDir(dir)
 			if err != nil {
 				if os.IsNotExist(err) {

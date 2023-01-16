@@ -44,7 +44,8 @@ var file = "addons/velaux/template.yaml"
 var pendingAddon = map[string]bool{}
 
 const (
-	regexPattern         = "^addons.*"
+	addonPattern         = "^addons.*"
+	testCasePattern      = "^test/e2e-test/addon-test/definition-test/testdata.*"
 	globalRexPattern     = "^.github.*|Makefile|.*.go"
 	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
 	defTestDir           = "test/e2e-test/addon-test/definition-test/"
@@ -93,31 +94,21 @@ func readPendingAddons() error {
 
 // will check all needed enabled addons according to changed files.
 func determineNeedEnableAddon(changedFile []string) map[string]bool {
-	needEnabledAddon := map[string]bool{}
-	globalRex := regexp.MustCompile(globalRexPattern)
-	regx := regexp.MustCompile(regexPattern)
-	for _, s := range changedFile {
-		regRes := regx.Find([]byte(s))
-		if len(regRes) != 0 {
-			fmt.Println(string(regRes))
-			list := strings.Split(string(regRes), "/")
-			if len(list) > 1 {
-				addon := list[1]
-				needEnabledAddon[addon] = true
-			}
+	allAddons := map[string]bool{}
+	putInAllAddons(allAddons)
+	addonRegex := func() string {
+		res := ""
+		for addon, _ := range allAddons {
+			res += addon + "|"
 		}
-
-		// if .github/makefile/*.go files changed, that will change the CI, so enable all addons.
-		if regRes := globalRex.Find([]byte(s)); len(regRes) != 0 {
-			// change CI related file, must test all addons
-			err := putInAllAddons(needEnabledAddon)
-			if err != nil {
-				return nil
-			} else {
-				fmt.Println("This pr need checkAll addons")
-				return needEnabledAddon
-			}
-		}
+		return strings.TrimSuffix(res, "|")
+	}()
+	needEnabledAddon := genAffectedFromChangedFiles(changedFile, addonPattern, addonRegex)
+	fmt.Printf("Changing addons: %s \n", needEnabledAddon)
+	testAffectedAddon := genAffectedFromChangedFiles(changedFile, testCasePattern, addonRegex)
+	fmt.Printf("Changing tests of addons: %s \n", testAffectedAddon)
+	for r, _ := range testAffectedAddon {
+		needEnabledAddon[r] = true
 	}
 
 	for addon := range needEnabledAddon {
@@ -135,6 +126,38 @@ func determineNeedEnableAddon(changedFile []string) map[string]bool {
 		fmt.Printf("%s,", ca)
 	}
 	fmt.Printf("\n")
+	return needEnabledAddon
+}
+
+func genAffectedFromChangedFiles(changedFile []string, filter string, regexPattern string) map[string]bool {
+	needEnabledAddon := map[string]bool{}
+	globalRex := regexp.MustCompile(globalRexPattern)
+	regx := regexp.MustCompile(regexPattern)
+	filterRegex := regexp.MustCompile(filter)
+	for _, s := range changedFile {
+		if len(filterRegex.FindString(s)) == 0 {
+			continue
+		}
+
+		regRes := regx.FindString(s)
+		if len(regRes) != 0 {
+			fmt.Println(regRes)
+			needEnabledAddon[regRes] = true
+			continue
+		}
+
+		// if .github/makefile/*.go files changed, that will change the CI, so enable all addons.
+		if regRes := globalRex.Find([]byte(s)); len(regRes) != 0 {
+			// change CI related file, must test all addons
+			err := putInAllAddons(needEnabledAddon)
+			if err != nil {
+				return nil
+			} else {
+				fmt.Println("This pr need checkAll addons")
+				return needEnabledAddon
+			}
+		}
+	}
 	return needEnabledAddon
 }
 
