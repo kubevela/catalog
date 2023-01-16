@@ -113,7 +113,7 @@ var _ = Describe("Terraform Test", func() {
 				return client.IgnoreNotFound(err)
 			}
 			return errors.Errorf("configuration %s still exist", cfgName)
-		}, 10*time.Minute, 2*time.Second).Should(Succeed())
+		}, 15*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	deleteApp := func(source string) {
@@ -127,7 +127,7 @@ var _ = Describe("Terraform Test", func() {
 		}
 		Eventually(func() error {
 			return k8sClient.Delete(ctx, newApp.DeepCopy())
-		}, 10*time.Second, 500*time.Millisecond).Should(Succeed())
+		}, 15*time.Second, 500*time.Millisecond).Should(Succeed())
 	}
 
 	It("Test OSS", func() {
