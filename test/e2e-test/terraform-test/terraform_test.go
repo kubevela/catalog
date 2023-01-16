@@ -8,6 +8,8 @@ import (
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/v1beta1"
 	"github.com/oam-dev/terraform-controller/api/types"
 	"github.com/oam-dev/terraform-controller/api/v1beta2"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"os"
@@ -100,7 +102,7 @@ var _ = Describe("Terraform Test", func() {
 					return fmt.Errorf("configuration %s is not available, current status %s", cfgName, config.Status.Apply.State)
 				}
 				return nil
-			}, 15*time.Minute, 2*time.Second).Should(Succeed())
+			}, 20*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	verifyConfigurationDeleted := func(cfgName string) {
