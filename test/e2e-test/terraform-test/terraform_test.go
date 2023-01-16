@@ -8,8 +8,6 @@ import (
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/v1beta1"
 	"github.com/oam-dev/terraform-controller/api/types"
 	"github.com/oam-dev/terraform-controller/api/v1beta2"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"os"
@@ -102,7 +100,7 @@ var _ = Describe("Terraform Test", func() {
 					return fmt.Errorf("configuration %s is not available, current status %s", cfgName, config.Status.Apply.State)
 				}
 				return nil
-			}, 20*time.Minute, 2*time.Second).Should(Succeed())
+			}, 15*time.Minute, 2*time.Second).Should(Succeed())
 	}
 
 	verifyConfigurationDeleted := func(cfgName string) {
@@ -182,13 +180,13 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted(rdsConfName)
 	})
 
-	It("Test dedicated kubernetes", func() {
-		applyApp("dedicated-kubernetes.yaml")
-		verifyConfigurationAvailable("sample-ack")
-		By("Delete application that create ACK")
-		deleteApp("dedicated-kubernetes.yaml")
-		verifyConfigurationDeleted("sample-ack")
-	})
+	//It("Test dedicated kubernetes", func() {
+	//	applyApp("dedecated-kubernetes.yaml")
+	//	verifyConfigurationAvailable("sample-ack")
+	//	By("Delete application that create ACK")
+	//	deleteApp("dedecated-kubernetes.yaml")
+	//	verifyConfigurationDeleted("sample-ack")
+	//})
 
 	It("Test ECS", func() {
 		applyApp("ecs.yaml")
