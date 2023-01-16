@@ -48,7 +48,7 @@ const (
 	testCasePattern      = "^test/e2e-test/addon-test/definition-test/testdata.*"
 	globalRexPattern     = "^.github.*|Makefile|.*.go"
 	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
-	defTestDir           = "test/e2e-test/addon-test/definition-test/"
+	defTestDir           = "test/e2e-test/addon-test/definition-test/testdata/"
 )
 
 func main() {
