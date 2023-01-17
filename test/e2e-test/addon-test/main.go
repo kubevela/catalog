@@ -153,7 +153,7 @@ func checkUpgradeAddonVersion(changedFiles []string) error {
 			}
 			addon := elem[1]
 			if !filesMap[filepath.Join("addons", addon, "metadata.yaml")] {
-				return fmt.Errorf("changing file %s without upgrading addon %s version", changedFile, addon)
+				return fmt.Errorf("changing file: %s without upgrading the version of addon: %s", changedFile, addon)
 			}
 		}
 		if strings.HasPrefix(changedFile, "experimental/addons/") {
@@ -163,7 +163,7 @@ func checkUpgradeAddonVersion(changedFiles []string) error {
 			}
 			addon := elem[2]
 			if !filesMap[filepath.Join("experimental", "addons", addon, "metadata.yaml")] {
-				return fmt.Errorf("changing file %s without upgrading addon %s version", changedFile, addon)
+				return fmt.Errorf("changing file: %s without upgrading the version of addon: %s", changedFile, addon)
 			}
 		}
 
