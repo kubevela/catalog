@@ -44,11 +44,12 @@ var file = "addons/velaux/template.yaml"
 var pendingAddon = map[string]bool{}
 
 const (
-	addonPattern         = "^addons.*"
-	testCasePattern      = "^test/e2e-test/addon-test/definition-test/testdata.*"
-	globalRexPattern     = "^.github.*|Makefile|.*.go"
-	pendingAddonFilename = "test/e2e-test/addon-test/PENDING"
-	defTestDir           = "test/e2e-test/addon-test/definition-test/testdata/"
+	addonPattern             = "^addons.*"
+	experimentalAddonPattern = "^experimental/addons.*"
+	testCasePattern          = "^test/e2e-test/addon-test/definition-test/testdata.*"
+	globalRexPattern         = "^.github.*|Makefile|.*.go"
+	pendingAddonFilename     = "test/e2e-test/addon-test/PENDING"
+	defTestDir               = "test/e2e-test/addon-test/definition-test/testdata/"
 )
 
 func main() {
@@ -58,6 +59,12 @@ func main() {
 		os.Exit(1)
 	}
 	changedFile := os.Args[1:]
+
+	if err := checkUpgradeAddonVersion(changedFile); err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+		os.Exit(1)
+	}
+
 	changedAddon := determineNeedEnableAddon(changedFile)
 	if len(changedAddon) == 0 {
 		return
@@ -127,6 +134,41 @@ func determineNeedEnableAddon(changedFile []string) map[string]bool {
 	}
 	fmt.Printf("\n")
 	return needEnabledAddon
+}
+
+func checkUpgradeAddonVersion(changedFiles []string) error {
+	filesMap := map[string]bool{}
+	for _, changedFile := range changedFiles {
+		filesMap[changedFile] = true
+	}
+	for _, changedFile := range changedFiles {
+		if !strings.HasPrefix(changedFile, "addons/") && !strings.HasPrefix(changedFile, "experimental/addons/") {
+			continue
+		}
+
+		if strings.HasPrefix(changedFile, "addons/") {
+			elem := strings.Split(changedFile, "/")
+			if len(elem) < 2 {
+				continue
+			}
+			addon := elem[1]
+			if !filesMap[filepath.Join("addons", addon, "metadata.yaml")] {
+				return fmt.Errorf("changing file %s without upgrading addon %s version", changedFile, addon)
+			}
+		}
+		if strings.HasPrefix(changedFile, "experimental/addons/") {
+			elem := strings.Split(changedFile, "/")
+			if len(elem) < 3 {
+				continue
+			}
+			addon := elem[2]
+			if !filesMap[filepath.Join("experimental", "addons", addon, "metadata.yaml")] {
+				return fmt.Errorf("changing file %s without upgrading addon %s version", changedFile, addon)
+			}
+		}
+
+	}
+	return nil
 }
 
 func genAffectedFromChangedFiles(changedFile []string, filter string, regexPattern string) map[string]bool {
