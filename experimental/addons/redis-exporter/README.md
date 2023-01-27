@@ -32,8 +32,8 @@ spec:
               size: 16Gi
       traits:
         - properties:
-          address: rfs-ha-redis.prod:26379
-          password: mypassword123
+          address: <host>:<port>
+          password: <password>
           disableAnnotation: false
           name: redis-server-exporter
           type: redis-exporter
@@ -65,8 +65,8 @@ spec:
               size: 16Gi
     - name: redis-exporter
       properties:
-        address: rfs-ha-redis.prod:26379
-        password: mypassword123
+        address: <host>:<port>
+        password: <password>
         disableAnnotation: false
         name: redis-server-exporter
       type: redis-exporter-server
