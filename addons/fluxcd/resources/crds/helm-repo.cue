@@ -4,11 +4,18 @@ helmRepoCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"
-		labels: "app.kubernetes.io/instance":                 "flux-system"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		labels: {
+			"app.kubernetes.io/component":           "source-controller"
+			"app.kubernetes.io/instance":            "flux-system"
+			"app.kubernetes.io/part-of":             "flux"			
+			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
+			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+		}
 		name: "helmrepositories.source.toolkit.fluxcd.io"
 	}
 	spec: {
+		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmRepository"
@@ -165,9 +172,10 @@ helmRepoCRD: {
 								description: "Conditions holds the conditions for the HelmRepository."
 								items: {
 									description: """
-           		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-           		     // other fields }
-           		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -311,12 +319,25 @@ helmRepoCRD: {
 							}
 							interval: {
 								description: "Interval at which to check the URL for updates."
+								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
 								type:        "string"
 							}
 							passCredentials: {
 								description: "PassCredentials allows the credentials from the SecretRef to be passed on to a host that does not match the host as defined in URL. This may be required if the host of the advertised chart URLs in the index differ from the defined URL. Enabling this should be done with caution, as it can potentially result in credentials getting stolen in a MITM-attack."
 
 								type: "boolean"
+							}
+							provider: {
+								default:     "generic"
+								description: "Provider used for authentication, can be 'aws', 'azure', 'gcp' or 'generic'. This field is optional, and only taken into account if the .spec.type field is set to 'oci'. When not specified, defaults to 'generic'."
+
+								enum: [
+									"generic",
+									"aws",
+									"azure",
+									"gcp",
+								]
+								type: "string"
 							}
 							secretRef: {
 								description: "SecretRef specifies the Secret containing authentication credentials for the HelmRepository. For HTTP/S basic auth the secret must contain 'username' and 'password' fields. For TLS the secret must contain a 'certFile' and 'keyFile', and/or 'caCert' fields."
@@ -337,8 +358,10 @@ helmRepoCRD: {
 							}
 							timeout: {
 								default:     "60s"
-								description: "Timeout of the index fetch operation, defaults to 60s."
-								type:        "string"
+								description: "Timeout is used for the index fetch operation for an HTTPS helm repository, and for remote OCI Repository operations like pulling for an OCI helm repository. Its default value is 60s."
+
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m))+$"
+								type:    "string"
 							}
 							type: {
 								description: "Type of the HelmRepository. When this field is set to  \"oci\", the URL field value must be prefixed with \"oci://\"."
@@ -379,6 +402,11 @@ helmRepoCRD: {
 										format: "date-time"
 										type:   "string"
 									}
+									metadata: {
+										additionalProperties: type: "string"
+										description: "Metadata holds upstream information such as OCI annotations."
+										type:        "object"
+									}
 									path: {
 										description: "Path is the relative file path of the Artifact. It can be used to locate the file in the root of the Artifact storage on the local file system of the controller managing the Source."
 
@@ -410,9 +438,10 @@ helmRepoCRD: {
 								description: "Conditions holds the conditions for the HelmRepository."
 								items: {
 									description: """
-           		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-           		     // other fields }
-           		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -499,8 +528,13 @@ helmRepoCRD: {
 	}
 	status: {
 		acceptedNames: {
-			kind:   ""
-			plural: ""
+			kind:     "HelmRepository"
+			listKind: "HelmRepositoryList"
+			plural:   "helmrepositories"
+			shortNames: [
+				"helmrepo",
+			]
+			singular: "helmrepository"
 		}
 		conditions: []
 		storedVersions: []

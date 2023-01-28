@@ -4,11 +4,18 @@ kustomizeCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"
-		labels: "app.kubernetes.io/instance":                 "flux-system"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		labels: {
+			"app.kubernetes.io/component":           "kustomize-controller"
+			"app.kubernetes.io/instance":            "flux-system"
+			"app.kubernetes.io/part-of":             "flux"			
+			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
+			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+		}
 		name: "kustomizations.kustomize.toolkit.fluxcd.io"
 	}
 	spec: {
+		conversion: strategy: "None"
 		group: "kustomize.toolkit.fluxcd.io"
 		names: {
 			kind:     "Kustomization"
@@ -497,9 +504,10 @@ kustomizeCRD: {
 							conditions: {
 								items: {
 									description: """
-               		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-               		     // other fields }
-               		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -656,6 +664,12 @@ kustomizeCRD: {
 						description: "KustomizationSpec defines the configuration to calculate the desired state from a Source using Kustomize."
 
 						properties: {
+							components: {
+								description: "Components specifies relative paths to specifications of other Components"
+
+								items: type: "string"
+								type: "array"
+							}
 							decryption: {
 								description: "Decrypt Kubernetes secrets before applying them on the cluster."
 
@@ -784,13 +798,14 @@ kustomizeCRD: {
 							}
 							interval: {
 								description: "The interval at which to reconcile the Kustomization."
+								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
 								type:        "string"
 							}
 							kubeConfig: {
 								description: "The KubeConfig for reconciling the Kustomization on a remote cluster. When used in combination with KustomizationSpec.ServiceAccountName, forces the controller to act on behalf of that Service Account at the target cluster. If the --default-service-account flag is set, its value will be used as a controller level fallback for when KustomizationSpec.ServiceAccountName is empty."
 
 								properties: secretRef: {
-									description: "SecretRef holds the name of a secret that contains a key with the kubeconfig file as the value. If no key is set, the key will default to 'value'. The secret must be in the same namespace as the Kustomization. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling the Kustomization."
+									description: "SecretRef holds the name of a secret that contains a key with the kubeconfig file as the value. If no key is set, the key will default to 'value'. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling Kubernetes resources."
 
 									properties: {
 										key: {
@@ -808,6 +823,9 @@ kustomizeCRD: {
 									]
 									type: "object"
 								}
+								required: [
+									"secretRef",
+								]
 								type: "object"
 							}
 							patches: {
@@ -1035,7 +1053,8 @@ kustomizeCRD: {
 							retryInterval: {
 								description: "The interval at which to retry a previously failed reconciliation. When not specified, the controller uses the KustomizationSpec.Interval value to retry failures."
 
-								type: "string"
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							serviceAccountName: {
 								description: "The name of the Kubernetes service account to impersonate when reconciling this Kustomization."
@@ -1053,6 +1072,7 @@ kustomizeCRD: {
 									kind: {
 										description: "Kind of the referent."
 										enum: [
+											"OCIRepository",
 											"GitRepository",
 											"Bucket",
 										]
@@ -1089,7 +1109,8 @@ kustomizeCRD: {
 							timeout: {
 								description: "Timeout for validation, apply and health checking operations. Defaults to 'Interval' duration."
 
-								type: "string"
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							validation: {
 								description: "Deprecated: Not used in v1beta2."
@@ -1120,9 +1141,10 @@ kustomizeCRD: {
 							conditions: {
 								items: {
 									description: """
-               		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-               		     // other fields }
-               		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -1246,8 +1268,13 @@ kustomizeCRD: {
 	}
 	status: {
 		acceptedNames: {
-			kind:   ""
-			plural: ""
+			kind:     "Kustomization"
+			listKind: "KustomizationList"
+			plural:   "kustomizations"
+			shortNames: [
+				"ks",
+			]
+			singular: "kustomization"
 		}
 		conditions: []
 		storedVersions: []
