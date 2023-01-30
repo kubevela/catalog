@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kustomize-oci-app
+  namespace: default
+spec:
+  components:
+    - name: flux-kustomize-oci-test
+      type: kustomize
+      properties:        
+        repoType: oci
+        url: oci://ghcr.io/stefanprodan/manifests/podinfo
+        path: ./        
+        pullInterval: 5m
+        targetNamespace: default
