@@ -24,6 +24,7 @@ template: {
 		apiVersion: "o11y.prism.oam.dev/v1alpha1"
 		kind:       "Grafana"
 		metadata: name: parameter.name
+		metadata: annotations: "app.oam.dev/last-applied-configuration": "-"
 		spec: {
 			endpoint: parameter.endpoint
 			access: {
