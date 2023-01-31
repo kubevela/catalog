@@ -15,21 +15,21 @@ output: {
 		policies: [
 			{
 				type: "shared-resource"
-				name: "shared-CRD"
+				name: "shared-resource"
 				properties: rules: [{
-					selector: resourceTypes: ["CustomResourceDefinition"]
+					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
 				}]
 			},
 			{
 				type: "take-over"
-				name: "take-over-CRD"
+				name: "take-over-resource"
 				properties: rules: [{
-					selector: resourceTypes: ["CustomResourceDefinition"]
+					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
 				}]
 			},
 			{
 				type: "garbage-collect"
-				name: "not-gc-CRD-namespace"
+				name: "not-gc-CRD"
 				properties: {
 					rules: [{
 						selector: resourceTypes: ["CustomResourceDefinition"]
@@ -40,10 +40,10 @@ output: {
 			},
 			{
 				type: "apply-once"
-				name: "not-keep-CRD"
+				name: "not-keep-resource"
 				properties: {
 					rules: [{
-						selector: resourceTypes: ["CustomResourceDefinition"]
+						selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
 						strategy: {
 							path: ["*"]
 						}
