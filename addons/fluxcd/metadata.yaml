@@ -1,5 +1,5 @@
 name: fluxcd
-version: 2.2.1
+version: 2.3.0
 description: Extended workload to do continuous and progressive delivery
 icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/flux/horizontal/color/flux-horizontal-color.png
 url: https://fluxcd.io
