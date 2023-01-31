@@ -4,3 +4,4 @@
 ocm-gateway-manager-addon
 model-serving
 flink-kubernetes-operator
+vela-core-shard-manager
