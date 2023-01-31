@@ -4,7 +4,7 @@ adaptor: {
 	type: "webservice"
 	name: "backstage-plugin-vela"
 	properties: {
-		image: "wonderflow/backstage-plugin-kubevela:v0.3"
+		image: "wonderflow/backstage-plugin-kubevela:v0.4"
 		if parameter["serviceType"] != _|_ {
 			exposeType: parameter["serviceType"]
 		}
