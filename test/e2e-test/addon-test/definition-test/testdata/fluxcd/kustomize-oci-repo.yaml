@@ -7,9 +7,9 @@ spec:
   components:
     - name: flux-kustomize-oci-test
       type: kustomize
-      properties:        
+      properties:
         repoType: oci
         url: oci://ghcr.io/stefanprodan/manifests/podinfo
-        path: ./        
+        path: ./
         pullInterval: 5m
         targetNamespace: default
