@@ -126,6 +126,28 @@ spec:
 
 >Please make sure your backstage app has the permission(`catalog.rules` and `backend.reading.allow`), check [this PR](https://github.com/wonderflow/vela-backstage-demo/pull/3/files) for details.
 
+You can also specify the backstage system if you want different vela apps in the same backstage system:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: first-vela-app-2
+  annotations:
+    backstage.oam.dev/system: "first-vela-app"
+spec:
+  components:
+    - name: express-server-2
+      type: webservice
+      properties:
+        image: oamdev/hello-world
+        ports:
+          - port: 8000
+            expose: true
+```
+
+More features wanted? Just raise an issue or PR to us! The source code repo is [here](https://github.com/kubevela-contrib/backstage-plugin-kubevela).
+
 ## How to build my own backstage app with this integration?
 
 This is a [demo repo](https://github.com/wonderflow/vela-backstage-demo) of my own backstage app. Below is the steps that how I create this repo.
