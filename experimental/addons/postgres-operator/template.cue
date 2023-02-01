@@ -21,8 +21,8 @@ output: {
 				properties:	{
 					repoType: "helm"
 					url: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
-					chart: "postgres-operator-charts/postgres-operator"
-					version: "1.8.2"
+					chart: "postgres-operator"
+					version: "1.9.0"
 				}
 			},
 		]
