@@ -16,10 +16,6 @@ if parameter.shardNames == _|_ && parameter.nShards != _|_ {
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
-	metadata: {
-		name:      const.name
-		namespace: "vela-system"
-	}
 	spec: {
 		components: [
 			for key in shardKeys {

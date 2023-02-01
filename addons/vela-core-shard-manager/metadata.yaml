@@ -1,4 +1,4 @@
-name: vela-core-manager
+name: vela-core-shard-manager
 version: v0.1.0
 description: "The manager for vela-core."
 icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
