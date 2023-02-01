@@ -45,14 +45,13 @@ template: {
 	wait: op.#ConditionalWait & {
 		continue: app.apply.value.status.status == "running" && app.apply.value.status.observedGeneration == app.apply.value.metadata.generation
 	}
-	parameter: close({
+	parameter: {
 		data?: {...}
-	}) | close({
 		ref?: {
 			name:      string
 			namespace: *context.namespace | string
 			type:      *"configMap" | string
 			key:       *"application" | string
 		}
-	})
+	}
 }
