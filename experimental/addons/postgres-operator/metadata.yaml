@@ -8,3 +8,6 @@ tags:
 - postgres-operator
 
 invisible: false
+
+dependencies:
+  - name: fluxcd
