@@ -4,11 +4,18 @@ helmReleaseCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.5.0"
-		labels: "app.kubernetes.io/instance":                 "flux-system"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		labels: {
+			"app.kubernetes.io/component":           "helm-controller"
+			"app.kubernetes.io/instance":            "flux-system"
+			"app.kubernetes.io/part-of":             "flux"			
+			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
+			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+		}
 		name: "helmreleases.helm.toolkit.fluxcd.io"
 	}
 	spec: {
+		conversion: strategy: "None"
 		group: "helm.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmRelease"
@@ -22,6 +29,10 @@ helmReleaseCRD: {
 		scope: "Namespaced"
 		versions: [{
 			additionalPrinterColumns: [{
+				jsonPath: ".metadata.creationTimestamp"
+				name:     "Age"
+				type:     "date"
+			}, {
 				jsonPath: ".status.conditions[?(@.type==\"Ready\")].status"
 				name:     "Ready"
 				type:     "string"
@@ -29,10 +40,6 @@ helmReleaseCRD: {
 				jsonPath: ".status.conditions[?(@.type==\"Ready\")].message"
 				name:     "Status"
 				type:     "string"
-			}, {
-				jsonPath: ".metadata.creationTimestamp"
-				name:     "Age"
-				type:     "date"
 			}]
 			name: "v2beta1"
 			schema: openAPIV3Schema: {
@@ -53,10 +60,10 @@ helmReleaseCRD: {
 						description: "HelmReleaseSpec defines the desired state of a Helm release."
 						properties: {
 							chart: {
-								description: "Chart defines the template of the v1beta1.HelmChart that should be created for this HelmRelease."
+								description: "Chart defines the template of the v1beta2.HelmChart that should be created for this HelmRelease."
 
 								properties: spec: {
-									description: "Spec holds the template for the v1beta1.HelmChartSpec for this HelmRelease."
+									description: "Spec holds the template for the v1beta2.HelmChartSpec for this HelmRelease."
 
 									properties: {
 										chart: {
@@ -65,12 +72,23 @@ helmReleaseCRD: {
 											type: "string"
 										}
 										interval: {
-											description: "Interval at which to check the v1beta1.Source for updates. Defaults to 'HelmReleaseSpec.Interval'."
+											description: "Interval at which to check the v1beta2.Source for updates. Defaults to 'HelmReleaseSpec.Interval'."
 
+											pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+											type:    "string"
+										}
+										reconcileStrategy: {
+											default:     "ChartVersion"
+											description: "Determines what enables the creation of a new artifact. Valid values are ('ChartVersion', 'Revision'). See the documentation of the values for an explanation on their behavior. Defaults to ChartVersion when omitted."
+
+											enum: [
+												"ChartVersion",
+												"Revision",
+											]
 											type: "string"
 										}
 										sourceRef: {
-											description: "The name and namespace of the v1beta1.Source the chart is available at."
+											description: "The name and namespace of the v1beta2.Source the chart is available at."
 
 											properties: {
 												apiVersion: {
@@ -115,9 +133,40 @@ helmReleaseCRD: {
 											items: type: "string"
 											type: "array"
 										}
+										verify: {
+											description: "Verify contains the secret name containing the trusted public keys used to verify the signature and specifies which provider to use to check whether OCI image is authentic. This field is only supported for OCI sources. Chart dependencies, which are not bundled in the umbrella chart artifact, are not verified."
+
+											properties: {
+												provider: {
+													default:     "cosign"
+													description: "Provider specifies the technology used to sign the OCI Helm chart."
+
+													enum: [
+														"cosign",
+													]
+													type: "string"
+												}
+												secretRef: {
+													description: "SecretRef specifies the Kubernetes Secret containing the trusted public keys."
+
+													properties: name: {
+														description: "Name of the referent."
+														type:        "string"
+													}
+													required: [
+														"name",
+													]
+													type: "object"
+												}
+											}
+											required: [
+												"provider",
+											]
+											type: "object"
+										}
 										version: {
 											default:     "*"
-											description: "Version semver expression, ignored for charts from v1beta1.GitRepository and v1beta1.Bucket sources. Defaults to latest when omitted."
+											description: "Version semver expression, ignored for charts from v1beta2.GitRepository and v1beta2.Bucket sources. Defaults to latest when omitted."
 
 											type: "string"
 										}
@@ -134,19 +183,20 @@ helmReleaseCRD: {
 								type: "object"
 							}
 							dependsOn: {
-								description: "DependsOn may contain a dependency.CrossNamespaceDependencyReference slice with references to HelmRelease resources that must be ready before this HelmRelease can be reconciled."
+								description: "DependsOn may contain a meta.NamespacedObjectReference slice with references to HelmRelease resources that must be ready before this HelmRelease can be reconciled."
 
 								items: {
-									description: "CrossNamespaceDependencyReference holds the reference to a dependency."
+									description: "NamespacedObjectReference contains enough information to locate the referenced Kubernetes resource object in any namespace."
 
 									properties: {
 										name: {
-											description: "Name holds the name reference of a dependency."
+											description: "Name of the referent."
 											type:        "string"
 										}
 										namespace: {
-											description: "Namespace holds the namespace reference of a dependency."
-											type:        "string"
+											description: "Namespace of the referent, when not specified it acts as LocalObjectReference."
+
+											type: "string"
 										}
 									}
 									required: [
@@ -162,12 +212,12 @@ helmReleaseCRD: {
 								properties: {
 									crds: {
 										description: """
-              		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Create` and if omitted CRDs are installed but not updated.
-              		 Skip: do neither install nor replace (update) any CRDs.
-              		 Create: new CRDs are created, existing CRDs are neither updated nor deleted.
-              		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted.
-              		 By default, CRDs are applied (installed) during Helm install action. With this option users can opt-in to CRD replace existing CRDs on Helm install actions, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
-              		"""
+		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Create` and if omitted CRDs are installed but not updated. 
+		 Skip: do neither install nor replace (update) any CRDs. 
+		 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
+		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
+		 By default, CRDs are applied (installed) during Helm install action. With this option users can opt-in to CRD replace existing CRDs on Helm install actions, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
+		"""
 
 										enum: [
 											"Skip",
@@ -230,33 +280,42 @@ helmReleaseCRD: {
 									}
 									skipCRDs: {
 										description: """
-              		SkipCRDs tells the Helm install action to not install any CRDs. By default, CRDs are installed if not already present.
-              		 Deprecated use CRD policy (`crds`) attribute with value `Skip` instead.
-              		"""
+		SkipCRDs tells the Helm install action to not install any CRDs. By default, CRDs are installed if not already present. 
+		 Deprecated use CRD policy (`crds`) attribute with value `Skip` instead.
+		"""
 
 										type: "boolean"
 									}
 									timeout: {
 										description: "Timeout is the time to wait for any individual Kubernetes operation (like Jobs for hooks) during the performance of a Helm install action. Defaults to 'HelmReleaseSpec.Timeout'."
 
-										type: "string"
+										pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+										type:    "string"
 									}
 								}
 								type: "object"
 							}
 							interval: {
 								description: "Interval at which to reconcile the Helm release."
+								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
 								type:        "string"
 							}
 							kubeConfig: {
-								description: "KubeConfig for reconciling the HelmRelease on a remote cluster. When specified, KubeConfig takes precedence over ServiceAccountName."
+								description: "KubeConfig for reconciling the HelmRelease on a remote cluster. When used in combination with HelmReleaseSpec.ServiceAccountName, forces the controller to act on behalf of that Service Account at the target cluster. If the --default-service-account flag is set, its value will be used as a controller level fallback for when HelmReleaseSpec.ServiceAccountName is empty."
 
 								properties: secretRef: {
-									description: "SecretRef holds the name to a secret that contains a 'value' key with the kubeconfig file as the value. It must be in the same namespace as the HelmRelease. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling the HelmRelease."
+									description: "SecretRef holds the name to a secret that contains a key with the kubeconfig file as the value. If no key is specified the key will default to 'value'. The secret must be in the same namespace as the HelmRelease. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling the HelmRelease."
 
-									properties: name: {
-										description: "Name of the referent"
-										type:        "string"
+									properties: {
+										key: {
+											description: "Key in the Secret, when not specified an implementation-specific default key is used."
+
+											type: "string"
+										}
+										name: {
+											description: "Name of the Secret."
+											type:        "string"
+										}
 									}
 									required: [
 										"name",
@@ -312,6 +371,63 @@ helmReleaseCRD: {
 												}
 												type: "array"
 											}
+											patches: {
+												description: "Strategic merge and JSON patches, defined as inline YAML objects, capable of targeting objects based on kind, label and annotation selectors."
+
+												items: {
+													description: "Patch contains an inline StrategicMerge or JSON6902 patch, and the target the patch should be applied to."
+
+													properties: {
+														patch: {
+															description: "Patch contains an inline StrategicMerge patch or an inline JSON6902 patch with an array of operation objects."
+
+															type: "string"
+														}
+														target: {
+															description: "Target points to the resources that the patch document should be applied to."
+
+															properties: {
+																annotationSelector: {
+																	description: "AnnotationSelector is a string that follows the label selection expression https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#api It matches with the resource annotations."
+
+																	type: "string"
+																}
+																group: {
+																	description: "Group is the API group to select resources from. Together with Version and Kind it is capable of unambiguously identifying and/or selecting resources. https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md"
+
+																	type: "string"
+																}
+																kind: {
+																	description: "Kind of the API Group to select resources from. Together with Group and Version it is capable of unambiguously identifying and/or selecting resources. https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md"
+
+																	type: "string"
+																}
+																labelSelector: {
+																	description: "LabelSelector is a string that follows the label selection expression https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#api It matches with the resource labels."
+
+																	type: "string"
+																}
+																name: {
+																	description: "Name to match resources with."
+																	type:        "string"
+																}
+																namespace: {
+																	description: "Namespace to select resources from."
+																	type:        "string"
+																}
+																version: {
+																	description: "Version of the API Group to select resources from. Together with Group and Kind it is capable of unambiguously identifying and/or selecting resources. https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/api-group.md"
+
+																	type: "string"
+																}
+															}
+															type: "object"
+														}
+													}
+													type: "object"
+												}
+												type: "array"
+											}
 											patchesJson6902: {
 												description: "JSON 6902 patches, defined as inline YAML objects."
 												items: {
@@ -322,11 +438,17 @@ helmReleaseCRD: {
 															description: "Patch contains the JSON6902 patch document with an array of operation objects."
 
 															items: {
-																description: "JSON6902 is a JSON6902 operation object. https://tools.ietf.org/html/rfc6902#section-4"
+																description: "JSON6902 is a JSON6902 operation object. https://datatracker.ietf.org/doc/html/rfc6902#section-4"
 
 																properties: {
-																	from: type: "string"
+																	from: {
+																		description: "From contains a JSON-pointer value that references a location within the target document where the operation is performed. The meaning of the value depends on the value of Op, and is NOT taken into account by all operations."
+
+																		type: "string"
+																	}
 																	op: {
+																		description: "Op indicates the operation to perform. Its value MUST be one of \"add\", \"remove\", \"replace\", \"move\", \"copy\", or \"test\". https://datatracker.ietf.org/doc/html/rfc6902#section-4"
+
 																		enum: [
 																			"test",
 																			"remove",
@@ -337,8 +459,16 @@ helmReleaseCRD: {
 																		]
 																		type: "string"
 																	}
-																	path: type:                                    "string"
-																	value: "x-kubernetes-preserve-unknown-fields": true
+																	path: {
+																		description: "Path contains the JSON-pointer value that references a location within the target document where the operation is performed. The meaning of the value depends on the value of Op."
+
+																		type: "string"
+																	}
+																	value: {
+																		description: "Value contains a valid JSON structure. The meaning of the value depends on the value of Op, and is NOT taken into account by all operations."
+
+																		"x-kubernetes-preserve-unknown-fields": true
+																	}
 																}
 																required: [
 																	"op",
@@ -454,7 +584,8 @@ helmReleaseCRD: {
 									timeout: {
 										description: "Timeout is the time to wait for any individual Kubernetes operation (like Jobs for hooks) during the performance of a Helm rollback action. Defaults to 'HelmReleaseSpec.Timeout'."
 
-										type: "string"
+										pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+										type:    "string"
 									}
 								}
 								type: "object"
@@ -500,7 +631,8 @@ helmReleaseCRD: {
 									timeout: {
 										description: "Timeout is the time to wait for any individual Kubernetes operation during the performance of a Helm test action. Defaults to 'HelmReleaseSpec.Timeout'."
 
-										type: "string"
+										pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+										type:    "string"
 									}
 								}
 								type: "object"
@@ -508,7 +640,8 @@ helmReleaseCRD: {
 							timeout: {
 								description: "Timeout is the time to wait for any individual Kubernetes operation (like Jobs for hooks) during the performance of a Helm action. Defaults to '5m0s'."
 
-								type: "string"
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							uninstall: {
 								description: "Uninstall holds the configuration for Helm uninstall actions for this HelmRelease."
@@ -516,6 +649,11 @@ helmReleaseCRD: {
 								properties: {
 									disableHooks: {
 										description: "DisableHooks prevents hooks from running during the Helm rollback action."
+
+										type: "boolean"
+									}
+									disableWait: {
+										description: "DisableWait disables waiting for all the resources to be deleted after a Helm uninstall is performed."
 
 										type: "boolean"
 									}
@@ -527,7 +665,8 @@ helmReleaseCRD: {
 									timeout: {
 										description: "Timeout is the time to wait for any individual Kubernetes operation (like Jobs for hooks) during the performance of a Helm uninstall action. Defaults to 'HelmReleaseSpec.Timeout'."
 
-										type: "string"
+										pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+										type:    "string"
 									}
 								}
 								type: "object"
@@ -543,12 +682,12 @@ helmReleaseCRD: {
 									}
 									crds: {
 										description: """
-              		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Skip` and if omitted CRDs are neither installed nor upgraded.
-              		 Skip: do neither install nor replace (update) any CRDs.
-              		 Create: new CRDs are created, existing CRDs are neither updated nor deleted.
-              		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted.
-              		 By default, CRDs are not applied during Helm upgrade action. With this option users can opt-in to CRD upgrade, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
-              		"""
+		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Skip` and if omitted CRDs are neither installed nor upgraded. 
+		 Skip: do neither install nor replace (update) any CRDs. 
+		 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
+		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
+		 By default, CRDs are not applied during Helm upgrade action. With this option users can opt-in to CRD upgrade, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
+		"""
 
 										enum: [
 											"Skip",
@@ -621,7 +760,8 @@ helmReleaseCRD: {
 									timeout: {
 										description: "Timeout is the time to wait for any individual Kubernetes operation (like Jobs for hooks) during the performance of a Helm upgrade action. Defaults to 'HelmReleaseSpec.Timeout'."
 
-										type: "string"
+										pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+										type:    "string"
 									}
 								}
 								type: "object"
@@ -661,12 +801,16 @@ helmReleaseCRD: {
 										targetPath: {
 											description: "TargetPath is the YAML dot notation path the value should be merged at. When set, the ValuesKey is expected to be a single flat value. Defaults to 'None', which results in the values getting merged at the root."
 
-											type: "string"
+											maxLength: 250
+											pattern:   "^([a-zA-Z0-9_\\-.\\\\\\/]|\\[[0-9]{1,5}\\])+$"
+											type:      "string"
 										}
 										valuesKey: {
-											description: "ValuesKey is the data key where the values.yaml or a specific value can be found at. Defaults to 'values.yaml'."
+											description: "ValuesKey is the data key where the values.yaml or a specific value can be found at. Defaults to 'values.yaml'. When set, must be a valid Data Key, consisting of alphanumeric characters, '-', '_' or '.'."
 
-											type: "string"
+											maxLength: 253
+											pattern:   "^[\\-._a-zA-Z0-9]+$"
+											type:      "string"
 										}
 									}
 									required: [
@@ -685,15 +829,17 @@ helmReleaseCRD: {
 						type: "object"
 					}
 					status: {
+						default: observedGeneration: -1
 						description: "HelmReleaseStatus defines the observed state of a HelmRelease."
 						properties: {
 							conditions: {
 								description: "Conditions holds the conditions for the HelmRelease."
 								items: {
 									description: """
-              		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-              		     // other fields }
-              		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -784,7 +930,7 @@ helmReleaseCRD: {
 								type: "string"
 							}
 							lastHandledReconcileAt: {
-								description: "LastHandledReconcileAt holds the value of the most recent reconcile request value, so a change can be detected."
+								description: "LastHandledReconcileAt holds the value of the most recent reconcile request value, so a change of the annotation value can be detected."
 
 								type: "string"
 							}
@@ -814,5 +960,18 @@ helmReleaseCRD: {
 			storage: true
 			subresources: status: {}
 		}]
+	}
+	status: {
+		acceptedNames: {
+			kind:     "HelmRelease"
+			listKind: "HelmReleaseList"
+			plural:   "helmreleases"
+			shortNames: [
+				"hr",
+			]
+			singular: "helmrelease"
+		}
+		conditions: []
+		storedVersions: []
 	}
 }

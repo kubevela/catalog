@@ -12,7 +12,7 @@ kustomizeController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/kustomize-controller:v0.26.0"
+		image:           _base + "fluxcd/kustomize-controller:v0.32.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
