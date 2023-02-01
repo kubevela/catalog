@@ -9,6 +9,10 @@
         value: git
       - label: Helm
         value: helm
+      - label: Oss
+        value: oss
+      - label: Oci
+        value: oci        
 - jsonKey: url
   label: Repo URL
   uiType: HelmRepoSelect
