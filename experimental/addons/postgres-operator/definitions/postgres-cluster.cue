@@ -13,6 +13,7 @@ template: {
                 apiVersion: "acid.zalan.do/v1"
                 metadata: {
                         name:      context.name
+                        namespace: context.namespace
                         // default namespace will be "prod"
                 }
                 spec: {
