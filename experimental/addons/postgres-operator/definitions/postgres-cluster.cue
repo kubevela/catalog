@@ -9,29 +9,19 @@
 
 template: {
         output: {
-                apiVersion: "v1"
-                kind:       "Secret"
-                metadata: {
-                        name:      context.name //"mongodb-secret"
-                        namespace: "postgres-operator" //"default"
-                }
-                stringData: password: parameter.password //"abc123456"
-                type: "Opaque"
-        }
-        outputs: postgres: {
-                apiVersion: "acid.zalan.do/v1"
                 kind:       "postgresql"
+                apiVersion: "acid.zalan.do/v1"
                 metadata: {
-                        name:      context.name //"mongodb"
-                        namespace: context.namespace //"default"
+                        name:      context.name
+                        // default namespace will be prod
                 }
                 spec: {
                         dockerImage: parameter.image //ghcr.io/zalando/spilo-15:2.1-p9
-                        numberOfInstances: parameter.replicas //2
+                        numberOfInstances: parameter.replicas //By default it's 2
                         teamId: parameter.teamId
                         postgresql: parameter.postgresql
                         databases: {
-                            foo: "zalando"
+                            foo: "zalando"      // dbname: owner
                         }
                         preparedDatabases: {
                                 bar: {
@@ -50,14 +40,14 @@ template: {
                                 }
                         }
                         users: { // Application/Robot users
-                            zalando: ["superuser", "createdb"]
-                            foo_user: []
+                            zalando: ["superuser", "createdb"]     // database owner
+                            foo_user: []        // role for application foo
                         }
                         enableMasterLoadBalancer: parameter.enableMasterLoadBalancer
                         enableReplicaLoadBalancer: parameter.enableReplicaLoadBalancer
                         enableConnectionPooler: parameter.enableConnectionPooler
                         enableReplicaConnectionPooler: parameter.enableReplicaConnectionPooler
-                        enableMasterPoolerLoadBalancer: parameter.enableMasterPoolerLoadBalancer
+                        enableMasterPoolerLoadBalancer: parameter.enableReplicaConnectionPooler
                         enableReplicaPoolerLoadBalancer: parameter.enableReplicaPoolerLoadBalancer
                         allowedSourceRanges:  [       // load balancers' source ranges for both master and replica services
                             "127.0.0.1/32"
@@ -119,28 +109,29 @@ template: {
                         //+usage=the size of the volume used of postgres.
                         size: *"1Gi" | string
                 }
+                //+usage=configure patroni.
                 patroni: {
                         failsafe_mode: *false | bool
                         initdb: {
                                 encoding: *"UTF8" | string
                                 locale: *"en_US.UTF-8" | string
-                                data-checksums: *"true" | string
+                                "data-checksums": *"true" | string
                         }
                 }
                 //+usage=enable SHM volume if set true.                
                 enableShmVolume: *true | bool
                 //+usage=enable master as load balancer if set true.
-                enableMasterLoadBalancer *false | bool
+                enableMasterLoadBalancer: *false | bool
                 //+usage=enable replica as load balancer if set true.
-                enableReplicaLoadBalancer *false | bool
+                enableReplicaLoadBalancer: *false | bool
                 //+usage=enable/disable connection pooler deployment.
-                enableConnectionPooler *false | bool
+                enableConnectionPooler: *false | bool
                 //+usage=set to enable connection pooler for replica service.
-                enableReplicaConnectionPooler *false | bool
+                enableReplicaConnectionPooler: *false | bool
                 //+usage=set to enable master pooler as load balancer.
-                enableMasterPoolerLoadBalancer *false | bool
+                enableMasterPoolerLoadBalancer: *false | bool
                 //+usage=set to enable replica pooler as load balancer.
-                enableReplicaPoolerLoadBalancer *false | bool
+                enableReplicaPoolerLoadBalancer: *false | bool
                 //+usage=set ttl(Time to live) by dedault it's 30 days.
                 ttl: *30 | int
                 //+usage=set loop wait time by dedault it's 10.
