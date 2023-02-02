@@ -13,36 +13,16 @@ template: {
                 apiVersion: "acid.zalan.do/v1"
                 metadata: {
                         name:      context.name
-                        // default namespace will be prod
+                        // default namespace will be "prod"
                 }
                 spec: {
                         dockerImage: parameter.image //ghcr.io/zalando/spilo-15:2.1-p9
                         numberOfInstances: parameter.replicas //By default it's 2
                         teamId: parameter.teamId
                         postgresql: parameter.postgresql
-                        databases: {
-                            foo: "zalando"      // dbname: owner
-                        }
-                        preparedDatabases: {
-                                bar: {
-                                        defaultUsers: true
-                                        extensions: {
-                                                pg_partman: "public"
-                                                pgcrypto: "public"
-                                        }
-                                        schemas: {
-                                                data: {}
-                                                history: {
-                                                        defaultRoles: true
-                                                        defaultUsers: false
-                                                }
-                                        }
-                                }
-                        }
-                        users: { // Application/Robot users
-                            zalando: ["superuser", "createdb"]     // database owner
-                            foo_user: []        // role for application foo
-                        }
+                        databases: parameter.databases
+                        preparedDatabases: parameter.preparedDatabases
+                        users: parameter.users
                         enableMasterLoadBalancer: parameter.enableMasterLoadBalancer
                         enableReplicaLoadBalancer: parameter.enableReplicaLoadBalancer
                         enableConnectionPooler: parameter.enableConnectionPooler
@@ -109,6 +89,32 @@ template: {
                         //+usage=the size of the volume used of postgres.
                         size: *"1Gi" | string
                 }
+                //+usage=define databases to be used.
+                databases: *{
+                        foo: "zalando"      // dbname: owner
+                } | {...}
+                //+usage=configure created databases.
+                preparedDatabases: *{
+                        bar: {
+                                defaultUsers: true
+                                extensions: {
+                                        pg_partman: "public"
+                                        pgcrypto: "public"
+                                }
+                                schemas: {
+                                        data: {}
+                                        history: {
+                                                defaultRoles: true
+                                                defaultUsers: false
+                                        }
+                                }
+                        }
+                } | {...}
+                //+usage=configure users for the databases.
+                users: *{
+                        zalando: ["superuser", "createdb"]
+                        foo_user: []
+                } | {...}
                 //+usage=configure patroni.
                 patroni: {
                         failsafe_mode: *false | bool
