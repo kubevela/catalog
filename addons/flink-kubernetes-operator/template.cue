@@ -22,10 +22,10 @@ output: {
                             type: "helm"
                             properties: {
                                     repoType: "helm"
-                                    url:      "https://downloads.apache.org/flink/flink-kubernetes-operator-1.3.0/"
+                                    url:      "https://downloads.apache.org/flink/flink-kubernetes-operator-1.3.1/"
                                     chart:    "flink-kubernetes-operator"
                                     targetNamespace: parameter["namespace"]
-                                    version:  "1.3.0"
+                                    version:  "1.3.1"
                                     values: {
                                             webhook: {
                                                 create: parameter["createWebhook"]
