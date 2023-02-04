@@ -1,0 +1,13 @@
+name: zookeeper-operator
+version: 1.0.0
+description: This addon adds zookeeper-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://zookeeper.apache.org/images/zookeeper_small.gif"
+url: "https://zookeeper.apache.org/"
+
+tags:
+- zookeeper-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd

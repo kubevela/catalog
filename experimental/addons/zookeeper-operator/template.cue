@@ -1,42 +1,41 @@
 package main
-
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	spec: {
 		components: [
 			{
-				name: "ns-postgres-operator"
+				name: "ns-zookeeper-operator"
 				type: "k8s-objects"
 				properties: objects: [{
 					kind: "Namespace"
 					apiVersion: "v1"
 					metadata:
-						name: "postgres-operator"
+						name: parameter.namespace
 				}]
 			},
 			{
-				name: "postgres-operator"
+				name: "zookeeper-operator"
 				type: "helm"
 				properties:	{
 					repoType: "helm"
-					url: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
-					chart: "postgres-operator-charts/postgres-operator"
-					version: "1.8.2"
+					url: "https://charts.pravega.io"
+					chart: "zookeeper-operator"
+					version: "0.2.14"
 				}
 			},
 		]
 		policies: [
 			{
 				type: "shared-resource"
-				name: "postgres-operator-ns"
+				name: "zookeeper-operator-ns"
 				properties: rules: [{
 					selector: resourceTypes: ["Namespace"]
 				}]
 			},
 			{
 				type: "topology"
-				name: "deploy-postgres-operator"
+				name: "deploy-zookeeper-operator"
 				properties: {
 					namespace: parameter.namespace
 					if parameter.clusters != _|_ {
