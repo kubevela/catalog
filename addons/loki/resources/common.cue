@@ -15,10 +15,14 @@ commonPolicies: [{
 	name: "namespace"
 	properties: rules: [{selector: resourceTypes: ["Namespace"]}]
 }, {
+	type: "take-over"
+	name: "namespace-take-over"
+	properties: rules: [{selector: resourceTypes: ["Namespace"]}]
+}, {
 	type: "garbage-collect"
-	name: "ignore-recycle-pvc-and-crd"
+	name: "ignore-recycle-pvc-ns"
 	properties: rules: [{
-		selector: resourceTypes: ["PersistentVolumeClaim", "CustomResourceDefinition"]
+		selector: resourceTypes: ["PersistentVolumeClaim", "Namespace"]
 		strategy: "never"
 	}]
 }, {

@@ -1,5 +1,6 @@
 - jsonKey: repoType
   label: Repo Type
+  uiType: Select
   sort: 1
   validate:
     required: true
@@ -9,6 +10,8 @@
         value: git
       - label: Oss
         value: oss
+      - label: Oci
+        value: oci  
 - jsonKey: url
   label: Repo URL
   sort: 2

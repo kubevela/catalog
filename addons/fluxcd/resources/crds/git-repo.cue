@@ -4,11 +4,18 @@ gitRepoCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"
-		labels: "app.kubernetes.io/instance":                 "flux-system"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		labels: {
+			"app.kubernetes.io/component":           "source-controller"
+			"app.kubernetes.io/instance":            "flux-system"
+			"app.kubernetes.io/part-of":             "flux"			
+			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
+			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+		}
 		name: "gitrepositories.source.toolkit.fluxcd.io"
 	}
 	spec: {
+		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "GitRepository"
@@ -189,7 +196,7 @@ gitRepoCRD: {
 							}
 							url: {
 								description: "The repository URL, can be a HTTP/S or SSH address."
-								pattern:     "^(http|https|ssh)://"
+								pattern:     "^(http|https|ssh)://.*$"
 								type:        "string"
 							}
 							verify: {
@@ -271,9 +278,10 @@ gitRepoCRD: {
 								description: "Conditions holds the conditions for the GitRepository."
 								items: {
 									description: """
-             		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-             		     // other fields }
-             		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -456,7 +464,7 @@ gitRepoCRD: {
 							}
 							gitImplementation: {
 								default:     "go-git"
-								description: "GitImplementation specifies which Git client library implementation to use. Defaults to 'go-git', valid values are ('go-git', 'libgit2')."
+								description: "GitImplementation specifies which Git client library implementation to use. Defaults to 'go-git', valid values are ('go-git', 'libgit2'). Deprecated: gitImplementation is deprecated now that 'go-git' is the only supported implementation."
 
 								enum: [
 									"go-git",
@@ -508,6 +516,7 @@ gitRepoCRD: {
 							}
 							interval: {
 								description: "Interval at which to check the GitRepository for updates."
+								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
 								type:        "string"
 							}
 							recurseSubmodules: {
@@ -521,17 +530,17 @@ gitRepoCRD: {
 								properties: {
 									branch: {
 										description: """
-             		Branch to check out, defaults to 'master' if no other field is defined.
-             		 When GitRepositorySpec.GitImplementation is set to 'go-git', a shallow clone of the specified branch is performed.
-             		"""
+		Branch to check out, defaults to 'master' if no other field is defined. 
+		 When GitRepositorySpec.GitImplementation is set to 'go-git', a shallow clone of the specified branch is performed.
+		"""
 
 										type: "string"
 									}
 									commit: {
 										description: """
-             		Commit SHA to check out, takes precedence over all reference fields.
-             		 When GitRepositorySpec.GitImplementation is set to 'go-git', this can be combined with Branch to shallow clone the branch, in which the commit is expected to exist.
-             		"""
+		Commit SHA to check out, takes precedence over all reference fields. 
+		 When GitRepositorySpec.GitImplementation is set to 'go-git', this can be combined with Branch to shallow clone the branch, in which the commit is expected to exist.
+		"""
 
 										type: "string"
 									}
@@ -568,12 +577,13 @@ gitRepoCRD: {
 								default:     "60s"
 								description: "Timeout for Git operations like cloning, defaults to 60s."
 
-								type: "string"
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m))+$"
+								type:    "string"
 							}
 							url: {
 								description: "URL specifies the Git repository URL, it can be an HTTP/S or SSH address."
 
-								pattern: "^(http|https|ssh)://"
+								pattern: "^(http|https|ssh)://.*$"
 								type:    "string"
 							}
 							verify: {
@@ -631,6 +641,11 @@ gitRepoCRD: {
 										format: "date-time"
 										type:   "string"
 									}
+									metadata: {
+										additionalProperties: type: "string"
+										description: "Metadata holds upstream information such as OCI annotations."
+										type:        "object"
+									}
 									path: {
 										description: "Path is the relative file path of the Artifact. It can be used to locate the file in the root of the Artifact storage on the local file system of the controller managing the Source."
 
@@ -662,9 +677,10 @@ gitRepoCRD: {
 								description: "Conditions holds the conditions for the GitRepository."
 								items: {
 									description: """
-             		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-             		     // other fields }
-             		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -723,7 +739,10 @@ gitRepoCRD: {
 								type: "array"
 							}
 							contentConfigChecksum: {
-								description: "ContentConfigChecksum is a checksum of all the configurations related to the content of the source artifact:  - .spec.ignore  - .spec.recurseSubmodules  - .spec.included and the checksum of the included artifacts observed in .status.observedGeneration version of the object. This can be used to determine if the content of the included repository has changed. It has the format of `<algo>:<checksum>`, for example: `sha256:<checksum>`."
+								description: """
+		ContentConfigChecksum is a checksum of all the configurations related to the content of the source artifact: - .spec.ignore - .spec.recurseSubmodules - .spec.included and the checksum of the included artifacts observed in .status.observedGeneration version of the object. This can be used to determine if the content of the included repository has changed. It has the format of `<algo>:<checksum>`, for example: `sha256:<checksum>`. 
+		 Deprecated: Replaced with explicit fields for observed artifact content config in the status.
+		"""
 
 								type: "string"
 							}
@@ -743,6 +762,12 @@ gitRepoCRD: {
 
 											format: "date-time"
 											type:   "string"
+										}
+										metadata: {
+											additionalProperties: type: "string"
+											description: "Metadata holds upstream information such as OCI annotations."
+
+											type: "object"
 										}
 										path: {
 											description: "Path is the relative file path of the Artifact. It can be used to locate the file in the root of the Artifact storage on the local file system of the controller managing the Source."
@@ -784,6 +809,53 @@ gitRepoCRD: {
 								format: "int64"
 								type:   "integer"
 							}
+							observedIgnore: {
+								description: "ObservedIgnore is the observed exclusion patterns used for constructing the source artifact."
+
+								type: "string"
+							}
+							observedInclude: {
+								description: "ObservedInclude is the observed list of GitRepository resources used to to produce the current Artifact."
+
+								items: {
+									description: "GitRepositoryInclude specifies a local reference to a GitRepository which Artifact (sub-)contents must be included, and where they should be placed."
+
+									properties: {
+										fromPath: {
+											description: "FromPath specifies the path to copy contents from, defaults to the root of the Artifact."
+
+											type: "string"
+										}
+										repository: {
+											description: "GitRepositoryRef specifies the GitRepository which Artifact contents must be included."
+
+											properties: name: {
+												description: "Name of the referent."
+												type:        "string"
+											}
+											required: [
+												"name",
+											]
+											type: "object"
+										}
+										toPath: {
+											description: "ToPath specifies the path to copy contents to, defaults to the name of the GitRepositoryRef."
+
+											type: "string"
+										}
+									}
+									required: [
+										"repository",
+									]
+									type: "object"
+								}
+								type: "array"
+							}
+							observedRecurseSubmodules: {
+								description: "ObservedRecurseSubmodules is the observed resource submodules configuration used to produce the current Artifact."
+
+								type: "boolean"
+							}
 							url: {
 								description: "URL is the dynamic fetch link for the latest Artifact. It is provided on a \"best effort\" basis, and using the precise GitRepositoryStatus.Artifact data is recommended."
 
@@ -802,8 +874,13 @@ gitRepoCRD: {
 	}
 	status: {
 		acceptedNames: {
-			kind:   ""
-			plural: ""
+			kind:     "GitRepository"
+			listKind: "GitRepositoryList"
+			plural:   "gitrepositories"
+			shortNames: [
+				"gitrepo",
+			]
+			singular: "gitrepository"
 		}
 		conditions: []
 		storedVersions: []

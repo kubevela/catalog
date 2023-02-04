@@ -96,6 +96,9 @@ template: {
 						if parameter.repoType == "oci" {
 							type: "oci"
 						}
+						if parameter.helmrepository.provider != _|_ {
+							provider: parameter.helmrepository.provider
+						}
 						_secret
 						_sourceCommonArgs
 					}
@@ -203,9 +206,14 @@ template: {
 			// +usage=The bucket's name, required if repoType is oss
 			bucketName: string
 			// +usage="generic" for Minio, Amazon S3, Google Cloud Storage, Alibaba Cloud OSS, "aws" for retrieve credentials from the EC2 service when credentials not specified, default "generic"
-			provider: *"generic" | "aws"
+			provider: *"generic" | "azure" | "aws" | "gcp"
 			// +usage=The bucket region, optional
 			region?: string
+		}
+		helmrepository?: {		   
+			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
+			provider: *"generic" | "azure" | "aws" | "gcp"		
+			
 		}
 		// +usage=Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef.Values files are merged in the order of this list with the last file overriding the first.
 		valuesFiles?: [...string]
