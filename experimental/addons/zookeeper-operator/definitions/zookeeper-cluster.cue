@@ -166,7 +166,7 @@ template: {
                     additionalConfig: *{} | {...}
                 }
                 //+usage=Type of storage that can be used it can take either ephemeral or persistence as value.
-                storageType: *"storageType" | string
+                storageType: *"persistence" | string
                 //+usage=Persistant storage type configuration.
                 persistence: {
                     //+usage=Specifies the annotations to attach to pvcs.
