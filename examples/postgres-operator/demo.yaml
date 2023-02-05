@@ -1,0 +1,66 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: postgres-operator-sample
+spec:
+  components:
+    # This component is provided by postgres-operator addon.
+    # In this example, 3 redis instances(replicas)
+    # will be created.
+    - type: "postgres-cluster"
+      name: "postgres"
+      properties:
+        # You can increase/decrease this later to add/remove instances.
+        replicas: 3 # By default it's set to 2
+        teamId: acid
+        image: "ghcr.io/zalando/spilo-15:2.1-p9"
+        volume:
+          size: 1Gi
+        databases:
+          foo: zalando
+        preparedDatabases:
+          bar:
+            defaultUsers: true
+            extensions:
+              pg_partman: public
+              pgcrypto: public
+            schemas:
+              data: {}
+              history:
+                defaultRoles: true
+                defaultUsers: false
+        users:
+          zalando: [superuser, createdb]
+          foo_user: []
+        patroni:
+          failsafe_mode: false
+          initdb:
+            encoding: UTF8
+            locale: en_US.UTF-8
+            data-checksums: "true"
+        enableShmVolume: true
+        enableMasterLoadBalancer: false
+        enableReplicaLoadBalancer: false
+        enableConnectionPooler: false
+        enableReplicaConnectionPooler: false
+        enableMasterPoolerLoadBalancer: false
+        enableReplicaPoolerLoadBalancer: false
+        ttl: 30
+        loopWait: 10
+        retryTimeout: 10
+        synchronousMode: false
+        synchronousModeStrict: false
+        synchronousNodeCount: 1
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        tls:
+          secretName: ""
+          certificateFile: tls.crt
+          privateKeyFile: tls.key
+          caFile: ""
+          caSecretName: ""
