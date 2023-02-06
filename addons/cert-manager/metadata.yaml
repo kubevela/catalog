@@ -1,5 +1,5 @@
 name: cert-manager
-version: 2.0.0
+version: 2.1.0
 description: Automatically provision and manage TLS certificates in Kubernetes
 icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/logo-small.png
 url: https://github.com/cert-manager/cert-manager
@@ -14,5 +14,5 @@ dependencies:
   - name: fluxcd
 
 system:
-  vela: ">=1.6.0-alpha.1"
+  vela: ">=v1.7.0-alpha.1"
 

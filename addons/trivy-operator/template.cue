@@ -37,6 +37,44 @@ output: {
 					}
 				}
 			},
+			{
+				type: "take-over"
+				name: "take-over-CRD-namespace"
+				properties: rules: [{
+					selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
+				}]
+			},
+			{
+				type: "shared-resource"
+				name: "shared-CRD-namespace"
+				properties: rules: [{
+					selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
+				}]
+			},
+			{
+				type: "garbage-collect"
+				name: "not-gc-CRD-namespace"
+				properties: {
+					rules: [{
+						selector: resourceTypes: ["CustomResourceDefinition", "Namespace"]
+						strategy: "never"
+					},
+					]
+				}
+			},
+			{
+				type: "apply-once"
+				name: "not-keep-CRD"
+				properties: {
+					rules: [{
+						selector: resourceTypes: ["CustomResourceDefinition"]
+						strategy: {
+							path: ["*"]
+						}
+					},
+					]
+				}
+			},
 		]
 	}
 }
