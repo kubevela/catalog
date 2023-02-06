@@ -214,6 +214,8 @@ var _ = Describe("Terraform Test", func() {
 		Expect(err).Should(BeNil())
 		args["vpc_id"] = vpc_id
 		comp.Properties = util.Object2RawExtension(args)
+		// this is only one comp
+		vswitchApp.Spec.Components[0] = *comp
 		err = k8sClient.Create(ctx, vswitchApp.DeepCopy())
 		Expect(err).Should(BeNil())
 		verifyConfigurationAvailable("sample-vswitch")
@@ -226,6 +228,8 @@ var _ = Describe("Terraform Test", func() {
 		Expect(err).Should(BeNil())
 		args["vpc_id"] = vpc_id
 		comp.Properties = util.Object2RawExtension(args)
+		// this is only one comp
+		secGroupApp.Spec.Components[0] = *comp
 		err = k8sClient.Create(ctx, secGroupApp.DeepCopy())
 		Expect(err).Should(BeNil())
 		verifyConfigurationAvailable("sample-sg")
