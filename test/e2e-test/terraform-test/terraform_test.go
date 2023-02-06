@@ -199,7 +199,7 @@ var _ = Describe("Terraform Test", func() {
 		verifyConfigurationDeleted("sample-ecs")
 	})
 
-	FIt("Test VPC/VSwitch/SecurityGroup", func() {
+	It("Test VPC/VSwitch/SecurityGroup", func() {
 		applyApp("vpc.yaml")
 		verifyConfigurationAvailable("sample-vpc")
 		By("Get VPC ID")
