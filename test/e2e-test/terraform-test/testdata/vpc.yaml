@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-vpc
+spec:
+  components:
+    - name: sample-vpc
+      type: alibaba-vpc
+      properties:
+        vpc_name: regular-check-vpc
+        vpc_cidr: 172.16.0.0/12
+        writeConnectionSecretToRef:
+          name: regular-check-vpc
+          namespace: default
