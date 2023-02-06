@@ -14,4 +14,4 @@ invisible: false
 
 
 system:
-  vela: ">=1.7.0"
+  vela: "v1.7.0-alpha.1"
