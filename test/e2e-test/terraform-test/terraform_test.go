@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/common"
 	"github.com/oam-dev/kubevela-core-api/apis/core.oam.dev/v1beta1"
+	"github.com/oam-dev/kubevela-core-api/pkg/oam/util"
 	"github.com/oam-dev/terraform-controller/api/types"
 	"github.com/oam-dev/terraform-controller/api/v1beta2"
 	. "github.com/onsi/ginkgo"
@@ -196,6 +197,50 @@ var _ = Describe("Terraform Test", func() {
 		By("Delete application that create ECS")
 		deleteApp("ecs.yaml")
 		verifyConfigurationDeleted("sample-ecs")
+	})
+
+	It("Test VPC/VSwitch/SecurityGroup", func() {
+		applyApp("vpc.yaml")
+		verifyConfigurationAvailable("sample-vpc")
+		By("Get VPC ID")
+		cfg := readConf("sample-vpc")
+		vpc_id := cfg.Status.Apply.Outputs["VPC_ID"].Value
+
+		By("Apply VSwitch")
+		vswitchApp := readApp("vswitch.yaml")
+		comp := vswitchApp.GetComponent("alibaba-vswitch")
+		Expect(comp).ShouldNot(BeNil())
+		args, err := util.RawExtension2Map(comp.Properties)
+		Expect(err).Should(BeNil())
+		args["vpc_id"] = vpc_id
+		comp.Properties = util.Object2RawExtension(args)
+		// this is only one comp
+		vswitchApp.Spec.Components[0] = *comp
+		err = k8sClient.Create(ctx, vswitchApp.DeepCopy())
+		Expect(err).Should(BeNil())
+		verifyConfigurationAvailable("sample-vswitch")
+
+		By("Apply Security Group")
+		secGroupApp := readApp("security-group.yaml")
+		comp = secGroupApp.GetComponent("alibaba-security-group")
+		Expect(comp).ShouldNot(BeNil())
+		args, err = util.RawExtension2Map(comp.Properties)
+		Expect(err).Should(BeNil())
+		args["vpc_id"] = vpc_id
+		comp.Properties = util.Object2RawExtension(args)
+		// this is only one comp
+		secGroupApp.Spec.Components[0] = *comp
+		err = k8sClient.Create(ctx, secGroupApp.DeepCopy())
+		Expect(err).Should(BeNil())
+		verifyConfigurationAvailable("sample-sg")
+
+		By("Delete application that create VPC/VSwitch/SecurityGroup")
+		deleteApp("security-group.yaml")
+		verifyConfigurationDeleted("sample-sg")
+		deleteApp("vswitch.yaml")
+		verifyConfigurationDeleted("sample-vswitch")
+		deleteApp("vpc.yaml")
+		verifyConfigurationDeleted("sample-vpc")
 	})
 
 })

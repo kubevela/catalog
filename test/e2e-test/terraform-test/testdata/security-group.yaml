@@ -1,0 +1,41 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-sg
+spec:
+  components:
+    - name: sample-sg
+      type: alibaba-security-group
+      properties:
+        name: sample-sg
+#        provided during test
+#        vpc_id: vpc-bp1mp89jxm3wjsggw9ybi
+        description: "vela test only"
+        ingress_cidr_blocks: [ "10.10.0.0/16" ]
+        ingress_rules: [ "https-443-tcp" ]
+        ingress_with_cidr_blocks:
+          - from_port: 8080
+            to_port: 8090
+            protocol: "tcp"
+            description: "User-service ports"
+            cidr_blocks: "10.10.0.0/16,10.11.0.0/16,10.12.0.0/16"
+            priority: 2
+          - rule: "postgresql-tcp"
+            priority: 2
+            cidr_blocks: "10.13.0.0/16,10.14.0.0/16"
+            # Using ingress_cidr_blocks to set cidr_blocks
+          - rule: "postgresql-tcp"
+        egress_cidr_blocks: [ "10.10.0.0/16" ]
+        egress_with_cidr_blocks:
+          - from_port: 8080
+            to_port: 8090
+            protocol: "tcp"
+            description: "User-service ports"
+            priority: 1
+            cidr_blocks: "10.13.0.0/16,10.14.0.0/16"
+            # Using egress_cidr_blocks to set cidr_blocks
+            rule: "postgresql-tcp"
+
+        writeConnectionSecretToRef:
+          name: sg-info
+          namespace: prod
