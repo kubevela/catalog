@@ -1,0 +1,170 @@
+# spark-kubernetes-operator
+
+A kubernetes operator for Apache Spark(https://github.com/GoogleCloudPlatform/spark-on-k8s-operator), it allows users to manage Spark applications and their lifecycle through native K8S tooling like `kubectl`.
+
+> Note: It's not provided by Apache Spark. But widely used by a large number of companies(https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/who-is-using.md).
+
+# Install
+
+```
+#The following steps are for enabling fluxcd and spark-kubernetes-operator in namespace called "spark-operator".
+
+vela addon enable fluxcd
+vela addon enable spark-kubernetes-operator
+```
+
+# Uninstall
+
+```
+vela addon disable spark-kubernetes-operator
+vela addon disable fluxcd
+```
+
+# To check the spark-kubernetes-operator running status
+
+* Firstly, check the spark-kubernetes-operator (and the fluxcd and we need to deploy by helm) running status
+
+```
+vela addon status spark-kubernetes-operator
+vela ls -A | grep spark
+```
+
+* Secondly, show the component type `spark-cluster`, so we know how to use it in one application. As a spark user, you can choose the parameter to set for your spark cluster.
+
+```
+vela show spark-application
+# Specification
++---------------------+------------------------------------------------------------------------------------------------------+-------------------+----------+---------+
+|        NAME         |                                             DESCRIPTION                                              |       TYPE        | REQUIRED | DEFAULT |
++---------------------+------------------------------------------------------------------------------------------------------+-------------------+----------+---------+
+| name                | Specify the spark application name.                                                                  | string            | true     |         |
+| namespace           | Specify the namespace for spark application to install.                                              | string            | true     |         |
+| type                | Specify the application language type, e.g. "Scala", "Python", "Java" or "R".                        | string            | true     |         |
+| pythonVersion       | Specify the python version.                                                                          | string            | false    |         |
+| mode                | Specify the deploy mode, e.go "cluster", "client" or "in-cluster-client".                            | string            | true     |         |
+| image               | Specify the container image for the driver, executor, and init-container.                            | string            | true     |         |
+| imagePullPolicy     | Specify the image pull policy for the driver, executor, and init-container.                          | string            | true     |         |
+| mainClass           | Specify the fully-qualified main class of the Spark application.                                     | string            | true     |         |
+| mainApplicationFile | Specify the path to a bundled JAR, Python, or R file of the application.                             | string            | true     |         |
+| sparkVersion        | Specify the version of Spark the application uses.                                                   | string            | true     |         |
+| driverCores         | Specify the number of CPU cores to request for the driver pod.                                       | int               | true     |         |
+| executorCores       | Specify the number of CPU cores to request for the executor pod.                                     | int               | true     |         |
+| arguments           | Specify a list of arguments to be passed to the application.                                         | []string          | false    |         |
+| sparkConf           | Specify the config information carries user-specified Spark configuration properties as they would   | map[string]string | false    |         |
+|                     | use the  "--conf" option in spark-submit.                                                            |                   |          |         |
+| hadoopConf          | Specify the config information carries user-specified Hadoop configuration properties as they would  | map[string]string | false    |         |
+|                     | use the  the "--conf" option in spark-submit.  The SparkApplication controller automatically adds    |                   |          |         |
+|                     | prefix "spark.hadoop." to Hadoop configuration properties.                                           |                   |          |         |
+| sparkConfigMap      | Specify the name of the ConfigMap containing Spark configuration files such as log4j.properties. The | string            | false    |         |
+|                     | controller will add environment variable SPARK_CONF_DIR to the path where the ConfigMap is mounted   |                   |          |         |
+|                     | to.                                                                                                  |                   |          |         |
+| hadoopConfigMap     | Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The   | string            | false    |         |
+|                     | controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted  |                   |          |         |
+|                     | to.                                                                                                  |                   |          |         |
++---------------------+------------------------------------------------------------------------------------------------------+-------------------+----------+---------+
+
+```
+
+# Example for how to run a component typed spark-cluster in application
+
+1. Firstly, copy the following example to "spark-app-v1.yaml":
+
+> The addon will create a namespace named "spark-cluster"
+
+```
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: spark-app-v1
+  namespace: spark-cluster
+spec:
+  components:
+  - name: my-spark-application-component
+    type: spark-application
+    properties:
+      name: my-spark-app
+      namespace: spark-cluster
+      type: Scala
+      mode: cluster
+      image: "gcr.io/spark-operator/spark:v3.1.1"
+      imagePullPolicy: Always
+      mainClass: org.apache.spark.examples.streaming.JavaQueueStream
+      mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar"
+      sparkVersion: "3.1.1"
+      driverCores: 1
+      executorCores: 1
+```
+
+2. Secondly, start the application:
+
+```
+vela up -f spark-app-v1.yaml
+```
+
+You will see the stdout like this:
+
+```
+Applying an application in vela K8s object format...
+I0227 16:54:37.069480  361176 apply.go:121] "creating object" name="spark-app-v1" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward spark-app-v1 -n spark-cluster
+             SSH: vela exec spark-app-v1 -n spark-cluster
+         Logging: vela logs spark-app-v1 -n spark-cluster
+      App status: vela status spark-app-v1 -n spark-cluster
+        Endpoint: vela status spark-app-v1 -n spark-cluster --endpoint
+Application spark-cluster/spark-app-v1 applied.
+```
+
+3. Then, you can use the native command to check the status of the Spark applicaiton:
+
+```
+$ kubectl get sparkapplications -n spark-cluster
+NAME           STATUS    ATTEMPTS   START                  FINISH       AGE
+my-spark-app   RUNNING   1          2023-02-27T08:54:40Z   <no value>   2m33s
+```
+
+or get the application detail via this command:
+
+```
+$ kubectl describe sparkapplication my-spark-app -n spark-cluster
+Name:         my-spark-app
+Namespace:    spark-cluster
+Labels:       app.oam.dev/app-revision-hash=4e5592aea53a5961
+              app.oam.dev/appRevision=spark-app-v1-v1
+              app.oam.dev/cluster=local
+              app.oam.dev/component=my-spark-application-component
+              app.oam.dev/name=spark-app-v1
+              app.oam.dev/namespace=spark-cluster
+              app.oam.dev/resourceType=TRAIT
+              app.oam.dev/revision=
+              oam.dev/render-hash=640a3298d803274e
+              trait.oam.dev/resource=spark
+              trait.oam.dev/type=AuxiliaryWorkload
+Annotations:  app.oam.dev/last-applied-configuration:
+                {"apiVersion":"sparkoperator.k8s.io/v1beta2","kind":"SparkApplication","metadata":{"annotations":{"app.oam.dev/last-applied-time":"2023-02...
+              app.oam.dev/last-applied-time: 2023-02-27T16:54:37+08:00
+              oam.dev/kubevela-version: v1.7.0
+API Version:  sparkoperator.k8s.io/v1beta2
+Kind:         SparkApplication
+Metadata:
+......
+```
+
+or get the general purpose detail information via this command:
+
+```
+$ kubectl get app spark-app-v1 -n spark-cluster -oyaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+......
+```
+
+4. Show the service of spark application via this command:
+
+```
+$ kubectl get svc -n spark-cluster
+NAME                                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+my-spark-app-c58a1c869214bfe5-driver-svc   ClusterIP   None             <none>        7078/TCP,7079/TCP,4040/TCP   19m
+my-spark-app-ui-svc                        ClusterIP   xx.xx.xx.xx   <none>        4040/TCP                     19m
+```
