@@ -92,7 +92,7 @@ template: {
 		// +usage=Specify addon enable args.
 		args?: [...string]
 		// +usage=Specify the image
-		image: *"oamdev/vela-cli:v1.6.4" | string
+		image: *"oamdev/vela-cli:v1.7.2" | string
 		// +usage=operation for the addon
 		operation: *"enable" | "upgrade" | "disable"
 		// +usage=specify serviceAccountName want to use
