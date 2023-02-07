@@ -21,4 +21,4 @@ spec:
             image:
               registry: hub.kubevela.net
               repository: oamdev/cloudshell
-              tag: "v1.6.4"
+              tag: "v1.7.2"
