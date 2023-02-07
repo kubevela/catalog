@@ -38,4 +38,4 @@ spec:
 
         writeConnectionSecretToRef:
           name: sg-info
-          namespace: prod
+          namespace: default
