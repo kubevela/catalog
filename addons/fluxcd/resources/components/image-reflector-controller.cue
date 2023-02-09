@@ -67,7 +67,12 @@ imageReflectorController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.imageReflectorControllerOptions != _|_ {
+					args: controllerArgs + parameter.imageReflectorControllerOptions
+				}
+				if parameter.imageReflectorControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

@@ -63,7 +63,12 @@ kustomizeController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.kustomizeControllerOptions != _|_ {
+					args: controllerArgs + parameter.kustomizeControllerOptions
+				}
+				if parameter.kustomizeControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]
