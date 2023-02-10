@@ -1,0 +1,19 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: regular-check-vswitch
+spec:
+  components:
+    - name: sample-vswitch
+      type: alibaba-vswitch
+      properties:
+#        provided during test
+#        vpc_id: vpc-bp1tfyt0rl2id3w2mtjb3
+        create_vpc: false
+        # This is a subnet of VPC
+        vswitch_cidr: 172.16.0.0/24
+        vswitch_name: sample-vswitch
+        zone_id: cn-hangzhou-b
+        writeConnectionSecretToRef:
+          name: my-vswitch-info
+          namespace: default

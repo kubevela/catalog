@@ -20,6 +20,7 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -28,6 +29,7 @@ import (
 	"unicode"
 
 	"github.com/pkg/errors"
+	"helm.sh/helm/v3/pkg/repo"
 	"sigs.k8s.io/yaml"
 )
 
@@ -50,6 +52,8 @@ const (
 	globalRexPattern         = "^.github.*|Makefile|.*.go"
 	pendingAddonFilename     = "test/e2e-test/addon-test/PENDING"
 	defTestDir               = "test/e2e-test/addon-test/definition-test/testdata/"
+	repoURL                  = "https://addons.kubevela.net"
+	experimentalRepoURL      = "https://addons.kubevela.net/experimental"
 )
 
 func main() {
@@ -57,6 +61,14 @@ func main() {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err)
 		os.Exit(1)
+	}
+	if os.Getenv("LOOPCHECK") == "true" {
+		err := loopCheck()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		os.Exit(0)
 	}
 	changedFile := os.Args[1:]
 
@@ -69,7 +81,7 @@ func main() {
 	if len(changedAddon) == 0 {
 		return
 	}
-	if err := enableAddonsByOrder(changedAddon); err != nil {
+	if _, err := enableAddonsByOrder("addons/%s", changedAddon, false); err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err)
 		os.Exit(1)
 	}
@@ -269,13 +281,17 @@ func readAddonMeta(addonName string) (*AddonMeta, error) {
 
 // This func will enable addon by order rely-on addon's relationShip dependency,
 // this func is so dummy now that the order is written manually, we can generated a dependency DAG workflow in the furture.
-func enableAddonsByOrder(changedAddon map[string]bool) error {
-	dirPattern := "addons/%s"
+func enableAddonsByOrder(dirPattern string, changedAddon map[string]bool, loopCheck bool) ([]string, error) {
 	// TODO: make topology sort to auto sort the order of enable
+	var failedAddons []string
 	for _, addonName := range []string{"fluxcd", "terraform", "velaux", "cert-manager", "vela-prism", "o11y-definitions", "prometheus-server"} {
 		if changedAddon[addonName] && !pendingAddon[addonName] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, addonName)); err != nil {
-				return err
+				if loopCheck {
+					failedAddons = append(failedAddons, addonName)
+					continue
+				}
+				return nil, err
 			}
 			changedAddon[addonName] = false
 		}
@@ -283,14 +299,18 @@ func enableAddonsByOrder(changedAddon map[string]bool) error {
 	for s, b := range changedAddon {
 		if b && !pendingAddon[s] {
 			if err := enableOneAddon(fmt.Sprintf(dirPattern, s)); err != nil {
-				return err
+				if loopCheck {
+					failedAddons = append(failedAddons, s)
+					continue
+				}
+				return nil, err
 			}
 			if err := disableOneAddon(s); err != nil {
-				return err
+				return nil, err
 			}
 		}
 	}
-	return nil
+	return failedAddons, nil
 }
 
 func enableOneAddon(dir string) error {
@@ -460,4 +480,66 @@ func testDefinitionsInAddons(addons string) error {
 		return err
 	}
 	return nil
+}
+
+// logic below is about loop check
+func loopCheck() error {
+	fmt.Println("Begin the process of loop check addon")
+	addons, err := calculateAddonsNameFromRepoUrl(repoURL)
+	if err != nil {
+		return err
+	}
+	enableAddons := map[string]bool{}
+	for _, addon := range addons {
+		enableAddons[addon] = true
+	}
+	failedAddons, err := enableAddonsByOrder("%s", enableAddons, true)
+	failed := false
+	if len(failedAddons) != 0 {
+		ioutil.WriteFile("/root/failed-addons", []byte(fmt.Sprint(failedAddons)), 0644)
+		failed = true
+	}
+	expAddons, err := calculateAddonsNameFromRepoUrl(experimentalRepoURL)
+	if err != nil {
+		return err
+	}
+	enableAddons = map[string]bool{}
+	for _, addon := range expAddons {
+		enableAddons[addon] = true
+	}
+	failedAddons, _ = enableAddonsByOrder("%s", enableAddons, true)
+	if len(failedAddons) != 0 {
+		ioutil.WriteFile("/root/failed-exp-addons", []byte(fmt.Sprint(failedAddons)), 0644)
+		failed = true
+	}
+	if failed {
+		return fmt.Errorf("failed to loop check addons")
+	}
+	return nil
+}
+
+func calculateAddonsNameFromRepoUrl(url string) ([]string, error) {
+	index := repo.IndexFile{}
+	body, err := http.Get(url + "/index.yaml")
+	if err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("failed to fetch index.yaml from %s", url)
+	}
+	if body.StatusCode != 200 {
+		return nil, fmt.Errorf("fetch idnex.yaml meeting not 200 http code")
+	}
+	indexByte, err := ioutil.ReadAll(body.Body)
+	if err != nil || len(indexByte) == 0 {
+		fmt.Println(err)
+		return nil, fmt.Errorf("failed to ready index bytes")
+	}
+	err = yaml.UnmarshalStrict(indexByte, &index)
+	if err != nil {
+		return nil, fmt.Errorf("faled to unmarshall index struct")
+	}
+	var addons []string
+	for addon, _ := range index.Entries {
+		addons = append(addons, addon)
+	}
+	return addons, nil
 }

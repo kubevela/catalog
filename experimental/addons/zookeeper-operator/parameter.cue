@@ -6,6 +6,6 @@
 // container images, ports, and etc.
 parameter: {
 	// +usage=Custom parameter description
-	namespace: *"postgres-operator" | string
+	namespace: *"zookeeper-operator" | string
 	clusters?: [...string]
 }

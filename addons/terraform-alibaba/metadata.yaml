@@ -1,5 +1,5 @@
 name: terraform-alibaba
-version: 1.0.4
+version: 1.0.5
 description: Kubernetes Terraform Controller for Alibaba Cloud
 icon: https://avatars3.githubusercontent.com/aliyun
 url: https://registry.terraform.io/providers/aliyun/alicloud/latest
