@@ -151,6 +151,21 @@ template: {
 			if parameter.values != _|_ {
 				values: parameter.values
 			}
+			if parameter.valuesFrom != _|_ {
+				valuesFrom: [for v in parameter.valuesFrom {{
+					kind: v.kind
+					name: v.name
+					if v.valuesKey != _|_ {
+						valuesKey: v.valuesKey
+					}
+					if v.targetPath != _|_ {
+						targetPath: v.targetPath
+					}
+					if v.optional != _|_ {
+						optional: v.optional
+					}
+				}}]
+			}
 			install: {
 				remediation: {
 					retries: parameter.retries
@@ -230,6 +245,19 @@ template: {
 		retries: *3 | int
 		// +usage=Chart values
 		values?: #nestedmap
+		// +usage=valuesFrom holds references to resources containing Helm values for this HelmRelease, and information about how they should be merged.
+		valuesFrom?: [...{
+			// +usage=Kind of the values referent, valid values are ('Secret', 'ConfigMap').
+			kind: "Secret" | "ConfigMap"
+			// +usage=Name of the values referent. Should reside in the same namespace as the referring resource.
+			name: string
+			// +usage=ValuesKey is the data key where the values.yaml or a specific value can be found at. Defaults to 'values.yaml'.
+			valuesKey?: string
+			// +usage=TargetPath is the YAML dot notation path the value should be merged at. When set, the ValuesKey is expected to be a single flat value. Defaults to 'None', which results in the values getting merged at the root.
+			targetPath?: string
+			// +usage=Optional marks this ValuesReference as optional. When set, a not found error or the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.
+			optional?: bool
+		}]
 	}
 
 	#nestedmap: {

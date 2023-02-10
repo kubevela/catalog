@@ -1,0 +1,27 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: hello-kubevela-helm
+spec:
+  components:
+    - name: hello-kubevela-helm
+      type: helm
+      properties:
+        repoType: "helm"
+        url: "https://www.kleinloog.ch/hello-helm/"
+        chart: "hello"
+        version: "0.4.0-rc2"
+        valuesFrom:
+          - kind: ConfigMap
+            name: hello-kubevela-helm-cm
+    - name: hello-kubevela-helm-cm
+      type: k8s-objects
+      properties:
+        objects:
+          - apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: hello-kubevela-helm-cm
+            data:
+              values.yaml: |
+                replicaCount: 1
