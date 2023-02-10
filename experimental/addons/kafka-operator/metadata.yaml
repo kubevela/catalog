@@ -1,0 +1,13 @@
+name: kafka-operator
+version: 1.0.0
+description: This addon adds kafka-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://raw.githubusercontent.com/strimzi/strimzi-kafka-operator/main/documentation/logo/strimzi_logo.png"
+url: "https://strimzi.io/"
+
+tags:
+- kafka-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
