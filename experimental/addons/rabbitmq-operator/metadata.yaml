@@ -1,0 +1,13 @@
+name: rabbitmq-operator
+version: 1.0.0
+description: This addon adds rabbitmq-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://avatars.githubusercontent.com/u/71012429?v=4"
+url: "https://www.rabbitmq.com/kubernetes/operator/"
+
+tags:
+- rabbitmq-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd

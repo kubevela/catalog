@@ -1,0 +1,38 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: rabbitmq-operator-sample
+spec:
+  components:
+    - type: "rabbitmq-operator"
+      name: "rabbitmq"
+      properties:
+        replicas: 1
+        image: rabbitmq:management
+        service:
+            type: ClusterIP
+            annotations: {}
+        persistence:
+            storage: 10Gi
+            storageClassName: ""
+        resources:
+            limits:
+                cpu: 2000m
+                memory: 2Gi
+            requests:
+                cpu: 1000m
+                memory: 2Gi
+        affinity: {}
+        tolerations: []
+        skipPostDeploySteps: false
+        terminationGracePeriodSeconds: 604800
+        tls:
+            secretName: ""
+            caSecretName: ""
+            disableNonTLSListeners: false
+        rabbitmq:
+            envConfig: ""
+            additionalPlugins: []
+            additionalConfig: ""
+            advancedConfig: ""
+        override: {...}
