@@ -7,14 +7,14 @@ spec:
     - type: "rabbitmq-operator"
       name: "rabbitmq"
       properties:
-        replicas: 1
-        image: rabbitmq:management
+        replicas: 2  # By default it's set to 1
+        image: ""    # set if want to use a custom image of any private repository
         service:
             type: ClusterIP
             annotations: {}
         persistence:
             storage: 10Gi
-            storageClassName: ""
+            storageClassName: "standard"
         resources:
             limits:
                 cpu: 2000m
