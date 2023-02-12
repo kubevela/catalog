@@ -9,21 +9,22 @@
 
 template: {
         output: {
-                apiVersion: "kafka.strimzi.io/v1beta2"
                 kind: "Kafka"
-                metadata:
-                    name: "my-cluster"
-                    spec: {
-                        kafka: parameter.kafka
-                        zookeeper: parameter.zookeeper
-                        entityOperator: parameter.entityOperator
-                        kafkaExporter: parameter.kafkaExporter
-                        cruiseControl:  parameter.cruiseControl
-                        clusterCa: parameter.clusterCa
-                        clientsCa: parameter.clientsCa
-                        jmxTrans: parameter.jmxTrans
-                        maintenanceTimeWindows: parameter.maintenanceTimeWindows
-                    }
+                apiVersion: "kafka.strimzi.io/v1beta2"
+                metadata: {
+                    name: context.name
+                }
+                spec: {
+                    kafka: parameter.kafka
+                    zookeeper: parameter.zookeeper
+                    entityOperator: parameter.entityOperator
+                    kafkaExporter: parameter.kafkaExporter
+                    cruiseControl:  parameter.cruiseControl
+                    clusterCa: parameter.clusterCa
+                    clientsCa: parameter.clientsCa
+                    jmxTrans: parameter.jmxTrans
+                    maintenanceTimeWindows: parameter.maintenanceTimeWindows
+                }
         }
         parameter: {
                 //+usage=configure kafka cluster.
