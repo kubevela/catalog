@@ -46,12 +46,12 @@ spec:
     - type: "rabbitmq-operator"
       name: "rabbitmq"
       properties:
-        replicas: 1
+        replicas: 2
 ```
 
 ```shell
 $ kubectl get po  -n prod  -o wide
 NAME                READY   STATUS    RESTARTS      AGE   IP            NODE       NOMINATED NODE   READINESS GATES
-rabbitmq-server-0   1/1     Pending   0             35m   <none>        <none>      <none>           <none>
+rabbitmq-server-0   1/1     Running   0          2m55s   10.244.0.173   minikube   <none>           <none>
+rabbitmq-server-1   1/1     Running   0          2m55s   10.244.0.174   minikube   <none>           <none>
 ```
-

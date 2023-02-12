@@ -34,7 +34,7 @@ template: {
             //+usage=The number of replicas of RabbitMQ nodes. Even numbers are highly discouraged and it is strongly recommended to use odd numbers.
             replicas: *1 | int
             //+usage=The RabbitMQ image reference.
-            image: *"rabbitmq:management" | string
+            image: *"" | string
             //+usage=An array of names of Kubernetes secrets, used to access the registry which contains the RabbitMQ image. This is only required for private registries.
             imagePullSecrets: [...]
             //+usage=configure service.
@@ -49,7 +49,7 @@ template: {
                 //+usage=The capacity of the persistent volume, expressed as a Kubernetes resource quantity. Set to `0` to deactivate persistence altogether (this may be convenient in CI/CD and test deloyments that should always start fresh).
                 storage: *"10Gi" | string
                 //+usage=The name of the Kubernetes StorageClass that will be used to request Persistent Volumes.
-                storageClassName: *"" | string
+                storageClassName: *"standard" | string
             }
             //+usage=configure respurces.
             resources: {
