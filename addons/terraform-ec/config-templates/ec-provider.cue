@@ -52,7 +52,7 @@ template: {
 
 	parameter: {
 		//+usage=The name of Terraform Provider for Elastic Cloud
-		name: *"ec" | string
+		name: string
 		//+usage=Get EC_API_KEY per this guide https://registry.terraform.io/providers/elastic/ec/latest/docs
 		EC_API_KEY: *"" | string
 	}

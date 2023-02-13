@@ -55,8 +55,8 @@ template: {
 	}
 
 	parameter: {
-		//+usage=The name of Terraform Provider for AWS, default is `default`
-		name: *"aws" | string
+		//+usage=The name of Terraform Provider for AWS
+		name: string
 		//+usage=Get AWS_ACCESS_KEY_ID per https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/
 		AWS_ACCESS_KEY_ID: string
 		//+usage=Get AWS_SECRET_ACCESS_KEY per https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/
