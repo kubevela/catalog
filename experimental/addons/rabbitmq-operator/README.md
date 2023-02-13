@@ -1,7 +1,6 @@
 # rabbitmq-operator
 
 Kubernetes operator to deploy and manage RabbitMQ clusters for more https://www.rabbitmq.com/.
-This is an addon template. Check how to build your own addon: https://kubevela.net/docs/platform-engineers/addon/intro
 
 ## Install
 
