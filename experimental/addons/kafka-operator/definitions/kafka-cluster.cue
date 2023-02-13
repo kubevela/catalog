@@ -18,12 +18,12 @@ template: {
                     kafka: parameter.kafka
                     zookeeper: parameter.zookeeper
                     entityOperator: parameter.entityOperator
-                    // kafkaExporter: parameter.kafkaExporter
-                    // cruiseControl:  parameter.cruiseControl
-                    // clusterCa: parameter.clusterCa
-                    // clientsCa: parameter.clientsCa
-                    // jmxTrans: parameter.jmxTrans
-                    // maintenanceTimeWindows: parameter.maintenanceTimeWindows
+                    kafkaExporter: parameter.kafkaExporter
+                    cruiseControl:  parameter.cruiseControl
+                    clusterCa: parameter.clusterCa
+                    clientsCa: parameter.clientsCa
+                    jmxTrans: parameter.jmxTrans
+                    maintenanceTimeWindows: parameter.maintenanceTimeWindows
                 }
         }
         parameter: {
@@ -67,30 +67,30 @@ template: {
                     storage: *{
                         type: "ephemeral"
                     } | {...}
-                    // //+usage=The docker image for the pods. The default value depends on the configured Kafka.spec.kafka.version.
-                    // image: *null | string
-                    // //+usage=Authorization configuration for Kafka brokers. The type depends on the value of the authorization.type property within the given object, which must be one of [simple, opa, keycloak, custom].
-                    // authorization: *null | {...}
-                    // //+usage=The image of the init container used for initializing the broker.rack.
-                    // brokerRackInitImage: *null | string
-                    // //+usage=Configuration of the broker.rack broker config.
-                    // rack: *null | {...}
-                    // //+usage=Pod liveness checking.
-                    // livenessProbe: *null | {...}
-                    // //+usage=Pod readiness checking.
-                    // readinessProbe: *null | {...}
-                    // //+usage=JVM Options for pods.
-                    // jvmOptions: *null | {...}
-                    // //+usage=JMX Options for Kafka brokers.
-                    // jmxOptions: *null | {...}
-                    // //+usage=CPU and memory resources to reserve. For more information, see the https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core
-                    // resources: *null | {...}
-                    // //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
-                    // metricsConfig: *null | {...}
-                    // //+usage=Logging configuration for Kafka. The type depends on the value of the logging.type property within the given object, which must be one of [inline, external].
-                    // logging: *null | {...}
-                    // //+usage=Template for Kafka cluster resources. The template allows users to specify how the StatefulSet, Pods, and Services are generated.
-                    // template: *null | {...}
+                    //+usage=The docker image for the pods. The default value depends on the configured Kafka.spec.kafka.version.
+                    image: *null | string
+                    //+usage=Authorization configuration for Kafka brokers. The type depends on the value of the authorization.type property within the given object, which must be one of [simple, opa, keycloak, custom].
+                    authorization: *null | {...}
+                    //+usage=The image of the init container used for initializing the broker.rack.
+                    brokerRackInitImage: *null | string
+                    //+usage=Configuration of the broker.rack broker config.
+                    rack: *null | {...}
+                    //+usage=Pod liveness checking.
+                    livenessProbe: *null | {...}
+                    //+usage=Pod readiness checking.
+                    readinessProbe: *null | {...}
+                    //+usage=JVM Options for pods.
+                    jvmOptions: *null | {...}
+                    //+usage=JMX Options for Kafka brokers.
+                    jmxOptions: *null | {...}
+                    //+usage=CPU and memory resources to reserve. For more information, see the https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#resourcerequirements-v1-core
+                    resources: *null | {...}
+                    //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
+                    metricsConfig: *null | {...}
+                    //+usage=Logging configuration for Kafka. The type depends on the value of the logging.type property within the given object, which must be one of [inline, external].
+                    logging: *null | {...}
+                    //+usage=Template for Kafka cluster resources. The template allows users to specify how the StatefulSet, Pods, and Services are generated.
+                    template: *null | {...}
                 }
 
                 //+usage=configure zookeeper.
@@ -101,26 +101,26 @@ template: {
                     storage: *{
                         type: "ephemeral"
                     } | {...}
-                    // //+usage=The docker image for the pods.
-                    // image: *null | string
-                    // //+usage=The ZooKeeper broker config. Properties with the some prefixes cannot be set, so for that use config to set. for more https://strimzi.io/docs/operators/latest/configuring.html#type-ZookeeperClusterSpec-schema-reference
-                    // config: *null | {...}
-                    // //+usage=Pod liveness checking.
-                    // livenessProbe: *null | {...}
-                    // //+usage=Pod readiness checking.
-                    // readinessProbe: *null | {...}
-                    // //+usage=JVM Options for pods.
-                    // jvmOptions: *null | {...}
-                    // //+usage=JMX Options for Zookeeper nodes.
-                    // jmxOptions: *null | {...}
-                    // //+usage=CCPU and memory resources to reserve. For more information, see the external documentation for core/v1 resourcerequirements.
-                    // resources: *null | {...}
-                    // //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
-                    // metricsConfig: *null | {...}
-                    // //+usage=Logging configuration for ZooKeeper. The type depends on the value of the logging.type property within the given object, which must be one of [inline, external].
-                    // logging: *null | {...}
-                    // //+usage=Template for ZooKeeper cluster resources. The template allows users to specify how the StatefulSet, Pods, and Services are generated.
-                    // template: *null | {...}
+                    //+usage=The docker image for the pods.
+                    image: *null | string
+                    //+usage=The ZooKeeper broker config. Properties with the some prefixes cannot be set, so for that use config to set. for more https://strimzi.io/docs/operators/latest/configuring.html#type-ZookeeperClusterSpec-schema-reference
+                    config: *null | {...}
+                    //+usage=Pod liveness checking.
+                    livenessProbe: *null | {...}
+                    //+usage=Pod readiness checking.
+                    readinessProbe: *null | {...}
+                    //+usage=JVM Options for pods.
+                    jvmOptions: *null | {...}
+                    //+usage=JMX Options for Zookeeper nodes.
+                    jmxOptions: *null | {...}
+                    //+usage=CCPU and memory resources to reserve. For more information, see the external documentation for core/v1 resourcerequirements.
+                    resources: *null | {...}
+                    //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
+                    metricsConfig: *null | {...}
+                    //+usage=Logging configuration for ZooKeeper. The type depends on the value of the logging.type property within the given object, which must be one of [inline, external].
+                    logging: *null | {...}
+                    //+usage=Template for ZooKeeper cluster resources. The template allows users to specify how the StatefulSet, Pods, and Services are generated.
+                    template: *null | {...}
                 }
 
                 //+usage=configure entity operator.
@@ -130,27 +130,27 @@ template: {
                     //+usage=Configuration of the User Operator.
                     userOperator: *{} | {...}
                     //+usage=TLS sidecar configuration.
-                    // tlsSidecar: *null | {...}
-                    // //+usage=Template for Entity Operator resources. The template allows users to specify how a Deployment and Pod is generated.
-                    // template: *null | {...}
+                    tlsSidecar: *null | {...}
+                    //+usage=Template for Entity Operator resources. The template allows users to specify how a Deployment and Pod is generated.
+                    template: *null | {...}
                 }
 
-                // //+usage=configure kafka exporter.
-                // kafkaExporter: *null | {...}
+                //+usage=configure kafka exporter.
+                kafkaExporter: *null | {...}
 
-                // //+usage=Configuration of the cluster certificate authority.
-                // clusterCa: *null | {...}
+                //+usage=Configuration of the cluster certificate authority.
+                clusterCa: *null | {...}
 
-                // //+usage=Configuration of the clients certificate authority.
-                // clientsCa: *null | {...}
+                //+usage=Configuration of the clients certificate authority.
+                clientsCa: *null | {...}
 
-                // //+usage=Configuration for Cruise Control deployment. Deploys a Cruise Control instance when specified.
-                // cruiseControl: *null | {...}
+                //+usage=Configuration for Cruise Control deployment. Deploys a Cruise Control instance when specified.
+                cruiseControl: *null | {...}
 
-                // //+usage=The jmxTrans property has been deprecated. JMXTrans is deprecated and will be removed in Strimzi 0.35.0 Configuration for JmxTrans. When the property is present a JmxTrans deployment is created for gathering JMX metrics from each Kafka broker. For more information see https://github.com/jmxtrans/jmxtrans.
-                // jmxTrans: *null | {...}
+                //+usage=The jmxTrans property has been deprecated. JMXTrans is deprecated and will be removed in Strimzi 0.35.0 Configuration for JmxTrans. When the property is present a JmxTrans deployment is created for gathering JMX metrics from each Kafka broker. For more information see https://github.com/jmxtrans/jmxtrans.
+                jmxTrans: *null | {...}
 
-                // //+usage=A list of time windows for maintenance tasks (that is, certificates renewal). Each time window is defined by a cron expression.
-                // maintenanceTimeWindows: *null | [...]
+                //+usage=A list of time windows for maintenance tasks (that is, certificates renewal). Each time window is defined by a cron expression.
+                maintenanceTimeWindows: *null | [...]
         }
 }
