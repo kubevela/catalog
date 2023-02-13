@@ -5,7 +5,8 @@ icon: "https://avatars.githubusercontent.com/u/71012429?v=4"
 url: "https://www.rabbitmq.com/kubernetes/operator/"
 
 tags:
-- rabbitmq-operator
+- Middleware
+- Message Broker
 
 invisible: false
 

@@ -51,7 +51,7 @@ template: {
                 //+usage=The name of the Kubernetes StorageClass that will be used to request Persistent Volumes.
                 storageClassName: *"standard" | string
             }
-            //+usage=configure respurces.
+            //+usage=configure resources.
             resources: {
                 limits: {
                     //+usage=The CPU units used to calculate the share of CPU time available to the RabbitMQ container per 100 ms.
