@@ -55,3 +55,26 @@ NAME                READY   STATUS    RESTARTS      AGE   IP            NODE    
 rabbitmq-server-0   1/1     Running   0          2m55s   10.244.0.173   minikube   <none>           <none>
 rabbitmq-server-1   1/1     Running   0          2m55s   10.244.0.174   minikube   <none>           <none>
 ```
+
+## Run the operator locally
+
+To connect with management console of Rabbitmq follow the below steps:
+
+- First, Have username and password default set by rabbitmq.
+
+```shell
+# For Username
+kubectl get secret rabbitmq-default-user -n prod --template={{.data.username}} | base64 --decode
+# For Password
+kubectl get secret rabbitmq-default-user -n prod --template={{.data.password}} | base64 --decode
+```
+
+- Port forward the service of Rabbitmq to login
+
+```shell
+kubectl port-forward service/rabbitmq -n prod 15672:15672
+```
+
+Now, Go on http://127.0.0.1:15672/ to login in management console.
+
+For documentation, dubugging or configuration visit https://www.rabbitmq.com/. 
