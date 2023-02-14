@@ -1,7 +1,8 @@
 name: kube-trigger
-version: 0.0.1-alpha.2
+version: 1.0.0
 description: kube-trigger watches events and triggers actions.
 url: https://github.com/kubevela/kube-trigger
+icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
 
 tags:
   - Continuous Delivery
