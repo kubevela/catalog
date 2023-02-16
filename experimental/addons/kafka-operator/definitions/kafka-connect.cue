@@ -13,6 +13,7 @@ template: {
                 apiVersion: "kafka.strimzi.io/v1beta2"
                 metadata: {
                     name: context.name
+                    namespace: context.namespace
                 }
                 spec: {
                     version:                parameter.version
@@ -42,33 +43,33 @@ template: {
                 version: *"3.3.2" | string
                 //+usage=The number of pods in the Kafka Connect group.
                 replicas: *1 | int
-                //+usage=The docker image for the pods.
-                image: *null | string
                 //+usage=Bootstrap servers to connect to. This should be given as a comma separated list of <hostname>:_<port>_ pairs.
-                bootstrapServers: *"my-cluster-kafka-bootstrap:9093" | string
+                bootstrapServers: *"kafka-cluster-kafka-bootstrap:9093" | string
                 //+usage=TLS configuration.
                 tls: *{
-                    trustedCertificates:  [{
-                            secretName: "my-cluster-cluster-ca-cert"
-                            certificate: ca.crt
-                        }]
+                    trustedCertificates: [
+                        {
+                            secretName: "kafka-cluster-cluster-ca-cert"
+                            certificate: "ca.crt"
+                        }
+                    ]
                 } | {...}
                 //+usage=The Kafka Connect configuration. Properties with the following prefixes cannot be set: ssl., sasl., security., listeners, plugin.path, rest., bootstrap.servers, consumer.interceptor.classes, producer.interceptor.classes (with the exception of: ssl.endpoint.identification.algorithm, ssl.cipher.suites, ssl.protocol, ssl.enabled.protocols).
                 config: *{
-                    group: id: "connect-cluster"
-                    offset: storage: {
-                        topic: "connect-cluster-offsets"
-                        replication: factor: -1
-                    }
-                    config: storage: {
-                        topic: "connect-cluster-configs"
-                        replication: factor: -1
-                    }
-                    status: storage: {
-                        topic: "connect-cluster-status"
-                        replication: factor: -1
-                    }
+                    "group.id": "connect-cluster"
+                    "offset.storage.topic": "connect-cluster-offsets"
+                    "config.storage.topic": "connect-cluster-configs"
+                    "status.storage.topic": "connect-cluster-status"
+                    "config.storage.replication.factor": -1
+                    "offset.storage.replication.factor": -1
+                    "status.storage.replication.factor": -1
                 } | {...}
+                //+usage=Configures how the Connect container image should be built. Optional.
+                build: *null | {...}
+                //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
+                metricsConfig: *null | {...}
+                //+usage=The docker image for the pods.
+                image: *null | string
                 //+usage=Authentication configuration for Kafka Connect. The type depends on the value of the authentication.type property within the given object, which must be one of [tls, scram-sha-256, scram-sha-512, plain, oauth].
                 authentication: *null | {...}
                 //+usage=Pod liveness checking.
@@ -93,9 +94,5 @@ template: {
                 template: *null | {...}
                 //+usage=Pass data from Secrets or ConfigMaps to the Kafka Connect pods and use them to configure connectors.
                 externalConfiguration: *null | {...}
-                //+usage=Configures how the Connect container image should be built. Optional.
-                build *null | {...}
-                //+usage=Metrics configuration. The type depends on the value of the metricsConfig.type property within the given object, which must be one of [jmxPrometheusExporter].
-                metricsConfig *null | {...}
         }
 }
