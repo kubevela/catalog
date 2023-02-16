@@ -13,6 +13,7 @@ template: {
                 apiVersion: "kafka.strimzi.io/v1beta2"
                 metadata: {
                     name: context.name
+                    namespace: context.namespace
                 }
                 spec: {
                     kafka: parameter.kafka
@@ -54,14 +55,12 @@ template: {
                     ] | [...]
                     //+usage=Kafka broker config properties with the some prefixes cannot be set, so for that use config to set. for more https://strimzi.io/docs/operators/latest/configuring.html#type-KafkaClusterSpec-schema-reference
                     config: *{
-                        offsets: topic: replication: factor: 3
-                        transaction: state: log: {
-                            replication: factor: 3
-                            in: isr: 2
-                        }
-                        default: replication: factor: 3
-                        min: insync: replicas: 2
-                        inter: broker: protocol: version: "3.3"
+                        "offsets.topic.replication.factor": 3
+                        "transaction.state.log.replication.factor": 3
+                        "transaction.state.log.min.isr": 2
+                        "default.replication.factor": 3
+                        "min.insync.replicas": 2
+                        "inter.broker.protocol.version": "3.3"
                     } | {...}
                     //+usage=Storage configuration (disk). Cannot be updated. The type depends on the value of the storage.type property within the given object, which must be one of [ephemeral, persistent-claim, jbod].
                     storage: *{
