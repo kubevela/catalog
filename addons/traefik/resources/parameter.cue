@@ -11,6 +11,14 @@ parameter: {
 	entryPoints?: [...{
 		name:     string
 		port:     int
+	        exposedPort: int
 		protocol: *"TCP" | "UDP"
 	}]
+	// +usage=Specify the service ip family policy.
+        ipFamilyPolicy: *"PreferDualStack" | "SingleStack" | "RequireDualStack"	
+	// +usage=Specify the service annotations.
+        annotations?: [...{
+		name:     string
+		value:    string
+	}]		
 }
