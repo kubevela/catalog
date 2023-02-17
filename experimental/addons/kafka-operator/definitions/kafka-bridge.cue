@@ -1,4 +1,4 @@
-"kafka-bridge-maker": {
+"kafka-bridge": {
         alias: ""
         annotations: {}
         attributes: workload: type: "autodetects.core.oam.dev"
