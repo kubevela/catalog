@@ -10,4 +10,4 @@ tags:
 invisible: false
 
 system:
-  vela: ">=v1.8.0-alpha.1"
+  vela: ">=v1.8.0-alpha.2"
