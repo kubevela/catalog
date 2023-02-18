@@ -14,6 +14,8 @@ template: {
                 metadata: {
                     name: context.name
                     namespace: context.namespace
+                    labels:
+                        "strimzi.io/cluster": parameter.cluster
                 }
                 spec: {
                     partitions:             parameter.partitions
@@ -23,6 +25,8 @@ template: {
                 }
         }
         parameter: {
+                //+usage=Type cluster name.
+                cluster: *"kafka-cluster" | string
                 //+usage=The number of partitions the topic should have. This cannot be decreased after topic creation. It can be increased after topic creation, but it is important to understand the consequences that has, especially for topics with semantic partitioning. When absent this will default to the broker configuration for num.partitions.
                 partitions: *10 | int
                 //+usage=The number of replicas the topic should have. When absent this will default to the broker configuration for default.replication.factor.

@@ -14,6 +14,8 @@ template: {
                 metadata: {
                     name: context.name
                     namespace: context.namespace
+                    labels:
+                        "strimzi.io/cluster": parameter.cluster
                 }
                 spec: {
                     authentication:         parameter.authentication
@@ -23,6 +25,8 @@ template: {
                 }
         }
         parameter: {
+                //+usage=Type cluster name.
+                cluster: *"kafka-cluster" | string
                 //+usage=Authentication mechanism enabled for this Kafka user. The supported authentication mechanisms are scram-sha-512, tls, and tls-external.
                 authentication: *{
                     type: "tls"
@@ -37,7 +41,7 @@ template: {
                                 name: "kafka-topic"
                                 patternType: "literal"
                             }
-                            operation: "Read"
+                            operations: ["Read"]
                             host: "*"
                         },
                         {
@@ -46,7 +50,7 @@ template: {
                                 name: "kafka-topic"
                                 patternType: "literal"
                             }
-                            operation: "Describe"
+                            operations: ["Describe"]
                             host: "*"
                         },
                         {
@@ -55,7 +59,7 @@ template: {
                                 name: "kafka-topic"
                                 patternType: "literal"
                             }
-                            operation: "Write"
+                            operations: ["Write"]
                             host: "*"
                         },
                         {
@@ -64,18 +68,9 @@ template: {
                                 name: "kafka-topic"
                                 patternType: "literal"
                             }
-                            operation: "Create"
+                            operations: ["Create"]
                             host: "*"
-                        },
-                        {
-                            resource: {
-                                type: "group"
-                                name: "kafka-group"
-                                patternType: "literal"
-                            }
-                            operation: "Read"
-                            host: "*"
-                        },
+                        }
                     ]
                 } | {...}
                 //+usage=Quotas on requests to control the broker resources used by clients. Network bandwidth and request rate quotas can be enforced.Kafka documentation for Kafka User quotas can be found at http://kafka.apache.org/documentation/#design_quotas.
