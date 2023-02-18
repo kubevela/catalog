@@ -14,6 +14,9 @@ template: {
                 metadata: {
                     name: context.name
                     namespace: context.namespace
+                    annotations: {
+                        "strimzi.io/use-connector-resources":   "true"
+                    }
                 }
                 spec: {
                     version:                parameter.version
