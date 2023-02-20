@@ -79,4 +79,4 @@ kubectl get svc -n prod
 
 Now, Go on http://127.0.0.1:nodeport/ to login in management console.
 
-For documentation, dubugging or configuration visit https://www.rabbitmq.com/. 
+For documentation, dubugging or configuration visit https://www.rabbitmq.com/.
