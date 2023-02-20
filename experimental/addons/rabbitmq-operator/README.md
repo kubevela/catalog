@@ -72,11 +72,11 @@ kubectl get secret rabbitmq-default-user -n prod --template={{.data.password}} |
 - Create a new service from existing Cluster-Ip service of Rabbitmq to login
 
 ```shell
-kubectl expose service -n prod rabbitmq --name=rabbitmq-svc --port=15672 --target-port=15672 --type=NodePort
+kubectl expose service -n prod rabbitmq --name=rabbitmq-svc --port=5672 --target-port=5672 --type=NodePort
 # Check nodeport
 kubectl get svc -n prod
+# Run, If you're using minikube
+minikube service rabbitmq-svc -n prod
 ```
-
-Now, Go on http://127.0.0.1:nodeport/ to login in management console.
 
 For documentation, dubugging or configuration visit https://www.rabbitmq.com/.
