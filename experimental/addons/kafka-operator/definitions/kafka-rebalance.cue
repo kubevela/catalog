@@ -14,13 +14,15 @@ template: {
                 metadata: {
                     name: context.name
                     namespace: context.namespace
+                    labels:
+                        "strimzi.io/cluster": parameter.cluster
                 }
                 spec: {
                     mode:                                       parameter.mode
                     brokers:                                    parameter.brokers
                     goals:                                      parameter.goals
                     skipHardGoalCheck:                          parameter.skipHardGoalCheck
-                    rebalanceDisk                               parameter.rebalanceDisk
+                    rebalanceDisk:                               parameter.rebalanceDisk
                     excludedTopics:                             parameter.excludedTopics
                     concurrentPartitionMovementsPerBroker:      parameter.concurrentPartitionMovementsPerBroker
                     concurrentIntraBrokerPartitionMovements:    parameter.concurrentIntraBrokerPartitionMovements
@@ -30,8 +32,9 @@ template: {
                 }
         }
         parameter: {
+                cluster: *"kafka-cluster" | string
                 //+usage=Mode to run the rebalancing. The supported modes are full, add-brokers, remove-brokers. If not specified, the full mode is used by default.
-                mode: *"" | string
+                mode: *null | string
                 //+usage=The list of newly added brokers in case of scaling up or the ones to be removed in case of scaling down to use for rebalancing. This list can be used only with rebalancing mode add-brokers and removed-brokers. It is ignored with full mode.
                 brokers: *null | [...]
                 //+usage=A list of goals, ordered by decreasing priority, to use for generating and executing the rebalance proposal. The supported goals are available at https://github.com/linkedin/cruise-control#goals. If an empty goals list is provided, the goals declared in the default.goals Cruise Control configuration parameter are used.

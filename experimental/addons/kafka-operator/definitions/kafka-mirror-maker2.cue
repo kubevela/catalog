@@ -20,7 +20,7 @@ template: {
                     replicas:               parameter.replicas
                     image:                  parameter.image
                     connectCluster:         parameter.connectCluster
-                    clusters                parameter.clusters
+                    clusters:                parameter.clusters
                     mirrors:                parameter.mirrors
                     resources:              parameter.resources
                     livenessProbe:          parameter.livenessProbe
@@ -38,7 +38,7 @@ template: {
         }
         parameter: {
                 //+usage=The Kafka Connect version. Defaults to 3.3.2. Consult the user documentation to understand the process required to upgrade or downgrade the version.
-                version: *"3.3.2" | string
+                version: *"3.4.0" | string
                 //+usage=The number of pods in the Kafka Connect group.
                 replicas: *1 | int
                 //+usage=The docker image for the pods.
