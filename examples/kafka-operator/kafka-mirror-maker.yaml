@@ -1,0 +1,19 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-mirror-maker-sample
+  namespace: kafka-operator
+spec:
+  components:
+    - type: kafka-mirror-maker
+      name: kafka-mirror-maker
+      namespace: kafka-operator
+      properties:
+        version: "3.3.2"
+        replicas: 1
+        consumer:
+          bootstrapServers: "kafka-cluster-kafka-bootstrap:9092"
+          groupId: kafka-mirror-maker-source-group-id
+        producer:
+          bootstrapServers: "kafka-cluster-target-kafka-bootstrap:9092"
+        include: .*

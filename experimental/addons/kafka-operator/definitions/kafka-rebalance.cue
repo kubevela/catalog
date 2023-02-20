@@ -22,7 +22,7 @@ template: {
                     brokers:                                    parameter.brokers
                     goals:                                      parameter.goals
                     skipHardGoalCheck:                          parameter.skipHardGoalCheck
-                    rebalanceDisk:                               parameter.rebalanceDisk
+                    rebalanceDisk:                              parameter.rebalanceDisk
                     excludedTopics:                             parameter.excludedTopics
                     concurrentPartitionMovementsPerBroker:      parameter.concurrentPartitionMovementsPerBroker
                     concurrentIntraBrokerPartitionMovements:    parameter.concurrentIntraBrokerPartitionMovements

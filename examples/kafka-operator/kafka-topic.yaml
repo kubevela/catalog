@@ -1,0 +1,16 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-topic-sample
+  namespace: kafka-operator
+spec:
+  components:
+    - type: kafka-topic
+      name: kafka-topic
+      namespace: kafka-operator
+      properties:
+        partitions: 10
+        replicas: 1
+        config:
+          retention.ms: 604800000
+          segment.bytes: 1073741824

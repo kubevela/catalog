@@ -1,0 +1,26 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-connect-sample
+  namespace: kafka-operator
+spec:
+  components:
+    - type: kafka-connect
+      name: kafka-connect
+      namespace: kafka-operator
+      properties:
+        version: 3.3.2
+        replicas: 1
+        bootstrapServers: "kafka-cluster-kafka-bootstrap:9093"
+        tls:
+          trustedCertificates:
+            - secretName: kafka-cluster-cluster-ca-cert
+              certificate: ca.crt
+        config:
+          group.id: connect-cluster
+          offset.storage.topic: connect-cluster-offsets
+          config.storage.topic: connect-cluster-configs
+          status.storage.topic: connect-cluster-status
+          config.storage.replication.factor: -1
+          offset.storage.replication.factor: -1
+          status.storage.replication.factor: -1

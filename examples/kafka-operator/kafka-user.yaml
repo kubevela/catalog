@@ -1,0 +1,44 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-user-sample
+  namespace: kafka-operator
+spec:
+  components:
+    - type: kafka-user
+      name: kafka-user
+      namespace: kafka-operator
+      properties:
+        authentication:
+          type: tls
+        authorization:
+          type: simple
+          acls:
+            - resource:
+                type: topic
+                name: kafka-topic
+                patternType: literal
+              operations:
+                - Read
+              host: '*'
+            - resource:
+                type: topic
+                name: kafka-topic
+                patternType: literal
+              operations:
+                - Describe
+              host: '*'
+            - resource:
+                type: topic
+                name: kafka-topic
+                patternType: literal
+              operations:
+                - Write
+              host: '*'
+            - resource:
+                type: topic
+                name: kafka-topic
+                patternType: literal
+              operations:
+                - Create
+              host: '*'
