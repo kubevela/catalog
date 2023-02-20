@@ -69,12 +69,14 @@ kubectl get secret rabbitmq-default-user -n prod --template={{.data.username}} |
 kubectl get secret rabbitmq-default-user -n prod --template={{.data.password}} | base64 --decode
 ```
 
-- Port forward the service of Rabbitmq to login
+- Create a new service from existing Cluster-Ip service of Rabbitmq to login
 
 ```shell
-kubectl port-forward service/rabbitmq -n prod 15672:15672
+kubectl expose service -n prod rabbitmq --name=rabbitmq-svc --port=15672 --target-port=15672 --type=NodePort
+# Check nodeport
+kubectl get svc -n prod
 ```
 
-Now, Go on http://127.0.0.1:15672/ to login in management console.
+Now, Go on http://127.0.0.1:nodeport/ to login in management console.
 
 For documentation, dubugging or configuration visit https://www.rabbitmq.com/. 
