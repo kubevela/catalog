@@ -2,12 +2,10 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: kafka-mirror-maker2-sample
-  namespace: kafka-operator
 spec:
   components:
     - type: kafka-mirror-maker2
       name: kafka-mirror-maker2
-      namespace: kafka-operator
       properties:
         version: 3.3.2
         replicas: 1

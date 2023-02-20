@@ -2,12 +2,10 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: kafka-bridge-sample
-  namespace: kafka-operator
 spec:
   components:
     - type: kafka-bridge
       name: kafka-bridge
-      namespace: kafka-operator
       properties:
         replicas: 1
         bootstrapServers: 'kafka-cluster-kafka-bootstrap:9092'
