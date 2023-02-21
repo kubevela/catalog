@@ -125,6 +125,6 @@ Now that you are up and running with the basics, you can explore what the Cluste
 
 You can do so by:
 
-- Looking at more examples https://github.com/rabbitmq/cluster-operator/tree/main/docs/examples/ such as monitoring the deployed RabbitMQ Cluster using Prometheus,    enabling TLS, etc https://www.rabbitmq.com/prometheus.html.
-- Looking at the API reference documentation.
-- Checking out our GitHub repository and contributing to this guide, other docs, and the codebase!
+  - Looking at more examples https://github.com/rabbitmq/cluster-operator/tree/main/docs/examples/ such as monitoring the deployed RabbitMQ Cluster using Prometheus, enabling TLS, etc https://www.rabbitmq.com/prometheus.html.
+  - Looking at the API reference documentation.
+  - Checking out our GitHub repository and contributing to this guide, other docs, and the codebase!
