@@ -1,8 +1,8 @@
-"colocation-profile": {
+"koordinator-colocation-profile": {
         alias: ""
         annotations: {}
         attributes: workload: type: "autodetects.core.oam.dev"
-        description: "colocation profile component"
+        description: "koordinator colocation profile component"
         labels: {}
         type: "component"
 }
