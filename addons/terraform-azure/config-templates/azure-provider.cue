@@ -54,8 +54,8 @@ template: {
 	}
 
 	parameter: {
-		//+usage=The name of Terraform Provider for Azure, default is `azure`
-		name:                *"azure" | string
+		//+usage=The name of Terraform Provider for Azure
+		name:                string
 		ARM_CLIENT_ID:       string
 		ARM_CLIENT_SECRET:   string
 		ARM_SUBSCRIPTION_ID: string

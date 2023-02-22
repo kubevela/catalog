@@ -54,16 +54,21 @@ spec:
     # resources change (in this case, it is the
     # two CMs above).
     - type: apprev-bumper
-      name: apprev-bumper
+      name: trigger-service
       properties:
-        watchResource:
-          apiVersion: v1
-          kind: ConfigMap
-          namespace: default
-          # We only care about the two CMs above.
-          # So use a regex to match them.
-          nameRegex: this-will-trigger-update-.
-
+        name: my-trigger-service
+        triggers: 
+          - source: 
+              type: resource-watcher
+              properties:
+                apiVersion: v1
+                kind: ConfigMap
+                namespace: default
+            filter: this-will-trigger-update-.
+            action:
+              type: bump-application-revision
+              properties:
+                namespace: default
 ```
 
 By applying the yaml above, we have created these resources:
