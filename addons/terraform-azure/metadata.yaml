@@ -1,5 +1,5 @@
 name: terraform-azure
-version: 1.0.2
+version: 1.0.3
 description: Kubernetes Terraform Controller for Azure
 icon: https://avatars3.githubusercontent.com/azure
 url: https://registry.terraform.io/providers/hashicorp/azurerm/latest

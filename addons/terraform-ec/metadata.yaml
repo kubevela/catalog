@@ -1,5 +1,5 @@
 name: terraform-ec
-version: 1.0.1
+version: 1.0.2
 description: Kubernetes Terraform Controller Provider for Elastic Cloud
 url: https://github.com/oam-dev/terraform-controller
 
