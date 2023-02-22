@@ -1,0 +1,13 @@
+name: koordinator
+version: 1.0.0
+description: This addon adds koordinator to the kubevela to be used across the application installed in kubevela.
+icon: "https://raw.githubusercontent.com/koordinator-sh/koordinator/main/docs/images/koordinator-logo.jpeg"
+url: "https://koordinator.sh/"
+
+tags:
+- koordinator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
