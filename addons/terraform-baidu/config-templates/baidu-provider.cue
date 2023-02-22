@@ -54,8 +54,8 @@ template: {
 	}
 
 	parameter: {
-		//+usage=The name of Terraform Provider for Baidu Cloud, default is `baidu`
-		name: *"baidu" | string
+		//+usage=The name of Terraform Provider for Baidu Cloud
+		name: string
 		//+usage=Get BAIDUCLOUD_ACCESS_KEY per this guide https://cloud.baidu.com/doc/Reference/s/9jwvz2egb
 		BAIDUCLOUD_ACCESS_KEY: string
 		//+usage=Get BAIDUCLOUD_SECRET_KEY per this guide https://cloud.baidu.com/doc/Reference/s/9jwvz2egb
