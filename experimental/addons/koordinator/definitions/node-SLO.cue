@@ -1,4 +1,4 @@
-"koordinator-node-SLO": {
+"koordinator-node-slo": {
         alias: ""
         annotations: {}
         attributes: workload: type: "autodetects.core.oam.dev"
