@@ -14,7 +14,7 @@ output: {
 			repoType: "helm"
 			url:      "https://openkruise.github.io/charts/"
 			chart:    "kruise-rollout"
-			version:  "0.2.0"
+			version:  "0.3.0"
 		}
 	}]
 }
