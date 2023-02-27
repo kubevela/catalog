@@ -1,3 +1,4 @@
+import ("strings")
 helm: {
 	attributes: {
 		workload: type: "autodetects.core.oam.dev"
@@ -166,6 +167,12 @@ template: {
 					}
 				}}]
 			}
+			if parameter.serviceAccountName != _|_ {
+				serviceAccountName: parameter.serviceAccountName
+			}
+			if parameter.serviceAccountName == _|_ && strings.HasPrefix(context.appAnnotations["app.oam.dev/username"], "system:serviceaccount:\(context.namespace):") {
+				serviceAccountName: strings.TrimPrefix(context.appAnnotations["app.oam.dev/username"], "system:serviceaccount:\(context.namespace):")
+			}
 			install: {
 				remediation: {
 					retries: parameter.retries
@@ -239,6 +246,8 @@ template: {
 		version: *"*" | string
 		// +usage=The namespace for helm chart, optional
 		targetNamespace?: string
+		// +usage=The service account used to install or upgrade helm release
+		serviceAccountName?: string
 		// +usage=The release name
 		releaseName?: string
 		// +usage=Retry times when install/upgrade fail.
