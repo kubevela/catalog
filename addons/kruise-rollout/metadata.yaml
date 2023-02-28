@@ -17,4 +17,4 @@ dependencies:
 
 system:
   kubernetes: ">=1.19.0-0"
-  vela: ">=1.5.0"
+  vela: ">=1.8.0-alpha.2"
