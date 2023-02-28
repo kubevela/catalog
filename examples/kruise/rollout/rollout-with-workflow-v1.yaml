@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: canary-demo
+  annotations:
+    app.oam.dev/publishVersion: v1
+spec:
+  components:
+    - name: canary-demo
+      type: webservice
+      properties:
+        image: barnett/canarydemo:v1
+        ports:
+          - port: 8090
+      traits:
+        - type: scaler
+          properties:
+            replicas: 5
+        - type: gateway
+          properties:
+            domain: canary-demo.com
+            http:
+              "/version": 8090
+
