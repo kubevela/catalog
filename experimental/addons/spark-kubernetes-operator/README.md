@@ -115,7 +115,47 @@ I0227 16:54:37.069480  361176 apply.go:121] "creating object" name="spark-app-v1
 Application spark-cluster/spark-app-v1 applied.
 ```
 
-3. Then, you can use the native command to check the status of the Spark applicaiton:
+3. Then, there are serval ways to check the status(or detail information) of the Spark applicaiton:
+
+option 1:
+
+```
+$ vela status spark-app-v1 -n spark-cluster
+About:
+
+  Name:      	spark-app-v1
+  Namespace: 	spark-cluster
+  Created at:	2023-02-27 16:54:37 +0800 CST
+  Status:    	running
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: r9day16jok
+    name: deploy-topology-two-clouds
+    type: deploy
+    phase: succeeded
+
+Services:
+
+  - Name: my-spark-application-component
+    Cluster: huaweibigdatak8s  Namespace: spark-cluster
+    Type: spark-application
+    Healthy
+    No trait applied
+
+  - Name: my-spark-application-component
+    Cluster: local  Namespace: spark-cluster
+    Type: spark-application
+    Healthy
+    No trait applied
+```
+
+option 2:
 
 ```
 $ kubectl get sparkapplications -n spark-cluster
@@ -123,7 +163,7 @@ NAME           STATUS    ATTEMPTS   START                  FINISH       AGE
 my-spark-app   RUNNING   1          2023-02-27T08:54:40Z   <no value>   2m33s
 ```
 
-or get the application detail via this command:
+option 3:
 
 ```
 $ kubectl describe sparkapplication my-spark-app -n spark-cluster
@@ -150,7 +190,7 @@ Metadata:
 ......
 ```
 
-or get the general purpose detail information via this command:
+option 4:
 
 ```
 $ kubectl get app spark-app-v1 -n spark-cluster -oyaml
@@ -166,5 +206,23 @@ metadata:
 $ kubectl get svc -n spark-cluster
 NAME                                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
 my-spark-app-c58a1c869214bfe5-driver-svc   ClusterIP   None             <none>        7078/TCP,7079/TCP,4040/TCP   19m
-my-spark-app-ui-svc                        ClusterIP   xx.xx.xx.xx   <none>        4040/TCP                     19m
+my-spark-app-ui-svc                        ClusterIP   xx.xx.xx.xx      <none>        4040/TCP                     19m
 ```
+
+# Architecture
+
+> The following content is quoted from the [original design document](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/design.md).
+
+The operator consists of:
+* a `SparkApplication` controller that watches events of creation, updates, and deletion of
+`SparkApplication` objects and acts on the watch events,
+* a *submission runner* that runs `spark-submit` for submissions received from the controller,
+* a *Spark pod monitor* that watches for Spark pods and sends pod status updates to the controller,
+* a [Mutating Admission Webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/) that handles customizations for Spark driver and executor pods based on the annotations on the pods added by the controller,
+* and also a command-line tool named `sparkctl` for working with the operator.
+
+The following diagram shows how different components interact and work together.
+
+![Architecture Diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/spark-on-k8s-operator/master/docs/architecture-diagram.png)
+
+Specifically, a user uses the `sparkctl` (or `kubectl`) to create a `SparkApplication` object. The `SparkApplication` controller receives the object through a watcher from the API server, creates a submission carrying the `spark-submit` arguments, and sends the submission to the *submission runner*. The submission runner submits the application to run and creates the driver pod of the application. Upon starting, the driver pod creates the executor pods. While the application is running, the *Spark pod monitor* watches the pods of the application and sends status updates of the pods back to the controller, which then updates the status of the application accordingly. 
