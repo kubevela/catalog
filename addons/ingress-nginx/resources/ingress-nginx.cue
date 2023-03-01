@@ -9,7 +9,14 @@ nginxIngress: {
 		chart:    "ingress-nginx"
 		version:  "4.2.0"
 		values: {
-			controller: service: type: parameter["serviceType"]
+			controller: {
+				service: type: parameter["serviceType"]
+				metrics: enabled: "true"
+				podAnnotations: {
+					"prometheus.io/scrape": "true"
+					"prometheus.io/port": "10254"
+				}
+			}
 		}
 	}
 }
