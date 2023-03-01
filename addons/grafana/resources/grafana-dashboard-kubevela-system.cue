@@ -2133,7 +2133,7 @@ grafanaDashboardKubevelaSystemData: #"""
 	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
-	          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\",cluster=\"local\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb)",
+	          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb)",
 	          "hide": false,
 	          "legendFormat": "{{verb}}: {{kind}}",
 	          "range": true,
@@ -2235,7 +2235,7 @@ grafanaDashboardKubevelaSystemData: #"""
 	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
-	          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_sum{app_kubernetes_io_name=\"vela-core\",cluster=\"local\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb) / sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\",cluster=\"local\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb)",
+	          "expr": "sum(rate(kubevela_controller_client_request_time_seconds_sum{app_kubernetes_io_name=\"vela-core\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb) / sum(rate(kubevela_controller_client_request_time_seconds_count{app_kubernetes_io_name=\"vela-core\",pod=~\"$pod\"}[$rate_interval])) by (kind, verb)",
 	          "hide": false,
 	          "legendFormat": "{{verb}}: {{kind}}",
 	          "range": true,
