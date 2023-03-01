@@ -28,11 +28,18 @@ vela addon disable koordinator
 ## Use
 ### koordinator
 
-After you enable this addon, create a namespace `prod`:
+After you enable this addon, create a namespace `prod` with the below YAML:
 
-```shell
-$ kubectl create namespace prod
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    koordinator.sh/enable-colocation: true
 ```
+
+**Note: Make sure created namespace `prod` must have label `koordinator.sh/enable-colocation: true` to follow this README**
 
 Then apply the below yaml to create ClusterColocationProfile:
 
@@ -48,10 +55,10 @@ spec:
       properties:
         namespaceSelector:
             matchLabels:
-            koordinator.sh/enable-colocation: "true"
+              koordinator.sh/enable-colocation: "true"
         selector:
             matchLabels:
-            koordinator.sh/enable-colocation: "true"
+              koordinator.sh/enable-colocation: "true"
         qosClass: BE
         priorityClassName: koord-batch
         koordinatorPriority: 1000
@@ -79,9 +86,10 @@ Create this pod and now you will find it's injected with Koordinator QoS, Koordi
 apiVersion: v1
 kind: Pod
 metadata:
+  name: test-pod
+  namespace: prod
   labels:
     koordinator.sh/enable-colocation: "true"
-  name: test-pod
 spec:
   containers:
   - name: app
@@ -91,7 +99,7 @@ spec:
 Check injected pod with Koordinator QoS, Koordinator Priority etc:
 
 ```shell
-$ kubectl get pod test-pod -o yaml
+$ kubectl get pod test-pod -n prod -o yaml
 apiVersion: v1
 kind: Pod
 metadata:
