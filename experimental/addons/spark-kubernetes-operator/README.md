@@ -67,38 +67,12 @@ vela show spark-workload
 
 # Example for how to run a component typed spark-cluster in application
 
-1. Firstly, copy the following example to "spark-app-v1.yaml":
-
-> The addon will create a namespace named "spark-cluster"
-
-```
-apiVersion: core.oam.dev/v1beta1
-kind: Application
-metadata:
-  name: spark-app-v1
-  namespace: spark-cluster
-spec:
-  components:
-  - name: spark-workload-component
-    type: spark-workload
-    properties:
-      name: my-spark-app
-      namespace: spark-cluster
-      type: Scala
-      mode: cluster
-      image: "gcr.io/spark-operator/spark:v3.1.1"
-      imagePullPolicy: Always
-      mainClass: org.apache.spark.examples.streaming.JavaQueueStream
-      mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar"
-      sparkVersion: "3.1.1"
-      driverCores: 1
-      executorCores: 1
-```
+1. Firstly, download or copy `catalog/examples/spark-kubernetes-operator/sparkapp.yaml`
 
 2. Secondly, start the application:
 
 ```
-vela up -f spark-app-v1.yaml
+vela up -f sparkapp.yaml
 ```
 
 You will see the stdout like this:
@@ -120,7 +94,7 @@ Application spark-cluster/spark-app-v1 applied.
 option 1:
 
 ```
-$ vela status spark-app-v1 -n spark-cluster
+vela status spark-app-v1 -n spark-cluster
 About:
 
   Name:      	spark-app-v1
@@ -158,7 +132,7 @@ Services:
 option 2:
 
 ```
-$ kubectl get sparkapplications -n spark-cluster
+kubectl get sparkapplications -n spark-cluster
 NAME           STATUS    ATTEMPTS   START                  FINISH       AGE
 my-spark-app   RUNNING   1          2023-02-27T08:54:40Z   <no value>   2m33s
 ```
@@ -166,7 +140,7 @@ my-spark-app   RUNNING   1          2023-02-27T08:54:40Z   <no value>   2m33s
 option 3:
 
 ```
-$ kubectl describe sparkapplication my-spark-app -n spark-cluster
+kubectl describe sparkapplication my-spark-app -n spark-cluster
 Name:         my-spark-app
 Namespace:    spark-cluster
 Labels:       app.oam.dev/app-revision-hash=4e5592aea53a5961
@@ -193,7 +167,7 @@ Metadata:
 option 4:
 
 ```
-$ kubectl get app spark-app-v1 -n spark-cluster -oyaml
+kubectl get app spark-app-v1 -n spark-cluster -oyaml
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
@@ -203,7 +177,7 @@ metadata:
 4. Show the service of spark application via this command:
 
 ```
-$ kubectl get svc -n spark-cluster
+kubectl get svc -n spark-cluster
 NAME                                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
 my-spark-app-c58a1c869214bfe5-driver-svc   ClusterIP   None             <none>        7078/TCP,7079/TCP,4040/TCP   19m
 my-spark-app-ui-svc                        ClusterIP   xx.xx.xx.xx      <none>        4040/TCP                     19m
