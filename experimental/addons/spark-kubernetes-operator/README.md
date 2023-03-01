@@ -107,7 +107,7 @@ vela show spark-workload
 
 # Example for how to run a component typed spark-cluster in application
 
-**Note**: If we want to check and verify the mount volume, we need to specify `parameter.createWebhook` to be `true`
+**Note**: If we want to check and verify the mount volume, we need to specify `parameter.createWebhook` to be `true`. For more details, please check the [official documentation](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/blob/master/docs/user-guide.md#mounting-volumes).
 
 1. Firstly, download or copy `catalog/examples/spark-kubernetes-operator/sparkapp.yaml`
 
