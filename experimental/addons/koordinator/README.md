@@ -36,10 +36,10 @@ kind: Namespace
 metadata:
   name: prod
   labels:
-    koordinator.sh/enable-colocation: true
+    koordinator.sh/enable-colocation: "true"
 ```
 
-**Note: Make sure created namespace `prod` must have label `koordinator.sh/enable-colocation: true` to follow this README**
+**Note: Make sure created namespace `prod` must have label `koordinator.sh/enable-colocation: "true"` to follow this README**
 
 Then apply the below yaml to create ClusterColocationProfile:
 
