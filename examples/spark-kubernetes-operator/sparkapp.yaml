@@ -1,0 +1,21 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: spark-app-v1
+  namespace: spark-cluster
+spec:
+  components:
+  - name: spark-workload-component
+    type: spark-workload
+    properties:
+      name: my-spark-app
+      namespace: spark-cluster
+      type: Scala
+      mode: cluster
+      image: "gcr.io/spark-operator/spark:v3.1.1"
+      imagePullPolicy: Always
+      mainClass: org.apache.spark.examples.streaming.JavaQueueStream
+      mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar"
+      sparkVersion: "3.1.1"
+      driverCores: 1
+      executorCores: 1

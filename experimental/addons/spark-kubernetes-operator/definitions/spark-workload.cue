@@ -1,4 +1,4 @@
-"spark-application": {
+"spark-workload": {
 	annotations: {}
 	attributes: workload: type: "autodetects.core.oam.dev"
 	description: "Describes a containerized spark application that can specify resource spec."

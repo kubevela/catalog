@@ -29,10 +29,10 @@ vela addon status spark-kubernetes-operator
 vela ls -A | grep spark
 ```
 
-* Secondly, show the component type `spark-cluster`, so we know how to use it in one application. As a spark user, you can choose the parameter to set for your spark cluster.
+* Secondly, show the component type `spark-workload`, so we know how to use it in one application. As a spark user, you can choose the parameter to set for your spark cluster.
 
 ```
-vela show spark-application
+vela show spark-workload
 # Specification
 +---------------------+------------------------------------------------------------------------------------------------------+-------------------+----------+---------+
 |        NAME         |                                             DESCRIPTION                                              |       TYPE        | REQUIRED | DEFAULT |
@@ -79,8 +79,8 @@ metadata:
   namespace: spark-cluster
 spec:
   components:
-  - name: my-spark-application-component
-    type: spark-application
+  - name: spark-workload-component
+    type: spark-workload
     properties:
       name: my-spark-app
       namespace: spark-cluster
