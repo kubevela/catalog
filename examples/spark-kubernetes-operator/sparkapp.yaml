@@ -22,11 +22,13 @@ spec:
           hostPath:
             path: "/tmp"
             type: Directory
-      driverCores: 1
-      executorCores: 1
-      driverVolumeMounts:
-        - name: "test-volume"
-          mountPath: "/tmp"
-      executorVolumeMounts:
-        - name: "test-volume"
-          mountPath: "/tmp"
+      driver:
+        cores: 1
+        volumeMounts:
+          - name: "test-volume"
+            mountPath: "/tmp"
+      executor:
+        cores: 1
+        volumeMounts:
+          - name: "test-volume"
+            mountPath: "/tmp"

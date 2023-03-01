@@ -28,10 +28,22 @@ template: {
 		mainApplicationFile: string
 		// +usage=Specify the version of Spark the application uses
 		sparkVersion: string
-		// +usage=Specify the number of CPU cores to request for the driver pod
-		driverCores: int
-		// +usage=Specify the number of CPU cores to request for the executor pod
-		executorCores: int
+		// +usage=Specify the driver sepc request for the driver pod
+		driver: {
+			cores: int
+			volumeMounts?: [...{
+				name:      string
+				mountPath: string
+			}]
+		}
+		// +usage=Specify the executor spec request for the executor pod
+		executor: {
+			cores: int
+			volumeMounts?: [...{
+				name:      string
+				mountPath: string
+			}]
+		}
 		// +usage=Specify a list of arguments to be passed to the application
 		arguments?: [...string]
 		// +usage=Specify the config information carries user-specified Spark configuration properties as they would use the  "--conf" option in spark-submit
@@ -49,16 +61,6 @@ template: {
 				path: string
 				type: *"Directory" | string
 			}
-		}]
-		// +usage=Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for driver pod
-		driverVolumeMounts?: [...{
-			name:      string
-			mountPath: string
-		}]
-		// +usage=Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for executor pod
-		executorVolumeMounts?: [...{
-			name:      string
-			mountPath: string
 		}]
 	}
 
@@ -95,18 +97,8 @@ template: {
 				mainClass:           parameter.mainClass
 				mainApplicationFile: parameter.mainApplicationFile
 				sparkVersion:        parameter.sparkVersion
-				driver: {
-					cores: parameter.driverCores
-					if parameter.driverVolumeMounts != _|_ {
-						volumeMounts: parameter.driverVolumeMounts
-					}
-				}
-				executor: {
-					cores: parameter.executorCores
-					if parameter.executorVolumeMounts != _|_ {
-						volumeMounts: parameter.executorVolumeMounts
-					}
-				}
+				driver:              parameter.driver
+				executor:            parameter.executor
 				if parameter.volumes != _|_ {
 					volumes: parameter.volumes
 				}

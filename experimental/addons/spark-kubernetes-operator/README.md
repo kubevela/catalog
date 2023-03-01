@@ -34,39 +34,71 @@ vela ls -A | grep spark
 ```
 vela show spark-workload
 # Specification
-+----------------------+------------------------------------------------------------------------------------------------------+-------------------------------------------------+----------+---------+
-|         NAME         |                                             DESCRIPTION                                              |                      TYPE                       | REQUIRED | DEFAULT |
-+----------------------+------------------------------------------------------------------------------------------------------+-------------------------------------------------+----------+---------+
-| name                 | Specify the spark application name.                                                                  | string                                          | true     |         |
-| namespace            | Specify the namespace for spark application to install.                                              | string                                          | true     |         |
-| type                 | Specify the application language type, e.g. "Scala", "Python", "Java" or "R".                        | string                                          | true     |         |
-| pythonVersion        | Specify the python version.                                                                          | string                                          | false    |         |
-| mode                 | Specify the deploy mode, e.go "cluster", "client" or "in-cluster-client".                            | string                                          | true     |         |
-| image                | Specify the container image for the driver, executor, and init-container.                            | string                                          | true     |         |
-| imagePullPolicy      | Specify the image pull policy for the driver, executor, and init-container.                          | string                                          | true     |         |
-| mainClass            | Specify the fully-qualified main class of the Spark application.                                     | string                                          | true     |         |
-| mainApplicationFile  | Specify the path to a bundled JAR, Python, or R file of the application.                             | string                                          | true     |         |
-| sparkVersion         | Specify the version of Spark the application uses.                                                   | string                                          | true     |         |
-| driverCores          | Specify the number of CPU cores to request for the driver pod.                                       | int                                             | true     |         |
-| executorCores        | Specify the number of CPU cores to request for the executor pod.                                     | int                                             | true     |         |
-| arguments            | Specify a list of arguments to be passed to the application.                                         | []string                                        | false    |         |
-| sparkConf            | Specify the config information carries user-specified Spark configuration properties as they would   | map[string]string                               | false    |         |
-|                      | use the  "--conf" option in spark-submit.                                                            |                                                 |          |         |
-| hadoopConf           | Specify the config information carries user-specified Hadoop configuration properties as they would  | map[string]string                               | false    |         |
-|                      | use the  the "--conf" option in spark-submit.  The SparkApplication controller automatically adds    |                                                 |          |         |
-|                      | prefix "spark.hadoop." to Hadoop configuration properties.                                           |                                                 |          |         |
-| sparkConfigMap       | Specify the name of the ConfigMap containing Spark configuration files such as log4j.properties. The | string                                          | false    |         |
-|                      | controller will add environment variable SPARK_CONF_DIR to the path where the ConfigMap is mounted   |                                                 |          |         |
-|                      | to.                                                                                                  |                                                 |          |         |
-| hadoopConfigMap      | Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The   | string                                          | false    |         |
-|                      | controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted  |                                                 |          |         |
-|                      | to.                                                                                                  |                                                 |          |         |
-| volumes              | Specify the list of Kubernetes volumes that can be mounted by the driver and/or executors.           | [[]volumes](#volumes)                           | false    |         |
-| driverVolumeMounts   | Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for  | [[]driverVolumeMounts](#drivervolumemounts)     | false    |         |
-|                      | driver pod.                                                                                          |                                                 |          |         |
-| executorVolumeMounts | Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for  | [[]executorVolumeMounts](#executorvolumemounts) | false    |         |
-|                      | executor pod.                                                                                        |                                                 |          |         |
-+----------------------+------------------------------------------------------------------------------------------------------+-------------------------------------------------+----------+---------+
++---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
+|        NAME         |                                             DESCRIPTION                                              |         TYPE          | REQUIRED | DEFAULT |
++---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
+| name                | Specify the spark application name.                                                                  | string                | true     |         |
+| namespace           | Specify the namespace for spark application to install.                                              | string                | true     |         |
+| type                | Specify the application language type, e.g. "Scala", "Python", "Java" or "R".                        | string                | true     |         |
+| pythonVersion       | Specify the python version.                                                                          | string                | false    |         |
+| mode                | Specify the deploy mode, e.go "cluster", "client" or "in-cluster-client".                            | string                | true     |         |
+| image               | Specify the container image for the driver, executor, and init-container.                            | string                | true     |         |
+| imagePullPolicy     | Specify the image pull policy for the driver, executor, and init-container.                          | string                | true     |         |
+| mainClass           | Specify the fully-qualified main class of the Spark application.                                     | string                | true     |         |
+| mainApplicationFile | Specify the path to a bundled JAR, Python, or R file of the application.                             | string                | true     |         |
+| sparkVersion        | Specify the version of Spark the application uses.                                                   | string                | true     |         |
+| driver              | Specify the driver sepc request for the driver pod.                                                  | [driver](#driver)     | true     |         |
+| executor            | Specify the executor spec request for the executor pod.                                              | [executor](#executor) | true     |         |
+| arguments           | Specify a list of arguments to be passed to the application.                                         | []string              | false    |         |
+| sparkConf           | Specify the config information carries user-specified Spark configuration properties as they would   | map[string]string     | false    |         |
+|                     | use the  "--conf" option in spark-submit.                                                            |                       |          |         |
+| hadoopConf          | Specify the config information carries user-specified Hadoop configuration properties as they would  | map[string]string     | false    |         |
+|                     | use the  the "--conf" option in spark-submit.  The SparkApplication controller automatically adds    |                       |          |         |
+|                     | prefix "spark.hadoop." to Hadoop configuration properties.                                           |                       |          |         |
+| sparkConfigMap      | Specify the name of the ConfigMap containing Spark configuration files such as log4j.properties. The | string                | false    |         |
+|                     | controller will add environment variable SPARK_CONF_DIR to the path where the ConfigMap is mounted   |                       |          |         |
+|                     | to.                                                                                                  |                       |          |         |
+| hadoopConfigMap     | Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The   | string                | false    |         |
+|                     | controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted  |                       |          |         |
+|                     | to.                                                                                                  |                       |          |         |
+| volumes             | Specify the list of Kubernetes volumes that can be mounted by the driver and/or executors.           | [[]volumes](#volumes) | false    |         |
++---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
+
+
+## driver
++--------------+-------------+---------------------------------+----------+---------+
+|     NAME     | DESCRIPTION |              TYPE               | REQUIRED | DEFAULT |
++--------------+-------------+---------------------------------+----------+---------+
+| cores        |             | int                             | true     |         |
+| volumeMounts |             | [[]volumeMounts](#volumemounts) | false    |         |
++--------------+-------------+---------------------------------+----------+---------+
+
+
+### volumeMounts
++-----------+-------------+--------+----------+---------+
+|   NAME    | DESCRIPTION |  TYPE  | REQUIRED | DEFAULT |
++-----------+-------------+--------+----------+---------+
+| name      |             | string | true     |         |
+| mountPath |             | string | true     |         |
++-----------+-------------+--------+----------+---------+
+
+
+## executor
++--------------+-------------+---------------------------------+----------+---------+
+|     NAME     | DESCRIPTION |              TYPE               | REQUIRED | DEFAULT |
++--------------+-------------+---------------------------------+----------+---------+
+| cores        |             | int                             | true     |         |
+| volumeMounts |             | [[]volumeMounts](#volumemounts) | false    |         |
++--------------+-------------+---------------------------------+----------+---------+
+
+
+### volumeMounts
++-----------+-------------+--------+----------+---------+
+|   NAME    | DESCRIPTION |  TYPE  | REQUIRED | DEFAULT |
++-----------+-------------+--------+----------+---------+
+| name      |             | string | true     |         |
+| mountPath |             | string | true     |         |
++-----------+-------------+--------+----------+---------+
 
 
 ## volumes
@@ -85,24 +117,6 @@ vela show spark-workload
 | path |             | string | true     |           |
 | type |             | string | false    | Directory |
 +------+-------------+--------+----------+-----------+
-
-
-## driverVolumeMounts
-+-----------+-------------+--------+----------+---------+
-|   NAME    | DESCRIPTION |  TYPE  | REQUIRED | DEFAULT |
-+-----------+-------------+--------+----------+---------+
-| name      |             | string | true     |         |
-| mountPath |             | string | true     |         |
-+-----------+-------------+--------+----------+---------+
-
-
-## executorVolumeMounts
-+-----------+-------------+--------+----------+---------+
-|   NAME    | DESCRIPTION |  TYPE  | REQUIRED | DEFAULT |
-+-----------+-------------+--------+----------+---------+
-| name      |             | string | true     |         |
-| mountPath |             | string | true     |         |
-+-----------+-------------+--------+----------+---------+
 ```
 
 # Example for how to run a component typed spark-cluster in application
