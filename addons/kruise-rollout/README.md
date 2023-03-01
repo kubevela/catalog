@@ -3,6 +3,17 @@
 [Kruise Rollout](https://github.com/openkruise/rollouts/blob/master/docs/getting_started/introduction.md) is a Bypass component which provides advanced deployment capabilities such as canary, traffic routing,
 and progressive delivery features, for a series of Kubernetes workloads, such as Deployment and CloneSet.
 
+Until 0.2.0 version, kruise-rollout has supported the **canary release mode** (with an extra canary Deployment) for Deployment.
+![batch-release](./image/canary-release.jpg)
+
+Since 0.3.0 version, kruise-rollout has supported the **standard batch release mode** (without any extra canary Deployment) for Deployment via adding `releaseMode: batch` parameter.
+Benefiting from this release mode:
+- No extra resources need to be paid for release.
+- Deployment name will not be changed anymore.
+- Fully compatible with HPA.
+
+![batch-release](./image/batch-release.jpg)
+
 ## Install
 
 ```shell
@@ -22,7 +33,7 @@ vela addon disable kruise-rollout
 
 ### First Deployment
 
-Deploy the application:
+Deploy the application, default is canary release mode:
 
 ```shell
 cat <<EOF | vela up -f -
@@ -58,6 +69,31 @@ spec:
           trafficRoutings:
             - type: nginx
 EOF
+```
+
+Another example for kruise-rollout trait, enable its **standard batch release mode**:
+```yaml
+### Since kruise-rollout 0.3.0
+    - type: kruise-rollout
+      properties:
+        # enable standard batch release mode
+        releaseMode: batch
+        canary:
+          # The 1-st batch of Canary releases 1 Pods, and the traffic with header `UserAgent=iOS` will be imported to the new version, require manual confirmation before subsequent releases are completed;
+          # The 2-nd batch of Canary releases 50% Pods, and 50% traffic will be imported to the new version by default load balance rule of nginx, also require manual confirmation;
+          # The 3-rd batch of Canary releases 100% Pods, and 100% traffic will be imported to the new version by default load balance rule of nginx;
+          steps:
+          - matches: # match the traffic with `UserAgent=iOS` header
+            - headers:
+              - type: Exact
+                name: UserAgent
+                value: iOS
+            replicas: 1
+          - replicas: 50%
+          - replicas: 100%
+          trafficRoutings:
+          - type: nginx
+
 ```
 
 Then check the status of application will find out the application is running.
