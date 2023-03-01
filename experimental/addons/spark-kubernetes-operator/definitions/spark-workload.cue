@@ -42,6 +42,24 @@ template: {
 		sparkConfigMap?: string
 		// +usage=Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted to
 		hadoopConfigMap?: string
+		// +usage=Specify the list of Kubernetes volumes that can be mounted by the driver and/or executors
+		volumes?: [...{
+			name: string
+			hostPath: {
+				path: string
+				type: *"Directory" | string
+			}
+		}]
+		// +usage=Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for driver pod
+		driverVolumeMounts?: [...{
+			name:      string
+			mountPath: string
+		}]
+		// +usage=Specify the volumes listed in "parameter.volumes" to mount into the main container’s filesystem for executor pod
+		executorVolumeMounts?: [...{
+			name:      string
+			mountPath: string
+		}]
 	}
 
 	output: {
@@ -79,10 +97,20 @@ template: {
 				sparkVersion:        parameter.sparkVersion
 				driver: {
 					cores: parameter.driverCores
+					if parameter.driverVolumeMounts != _|_ {
+						volumeMounts: parameter.driverVolumeMounts
+					}
 				}
 				executor: {
 					cores: parameter.executorCores
+					if parameter.executorVolumeMounts != _|_ {
+						volumeMounts: parameter.executorVolumeMounts
+					}
 				}
+				if parameter.volumes != _|_ {
+					volumes: parameter.volumes
+				}
+
 			}
 		}
 	}

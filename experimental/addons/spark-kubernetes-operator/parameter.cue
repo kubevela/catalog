@@ -9,7 +9,7 @@ parameter: {
 	clusters?: [...string]
 	// +usage=Namespace to deploy to
 	namespace: *"spark-operator" | string
-	// +usage=Specify if create  the webhook or not
+	// +usage=Specify if create the webhook or not
 	"createWebhook": *false | bool
 	// +usage=Specify the image repository
 	"imageRepository": *"ghcr.io/googlecloudplatform/spark-operator" | string

@@ -17,5 +17,16 @@ spec:
       mainClass: org.apache.spark.examples.streaming.JavaQueueStream
       mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar"
       sparkVersion: "3.1.1"
+      volumes:
+        - name: "test-volume"
+          hostPath:
+            path: "/tmp"
+            type: Directory
       driverCores: 1
       executorCores: 1
+      driverVolumeMounts:
+        - name: "test-volume"
+          mountPath: "/tmp"
+      executorVolumeMounts:
+        - name: "test-volume"
+          mountPath: "/tmp"
