@@ -16,6 +16,17 @@ metadata:
   namespace: default
 spec:
   components:
+    - name: redis-secret
+      type: k8s-objects
+      properties:
+        objects:
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: redis-secret
+            data:
+              username: <username-bash64>
+              password: <password-bash64>
     - name: redis
       type: helm
       properties:
@@ -33,7 +44,7 @@ spec:
       traits:
         - properties:
           address: <host>:<port>
-          password: <password>
+          secretName: redis-secret
           disableAnnotation: false
           name: redis-server-exporter
           type: redis-exporter
@@ -49,6 +60,17 @@ metadata:
   namespace: default
 spec:
   components:
+    - name: redis-secret
+      type: k8s-objects
+      properties:
+        objects:
+          - apiVersion: v1
+            kind: Secret
+            metadata:
+              name: redis-secret
+            data:
+              username: <username-bash64>
+              password: <password-bash64>
     - name: redis
       type: helm
       properties:
@@ -66,7 +88,7 @@ spec:
     - name: redis-exporter
       properties:
         address: <host>:<port>
-        password: <password>
+        secretName: redis-secret
         disableAnnotation: false
         name: redis-server-exporter
       type: redis-exporter-server

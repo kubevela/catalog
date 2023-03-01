@@ -109,15 +109,23 @@ template: {
 									name:  "REDIS_ADDR"
 									value: parameter.address
 								},
-								if parameter.user != _|_ {
-									{
-										name:  "REDIS_USER"
-										value: parameter.user
+								{
+									name: "REDIS_USER"
+									valueFrom: {
+										secretKeyRef: {
+											name: parameter.serectName
+											key:  "redis-username"
+										}
 									}
 								},
 								{
-									name:  "REDIS_PASSWORD"
-									value: parameter.password
+									name: "REDIS_PASSWORD"
+									valueFrom: {
+										secretKeyRef: {
+											name: parameter.serectName
+											key:  "redis-password"
+										}
+									}
 								},
 							]
 						},
@@ -149,10 +157,8 @@ template: {
 		name: *"redis-server-exporter" | string
 		// +usage=Address of the Redis instance.
 		address: *"localhost" | string
-		// +usage=User name to use for authentication(Redis ACL for Redis 6.0 and newer).
-		user?: string
-		// +usage=Password of the Redis instance
-		password: *"" | string
+		// +usage=Secret name indidcates the secret that contains the username and password of the Redis instance.
+		serectName: *"redis-secret" | string
 		// +usage=Specify the CPU capacity of the Exporter collector.
 		cpu?: string
 		// +usage=Specify the Memory capacity of the Exporter collector.
