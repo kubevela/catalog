@@ -25,16 +25,19 @@ spec:
             metadata:
               name: redis-secret
             data:
-              username: <username-bash64>
-              password: <password-bash64>
+              username: <username-bash64> # default: ""
+              password: <password-bash64> # default: password in base64
     - name: redis
       type: helm
       properties:
         repoType: "helm"
         url: "https://charts.bitnami.com/bitnami"
         chart: "redis"
-        version: "16.8.5"
+        version: "17.7.3"
         values:
+          global:
+            redis:
+              password: <password>
           master:
             persistence:
               size: 16Gi
@@ -42,12 +45,12 @@ spec:
             persistence:
               size: 16Gi
       traits:
+        - type: redis-exporter
         - properties:
           address: <host>:<port>
           secretName: redis-secret
           disableAnnotation: false
           name: redis-server-exporter
-          type: redis-exporter
 ```
 
 * Work as a component.
@@ -69,16 +72,19 @@ spec:
             metadata:
               name: redis-secret
             data:
-              username: <username-bash64>
-              password: <password-bash64>
+              username: <username-bash64> # default: ""
+              password: <password-bash64> # default: password in base64
     - name: redis
       type: helm
       properties:
         repoType: "helm"
         url: "https://charts.bitnami.com/bitnami"
         chart: "redis"
-        version: "16.8.5"
+        version: "17.7.3"
         values:
+          global:
+            redis:
+              password: <password>
           master:
             persistence:
               size: 16Gi
@@ -86,10 +92,10 @@ spec:
             persistence:
               size: 16Gi
     - name: redis-exporter
+      type: redis-exporter-server
       properties:
         address: <host>:<port>
         secretName: redis-secret
         disableAnnotation: false
         name: redis-server-exporter
-      type: redis-exporter-server
 ```

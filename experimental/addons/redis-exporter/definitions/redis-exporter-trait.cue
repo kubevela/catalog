@@ -79,7 +79,7 @@ template: {
 										valueFrom: {
 											secretKeyRef: {
 												name: parameter.serectName
-												key:  "redis-username"
+												key:  "username"
 											}
 										}
 									},
@@ -88,7 +88,7 @@ template: {
 										valueFrom: {
 											secretKeyRef: {
 												name: parameter.serectName
-												key:  "redis-password"
+												key:  "password"
 											}
 										}
 									},
