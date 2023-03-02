@@ -28,9 +28,30 @@ template: {
 		mainApplicationFile: string
 		// +usage=Specify the version of Spark the application uses
 		sparkVersion: string
+		// +usage=Specify the policy on if and in which conditions the controller should restart an application
+		restartPolicy?: {
+			// +usage=Type value option: "Always", "Never", "OnFailure"
+			type: string
+			// +usage=Specify the number of times to retry submitting an application before giving up. This is best effort and actual retry attempts can be >= the value specified due to caching. These are required if RestartPolicy is OnFailure
+			onSubmissionFailureRetries?: int
+			// +usage=Specify the number of times to retry running an application before giving up
+			onFailureRetries?: int
+			// +usage=Specify the interval in seconds between retries on failed submissions
+			onSubmissionFailureRetryInterval?: int
+			// +usage=Specify the interval in seconds between retries on failed runs
+			onFailureRetryInterval?: int
+		}
 		// +usage=Specify the driver sepc request for the driver pod
 		driver: {
-			cores: int
+			// +usage=Specify the cores maps to spark.driver.cores or spark.executor.cores for the driver and executors, respectively
+			cores?: int
+			// +usage=Specify a hard limit on CPU cores for the pod
+			coreLimit?: string
+			// +usage=Specify the amount of memory to request for the pod
+			memory?: string
+			// +usage=Specify the Kubernetes labels to be added to the pod
+			labels?: [string]: string
+			// +usage=Specify the volumes listed in “.spec.volumes” to mount into the main container’s filesystem
 			volumeMounts?: [...{
 				name:      string
 				mountPath: string
@@ -38,7 +59,16 @@ template: {
 		}
 		// +usage=Specify the executor spec request for the executor pod
 		executor: {
-			cores: int
+			// +usage=Specify the cores maps to spark.driver.cores or spark.executor.cores for the driver and executors, respectively
+			cores?: int
+			// +usage=Specify a hard limit on CPU cores for the pod
+			coreLimit?: string
+			// +usage=Specify the amount of memory to request for the pod
+			memory?:    string
+			instances?: int
+			// +usage=Specify the Kubernetes labels to be added to the pod
+			labels?: [string]: string
+			// +usage=Specify the volumes listed in “.spec.volumes” to mount into the main container’s filesystem
 			volumeMounts?: [...{
 				name:      string
 				mountPath: string
@@ -62,6 +92,21 @@ template: {
 				type: *"Directory" | string
 			}
 		}]
+		// +usage=Specify the dependencies captures all possible types of dependencies of a Spark application
+		deps?: {
+			// +usage=Specify a list of JAR files the Spark application depends on
+			jars?: [...string]
+			// +usage=Specify a list of files the Spark application depends on
+			files?: [...string]
+			// +usage=Specify a list of Python files the Spark application depends on
+			pyFiles?: [...string]
+			// +usage=Specify a list of maven coordinates of jars to include on the driver and executor classpaths. This will search the local maven repo, then maven central and any additional remote repositories given by the “repositories” option. Each package should be of the form “groupId:artifactId:version”
+			packages?: [...string]
+			// +usage=Specify a list of “groupId:artifactId”, to exclude while resolving the dependencies provided in Packages to avoid dependency conflicts
+			excludePackages?: [...string]
+			// +usage=Specify a list of additional remote repositories to search for the maven coordinate given with the “packages” option
+			repositories?: [...string]
+		}
 	}
 
 	output: {

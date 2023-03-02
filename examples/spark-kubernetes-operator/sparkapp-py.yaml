@@ -8,17 +8,22 @@ spec:
   - name: spark-workload-component
     type: spark-workload
     properties:
-      name: my-spark-app
+      name: my-spark-py-app
       namespace: spark-cluster
-      type: Scala
+      type: Python
+      pythonVersion: "3"
       mode: cluster
-      image: "gcr.io/spark-operator/spark:v3.1.1"
+      image: "gcr.io/spark-operator/spark-py:v3.1.1"
       imagePullPolicy: Always
       mainClass: org.apache.spark.examples.streaming.JavaQueueStream
-      mainApplicationFile: "local:///opt/spark/examples/jars/spark-examples_2.12-3.1.1.jar"
+      mainApplicationFile: "local:///opt/spark/examples/src/main/python/pi.py"
       sparkVersion: "3.1.1"
       restartPolicy:
-        type: Never
+        type: OnFailure
+        onFailureRetries: 3
+        onFailureRetryInterval: 10
+        onSubmissionFailureRetries: 5
+        onSubmissionFailureRetryInterval: 20
       volumes:
         - name: "test-volume"
           hostPath:

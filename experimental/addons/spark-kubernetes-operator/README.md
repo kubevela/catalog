@@ -34,44 +34,64 @@ vela ls -A | grep spark
 ```
 vela show spark-workload
 # Specification
-+---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
-|        NAME         |                                             DESCRIPTION                                              |         TYPE          | REQUIRED | DEFAULT |
-+---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
-| name                | Specify the spark application name.                                                                  | string                | true     |         |
-| namespace           | Specify the namespace for spark application to install.                                              | string                | true     |         |
-| type                | Specify the application language type, e.g. "Scala", "Python", "Java" or "R".                        | string                | true     |         |
-| pythonVersion       | Specify the python version.                                                                          | string                | false    |         |
-| mode                | Specify the deploy mode, e.go "cluster", "client" or "in-cluster-client".                            | string                | true     |         |
-| image               | Specify the container image for the driver, executor, and init-container.                            | string                | true     |         |
-| imagePullPolicy     | Specify the image pull policy for the driver, executor, and init-container.                          | string                | true     |         |
-| mainClass           | Specify the fully-qualified main class of the Spark application.                                     | string                | true     |         |
-| mainApplicationFile | Specify the path to a bundled JAR, Python, or R file of the application.                             | string                | true     |         |
-| sparkVersion        | Specify the version of Spark the application uses.                                                   | string                | true     |         |
-| driver              | Specify the driver sepc request for the driver pod.                                                  | [driver](#driver)     | true     |         |
-| executor            | Specify the executor spec request for the executor pod.                                              | [executor](#executor) | true     |         |
-| arguments           | Specify a list of arguments to be passed to the application.                                         | []string              | false    |         |
-| sparkConf           | Specify the config information carries user-specified Spark configuration properties as they would   | map[string]string     | false    |         |
-|                     | use the  "--conf" option in spark-submit.                                                            |                       |          |         |
-| hadoopConf          | Specify the config information carries user-specified Hadoop configuration properties as they would  | map[string]string     | false    |         |
-|                     | use the  the "--conf" option in spark-submit.  The SparkApplication controller automatically adds    |                       |          |         |
-|                     | prefix "spark.hadoop." to Hadoop configuration properties.                                           |                       |          |         |
-| sparkConfigMap      | Specify the name of the ConfigMap containing Spark configuration files such as log4j.properties. The | string                | false    |         |
-|                     | controller will add environment variable SPARK_CONF_DIR to the path where the ConfigMap is mounted   |                       |          |         |
-|                     | to.                                                                                                  |                       |          |         |
-| hadoopConfigMap     | Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The   | string                | false    |         |
-|                     | controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted  |                       |          |         |
-|                     | to.                                                                                                  |                       |          |         |
-| volumes             | Specify the list of Kubernetes volumes that can be mounted by the driver and/or executors.           | [[]volumes](#volumes) | false    |         |
-+---------------------+------------------------------------------------------------------------------------------------------+-----------------------+----------+---------+
++---------------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+|        NAME         |                                             DESCRIPTION                                              |              TYPE               | REQUIRED | DEFAULT |
++---------------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+| name                | Specify the spark application name.                                                                  | string                          | true     |         |
+| namespace           | Specify the namespace for spark application to install.                                              | string                          | true     |         |
+| type                | Specify the application language type, e.g. "Scala", "Python", "Java" or "R".                        | string                          | true     |         |
+| pythonVersion       | Specify the python version.                                                                          | string                          | false    |         |
+| mode                | Specify the deploy mode, e.go "cluster", "client" or "in-cluster-client".                            | string                          | true     |         |
+| image               | Specify the container image for the driver, executor, and init-container.                            | string                          | true     |         |
+| imagePullPolicy     | Specify the image pull policy for the driver, executor, and init-container.                          | string                          | true     |         |
+| mainClass           | Specify the fully-qualified main class of the Spark application.                                     | string                          | true     |         |
+| mainApplicationFile | Specify the path to a bundled JAR, Python, or R file of the application.                             | string                          | true     |         |
+| sparkVersion        | Specify the version of Spark the application uses.                                                   | string                          | true     |         |
+| restartPolicy       | Specify the policy on if and in which conditions the controller should restart an application.       | [restartPolicy](#restartpolicy) | false    |         |
+| driver              | Specify the driver sepc request for the driver pod.                                                  | [driver](#driver)               | true     |         |
+| executor            | Specify the executor spec request for the executor pod.                                              | [executor](#executor)           | true     |         |
+| arguments           | Specify a list of arguments to be passed to the application.                                         | []string                        | false    |         |
+| sparkConf           | Specify the config information carries user-specified Spark configuration properties as they would   | map[string]string               | false    |         |
+|                     | use the  "--conf" option in spark-submit.                                                            |                                 |          |         |
+| hadoopConf          | Specify the config information carries user-specified Hadoop configuration properties as they would  | map[string]string               | false    |         |
+|                     | use the  the "--conf" option in spark-submit.  The SparkApplication controller automatically adds    |                                 |          |         |
+|                     | prefix "spark.hadoop." to Hadoop configuration properties.                                           |                                 |          |         |
+| sparkConfigMap      | Specify the name of the ConfigMap containing Spark configuration files such as log4j.properties. The | string                          | false    |         |
+|                     | controller will add environment variable SPARK_CONF_DIR to the path where the ConfigMap is mounted   |                                 |          |         |
+|                     | to.                                                                                                  |                                 |          |         |
+| hadoopConfigMap     | Specify the name of the ConfigMap containing Hadoop configuration files such as core-site.xml. The   | string                          | false    |         |
+|                     | controller will add environment variable HADOOP_CONF_DIR to the path where the ConfigMap is mounted  |                                 |          |         |
+|                     | to.                                                                                                  |                                 |          |         |
+| volumes             | Specify the list of Kubernetes volumes that can be mounted by the driver and/or executors.           | [[]volumes](#volumes)           | false    |         |
+| deps                | Specify the dependencies captures all possible types of dependencies of a Spark application.         | [deps](#deps)                   | false    |         |
++---------------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+
+
+## restartPolicy
++----------------------------------+------------------------------------------------------------------------------------------------------+--------+----------+---------+
+|               NAME               |                                             DESCRIPTION                                              |  TYPE  | REQUIRED | DEFAULT |
++----------------------------------+------------------------------------------------------------------------------------------------------+--------+----------+---------+
+| type                             | Type value option: "Always", "Never", "OnFailure".                                                   | string | true     |         |
+| onSubmissionFailureRetries       | Specify the number of times to retry submitting an application before giving up. This is best        | int    | false    |         |
+|                                  | effort and actual retry attempts can be >= the value specified due to caching. These are required if |        |          |         |
+|                                  | RestartPolicy is OnFailure.                                                                          |        |          |         |
+| onFailureRetries                 | Specify the number of times to retry running an application before giving up.                        | int    | false    |         |
+| onSubmissionFailureRetryInterval | Specify the interval in seconds between retries on failed submissions.                               | int    | false    |         |
+| onFailureRetryInterval           | Specify the interval in seconds between retries on failed runs.                                      | int    | false    |         |
++----------------------------------+------------------------------------------------------------------------------------------------------+--------+----------+---------+
 
 
 ## driver
-+--------------+-------------+---------------------------------+----------+---------+
-|     NAME     | DESCRIPTION |              TYPE               | REQUIRED | DEFAULT |
-+--------------+-------------+---------------------------------+----------+---------+
-| cores        |             | int                             | true     |         |
-| volumeMounts |             | [[]volumeMounts](#volumemounts) | false    |         |
-+--------------+-------------+---------------------------------+----------+---------+
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+|     NAME     |                                             DESCRIPTION                                              |              TYPE               | REQUIRED | DEFAULT |
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+| cores        | Specify the cores maps to spark.driver.cores or spark.executor.cores for the driver and executors,   | int                             | false    |         |
+|              | respectively.                                                                                        |                                 |          |         |
+| coreLimit    | Specify a hard limit on CPU cores for the pod.                                                       | string                          | false    |         |
+| memory       | Specify the amount of memory to request for the pod.                                                 | string                          | false    |         |
+| labels       | Specify the Kubernetes labels to be added to the pod.                                                | map[string]string               | false    |         |
+| volumeMounts | Specify the volumes listed in “.spec.volumes” to mount into the main container’s filesystem.         | [[]volumeMounts](#volumemounts) | false    |         |
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
 
 
 ### volumeMounts
@@ -84,12 +104,17 @@ vela show spark-workload
 
 
 ## executor
-+--------------+-------------+---------------------------------+----------+---------+
-|     NAME     | DESCRIPTION |              TYPE               | REQUIRED | DEFAULT |
-+--------------+-------------+---------------------------------+----------+---------+
-| cores        |             | int                             | true     |         |
-| volumeMounts |             | [[]volumeMounts](#volumemounts) | false    |         |
-+--------------+-------------+---------------------------------+----------+---------+
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+|     NAME     |                                             DESCRIPTION                                              |              TYPE               | REQUIRED | DEFAULT |
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
+| cores        | Specify the cores maps to spark.driver.cores or spark.executor.cores for the driver and executors,   | int                             | false    |         |
+|              | respectively.                                                                                        |                                 |          |         |
+| coreLimit    | Specify a hard limit on CPU cores for the pod.                                                       | string                          | false    |         |
+| memory       | Specify the amount of memory to request for the pod.                                                 | string                          | false    |         |
+| instances    |                                                                                                      | int                             | false    |         |
+| labels       | Specify the Kubernetes labels to be added to the pod.                                                | map[string]string               | false    |         |
+| volumeMounts | Specify the volumes listed in “.spec.volumes” to mount into the main container’s filesystem.         | [[]volumeMounts](#volumemounts) | false    |         |
++--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
 
 
 ### volumeMounts
@@ -117,6 +142,23 @@ vela show spark-workload
 | path |             | string | true     |           |
 | type |             | string | false    | Directory |
 +------+-------------+--------+----------+-----------+
+
+
+## deps
++-----------------+------------------------------------------------------------------------------------------------------+----------+----------+---------+
+|      NAME       |                                             DESCRIPTION                                              |   TYPE   | REQUIRED | DEFAULT |
++-----------------+------------------------------------------------------------------------------------------------------+----------+----------+---------+
+| jars            | Specify a list of JAR files the Spark application depends on.                                        | []string | false    |         |
+| files           | Specify a list of files the Spark application depends on.                                            | []string | false    |         |
+| pyFiles         | Specify a list of Python files the Spark application depends on.                                     | []string | false    |         |
+| packages        | Specify a list of maven coordinates of jars to include on the driver and executor classpaths. This   | []string | false    |         |
+|                 | will search the local maven repo, then maven central and any additional remote repositories given by |          |          |         |
+|                 | the “repositories” option. Each package should be of the form “groupId:artifactId:version”.          |          |          |         |
+| excludePackages | Specify a list of “groupId:artifactId”, to exclude while resolving the dependencies provided in      | []string | false    |         |
+|                 | Packages to avoid dependency conflicts.                                                              |          |          |         |
+| repositories    | Specify a list of additional remote repositories to search for the maven coordinate given with the   | []string | false    |         |
+|                 | “packages” option.                                                                                   |          |          |         |
++-----------------+------------------------------------------------------------------------------------------------------+----------+----------+---------+
 ```
 
 # Example for how to run a component typed spark-cluster in application
