@@ -33,7 +33,6 @@ vela ls -A | grep spark
 
 ```
 vela show spark-workload
-# Specification
 +---------------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
 |        NAME         |                                             DESCRIPTION                                              |              TYPE               | REQUIRED | DEFAULT |
 +---------------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+
@@ -47,6 +46,8 @@ vela show spark-workload
 | mainClass           | Specify the fully-qualified main class of the Spark application.                                     | string                          | true     |         |
 | mainApplicationFile | Specify the path to a bundled JAR, Python, or R file of the application.                             | string                          | true     |         |
 | sparkVersion        | Specify the version of Spark the application uses.                                                   | string                          | true     |         |
+| proxyUser           | Specify the user to impersonate when submitting the application. It maps to the command-line flag    | string                          | false    |         |
+|                     | “–proxy-user” in spark-submit.                                                                       |                                 |          |         |
 | restartPolicy       | Specify the policy on if and in which conditions the controller should restart an application.       | [restartPolicy](#restartpolicy) | false    |         |
 | driver              | Specify the driver sepc request for the driver pod.                                                  | [driver](#driver)               | true     |         |
 | executor            | Specify the executor spec request for the executor pod.                                              | [executor](#executor)           | true     |         |
@@ -111,7 +112,7 @@ vela show spark-workload
 |              | respectively.                                                                                        |                                 |          |         |
 | coreLimit    | Specify a hard limit on CPU cores for the pod.                                                       | string                          | false    |         |
 | memory       | Specify the amount of memory to request for the pod.                                                 | string                          | false    |         |
-| instances    |                                                                                                      | int                             | false    |         |
+| instances    | Specify the number of executor instances.                                                            | int                             | false    |         |
 | labels       | Specify the Kubernetes labels to be added to the pod.                                                | map[string]string               | false    |         |
 | volumeMounts | Specify the volumes listed in “.spec.volumes” to mount into the main container’s filesystem.         | [[]volumeMounts](#volumemounts) | false    |         |
 +--------------+------------------------------------------------------------------------------------------------------+---------------------------------+----------+---------+

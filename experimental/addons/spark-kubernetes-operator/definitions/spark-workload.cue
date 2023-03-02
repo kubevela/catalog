@@ -28,6 +28,8 @@ template: {
 		mainApplicationFile: string
 		// +usage=Specify the version of Spark the application uses
 		sparkVersion: string
+		// +usage=Specify the user to impersonate when submitting the application. It maps to the command-line flag “–proxy-user” in spark-submit
+		proxyUser?: string
 		// +usage=Specify the policy on if and in which conditions the controller should restart an application
 		restartPolicy?: {
 			// +usage=Type value option: "Always", "Never", "OnFailure"
@@ -64,7 +66,8 @@ template: {
 			// +usage=Specify a hard limit on CPU cores for the pod
 			coreLimit?: string
 			// +usage=Specify the amount of memory to request for the pod
-			memory?:    string
+			memory?: string
+			// +usage=Specify the number of executor instances
 			instances?: int
 			// +usage=Specify the Kubernetes labels to be added to the pod
 			labels?: [string]: string
