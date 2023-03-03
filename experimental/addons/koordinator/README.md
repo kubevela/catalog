@@ -179,7 +179,7 @@ For users who need deep insight, please visit https://koordinator.sh/docs/user-m
   ```shell
   $ kubectl create -f nginx-deployment.yaml
   deployment/nginx-lsr created
-  $ kubectl get pods -o wide | grep nginx
+  $ kubectl get -n prod pods -o wide | grep nginx
   nginx-lsr-59cf487d4b-jwwjv   1/1     Running   0       21s     172.20.101.35    node-0   <none>         <none>
   nginx-lsr-59cf487d4b-4l7r4   1/1     Running   0       21s     172.20.101.79    node-1   <none>         <none>
   nginx-lsr-59cf487d4b-nrb7f   1/1     Running   0       21s     172.20.106.119   node-2   <none>         <none>
@@ -188,13 +188,13 @@ For users who need deep insight, please visit https://koordinator.sh/docs/user-m
 - Check the CPU binding results of pods on `scheduling.koordinator.sh/resource-status` annotations.
 
   ```shell
-  $ kubectl get pod nginx-lsr-59cf487d4b-jwwjv -o jsonpath='{.metadata.annotations.scheduling\.koordinator\.sh/resource-status}'
+  $ kubectl get pod -n prod nginx-lsr-59cf487d4b-jwwjv -o jsonpath='{.metadata.annotations.scheduling\.koordinator\.sh/resource-status}'
   {"cpuset":"2,54"}
   ```
 
-  We can see that the pod `nginx-lsr-59cf487d4b-jwwjv` binds 2 CPUs, and the IDs are 2,54, which are the logical processors of the same core.
+  We can see that the pod `nginx-lsr-59cf487d4b-jwwjv` binds 2 CPUs, and the IDs are 2,54, which are the logical processors of the same core, But could be illogical for other processors.
 
-- Change the binding policy in the nginx deployment with the YAML file below.
+- So change the binding policy in the nginx deployment with the YAML file below.
 
   ```yaml
   apiVersion: apps/v1
@@ -235,7 +235,7 @@ For users who need deep insight, please visit https://koordinator.sh/docs/user-m
   ```shell
   $ kubectl apply -f nginx-deployment.yaml
   deployment/nginx-lsr created
-  $ kubectl get pods -o wide | grep nginx
+  $ kubectl get pods -n prod -o wide | grep nginx
   nginx-lsr-7fcbcf89b4-rkrgg   1/1     Running   0       49s     172.20.101.35    node-0   <none>         <none>
   nginx-lsr-7fcbcf89b4-ndbks   1/1     Running   0       49s     172.20.101.79    node-1   <none>         <none>
   nginx-lsr-7fcbcf89b4-9v8b8   1/1     Running   0       49s     172.20.106.119   node-2   <none>         <none>
