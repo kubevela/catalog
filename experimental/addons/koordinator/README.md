@@ -26,6 +26,7 @@ vela addon disable koordinator
 ```
 
 ## Use
+
 ### koordinator
 
 After you enable this addon, create a namespace `prod` with the below YAML:
@@ -201,6 +202,7 @@ For users who need deep insight, please visit https://koordinator.sh/docs/user-m
   kind: Deployment
   metadata:
     name: nginx-lsr
+    namespace: prod
     labels:
       app: nginx-lsr
   spec:
@@ -244,10 +246,146 @@ For users who need deep insight, please visit https://koordinator.sh/docs/user-m
 - Check the new CPU binding results of pods on `scheduling.koordinator.sh/resource-status` annotations.
 
   ```shell
-  $ kubectl get pod nginx-lsr-7fcbcf89b4-rkrgg -o jsonpath='{.metadata.annotations.scheduling\.koordinator\.sh/resource-status}'
+  $ kubectl get pod -n prod nginx-lsr-7fcbcf89b4-rkrgg -o jsonpath='{.metadata.annotations.scheduling\.koordinator\.sh/resource-status}'
   {"cpuset":"2-3"}
   ```
 
   Now we can see that the pod `nginx-lsr-59cf487d4b-jwwjv` binds 2 CPUs, and the IDs are 2,3, which are the logical processors of the different core.
+
+### Load Aware Scheduling
+
+Load Aware Scheduling is an ability of koord-scheduler for balancing pods scheduling based on the real-time load of each node.
+
+Load-aware scheduling is Enabled by default. You can use it without any modification on the koord-scheduler config.
+
+For users who need deep insight, please visit https://koordinator.sh/docs/user-manuals/load-aware-scheduling/#global-configuration-via-plugin-args.
+
+**Use Load Aware Scheduling**
+*Load-aware scheduling by the whole machine load*
+
+The example cluster in this article has three 4-core 16GiB nodes.
+
+- Deploy a stress pod with the YAML file below.
+
+  ```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: stress-demo
+    namespace: prod
+    labels:
+      app: stress-demo
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: stress-demo
+    template:
+      metadata:
+        name: stress-demo
+        labels:
+          app: stress-demo
+      spec:
+        containers:
+          - args:
+              - '--vm'
+              - '2'
+              - '--vm-bytes'
+              - '1600M'
+              - '-c'
+              - '2'
+              - '--vm-hang'
+              - '2'
+            command:
+              - stress
+            image: polinux/stress
+            imagePullPolicy: Always
+            name: stress
+            resources:
+              limits:
+                cpu: '2'
+                memory: 4Gi
+              requests:
+                cpu: '2'
+                memory: 4Gi
+        restartPolicy: Always
+        schedulerName: koord-scheduler # use the koord-scheduler
+  ```
+
+  ```shell
+  $ kubectl create -f stress-demo.yaml
+  deployment.apps/stress-demo created
+  ```
+
+- Watch the pod status util it becomes running.
+
+  ```shell
+  $ kubectl get pod -n prod -o wide
+  NAME                           READY   STATUS    RESTARTS   AGE   IP           NODE                    NOMINATED NODE   READINESS GATES
+  stress-demo-7fdd89cc6b-gcnzn   1/1     Running   0          82s   10.0.3.114   cn-beijing.10.0.3.112   <none>           <none>
+  ```
+
+  The pod `stress-demo-7fdd89cc6b-gcnzn` is scheduled on `cn-beijing.10.0.3.112`.
+
+- Check the load of each node.
+
+  ```shell
+  $ kubectl top node
+  NAME                    CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+  cn-beijing.10.0.3.110   92m          2%     1158Mi          9%
+  cn-beijing.10.0.3.111   77m          1%     1162Mi          9%
+  cn-beijing.10.0.3.112   2105m        53%    3594Mi          28%
+  ```
+
+  In above order, `cn-beijing.10.0.3.112` has the highest load, while `cn-beijing.10.0.3.111` has the lowest load.
+
+- Deploy an `nginx` deployment with the YAML file below.
+
+  ```yaml
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: nginx-with-loadaware
+    namespace: prod
+    labels:
+      app: nginx
+  spec:
+    replicas: 6
+    selector:
+      matchLabels:
+        app: nginx
+    template:
+      metadata:
+        name: nginx
+        labels:
+          app: nginx
+      spec:
+        schedulerName: koord-scheduler # use the koord-scheduler
+        containers:
+        - name: nginx
+          image: nginx
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 500m
+  ```
+
+  ```shell
+  $ kubectl create -f nginx-with-loadaware.yaml
+  deployment/nginx-with-loadawre created
+  ```
+
+- Check the scheduling results of nginx pods.
+
+  ```shell
+  $ kubectl get -n prod pods | grep nginx
+  nginx-with-loadaware-5646666d56-224jp   1/1     Running   0          18s   10.0.3.118   cn-beijing.10.0.3.110   <none>           <none>
+  nginx-with-loadaware-5646666d56-7glt9   1/1     Running   0          18s   10.0.3.115   cn-beijing.10.0.3.110   <none>           <none>
+  nginx-with-loadaware-5646666d56-kcdvr   1/1     Running   0          18s   10.0.3.119   cn-beijing.10.0.3.110   <none>           <none>
+  nginx-with-loadaware-5646666d56-qzw4j   1/1     Running   0          18s   10.0.3.113   cn-beijing.10.0.3.111   <none>           <none>
+  nginx-with-loadaware-5646666d56-sbgv9   1/1     Running   0          18s   10.0.3.120   cn-beijing.10.0.3.111   <none>           <none>
+  nginx-with-loadaware-5646666d56-z79dn   1/1     Running   0          18s   10.0.3.116   cn-beijing.10.0.3.111   <none>           <none>
+  ```
 
 For more visit to https://koordinator.sh/.
