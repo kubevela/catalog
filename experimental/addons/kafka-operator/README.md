@@ -102,7 +102,7 @@ Enjoy your Apache Kafka cluster, running on Minikube!
 
 **Create a kafka-bridge to enable HTTP connection to the kafka-cluster**
 
-Apply the below YAML to create kafka bridge in `kafka-operator` namespace:
+Apply below YAML to create kafka bridge in `kafka-operator` namespace:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -132,4 +132,57 @@ $ kubectl port-forward -n kafka-operator kafka-bridge-bridge-75549d4f89-c6qjf 80
 # Visit on the port-forwarding port via CLI
 $ curl http://localhost:8080
 {"bridge_version":"0.24.0"}
+
+```
+
+### External datasource connection to kafka broker
+
+**Create kafka-connect cluster**
+
+Apply below YAML to create kafka-connect:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-connect-sample
+spec:
+  components:
+    - type: kafka-connect
+      name: kafka-connect
+      properties:
+        version: 3.3.2
+        replicas: 1
+        bootstrapServers: "kafka-cluster-kafka-bootstrap:9093"
+        tls:
+          trustedCertificates:
+            - secretName: kafka-cluster-cluster-ca-cert
+              certificate: ca.crt
+        config:
+          group.id: connect-cluster
+          offset.storage.topic: connect-cluster-offsets
+          config.storage.topic: connect-cluster-configs
+          status.storage.topic: connect-cluster-status
+          config.storage.replication.factor: -1
+          offset.storage.replication.factor: -1
+          status.storage.replication.factor: -1
+```
+
+**Create kafka-connector to connect with `kafka-connect` cluster and external datasource**
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-connector-sample
+spec:
+  components:
+    - type: kafka-connector
+      name: kafka-connector
+      properties:
+        class: org.apache.kafka.connect.file.FileStreamSourceConnector
+        tasksMax: 1
+        config:
+          file: /opt/kafka/LICENSE
+          topic: kafka-topic
 ```
