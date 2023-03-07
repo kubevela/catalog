@@ -234,4 +234,4 @@ NAME              CLUSTER         CONNECTOR CLASS                               
 kafka-connector   kafka-connect   org.apache.kafka.connect.file.FileStreamSourceConnector   1           True
 ```
 
-Enjoy your Apache Kafka cluster, running on Minikube!
+Enjoy your Apache Kafka cluster, running on Minikube!.
