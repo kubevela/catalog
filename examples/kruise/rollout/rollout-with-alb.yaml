@@ -3,13 +3,13 @@ kind: Application
 metadata:
   name: canary-demo
   annotations:
-    app.oam.dev/publishVersion: v1
+    app.oam.dev/publishVersion: v2
 spec:
   components:
     - name: canary-demo
       type: webservice
       properties:
-        image: barnett/canarydemo:v1
+        image: barnett/canarydemo:v2
         ports:
           - port: 8090
       traits:
@@ -24,9 +24,25 @@ spec:
   workflow:
     steps:
       - type: canary-deploy
+        name: rollout-20
+        properties:
+          component: canary-demo
+          weight: 20
+          trafficRoutingType: "aliyun-alb"
+      - name: suspend
+        type: suspend
+      - type: canary-deploy
+        name: rollout-50
+        properties:
+          component: canary-demo
+          weight: 50
+          trafficRoutingType: "aliyun-alb"
+      - name: suspend-again
+        type: suspend
+      - type: canary-deploy
         name: rollout-100
         properties:
           component: canary-demo
           weight: 100
-
+          trafficRoutingType: "aliyun-alb"
 

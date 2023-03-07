@@ -11,43 +11,7 @@
 				message: context.outputs.rollout.status.message
 				"""#
 			healthPolicy: #"""
-				updated: *true | bool
-				if len(context.outputs.rollout.spec.strategy.canary.steps) < 1 {
-					updated: false
-				}
-				if len(context.outputs.rollout.spec.strategy.canary.steps) >= 1 {
-					if context.parameter.weight != _|_ {
-						if context.outputs.rollout.spec.strategy.canary.steps[0].weight == _|_ {
-							updated: false
-						}
-						if context.outputs.rollout.metadata.annotations[""rollout.addon.dev/weight"] != _|_ {
-							if context.outputs.rollout.metadata.annotations[""rollout.addon.dev/weight"] != context.parameter.canary.steps[0].weight {
-								updated: false
-							}
-						}
-					}
-					if context.parameter.replicas != _|_ {
-						if context.outputs.rollout.spec.strategy.canary.steps[0].replicas == _|_ {
-							updated: false
-						}
-						if context.outputs.rollout.spec.strategy.canary.steps[0].replicas != _|_ {
-							if context.outputs.rollout.spec.strategy.canary.steps[0].replicas != context.parameter.canary.steps[0].replicas {
-								updated: false
-							}
-						}
-					}
-				}
-				isHealth: *false | bool
-				if updated {
-					if context.outputs.rollout.status.phase == "Healthy" {
-						isHealth: true
-					}
-					if context.outputs.rollout.status.phase != "Healthy" {
-						if context.outputs.rollout.status.canaryStatus != _|_ {
-							isHealth: context.outputs.rollout.status.canaryStatus.currentStepState == "StepPaused"
-						}
-					}
-				}
+				isHealth: context.outputs.rollout.status.phase == "Healthy"
 				"""#
 		}
 	}
@@ -81,7 +45,7 @@ template: {
 		// +usage=refers to the name of an `HTTPRoute` of gateway API.
 		gatewayHTTPRouteName?: string
 		// +usage=specify the type of traffic route, can be ingress or gateway.
-		type: *"ingress" | "gateway"
+		type: *"ingress" | "gateway" | "aliyun-alb"
 	}
 	#WorkloadType: {
 		apiVersion: string
@@ -104,14 +68,6 @@ template: {
 	}
 
 	srcName: context.output.metadata.name
-
-
-	patch: {
-		 metadata: {
-		 	   // +patchStrategy=jsonMergePatch
-		 	   annotations: {"app.oam.dev/disable-health-check": "true"}
-		 }
-	}
 
 	outputs: rollout: {
 		apiVersion: "rollouts.kruise.io/v1alpha1"

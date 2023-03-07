@@ -1,12 +1,13 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: canary-demo
+  name: canary-demo-wf
+  namespace: default
   annotations:
     app.oam.dev/publishVersion: v1
 spec:
   components:
-    - name: canary-demo
+    - name: canary-demo-wf
       type: webservice
       properties:
         image: barnett/canarydemo:v1
@@ -15,7 +16,7 @@ spec:
       traits:
         - type: scaler
           properties:
-            replicas: 5
+            replicas: 1
         - type: gateway
           properties:
             domain: canary-demo.com
@@ -28,5 +29,3 @@ spec:
         properties:
           component: canary-demo
           weight: 100
-
-

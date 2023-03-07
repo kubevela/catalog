@@ -2,9 +2,9 @@
 	type: "trait"
 	annotations: {}
 	labels: {}
-	description: "Rolling workload with specified weight via kruise rollout."
+	description: "Rolling workload with specified weight via kruise rollout. It's advisable not to use this trait directly. Instead, if you use the canary-deploy step, this trait will be added implicitly"
 	attributes: {
-		stage: "PreDispatch"
+		stage:   "PreDispatch"
 		podDisruptive: true
 		appliesToWorkloads: ["*"]
 		status: {
@@ -64,8 +64,8 @@ template: {
 		ingressName?: string
 		// +usage=refers to the name of an `HTTPRoute` of gateway API.
 		gatewayHTTPRouteName?: string
-		// +usage=specify the type of traffic route, can be ingress or gateway.
-		type: *"ingress" | "gateway"
+		// +usage=specify the type of traffic route, can be ingress, gateway or aliyun-alb.
+		type: *"ingress" | "gateway" | "aliyun-alb"
 	}
 	#WorkloadType: {
 		apiVersion: string
@@ -145,9 +145,28 @@ template: {
 								gracePeriodSeconds: routing.gracePeriodSeconds
 
 								if routing.type == "ingress" {
-									ingress: name: *context.name | string
+									ingress: {
+										name:      *context.name | string
+										classType: "nginx"
+									}
 									if routing.ingressName != _|_ {
-										ingress: name: routing.ingressName
+										ingress: {
+											name:      routing.ingressName
+											classType: "nginx"
+										}
+									}
+								}
+
+								if routing.type == "aliyun-alb" {
+									ingress: {
+										name:      *context.name | string
+										classType: "aliyun-alb"
+									}
+									if routing.ingressName != _|_ {
+										ingress: {
+											name:      *context.name | string
+											classType: "aliyun-alb"
+										}
 									}
 								}
 

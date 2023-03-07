@@ -1,0 +1,10 @@
+- sort: 50
+  jsonKey: policies
+  uiType: PolicySelect
+- sort: 30
+  jsonKey: component
+  uiType: ComponentSelect
+- sort: 40
+  jsonKey: trafficRoutingType
+- sort: 10
+  jsonKey: weight
