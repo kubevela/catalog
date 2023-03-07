@@ -165,7 +165,7 @@ redis_allocator_frag_ratio 1.29
 
 ### Grafana Dashboard
 
-You can use Grafana dashboard to visualize the metrics.
+You can choose to install Grafana in the Kubernetes cluster manually, or use Grafana in a simple way by installing the [Grafana addon](https://github.com/kubevela/catalog/tree/master/addons/grafana) of KubeVela. And then you can use dashboard to visualize the metrics.
 
 Example Grafana screenshots:
 
