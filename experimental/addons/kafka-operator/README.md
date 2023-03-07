@@ -98,8 +98,6 @@ And to receive them in a different terminal, run:
 $ kubectl -n kafka-operator run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.33.2-kafka-3.4.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic kafka-topic --from-beginning
 ```
 
-Enjoy your Apache Kafka cluster, running on Minikube!
-
 **Create a kafka-bridge to enable HTTP connection to the kafka-cluster**
 
 Apply below YAML to create kafka bridge in `kafka-operator` namespace:
@@ -135,11 +133,42 @@ $ curl http://localhost:8080
 
 ```
 
+**Create kafka-rebalance to depict every partition of topic**
+
+Apply below YAML to create kafka-connector in `kafka-operator` namespace:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-rebalance-sample
+spec:
+  components:
+    - type: kafka-rebalance
+      name: kafka-rebalance
+      properties:
+        goals:
+        - CpuCapacityGoal
+        - NetworkInboundCapacityGoal
+        - DiskCapacityGoal
+        - RackAwareGoal
+        - MinTopicLeadersPerBrokerGoal
+        - NetworkOutboundCapacityGoal
+        - ReplicaCapacityGoal
+```
+
+Now, Verify.
+
+```shell
+NAME              CLUSTER         PENDINGPROPOSAL   PROPOSALREADY   REBALANCING   READY   NOTREADY
+kafka-rebalance   kafka-cluster                                                   True        
+```
+
 ### External datasource connection to kafka broker
 
 **Create kafka-connect cluster**
 
-Apply below YAML to create kafka-connect:
+Apply below YAML to create kafka-connect in `kafka-operator` namespace:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -168,7 +197,17 @@ spec:
           status.storage.replication.factor: -1
 ```
 
+Now, verify.
+
+```shell
+$ kubectl get kafkaConnect -n kafka-operator
+NAME            DESIRED REPLICAS   READY
+kafka-connect   1                  True
+```
+
 **Create kafka-connector to connect with `kafka-connect` cluster and external datasource**
+
+Apply below YAML to create kafka-connector in `kafka-operator` namespace:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -186,3 +225,13 @@ spec:
           file: /opt/kafka/LICENSE
           topic: kafka-topic
 ```
+
+Now, Verify.
+
+```shell
+$ kubectl get kafkaConnector -n kafka-operator
+NAME              CLUSTER         CONNECTOR CLASS                                           MAX TASKS   READY
+kafka-connector   kafka-connect   org.apache.kafka.connect.file.FileStreamSourceConnector   1           True
+```
+
+Enjoy your Apache Kafka cluster, running on Minikube!
