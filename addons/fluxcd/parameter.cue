@@ -7,4 +7,14 @@ parameter: {
 	namespace: *"flux-system" | string
 	//+usage=OnlyHelmComponents only enable helm associated components, default to false
 	onlyHelmComponents: *false | bool
+	//+usage=advanced options for Helm Controller
+	helmControllerOptions?: [...string]
+	//+usage=advanced options for Source Controller
+	sourceControllerOptions?: [...string]
+	//+usage=advanced options for Kustomize Controller
+	kustomizeControllerOptions?: [...string]
+	//+usage=advanced options for Image Reflector Controller
+	imageReflectorControllerOptions?: [...string]
+	//+usage=advanced options for Image Automation Controller
+	imageAutomationControllerOptions?: [...string]
 }
