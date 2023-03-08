@@ -235,3 +235,4 @@ kafka-connector   kafka-connect   org.apache.kafka.connect.file.FileStreamSource
 ```
 
 Enjoy your Apache Kafka cluster, running on Minikube!.
+For more visit on https://strimzi.io/.
