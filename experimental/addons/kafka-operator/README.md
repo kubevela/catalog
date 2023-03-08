@@ -130,7 +130,6 @@ $ kubectl port-forward -n kafka-operator kafka-bridge-bridge-75549d4f89-c6qjf 80
 # Visit on the port-forwarding port via CLI
 $ curl http://localhost:8080
 {"bridge_version":"0.24.0"}
-
 ```
 
 **Create kafka-rebalance to depict every partition of topic**
