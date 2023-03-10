@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: volcano-queue-sample
+spec:
+  components:
+    - type: volcano-queue
+      name: volcano-queue-default
+      properties:
+        reclaimable: true
+        weight: 1
+        capability:
+          cpu: "1"
+          memory: "1024Mi"
