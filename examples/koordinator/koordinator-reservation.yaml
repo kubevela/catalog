@@ -1,0 +1,63 @@
+# 1. Deploy a reservation reservation-demo with the YAML file below.
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: koordinator-reservation-sample
+spec:
+  components:
+    - type: koordinator-reservation
+      name: koordinator-reservation
+      properties:
+        template: # set resource requirements
+          namespace: prod
+          spec:
+            containers:
+              - args:
+                  - '-c'
+                  - '1'
+                command:
+                  - stress
+                image: polinux/stress
+                imagePullPolicy: Always
+                name: stress
+                resources: # reserve 500m cpu and 800Mi memory
+                  requests:
+                    cpu: 500m
+                    memory: 800Mi
+            schedulerName: koord-scheduler # use koord-scheduler
+        owners: # set the owner specifications
+          - object: # owner pod whose name is `prod/static-web`
+              name: static-web
+              namespace: prod
+        ttl: 1h # set the TTL, the reservation will get expired 1 hour later
+
+# 2. Watch the reservation status util it becomes available.
+
+---
+
+# 3. Deploy a pod pod-demo-0 with the YAML file below by commenting out to check working.
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: pod-demo-0 # match the owner spec of `reservation-demo`
+# spec:
+#   containers:
+#     - args:
+#         - '-c'
+#         - '1'
+#       command:
+#         - stress
+#       image: polinux/stress
+#       imagePullPolicy: Always
+#       name: stress
+#       resources:
+#         limits:
+#           cpu: '1'
+#           memory: 1Gi
+#         requests:
+#           cpu: 200m
+#           memory: 400Mi
+#   restartPolicy: Always
+#   schedulerName: koord-scheduler # use koord-scheduler
+
