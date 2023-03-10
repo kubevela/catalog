@@ -5,6 +5,12 @@
 // For example, you can use parameters to allow the user to customize
 // container images, ports, and etc.
 parameter: {
-	// +usage=Custom parameter description
-	myparam: *"myns" | string
+	// +usage=Deploy to specified clusters. Leave empty to deploy to all clusters.
+        clusters?: [...string]
+	// +usage=Namespace to deploy to
+        namespace: *"kyuubi-ns" | string
+	// +usage=Specify the image repository
+        "imageRepository": *"apache/kyuubi" | string
+	// +usage=Specify the image tag
+        "imageTag": *"" | string
 }
