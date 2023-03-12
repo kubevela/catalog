@@ -1,0 +1,26 @@
+name: hbase-operator
+version: 1.0.0
+description: This addon adds hbase-operator to the kubevela to be used by across the application installed in kubevela.
+icon: ""
+url: "https://hbase.apache.org/"
+
+tags:
+- hbase-operator
+
+invisible: false
+
+dependencies:
+- name: kubernetes
+  version: ">=1.18.0"
+- name: operator-sdk
+  version: ">=1.8.0"
+- name: hbase
+  version: ">=2.4.0"
+- name: zookeeper
+  version: ">=3.7.0"
+- name: etcd
+  version: ">=3.5.0"
+- name: prometheus-operator
+  version: ">=0.49.0"
+- name: grafana
+  version: ">=8.0.0"
