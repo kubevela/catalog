@@ -6,6 +6,11 @@ controllerArgs: [...]
 _targetNamespace: string
 _sourceControllerName: "fluxcd-source-controller"
 
+imageControllerDefaultArgs: controllerArgs + [
+					"--storage-path=/data",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
+]
+
 sourceController: {
 	// About this name, refer to #429 for details.
 	name: _sourceControllerName
@@ -77,10 +82,12 @@ sourceController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs + [
-					"--storage-path=/data",
-					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
-				]
+				if parameter.sourceControllerOptions != _|_ {
+					args: imageControllerDefaultArgs + parameter.sourceControllerOptions
+				}
+				if parameter.sourceControllerOptions == _|_ {
+					args: imageControllerDefaultArgs
+				}	
 			}
 		},
 	]

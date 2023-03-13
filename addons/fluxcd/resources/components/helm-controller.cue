@@ -63,7 +63,12 @@ helmController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.helmControllerOptions != _|_ {
+					args: controllerArgs + parameter.helmControllerOptions
+				}
+				if parameter.helmControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

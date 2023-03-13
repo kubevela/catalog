@@ -1,5 +1,5 @@
 name: prometheus-server
-version: v0.3.0
+version: v0.3.1
 description: An open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.
 icon: https://artifacthub.io/image/0503add5-3fce-4b63-bbf3-b9f649512a86@1x
 url: https://prometheus.io/

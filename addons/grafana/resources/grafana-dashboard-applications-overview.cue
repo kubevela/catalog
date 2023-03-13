@@ -240,9 +240,6 @@ grafanaDashboardApplicationOverviewData: #"""
 	          "fields": "/.*/",
 	          "values": false
 	        },
-	        "text": {
-	          "valueSize": 32
-	        },
 	        "textMode": "auto"
 	      },
 	      "pluginVersion": "8.5.3",
