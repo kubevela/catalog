@@ -84,7 +84,19 @@ NAME                                                                            
 kafka-topic                                                                                        kafka-cluster   10           1                    True
 ```
 
-**Send and receive messages with producer & consumer**
+**Send and receive messages with Producer & Consumer**
+
+An event records the fact that "something happened" in the world or in your business. It is also called record or message in the documentation. When you read or write data to Kafka, you do this in the form of events. Conceptually, an event has a key, value, timestamp, and optional metadata headers. Here's an example event:
+
+- Event key: "Alice"
+- Event value: "Made a payment of $200 to Bob"
+- Event timestamp: "Jun. 25, 2020 at 2:06 p.m."
+
+Producers are those client applications that publish (write) events to Kafka, and consumers are those that subscribe to (read and process) these events. In Kafka, producers and consumers are fully decoupled and agnostic of each other, which is a key design element to achieve the high scalability that Kafka is known for. For example, producers never need to wait for consumers.
+
+Events are organized and durably stored in topics. Very simplified, a topic is similar to a folder in a filesystem, and the events are the files in that folder.
+
+*Make sure that `kafka-topic` and `kafka-cluster` got created successfullly before to move further because further steps utilizes `kafka-topic` and `kafka-cluster`.*
 
 With the cluster running, run a simple producer to send messages to the Kafka topic `kafka-topic`:
 
@@ -92,7 +104,7 @@ With the cluster running, run a simple producer to send messages to the Kafka to
 $ kubectl -n kafka-operator run kafka-producer -ti --image=quay.io/strimzi/kafka:0.33.2-kafka-3.4.0 --rm=true --restart=Never -- bin/kafka-console-producer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic kafka-topic
 ```
 
-And to receive them in a different terminal, run:
+And to receive messages in a different terminal from topic, run:
 
 ```shell
 $ kubectl -n kafka-operator run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.33.2-kafka-3.4.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic kafka-topic --from-beginning
