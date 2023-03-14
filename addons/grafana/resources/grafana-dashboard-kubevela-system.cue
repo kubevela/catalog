@@ -1919,7 +1919,7 @@ grafanaDashboardKubevelaSystemData: #"""
 	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
-	          "expr": "histogram_quantile(0.95, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
+	          "expr": "histogram_quantile(0.95, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\",pod=~\"$pod\"}[$rate_interval])) by (le))",
 	          "hide": false,
 	          "legendFormat": "p95",
 	          "range": true,
@@ -1931,7 +1931,7 @@ grafanaDashboardKubevelaSystemData: #"""
 	            "uid": "${datasource}"
 	          },
 	          "editorMode": "code",
-	          "expr": "histogram_quantile(0.75, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\"}[$rate_interval])) by (le))",
+	          "expr": "histogram_quantile(0.75, sum(rate(controller_runtime_reconcile_time_seconds_bucket{controller=\"application\",app_kubernetes_io_name=\"vela-core\",pod=~\"$pod\"}[$rate_interval])) by (le))",
 	          "hide": false,
 	          "legendFormat": "p75",
 	          "range": true,
