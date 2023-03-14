@@ -39,7 +39,8 @@
     defaultValue: "*"
   conditions:
     - jsonKey: repoType
-      value: "helm"
+      op: "!="
+      value: "git"
     - jsonKey: chart
       op: "!="
       value: ""

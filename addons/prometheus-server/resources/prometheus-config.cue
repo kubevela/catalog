@@ -138,6 +138,9 @@ prometheusConfig: {
 				    target_label: node
 				  - replacement: $CLUSTER
 				    target_label: cluster
+				  tls_config:
+				    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+				    insecure_skip_verify: true
 				- honor_labels: true
 				  job_name: kubernetes-service-endpoints-slow
 				  kubernetes_sd_configs:
@@ -227,6 +230,9 @@ prometheusConfig: {
 				    target_label: service
 				  - replacement: $CLUSTER
 				    target_label: cluster
+				  tls_config:
+				    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+				    insecure_skip_verify: true
 				- honor_labels: true
 				  job_name: kubernetes-pods
 				  kubernetes_sd_configs:
@@ -276,6 +282,9 @@ prometheusConfig: {
 				    - __meta_kubernetes_pod_phase
 				  - replacement: $CLUSTER
 				    target_label: cluster
+				  tls_config:
+				    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+				    insecure_skip_verify: true
 				- honor_labels: true
 				  job_name: kubernetes-pods-slow
 				  kubernetes_sd_configs:
@@ -323,6 +332,9 @@ prometheusConfig: {
 				    target_label: cluster
 				  scrape_interval: 5m
 				  scrape_timeout: 30s
+				  tls_config:
+				    ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+				    insecure_skip_verify: true
 				alerting:
 				  alertmanagers:
 				  - kubernetes_sd_configs:

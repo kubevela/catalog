@@ -63,7 +63,12 @@ imageAutomationController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.imageAutomationControllerOptions != _|_ {
+					args: controllerArgs + parameter.imageAutomationControllerOptions
+				}
+				if parameter.imageAutomationControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]
