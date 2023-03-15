@@ -15,28 +15,6 @@ output: {
 				}]
 			},
 			{
-				name: "minio"
-				type: "helm"
-				properties:	{
-					repoType: "helm"
-					url: "https://charts.min.io/"
-					chart: "minio"
-					version: "4.0.2"
-					targetNamespace: "prod"
-				}
-			},
-			{
-				name: "postgresql"
-				type: "helm"
-				properties:	{
-					repoType: "helm"
-					url: "https://charts.bitnami.com/bitnami"
-					chart: "postgresql"
-					version: "12.1.5"
-					targetNamespace: "prod"
-				}
-			},
-			{
 				name: "commons-operator"
 				type: "helm"
 				properties:	{
