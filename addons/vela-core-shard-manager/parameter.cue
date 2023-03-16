@@ -9,4 +9,7 @@ parameter: {
 	nShards: *1 | int
 	shardNames?: [...string]
 	replicas: *1 | int
+
+	cpu?: string
+	memory?: string
 }
