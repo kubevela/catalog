@@ -106,6 +106,8 @@ spec:
         path: /metrics
   workflow:
     steps:
+      - type: deploy
+        name: deploy-redis-exporter
       - type: import-grafana-dashboard
         name: import-redis-exporter-dashboard
         properties:
