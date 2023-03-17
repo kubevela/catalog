@@ -46,10 +46,7 @@ template: {
                 user:       *null | string
             }
             //+usage=HDFS connection specification.
-            hdfs: {
-                //+usage=Name of the discovery-configmap providing information about the HDFS cluster.
-                configMap: *null | string
-            }
+            hdfs: *null | {...}
             //+usage=S3 connection specification.
             s3: {
                 //+usage=S3 connection definition as CRD.
@@ -57,7 +54,7 @@ template: {
                 reference: *null | string
             }
             //+usage=Specify the type of the created kubernetes service. This attribute will be removed in a future release when listener-operator is finished. Use with caution.
-            serviceType: *null | string
+            serviceType: *"ClusterIP" | string
             //+usage=Name of the Vector aggregator discovery ConfigMap. It must contain the key `ADDRESS` with the address of the Vector aggregator.
             vectorAggregatorConfigMapName: *null | string
         }
