@@ -18,7 +18,7 @@ output: {
 			dependsOn: ["kyuubi-ns"]
 			properties: {
 					repoType:        "helm"
-					url:             "https://awesome-kyuubi.github.io/kyuubi-helm-chart/"
+					url: 		 "https://awesome-kyuubi.github.io/kyuubi-helm-chart/"
 					chart:           "kyuubi"
 					targetNamespace: parameter["namespace"]
 					version:         "0.1.0"
@@ -27,6 +27,11 @@ output: {
 							repository: parameter["imageRepository"]
 							tag:        parameter["imageTag"]
 						},
+						kyuubiConf: {
+                            				kyuubiDefaults: """
+							spark.master=local
+							"""
+                        			}
 					}
 			}
 		}]
