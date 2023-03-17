@@ -108,12 +108,14 @@ spec:
     steps:
       - type: deploy
         name: deploy-redis-exporter
+        properties:
+          policies: []
       - type: import-grafana-dashboard
         name: import-redis-exporter-dashboard
         properties:
           uid: redis-exporter-dashboard
           title: Redis Exporter Dashboard
-          url: https://github.com/oliver006/redis_exporter/blob/master/contrib/grafana_prometheus_redis_dashboard.json
+          url: https://raw.githubusercontent.com/oliver006/redis_exporter/master/contrib/grafana_prometheus_redis_dashboard.json
 ```
 
 ### Work as a trait.
@@ -170,12 +172,16 @@ spec:
               path: /metrics
   workflow:
     steps:
+      - type: deploy
+        name: deploy-redis-exporter
+        properties:
+          policies: []
       - type: import-grafana-dashboard
         name: import-redis-exporter-dashboard
         properties:
           uid: redis-exporter-dashboard
           title: Redis Exporter Dashboard
-          url: https://github.com/oliver006/redis_exporter/blob/master/contrib/grafana_prometheus_redis_dashboard.json
+          url: https://raw.githubusercontent.com/oliver006/redis_exporter/master/contrib/grafana_prometheus_redis_dashboard.json
 ```
 
 ## Grafana Dashboard
