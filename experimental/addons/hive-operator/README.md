@@ -68,7 +68,7 @@ In order to connect Hive to MinIO we need to create several dependent components
 
 **s3-connection**
 
-An S3Connection to connect to MinIO:
+An S3Connection to connect to MinIO, Apply below YAML:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -89,7 +89,7 @@ spec:
 
 **secret**
 
-Credentials for the S3Connection to log into MinIO:
+Credentials for the S3Connection to log into MinIO, Apply below YAML:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -115,7 +115,7 @@ spec:
 
 **secret-class**
 
-A SecretClass for the credentials to the Minio. The credentials were defined in the installation of Minio via helm:
+A SecretClass for the credentials to the Minio. The credentials were defined in the installation of Minio via helm, Apply below YAML:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -135,7 +135,7 @@ spec:
 
 **hive-cluster**
 
-And lastly the actual Apache Hive cluster definition:
+And lastly the actual Apache Hive cluster definition, Apply below YAML:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -162,7 +162,6 @@ spec:
           roleGroups:
             default:
               replicas: 1
-
 ```
 
 Verify that it works
