@@ -118,15 +118,19 @@ spec:
 A SecretClass for the credentials to the Minio. The credentials were defined in the installation of Minio via helm:
 
 ```yaml
-apiVersion: secrets.stackable.tech/v1alpha1
-kind: SecretClass
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: hive-s3-secret-class
+  name: secret-class-sample
 spec:
-  backend:
-    k8sSearch:
-      searchNamespace:
-        pod: {}
+  components:
+    - type: secret-class
+      name: hive-s3-secret-class
+      properties:
+        backend:
+          k8sSearch:
+            searchNamespace:
+              pod: {}
 ```
 
 **hive-cluster**
@@ -134,27 +138,31 @@ spec:
 And lastly the actual Apache Hive cluster definition:
 
 ```yaml
----
-apiVersion: hive.stackable.tech/v1alpha1
-kind: HiveCluster
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: hive-postgres-s3
+  name: hive-postgres-cluster
 spec:
-  image:
-    productVersion: 3.1.3
-    stackableVersion: 23.1.0
-  clusterConfig:
-    database:
-      connString: jdbc:postgresql://postgresql:5432/hive
-      user: hive
-      password: hive
-      dbType: postgres
-    s3:
-      reference: minio
-  metastore:
-    roleGroups:
-      default:
-        replicas: 1
+  components:
+    - type: hive-cluster
+      name: hive-postgres-cluster
+      properties:
+        image:
+          productVersion: 3.1.3
+          stackableVersion: 23.1.0
+        clusterConfig:
+          database:
+            connString: jdbc:postgresql://postgresql:5432/hive
+            user: hive
+            password: hive
+            dbType: postgres
+          s3:
+            reference: minio
+        metastore:
+          roleGroups:
+            default:
+              replicas: 1
+
 ```
 
 Verify that it works
