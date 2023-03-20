@@ -1,0 +1,13 @@
+name: redis-exporter
+version: 0.0.1
+appVersion: v1.45.0
+description: Prometheus Redis metrics exporter.
+icon: https://redis.com/wp-content/themes/wpx/assets/images/logo-redis.svg
+url: https://github.com/oliver006/redis_exporter
+
+tags:
+  - Observability
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: false
