@@ -15,6 +15,66 @@ output: {
 				}]
 			},
 			{
+				name: "minio"
+				type: "helm"
+				properties:	{
+					repoType: "helm"
+					url: "https://charts.min.io/"
+					chart: "minio"
+					version: "4.0.2"
+					targetNamespace: "prod"
+					values:	{
+						mode: "standalone",
+						replicas: 1,
+						persistence: {
+							enabled: false
+						}
+						buckets: [
+							{
+								name: "hive",
+								policy: "none"
+							}
+						]
+						users: [
+							{
+								accessKey: 	"hive",
+								secretKey:	"hivehive",
+								policy:		"readwrite"
+							}
+						]
+						resources: {
+							requests: {
+								memory:	"1Gi"
+							}
+						}
+						service: {
+							type: "NodePort",
+							nodePort: null
+						}
+						consoleService: {
+							type: "NodePort",
+							nodePort: null
+						}
+					}
+				}
+			},
+			{
+				name: "postgresql"
+				type: "helm"
+				properties:	{
+					repoType: "helm"
+					url: "https://charts.bitnami.com/bitnami"
+					chart: "postgresql"
+					version: "12.1.5"
+					targetNamespace: "prod"
+					values:	{
+						postgresqlUsername: "hive",
+						postgresqlPassword: "hive",
+						postgresqlDatabase: "hive"
+					}
+				}
+			},
+			{
 				name: "commons-operator"
 				type: "helm"
 				properties:	{
