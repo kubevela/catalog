@@ -27,39 +27,6 @@ Disable this addon
 vela addon disable hive-operator
 ```
 
-## Install Dependencies
-
-In order to install the MinIO and PostgreSQL dependencies via Helm, you have to deploy two charts.
-
-**Minio**
-
-```shell
-helm install minio \
---namespace prod \
---version 4.0.2 \
---set mode=standalone \
---set replicas=1 \
---set persistence.enabled=false \
---set buckets[0].name=hive,buckets[0].policy=none \
---set users[0].accessKey=hive,users[0].secretKey=hivehive,users[0].policy=readwrite \
---set resources.requests.memory=1Gi \
---set service.type=NodePort,service.nodePort=null \
---set consoleService.type=NodePort,consoleService.nodePort=null \
---repo https://charts.min.io/ minio
-```
-
-**PostgresSQL**
-
-```shell
-helm install postgresql \
---version=12.1.5 \
---namespace prod \
---set postgresqlUsername=hive \
---set postgresqlPassword=hive \
---set postgresqlDatabase=hive \
---repo https://charts.bitnami.com/bitnami postgresql
-```
-
 ## Use
 
 After going through the Installation section and having installed all the dependencies, you will now deploy a Hive metastore cluster and it’s dependencies. Afterwards you can verify that it works.
