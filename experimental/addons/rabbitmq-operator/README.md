@@ -93,7 +93,37 @@ $ curl -u$username:$password localhost:15672/api/overview
 
 ### Connect An Application To The Cluster
 
-The next step would be to connect an application to the RabbitMQ Cluster in order to use its messaging capabilities. The perf-test application is frequently used within the RabbitMQ community for load testing RabbitMQ Clusters.
+The next step would be to connect an application to the RabbitMQ Cluster in order to use its messaging capabilities.
+
+**Producer/Consumer**
+
+RabbitMQ is a message broker: it accepts and forwards messages. You can think about it as a post office: when you put the mail that you want posting in a post box, you can be sure that the letter carrier will eventually deliver the mail to your recipient. In this analogy, RabbitMQ is a post box, a post office, and a letter carrier.
+
+- Port forward the running service `rabbitmq` in prod namespace.
+
+  ```shell
+  $ kubectl port-forward -n prod svc/rabbitmq 5672:5672
+  ```
+
+- Run producer(sender) to send messages.
+
+  ```shell
+  $ username="$(kubectl get secret rabbitmq-default-user -n prod -o jsonpath='{.data.username}' | base64 --decode)"
+  $ password="$(kubectl get secret rabbitmq-default-user -n prod -o jsonpath='{.data.password}' | base64 --decode)"
+  $ docker run -i --network=host -e USER=$username -e PASSWORD=$password ghcr.io/kubevela-contrib/rabbitmq-producer
+  ```
+
+- Run consumer(receiver) in another terminal to recieve messages.
+
+  ```shell
+  $ username="$(kubectl get secret rabbitmq-default-user -n prod -o jsonpath='{.data.username}' | base64 --decode)"
+  $ password="$(kubectl get secret rabbitmq-default-user -n prod -o jsonpath='{.data.password}' | base64 --decode)"
+  $ docker run -i --network=host -e USER=$username -e PASSWORD=$password ghcr.io/kubevela-contrib/rabbitmq-consumer
+  ```
+
+**perf-test**
+
+The perf-test application is frequently used within the RabbitMQ community for load testing RabbitMQ Clusters.
 
 Here, we will be using the `rabbitmq` service to find the connection address, and the `rabbitmq-default-user` secret to find connection credentials.
 
