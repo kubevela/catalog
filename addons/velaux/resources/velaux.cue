@@ -52,8 +52,8 @@ velaux: {
 			]
 		}
 	}
-	_nginxTrait: *[
-			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx" {
+	_nginxIngressTrait: *[
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx" && parameter["trafficType"] == "ingress" {
 			{
 				type: "gateway"
 				properties: {
@@ -66,13 +66,27 @@ velaux: {
 			}
 		},
 	] | []
-	_traefikTrait: *[
-			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" {
+	_traefikGatewayTrait: *[
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" && parameter["trafficType"] == "gateway" {
 			{
 				type: "http-route"
 				properties: {
 					domains: [ parameter["domain"]]
 					rules: [{port: 80}]
+				}
+			}
+		},
+	] | []
+	_traefikIngressTrait: *[
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" && parameter["trafficType"] == "ingress" {
+			{
+				type: "ingress"
+				properties: {
+					domain: parameter["domain"]
+					http: {
+						"/": 80
+					}
+					class: "traefik"
 				}
 			}
 		},
@@ -89,6 +103,6 @@ velaux: {
 	_scalerTraits: [
 		{type: "scaler", properties: replicas: parameter["replicas"]},
 	]
-	traits: _nginxTrait + _traefikTrait + _httpsTrait + _scalerTraits
+	traits: _nginxIngressTrait + _traefikIngressTrait +_traefikGatewayTrait + _httpsTrait + _scalerTraits
 	dependsOn: ["apiserver"]
 }
