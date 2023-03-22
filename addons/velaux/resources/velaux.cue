@@ -53,7 +53,7 @@ velaux: {
 		}
 	}
 	_nginxIngressTrait: *[
-			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx" && parameter["trafficType"] == "ingress" {
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx"  {
 			{
 				type: "gateway"
 				properties: {
@@ -67,7 +67,7 @@ velaux: {
 		},
 	] | []
 	_traefikGatewayTrait: *[
-			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" && parameter["trafficType"] == "gateway" {
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik-gateway" {
 			{
 				type: "http-route"
 				properties: {
@@ -78,7 +78,7 @@ velaux: {
 		},
 	] | []
 	_traefikIngressTrait: *[
-			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik" && parameter["trafficType"] == "ingress" {
+			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik-ingress" {
 			{
 				type: "ingress"
 				properties: {
