@@ -1,17 +1,17 @@
 package main
 
-_version: "v1.7.4"
+velaux_version: "v1.7.4"
 
 velaux: {
 	name: "velaux"
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/velaux:" + _version
+			image: "oamdev/velaux:" + velaux_version
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" + "oamdev/velaux:" + _version
+			image: parameter["repo"] + "/" + "oamdev/velaux:" + velaux_version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
