@@ -4,8 +4,6 @@
 //
 // For example, you can use parameters to allow the user to customize
 // container images, ports, and etc.
-package main
-
 parameter: {
 	// +usage=Custom parameter description
 	namespace: *"elasticsearch-operator" | string
