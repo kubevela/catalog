@@ -15,6 +15,7 @@ output: {
 						name: parameter.namespace
 				}]
 			},
+			CRDs,
 		]
 		policies: [
 			{
