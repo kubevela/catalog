@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: volcano-pod-group-sample
+spec:
+  components:
+    - type: volcano-pod-group
+      name: volcano-pod-group-sample
+      properties:
+        minMember: 1
+        minResources:
+          cpu: "1"
+          memory: "1024Mi"
+        priorityClassName: high-priority
+        queue: default

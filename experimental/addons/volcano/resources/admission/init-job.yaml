@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: volcano-admission-init
+  namespace: volcano-system
+  labels:
+    app: volcano-admission-init
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      serviceAccountName: volcano-admission
+      priorityClassName: system-cluster-critical
+      restartPolicy: Never
+      containers:
+        - name: main
+          image: volcanosh/vc-webhook-manager:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            [
+              "./gen-admission-secret.sh",
+              "--service",
+              "volcano-admission-service",
+              "--namespace",
+              "volcano-system",
+              "--secret",
+              "volcano-admission-secret",
+            ]
