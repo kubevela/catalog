@@ -2,7 +2,7 @@ package main
 
 CRDs: {
 	type: "k8s-objects"
-	name: "catalog-source-crd"
+	name: "olm-crds"
 	properties: {
 		objects: [
 			{
