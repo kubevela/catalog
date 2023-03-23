@@ -25,7 +25,7 @@ template: {
 	parameter: {
 		grafana:      *"default" | string
 		parser?:      "nginx" | "apache" | "customize"
-		VRL?: string
+		VRL?:         string
 		lokiEndpoint: *"http://loki:3100/" | string
 	}
 

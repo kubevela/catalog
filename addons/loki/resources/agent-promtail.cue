@@ -76,52 +76,54 @@ promtailConfig: {
 				  http_listen_port: 3101
 
 				clients:
-				  - url: http://loki:3100/loki/api/v1/push
-				
-				positions:
-				  filename: /run/promtail/positions.yaml
-				
-				scrape_configs:
-				  # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
-				  - job_name: kubernetes-pods
-				    pipeline_stages:
-				      - cri: {}
-				      - static_labels:
-				          agent: promtail
-				          cluster: $CLUSTER
-				          forward: daemon
-				    kubernetes_sd_configs:
-				      - role: pod
-				    relabel_configs:
-				      - action: replace
-				        source_labels:
-				        - __meta_kubernetes_namespace
-				        target_label: namespace
-				      - action: replace
-				        source_labels:
-				        - __meta_kubernetes_pod_name
-				        target_label: pod
-				      - action: replace
-				        source_labels:
-				        - __meta_kubernetes_pod_container_name
-				        target_label: container
-				      - action: replace
-				        replacement: /var/log/pods/*$1/*.log
-				        separator: /
-				        source_labels:
-				        - __meta_kubernetes_pod_uid
-				        - __meta_kubernetes_pod_container_name
-				        target_label: __path__
-				      - action: replace
-				        regex: true/(.*)
-				        replacement: /var/log/pods/*$1/*.log
-				        separator: /
-				        source_labels:
-				        - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
-				        - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
-				        - __meta_kubernetes_pod_container_name
-				        target_label: __path__
-				"""#
+				"""# +
+				"\n  - url: " + lokiURL + "loki/api/v1/push\n" +
+				#"""
+					
+					positions:
+					  filename: /run/promtail/positions.yaml
+					
+					scrape_configs:
+					  # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
+					  - job_name: kubernetes-pods
+					    pipeline_stages:
+					      - cri: {}
+					      - static_labels:
+					          agent: promtail
+					          cluster: $CLUSTER
+					          forward: daemon
+					    kubernetes_sd_configs:
+					      - role: pod
+					    relabel_configs:
+					      - action: replace
+					        source_labels:
+					        - __meta_kubernetes_namespace
+					        target_label: namespace
+					      - action: replace
+					        source_labels:
+					        - __meta_kubernetes_pod_name
+					        target_label: pod
+					      - action: replace
+					        source_labels:
+					        - __meta_kubernetes_pod_container_name
+					        target_label: container
+					      - action: replace
+					        replacement: /var/log/pods/*$1/*.log
+					        separator: /
+					        source_labels:
+					        - __meta_kubernetes_pod_uid
+					        - __meta_kubernetes_pod_container_name
+					        target_label: __path__
+					      - action: replace
+					        regex: true/(.*)
+					        replacement: /var/log/pods/*$1/*.log
+					        separator: /
+					        source_labels:
+					        - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
+					        - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+					        - __meta_kubernetes_pod_container_name
+					        target_label: __path__
+					"""#
 		}
 	}]
 }
