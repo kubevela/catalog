@@ -6,6 +6,6 @@
 // container images, ports, and etc.
 parameter: {
 	// +usage=Custom parameter description
-	namespace: *"elasticsearch-operator" | string
+	namespace: *"vela-system" | string
 	clusters?: [...string]
 }
