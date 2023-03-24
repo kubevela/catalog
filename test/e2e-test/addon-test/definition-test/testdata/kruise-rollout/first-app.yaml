@@ -2,6 +2,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: canary-demo
+  namespace: default
   annotations:
     app.oam.dev/publishVersion: v1
 spec:
