@@ -5,8 +5,17 @@ output: {
 	kind:       "Application"
 	spec: {
 		components: [
+			{
+				name: "ns-elasticsearch-operator"
+				type: "k8s-objects"
+				properties: objects: [{
+					kind: "Namespace"
+					apiVersion: "v1"
+					metadata:
+						name: parameter.namespace
+				}]
+			},
 			CRDs,
-			olmResources,
 			esOperator,
 		]
 		policies: [
@@ -31,32 +40,5 @@ output: {
 				}
 			},
 		]
-		workflow: {
-			steps: [
-				{
-					name: "apply-crds"
-					type: "apply-component"
-					properties: {
-						component: "olm-crds"
-					}
-				},
-				{
-					name: "apply-olm-resources"
-					type: "apply-component"
-					dependsOn: ["apply-crds"]
-					properties: {
-						component: "olm-resources"
-					}
-				},
-				{
-					name: "apply-es-operator"
-					type: "apply-component"
-					dependsOn: ["apply-olm-resources"]
-					properties: {
-						component: "elasticsearch"
-					}
-				},
-			]
-		}
 	}
 }
