@@ -5,6 +5,7 @@ icon: https://artifacthub.io/image/81797fec-309d-4380-a527-68f1c9e1dcfb@1x
 url: https://github.com/kubernetes/kube-state-metrics
 
 tags:
+ - Official
  - Observability
  - Kubernetes
  - Metrics

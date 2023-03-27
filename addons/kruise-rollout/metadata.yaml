@@ -8,6 +8,10 @@ deployTo:
   control_plane: true
   runtime_cluster: true
 
+tags:
+ - Official
+ - Rollout
+
 dependencies:
 - name: fluxcd
 

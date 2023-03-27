@@ -5,6 +5,7 @@ icon: https://artifacthub.io/image/0503add5-3fce-4b63-bbf3-b9f649512a86@1x
 url: https://prometheus.io/
 
 tags:
+  - Official
   - Observability
   - Kubernetes
   - Prometheus

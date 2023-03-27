@@ -5,6 +5,7 @@ icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/flux/horizo
 url: https://fluxcd.io
 
 tags:
+  - Official
   - Extended Workload
   - GitOps
   - Helm
