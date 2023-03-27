@@ -76,12 +76,14 @@ parameter: {
 	externalPort: *8080 | int
 	// +usage=Settings related to persisting data. You only need this if you are using local storage.
 	persistence: {
-		// +usage=Persist ChartMuseum data to PV. PVC will be created automatically. Specify a pvcName to prevent that.
+		// +usage=Persist ChartMuseum data to PV. PVC will be created automatically when you enable this addon, and deleted automatically when you disable this addon. Specify a pvcName to prevent that.
 		enabled: *false | bool
+		// +usage=StorageClassName for the automatically created PVC.
+		storageClassName?: string
 		// This is commented out because I haven't found a way to specify policies.
 		// Keep automatically created PVC even if addon is deleted.
 		// alwaysKeep: *false | bool
-		// +usage=Use an existing PVC. If you specify this, PVC will NOT be created automatically.
+		// +usage=Use an existing PVC. If you specify this, PVC will NOT be created automatically. You can use this to persist data even if this addon is disabled.
 		pvcName?: string
 	}
 	// +usage=Hosts for Ingress
