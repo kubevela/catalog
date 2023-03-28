@@ -1,0 +1,13 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: elasticsearch-apm-server-sample
+spec:
+  components:
+    - type: elasticsearch-apm-server
+      name: elasticsearch-apm-server
+      properties:
+        version: 8.6.2
+        count: 1
+        elasticsearchRef:
+          name: elasticsearch-cluster
