@@ -1,0 +1,13 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kibana-sample
+spec:
+  components:
+    - type: kibana
+      name: kibana
+      properties:
+        version: 8.6.2
+        count: 1
+        elasticsearchRef:
+          name: elasticsearch-cluster
