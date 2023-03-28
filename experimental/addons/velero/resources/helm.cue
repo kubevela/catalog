@@ -12,6 +12,7 @@ chart: {
 		url:             parameter.chartUrl
 		chart:           "velero"
 		version:         "3.1.2"
+		upgradeCRD:      true // Only supported in fluxcd addon version >= 2.3.3
 		targetNamespace: _targetNamespace
 		values: {
 			snapshotsEnabled: parameter.snapshotsEnabled
