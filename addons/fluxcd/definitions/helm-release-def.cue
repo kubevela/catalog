@@ -175,6 +175,11 @@ template: {
 				remediation: {
 					retries: parameter.retries
 				}
+				if parameter.upgradeCRD != _|_ {
+					if parameter.upgradeCRD {
+						 crds: "CreateReplace"
+					}
+				}
 			}
 		}
 	}
@@ -258,6 +263,7 @@ template: {
 			// +usage=Optional marks this ValuesReference as optional. When set, a not found error or the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.
 			optional?: bool
 		}]
+		upgradeCRD?: *false | bool
 	}
 
 	#nestedmap: {
