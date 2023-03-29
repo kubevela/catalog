@@ -26,20 +26,17 @@ spec:
       - type: canary-deploy
         name: rollout-20
         properties:
-          component: canary-demo
           weight: 20
       - name: suspend
         type: suspend
       - type: canary-deploy
         name: rollout-50
         properties:
-          component: canary-demo
           weight: 50
       - name: suspend
         type: suspend
       - type: canary-deploy
         name: rollout-100
         properties:
-          component: canary-demo
           weight: 100
 

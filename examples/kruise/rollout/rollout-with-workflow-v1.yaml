@@ -21,12 +21,5 @@ spec:
             domain: canary-demo.com
             http:
               "/version": 8090
-  workflow:
-    steps:
-      - type: canary-deploy
-        name: rollout-100
-        properties:
-          component: canary-demo
-          weight: 100
 
 
