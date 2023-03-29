@@ -80,7 +80,7 @@ velaux: {
 	_traefikIngressTrait: *[
 			if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "traefik-ingress" {
 			{
-				type: "ingress"
+				type: "gateway"
 				properties: {
 					domain: parameter["domain"]
 					http: {
