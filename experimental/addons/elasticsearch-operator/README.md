@@ -118,3 +118,63 @@ elasticsearch-cluster-es-http   ClusterIP   10.104.95.219   <none>        9200/T
         "tagline" : "You Know, for Search"
     }
     ```
+
+###  Kibana
+
+**Deploy a Kibana instance**
+
+To deploy your Kibana instance go through the apply below YAML:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kibana-sample
+spec:
+  components:
+    - type: kibana
+      name: kibana
+      properties:
+        version: 8.6.2
+        count: 1
+        elasticsearchRef:
+          name: elasticsearch-cluster
+```
+
+Monitor Kibana health and creation progress.
+
+```shell
+$ kubectl get kibana
+NAME     HEALTH   NODES   VERSION   AGE
+kibana   green    1       8.6.2     7m39s
+```
+
+And the associated Pods:
+
+```shell
+$ kubectl get pod -n prod --selector='kibana.k8s.elastic.co/name=kibana'
+NAME                        READY   STATUS    RESTARTS   AGE
+kibana-kb-947c77847-kdbhf   1/1     Running   0          9m46s
+```
+
+**Access Kibana**
+
+A ClusterIP Service is automatically created for Kibana:
+
+```shell
+kubectl get service -n prod kibana-kb-http
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+kibana-kb-http   ClusterIP   10.109.2.144   <none>        5601/TCP   15m
+```
+
+```shell
+kubectl port-forward -n prod service/kibana-kb-http 5601
+```
+
+Get credentials: 
+
+```shell
+kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+
+Login as the elastic user by visiting https://localhost:5601 in your browser.
