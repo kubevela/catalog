@@ -24,9 +24,9 @@ template: {
 			type: "override"
 			name: "canary"
 			properties: {
-				if parameter.component != _|_ {
-					if len(parameter.component) != 0 {
-						selector: parameter.component
+				if parameter.components != _|_ {
+					if len(parameter.components) != 0 {
+						selector: parameter.components
 					}
 				}
 				components: [{
