@@ -34,9 +34,6 @@ template: {
 						type: "rolling-release"
 						properties: {
 							weight: parameter.weight
-							if parameter.trafficRoutingType != _|_ {
-								trafficRoutings: [{type: parameter.trafficRoutingType}]
-							}
 						}
 					}]
 				}]
@@ -50,7 +47,5 @@ template: {
 		components?: *[] | [...string]
 		//+usage=Specify the percentage of replicas to update to the new version at each step, as well as the routing of traffic to the new version, e.g., 20, 40...
 		weight: int
-		//+usage=specify the type of traffic route, can be ingress, gateway or aliyun-alb
-		trafficRoutingType?: "ingress" | "gateway" | "aliyun-alb"
 	}
 }

@@ -78,12 +78,32 @@ template: {
 		replicas?: int | string
 		// +usage=Declare whether the rolling reach end
 		final: *false | bool
-
-		// +usage=Define traffic routing related service, ingress information
-		trafficRoutings?: [...#TrafficRouting]
 		// +usage=Define the workload for rolling. If not specified, it will be auto detected.
 		workloadType?: #WorkloadType
 	}
+
+  component: {...}
+
+  for comp in context.components {
+  	 if comp.name == context.name {
+  	 	   component: comp
+  	 }
+  }
+
+  trafficRoutingType?: "ingress" | "gateway" | string
+
+  if component.traits != _|_ {
+  	for t in component.traits {
+				if t.type == "gateway" {
+					 trafficRoutingType: "ingress"
+				}
+
+				if t.type == "http-route" || t.type == "https-route" || t.type == "tcp-route" {
+					 trafficRoutingType: "gateway"
+				}
+  	}
+  }
+
 
 	patch: metadata: annotations: "app.oam.dev/disable-health-check": "true"
 
@@ -135,46 +155,20 @@ template: {
 							}
 						}
 					}]
-					if parameter.trafficRoutings != _|_ {
-						trafficRoutings: [
-							for routing in parameter.trafficRoutings {
+					if trafficRoutingType != _|_ {
+						trafficRoutings: [{
 								service: *context.name | string
-								if routing.service != _|_ {
-									service: routing.service
-								}
-								gracePeriodSeconds: routing.gracePeriodSeconds
+								gracePeriodSeconds: *5 | int
 
-								if routing.type == "ingress" {
+								if trafficRoutingType == "ingress" {
 									ingress: {
 										name:      *context.name | string
 										classType: "nginx"
 									}
-									if routing.ingressName != _|_ {
-										ingress: {
-											name:      routing.ingressName
-											classType: "nginx"
-										}
-									}
 								}
 
-								if routing.type == "aliyun-alb" {
-									ingress: {
-										name:      *context.name | string
-										classType: "aliyun-alb"
-									}
-									if routing.ingressName != _|_ {
-										ingress: {
-											name:      *context.name | string
-											classType: "aliyun-alb"
-										}
-									}
-								}
-
-								if routing.type == "gateway" {
+								if trafficRoutingType == "gateway" {
 									gateway: httpRouteName: *context.name | string
-									if routing.gatewayHTTPRouteName != _|_ {
-										gateway: httpRouteName: routing.gatewayHTTPRouteName
-									}
 								}
 							},
 						]
