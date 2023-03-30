@@ -352,3 +352,46 @@ You have two options:
   ```
 
 - Follow the Kibana deployment guide, log in and go to **Kibana > Discover**.
+
+###  Elasticsearch beat
+
+**Deploy a Elasticsearch beat**
+
+Managing both APM Server and Elasticsearch by ECK allows a smooth and secured integration between the two. The output configuration of the APM Server is setup automatically to establish a trust relationship with Elasticsearch.
+
+- To deploy an APM Server and connect it to the cluster you created as the `elasticsearch-cluster`, apply the following specification:
+
+  ```yaml
+  apiVersion: core.oam.dev/v1beta1
+  kind: Application
+  metadata:
+    name: elasticsearch-apm-server-sample
+  spec:
+    components:
+      - type: elasticsearch-apm-server
+        name: elasticsearch-apm-server
+        properties:
+          version: 8.6.2
+          count: 1
+          elasticsearchRef:
+            name: elasticsearch-cluster
+  ```
+
+By default elasticsearchRef targets all nodes in your Elasticsearch cluster. If you want to direct traffic to specific nodes of your cluster, refer to Traffic Splitting https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-traffic-splitting.html for more information and examples.
+
+Monitor APM Server deployment.
+
+You can retrieve details about the APM Server instance:
+
+```shell
+$ kubectl get apmservers -n prod
+NAME                       HEALTH   NODES   VERSION   AGE
+elasticsearch-apm-server   green    1       8.6.2     6m2s
+```
+
+And you can list all the Pods belonging to a given deployment:
+
+```shell
+$ kubectl get pods -n prod | grep apm
+elasticsearch-apm-server-apm-server-6967d664d5-qb7hh   1/1     Running   0              6m37s
+```
