@@ -4,7 +4,5 @@
 - sort: 30
   jsonKey: component
   uiType: ComponentSelect
-- sort: 40
-  jsonKey: trafficRoutingType
 - sort: 10
   jsonKey: weight
