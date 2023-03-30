@@ -353,9 +353,9 @@ You have two options:
 
 - Follow the Kibana deployment guide, log in and go to **Kibana > Discover**.
 
-###  Elasticsearch beat
+###  Elasticsearch apm-server
 
-**Deploy a Elasticsearch beat**
+**Deploy a Elasticsearch apm-server**
 
 Managing both APM Server and Elasticsearch by ECK allows a smooth and secured integration between the two. The output configuration of the APM Server is setup automatically to establish a trust relationship with Elasticsearch.
 
@@ -395,3 +395,113 @@ And you can list all the Pods belonging to a given deployment:
 $ kubectl get pods -n prod | grep apm
 elasticsearch-apm-server-apm-server-6967d664d5-qb7hh   1/1     Running   0              6m37s
 ```
+
+###  Elasticsearch enterprise search
+
+**Deploy a Elasticsearch enterprise search**
+
+Apply the following specification to deploy Enterprise Search. ECK automatically configures the secured connection to an Elasticsearch cluster named `elasticsearch-cluster` that you created previously.
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: elasticsearch-enterprise-search-sample
+spec:
+  components:
+    - type: elasticsearch-enterprise-search
+      name: elasticsearch-enterprise-search
+      properties:
+        version: 8.6.2
+        count: 1
+        elasticsearchRef:
+          name: elasticsearch-cluster
+        podTemplate:
+          spec:
+            containers:
+              - name: enterprise-search
+                resources:
+                  requests:
+                    cpu: 1
+                    memory: 512Mi
+                  limits:
+                    cpu: 1
+                    memory: 512Mi
+```
+
+Monitor the Enterprise Search deployment.
+
+Retrieve details about the Enterprise Search deployment:
+
+```shell
+$ kubectl get enterprisesearch -n prod
+NAME                            HEALTH    NODES    VERSION   AGE
+enterprise-search-quickstart    green     1        8.6.2      8m
+```
+
+List all the Pods belonging to a given deployment:
+
+```shell
+$ kubectl get pods -n prod | grep enterprise-search
+NAME                                                   READY   STATUS    RESTARTS   AGE
+elasticsearch-enterprise-search-ent-7d46f867b-w5v4q    1/1     Running   0          2m50s
+```
+
+Access Enterprise Search.
+
+A ClusterIP Service is automatically created for the deployment, and can be used to access the Enterprise Search API from within the Kubernetes cluster:
+
+```shell
+$ kubectl get svc -n prod | grep enterprise-search
+elasticsearch-enterprise-search-ent-http   ClusterIP   10.108.157.221   <none>        3002/TCP   21m
+```
+
+Use kubectl port-forward to access Enterprise Search from your local browser:
+
+```shell
+$ kubectl port-forward -n prod service/elasticsearch-enterprise-search-ent-http 3002
+```
+
+Open https://localhost:3002 in your browser.
+
+Login as the elastic user created with the Elasticsearch cluster. Its password can be obtained with:
+
+```shell
+$ kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o go-template='{{.data.elastic | base64decode}}'
+```
+
+**Deploy enterprise-search configured kibana**
+
+Access the Enterprise Search UI in Kibana:
+
+Starting with version 7.14.0, the Enterprise Search UI is accessible in Kibana.
+
+Apply the following specification to deploy Kibana, configured to connect to both Elasticsearch and Enterprise Search:
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kibana-sample
+spec:
+  components:
+    - type: kibana
+      name: kibana
+      properties:
+        version: 8.6.2
+        count: 1
+        elasticsearchRef:
+          name: elasticsearch-cluster
+        enterpriseSearchRef:
+          name: elasticsearch-enterprise-search
+```
+
+Use kubectl port-forward to access Kibana from your local system.
+
+```shell
+$ kubectl port-forward service/quickstart-kb-http 5601
+```
+
+Open https://localhost:5601 in your browser and navigate to the Enterprise Search UI.
+
+For more, Please visit on the website https://www.elastic.co/.
