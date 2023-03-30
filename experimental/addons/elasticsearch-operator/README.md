@@ -178,3 +178,88 @@ kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o=jsonpath='{.
 ```
 
 Login as the elastic user by visiting https://localhost:5601 in your browser.
+
+###  Elasticsearch agent
+
+**Deploy a Elasticsearch agent**
+
+Apply the following specification to deploy Elastic Agent with the System metrics integration to harvest CPU metrics from the Agent Pods. ECK automatically configures the secured connection to an Elasticsearch cluster named `elasticsearch-cluster` that you created previously.
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: elasticsearch-agent-sample
+spec:
+  components:
+    - type: elasticsearch-agent
+      name: elasticsearch-agent
+      properties:
+        version: 8.6.2
+        elasticsearchRefs:
+          - name: elasticsearch-cluster
+        daemonSet:
+          podTemplate:
+            spec:
+              securityContext:
+                runAsUser: 0
+        config:
+          inputs:
+            - name: system-1
+              revision: 1
+              type: system/metrics
+              use_output: default
+              meta:
+                package:
+                  name: system
+                  version: 0.9.1
+              data_stream:
+                namespace: default
+              streams:
+                - id: system/metrics-system.cpu
+                  data_stream:
+                    dataset: system.cpu
+                    type: metrics
+                  metricsets:
+                    - cpu
+                  cpu.metrics:
+                    - percentages
+                    - normalized_percentages
+                  period: 10s
+```
+
+Monitor the status of Elastic Agent.
+
+```shell
+$ kubectl get agent -n prod
+NAME                  HEALTH   AVAILABLE   EXPECTED   VERSION   AGE
+elasticsearch-agent   green    1           1          8.6.2     23m
+```
+
+List all the Pods that belong to a given Elastic Agent specification.
+
+```shell
+$ kubectl get pods -n prod --selector='agent.k8s.elastic.co/name=elasticsearch-agent'
+NAME                              READY   STATUS    RESTARTS   AGE
+elasticsearch-agent-agent-kfv9s   1/1     Running   0          21m
+```
+
+Access logs for one of the Pods.
+
+```shell
+$ kubectl logs -n prod -f elasticsearch-agent-agent-kfv9s
+```
+
+Access the CPU metrics ingested by Elastic Agent, Make sure elasticsearch is port-forwarded.
+
+You have two options:
+
+- Follow the Elasticsearch deployment guide and run:
+
+  ```shell
+  $ PASSWORD=$(kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
+  $ curl -u "elastic:$PASSWORD" -k "https://localhost:9200/metrics-system.cpu-*/_search"
+  {"took":4,"timed_out":false,"_shards":{"total":0,"successful":0,"skipped":0,"failed":0},"hits":{"total":{"value":0,"relation":"eq"},"max_score":0.0,"hits":[]}}
+  ```
+
+- Follow the Kibana deployment guide, log in and go to **Kibana > Discover**.
