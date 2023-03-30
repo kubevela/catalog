@@ -263,3 +263,92 @@ You have two options:
   ```
 
 - Follow the Kibana deployment guide, log in and go to **Kibana > Discover**.
+
+###  Elasticsearch beat
+
+**Deploy a Elasticsearch beat**
+
+Apply the following specification to deploy Filebeat and collect the logs of all containers running in the Kubernetes cluster. ECK automatically configures the secured connection to an Elasticsearch cluster named `elasticsearch-cluster` that you created previously.
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: elasticsearch-beat-sample
+spec:
+  components:
+    - type: elasticsearch-beat
+      name: elasticsearch-beat
+      properties:
+        type: filebeat
+        version: 8.6.2
+        elasticsearchRef:
+          name: elasticsearch-cluster
+        config:
+          filebeat.inputs:
+            - type: container
+              paths:
+                - /var/log/containers/*.log
+        daemonSet:
+          podTemplate:
+            spec:
+              dnsPolicy: ClusterFirstWithHostNet
+              hostNetwork: true
+              securityContext:
+                runAsUser: 0
+              containers:
+                - name: filebeat
+                  volumeMounts:
+                    - name: varlogcontainers
+                      mountPath: /var/log/containers
+                    - name: varlogpods
+                      mountPath: /var/log/pods
+                    - name: varlibdockercontainers
+                      mountPath: /var/lib/docker/containers
+              volumes:
+                - name: varlogcontainers
+                  hostPath:
+                    path: /var/log/containers
+                - name: varlogpods
+                  hostPath:
+                    path: /var/log/pods
+                - name: varlibdockercontainers
+                  hostPath:
+                    path: /var/lib/docker/containers
+```
+
+Monitor Beats.
+
+Retrieve details about the Filebeat.
+
+```shell
+kubectl get beat -n prod
+NAME                 HEALTH   AVAILABLE   EXPECTED   TYPE       VERSION   AGE
+elasticsearch-beat   green    1           1          filebeat   8.6.2     21m
+```
+
+List all the Pods belonging to a given Beat.
+
+```shell
+$ kubectl get pods -n prod | grep beat
+elasticsearch-beat-beat-filebeat-wglvg   1/1     Running   0             26m
+```
+
+Access logs for the Pod.
+
+```shell
+$ kubectl logs -f elasticsearch-beat-beat-filebeat-wglvg -n prod
+```
+
+Access logs ingested by Filebeat, Make sure Elasticsearch service is still port-forwarded.
+
+You have two options:
+
+- Follow the Elasticsearch deployment guide and run:
+
+  ```shell
+  $ PASSWORD=$(kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
+  $ curl -u "elastic:$PASSWORD" -k "https://localhost:9200/filebeat-*/_search"
+  ```
+
+- Follow the Kibana deployment guide, log in and go to **Kibana > Discover**.
