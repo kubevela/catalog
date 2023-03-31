@@ -82,24 +82,27 @@ template: {
 		workloadType?: #WorkloadType
 	}
 
-	component: {...}
-
-	for comp in context.components {
-		if comp.name == context.name {
-			component: comp
+	app: component: {...}
+	app: {
+		for comp in context.components {
+			if comp.name == context.name {
+				component: comp
+			}
 		}
 	}
 
 	trafficRouting: {
 		type?: "ingress" | "gateway"
-		if component.traits != _|_ {
-			for t in component.traits {
-				if t.type == "gateway" {
-					type: "ingress"
-				}
+		if app.component != _|_ {
+			if app.component.traits != _|_ {
+				for t in app.component.traits {
+					if t.type == "gateway" {
+						type: "ingress"
+					}
 
-				if t.type == "http-route" || t.type == "https-route" || t.type == "tcp-route" {
-					type: "gateway"
+					if t.type == "http-route" || t.type == "https-route" || t.type == "tcp-route" {
+						type: "gateway"
+					}
 				}
 			}
 		}
