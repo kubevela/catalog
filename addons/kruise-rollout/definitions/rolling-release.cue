@@ -116,7 +116,10 @@ template: {
 		metadata: {
 			name:      context.name
 			namespace: context.namespace
-			annotations: {"rollouts.kruise.io/rolling-style": "partition"}
+			annotations: {
+				"rollouts.kruise.io/rolling-style":    "partition"
+				"controller.core.oam.dev/skip-resume": "true"
+			}
 		}
 		spec: {
 			objectRef: {
