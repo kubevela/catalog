@@ -4,7 +4,7 @@
 	labels: {}
 	description: "Rolling workload with specified weight via kruise rollout. It's advisable not to use this trait directly. Instead, if you use the canary-deploy step, this trait will be added implicitly"
 	attributes: {
-		stage:   "PreDispatch"
+		stage:         "PreDispatch"
 		podDisruptive: true
 		appliesToWorkloads: ["*"]
 		status: {
@@ -82,28 +82,28 @@ template: {
 		workloadType?: #WorkloadType
 	}
 
-  component: {...}
+	component: {...}
 
-  for comp in context.components {
-  	 if comp.name == context.name {
-  	 	   component: comp
-  	 }
-  }
+	for comp in context.components {
+		if comp.name == context.name {
+			component: comp
+		}
+	}
 
-  trafficRoutingType?: "ingress" | "gateway" | string
-
-  if component.traits != _|_ {
-  	for t in component.traits {
+	trafficRouting: {
+		type?: "ingress" | "gateway"
+		if component.traits != _|_ {
+			for t in component.traits {
 				if t.type == "gateway" {
-					 trafficRoutingType: "ingress"
+					type: "ingress"
 				}
 
 				if t.type == "http-route" || t.type == "https-route" || t.type == "tcp-route" {
-					 trafficRoutingType: "gateway"
+					type: "gateway"
 				}
-  	}
-  }
-
+			}
+		}
+	}
 
 	patch: metadata: annotations: "app.oam.dev/disable-health-check": "true"
 
@@ -155,22 +155,22 @@ template: {
 							}
 						}
 					}]
-					if trafficRoutingType != _|_ {
+					if trafficRouting.type != _|_ {
 						trafficRoutings: [{
-								service: *context.name | string
-								gracePeriodSeconds: *5 | int
+							service:            *context.name | string
+							gracePeriodSeconds: *5 | int
 
-								if trafficRoutingType == "ingress" {
-									ingress: {
-										name:      *context.name | string
-										classType: "nginx"
-									}
+							if trafficRouting.type == "ingress" {
+								ingress: {
+									name:      *context.name | string
+									classType: "nginx"
 								}
+							}
 
-								if trafficRoutingType == "gateway" {
-									gateway: httpRouteName: *context.name | string
-								}
-							},
+							if trafficRouting.type == "gateway" {
+								gateway: httpRouteName: *context.name | string
+							}
+						},
 						]
 					}
 				}
