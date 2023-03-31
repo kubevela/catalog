@@ -33,7 +33,7 @@ template: {
 	}
 	#HTTPHeaderMatch: {
 		Type?: *"Exact" | "RegularExpression"
-		Name: string
+		Name:  string
 		Value: string
 	}
 	#TrafficRouting: {
@@ -45,7 +45,7 @@ template: {
 		// +usage=refers to the name of an `HTTPRoute` of gateway API.
 		gatewayHTTPRouteName?: string
 		// +usage=specify the type of traffic route, can be ingress or gateway.
-		type: *"ingress" | "gateway"
+		type: *"ingress" | "gateway" | "aliyun-alb"
 	}
 	#WorkloadType: {
 		apiVersion: string
@@ -75,9 +75,11 @@ template: {
 		metadata: {
 			name:      context.name
 			namespace: context.namespace
-			if parameter.releaseMode == "batch" {
-				annotations: {
-					"rollouts.kruise.io/rolling-style": "partition"
+			if parameter.releaseMode != _|_ {
+				if parameter.releaseMode == "batch" {
+					annotations: {
+						"rollouts.kruise.io/rolling-style": "partition"
+					}
 				}
 			}
 		}
@@ -132,12 +134,12 @@ template: {
 									for _, match in v.matches {
 										headers: [
 											for _, header in match.headers {
-												type: header.type
-												name: header.name
+												type:  header.type
+												name:  header.name
 												value: header.value
-											}
+											},
 										]
-									}
+									},
 								]
 							}
 

@@ -1,0 +1,16 @@
+name: velero
+description: Velero is an open source tool to safely backup and restore, perform disaster recovery, and migrate Kubernetes cluster resources and persistent volumes.
+version: 0.0.1
+icon: https://velero.io/img/Velero.svg
+invisible: false
+
+# TODO: remove dependency on fluxcd if possible
+dependencies:
+  - name: fluxcd
+
+tags:
+  - Backup
+  - Disaster Recovery
+
+system:
+  vela: ">=v1.5.0"

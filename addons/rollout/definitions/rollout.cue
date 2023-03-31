@@ -13,7 +13,7 @@ rollout: {
 				"""#
 		}
 		podDisruptive: false
-		appliesToWorkloads: ["deployments.apps"]
+		appliesToWorkloads: ["deployments.apps", "statefulsets.apps"]
 	}
 }
 template: {
