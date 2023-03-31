@@ -45,7 +45,7 @@ template: {
 		// +usage=refers to the name of an `HTTPRoute` of gateway API.
 		gatewayHTTPRouteName?: string
 		// +usage=specify the type of traffic route, can be ingress or gateway.
-		type: *"ingress" | "gateway"
+		type: *"ingress" | "gateway" | "aliyun-alb"
 	}
 	#WorkloadType: {
 		apiVersion: string
