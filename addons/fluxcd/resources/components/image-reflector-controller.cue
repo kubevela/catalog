@@ -45,6 +45,14 @@ imageReflectorController: {
 				},
 			]
 		}
+		ports: [
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
+		]
 	}
 	traits: [
 		{
