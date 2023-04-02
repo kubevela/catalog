@@ -67,6 +67,8 @@ kubectl port-forward -n prod svc/nacos-cluster-headless 8848:8848
 
 ### Service & Configuration Management
 
+Follow below sequence of steps from registering of service to publishing & accessing config in nacos.
+
 **Service registration**
 
 ```shell
