@@ -15,7 +15,16 @@ output: {
 						name: parameter.namespace
 				}]
 			},
-			nacosOperator,
+			{
+				name: "nacos-operator"
+				type: "helm"
+				properties: {
+					repoType: "git"
+					url:      "https://github.com/nacos-group/nacos-k8s.git"
+					chart:    "./operator/chart/nacos-operator/"
+					version:  "1.16.0"
+				}
+			},
 		]
 		policies: [
 			{
