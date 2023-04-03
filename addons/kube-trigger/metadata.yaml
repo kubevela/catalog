@@ -5,8 +5,9 @@ url: https://github.com/kubevela/kube-trigger
 icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
 
 tags:
-  - Continuous Delivery
-  - Event Trigger
+ - Official
+ - Continuous Delivery
+ - Event Trigger
 
 system:
-  vela: ">=1.6.0-alpha.1"
+  vela: ">=1.6.0"

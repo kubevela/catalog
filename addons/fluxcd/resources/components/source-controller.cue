@@ -58,6 +58,12 @@ sourceController: {
 				protocol: "TCP"
 				expose:   true
 			},
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
 		]
 		exposeType: "ClusterIP"
 	}

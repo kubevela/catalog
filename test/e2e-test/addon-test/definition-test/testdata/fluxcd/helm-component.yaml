@@ -18,3 +18,4 @@ spec:
           replica:
             persistence:
               size: 16Gi
+        upgradeCRD: true

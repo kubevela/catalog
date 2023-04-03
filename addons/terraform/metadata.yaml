@@ -5,6 +5,7 @@ icon: https://static.kubevela.net/images/logos/terraform.png
 url: https://github.com/oam-dev/terraform-controller
 
 tags:
+  - Official
   - IaC
   - Cloud Resource
 

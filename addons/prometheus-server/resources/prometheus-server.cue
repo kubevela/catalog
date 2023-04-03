@@ -47,7 +47,7 @@ prometheusServer: {
 				expose: true
 			},
 			if parameter.thanos {
-				port:   10902
+				port: 10902
 			},
 			if parameter.thanos {
 				port:   10901
@@ -106,6 +106,22 @@ prometheusServer: {
 			}
 		}
 	}, {
+		type: "service-account"
+		properties: {
+			name:   "prometheus-server"
+			create: true
+			privileges: [ for p in _clusterPrivileges {
+				scope: "cluster"
+				{p}
+			}]
+		}
+	}, {
+		type: "resource"
+		properties: {
+			cpu:    parameter["cpu"]
+			memory: parameter["memory"]
+		}
+	}, {
 		if parameter.thanos {
 			type: "json-patch"
 			properties: {
@@ -142,22 +158,6 @@ prometheusServer: {
 					}
 				}]
 			}
-		}
-	}, {
-		type: "service-account"
-		properties: {
-			name:   "prometheus-server"
-			create: true
-			privileges: [ for p in _clusterPrivileges {
-				scope: "cluster"
-				{p}
-			}]
-		}
-	}, {
-		type: "resource"
-		properties: {
-			cpu:    parameter["cpu"]
-			memory: parameter["memory"]
 		}
 	}]
 }

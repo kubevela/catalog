@@ -1,0 +1,10 @@
+name: volcano
+version: 1.0.0
+description: This addon adds volcano to the kubevela to be used across the application installed in kubevela.
+icon: "https://raw.githubusercontent.com/volcano-sh/charts/master/docs/images/volcano-logo.png"
+url: "https://volcano.sh/"
+
+tags:
+- volcano
+
+invisible: false

@@ -1,6 +1,6 @@
 package main
 
-_version: context.metadata.version
+apiserver_version: context.metadata.version
 
 database: *[ if parameter["database"] != _|_ {
 	"--datastore-database=" + parameter["database"]
@@ -19,11 +19,11 @@ apiserver: {
 	type: "webservice"
 	properties: {
 		if parameter["repo"] == _|_ {
-			image: "oamdev/vela-apiserver:" + _version
+			image: "oamdev/vela-apiserver:" + apiserver_version
 		}
 
 		if parameter["repo"] != _|_ {
-			image: parameter["repo"] + "/" + "oamdev/vela-apiserver:" + _version
+			image: parameter["repo"] + "/" + "oamdev/vela-apiserver:" + apiserver_version
 		}
 
 		if parameter["imagePullSecrets"] != _|_ {
