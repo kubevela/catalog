@@ -1,0 +1,13 @@
+name: nacos-operator
+version: 1.0.0
+description: This addon adds nacos-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://avatars.githubusercontent.com/u/41446552?s=200&v=4"
+url: "https://nacos.io/en-us/"
+
+tags:
+- nacos-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
