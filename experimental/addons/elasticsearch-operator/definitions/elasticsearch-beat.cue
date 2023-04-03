@@ -2,13 +2,13 @@
 	alias: ""
 	annotations: {}
 	attributes: workload: type: "autodetects.core.oam.dev"
-	description: "elasticsearch beat component"
+	description: "elasticsearch beat trait"
 	labels: {}
-	type: "component"
+	type: "trait"
 }
 
 template: {
-	output: {
+	outputs: beat: {
 		kind:       "Beat"
 		apiVersion: "beat.k8s.elastic.co/v1beta1"
 		metadata: {
