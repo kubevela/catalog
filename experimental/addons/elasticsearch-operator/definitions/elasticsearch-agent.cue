@@ -2,13 +2,13 @@
 	alias: ""
 	annotations: {}
 	attributes: workload: type: "autodetects.core.oam.dev"
-	description: "elasticsearch agent component"
+	description: "elasticsearch agent trait"
 	labels: {}
-	type: "component"
+	type: "trait"
 }
 
 template: {
-	output: {
+	outputs: agent: {
 		kind:       "Agent"
 		apiVersion: "agent.k8s.elastic.co/v1alpha1"
 		metadata: {
