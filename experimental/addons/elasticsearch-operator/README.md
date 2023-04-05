@@ -351,7 +351,7 @@ You have two options:
   $ curl -u "elastic:$PASSWORD" -k "https://localhost:9200/filebeat-*/_search"
   ```
 
-- Follow the Kibana deployment guide to install kibana, And log in and go to **Kibana > Discover** then create a view in kibana for `filebeat-8.6.2` index, You will  be able to view the entire logs related to above created `filebeat` type elasticsearch-beat.
+- Follow the Kibana deployment guide to install kibana, And log in and go to **Kibana > Discover** then create a dataview in kibana for `filebeat-8.6.2` index, You will  be able to view the entire logs related to above created `filebeat` type elasticsearch-beat.
 
 ###  Elasticsearch apm-server
 
