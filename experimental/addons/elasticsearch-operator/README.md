@@ -144,7 +144,7 @@ spec:
 Monitor Kibana health and creation progress.
 
 ```shell
-$ kubectl get kibana
+$ kubectl get kibana -n prod
 NAME     HEALTH   NODES   VERSION   AGE
 kibana   green    1       8.6.2     7m39s
 ```
