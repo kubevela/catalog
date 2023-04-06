@@ -33,6 +33,7 @@ vela addon disable kafka-operator
 After you enable this addon, apply below YAML to create a kafka cluster inside kafka-operator namespace:
 
 ```yaml
+# kafka-cluster.yaml
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
@@ -49,12 +50,49 @@ spec:
 ```
 
 ```shell
-$ kubectl get po  -n kafka-operator  -o wide
-NAME                                            READY   STATUS    RESTARTS   AGE     IP            NODE       NOMINATED NODE   READINESS GATES
-kafka-cluster-entity-operator-fbd554658-fpbwh   3/3     Running   0          5m48s   172.17.0.15   minikube   <none>           <none>
-kafka-cluster-kafka-0                           1/1     Running   0          6m9s    172.17.0.14   minikube   <none>           <none>
-kafka-cluster-zookeeper-0                       1/1     Running   0          6m30s   172.17.0.13   minikube   <none>           <none>
-strimzi-cluster-operator-6f96fc9c95-ql7kt       1/1     Running   0          10m     172.17.0.10   minikube   <none>           <none>
+# First, Create kafka-cluster.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-cluster.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 13:54:27.824629  228528 apply.go:121] "creating object" name="kafka-cluster-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-cluster-sample -n kafka-operator
+             SSH: vela exec kafka-cluster-sample -n kafka-operator
+         Logging: vela logs kafka-cluster-sample -n kafka-operator
+      App status: vela status kafka-cluster-sample -n kafka-operator
+        Endpoint: vela status kafka-cluster-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-cluster-sample applied.
+```
+
+Now, Verify.
+
+```shell
+$ vela status kafka-cluster-sample -n kafka-operator
+About:
+
+  Name:         kafka-cluster-sample         
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 13:54:27 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: eh66k3muw7
+    name: kafka-cluster
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-cluster  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-cluster
+    Healthy 
+    No trait applied
 ```
 
 **Create kafka-topic**
@@ -79,9 +117,50 @@ spec:
 ```
 
 ```shell
-$ kubectl get kafkaTopic -n kafka-operator | grep kafka-topic
-NAME                                                                                               CLUSTER         PARTITIONS   REPLICATION FACTOR   READY
-kafka-topic                                                                                        kafka-cluster   10           1                    True
+# First, Create kafka-topic.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-topic.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 14:05:04.023820  255043 apply.go:121] "creating object" name="kafka-topic-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-topic-sample -n kafka-operator
+             SSH: vela exec kafka-topic-sample -n kafka-operator
+         Logging: vela logs kafka-topic-sample -n kafka-operator
+      App status: vela status kafka-topic-sample -n kafka-operator
+        Endpoint: vela status kafka-topic-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-topic-sample applied.
+```
+
+Now, Verify.
+
+```shell
+$ vela status kafka-topic-sample -n kafka-operator
+About:
+
+  Name:         kafka-topic-sample           
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 14:05:04 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: ld98eberfn
+    name: kafka-topic
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-topic  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-topic
+    Healthy 
+    No trait applied
+
 ```
 
 **Send and receive messages with Producer & Consumer**
@@ -130,13 +209,55 @@ spec:
           port: 8080
 ```
 
-after creating kafka-bridge, verify it.
+```shell
+# First, Create kafka-bridge.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-bridge.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 14:16:23.139482  281531 apply.go:121] "creating object" name="kafka-bridge-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-bridge-sample -n kafka-operator
+             SSH: vela exec kafka-bridge-sample -n kafka-operator
+         Logging: vela logs kafka-bridge-sample -n kafka-operator
+      App status: vela status kafka-bridge-sample -n kafka-operator
+        Endpoint: vela status kafka-bridge-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-bridge-sample applied.
+```
+
+Now, Verify.
 
 ```shell
-$ kubectl get pods -n kafka-operator | grep kafka-bridge
-kafka-bridge-bridge-75549d4f89-c6qjf            1/1     Running   0          34m
+$ vela status kafka-bridge-sample -n kafka-operator
+About:
 
-# Create a NodePort service
+  Name:         kafka-bridge-sample          
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 14:16:23 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: ic332zwn64
+    name: kafka-bridge
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-bridge  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-bridge
+    Healthy 
+    No trait applied
+```
+
+Create a NodePort service.
+
+```shell
 $ kubectl expose -n kafka-operator service kafka-bridge-bridge-service --port=8080 --target-port=8080 --name=kafka-bridge-nodeport --type=NodePort
 
 # Access the NodePort service using minikube.
@@ -149,7 +270,7 @@ $ curl $svcurl
 
 **Create kafka-rebalance to depict every partition of topic**
 
-Apply below YAML to create kafka-connector in `kafka-operator` namespace:
+Apply below YAML to create kafka-rebalance in `kafka-operator` namespace:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -171,11 +292,50 @@ spec:
         - ReplicaCapacityGoal
 ```
 
+```shell
+# First, Create kafka-rebalance.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-rebalance.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 14:27:54.395927  309046 apply.go:121] "creating object" name="kafka-rebalance-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-rebalance-sample -n kafka-operator
+             SSH: vela exec kafka-rebalance-sample -n kafka-operator
+         Logging: vela logs kafka-rebalance-sample -n kafka-operator
+      App status: vela status kafka-rebalance-sample -n kafka-operator
+        Endpoint: vela status kafka-rebalance-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-rebalance-sample applied.
+```
+
 Now, Verify.
 
 ```shell
-NAME              CLUSTER         PENDINGPROPOSAL   PROPOSALREADY   REBALANCING   READY   NOTREADY
-kafka-rebalance   kafka-cluster                                                   True        
+vela status kafka-rebalance-sample -n kafka-operator
+About:
+
+  Name:         kafka-rebalance-sample       
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 14:27:54 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: jxr1yzhi2r
+    name: kafka-rebalance
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-rebalance  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-rebalance
+    Healthy 
+    No trait applied
 ```
 
 ### External datasource connection to kafka broker
@@ -211,12 +371,50 @@ spec:
           status.storage.replication.factor: -1
 ```
 
+```shell
+# First, Create kafka-connect.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-connect.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 14:33:32.214558  322307 apply.go:121] "creating object" name="kafka-connect-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-connect-sample -n kafka-operator
+             SSH: vela exec kafka-connect-sample -n kafka-operator
+         Logging: vela logs kafka-connect-sample -n kafka-operator
+      App status: vela status kafka-connect-sample -n kafka-operator
+        Endpoint: vela status kafka-connect-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-connect-sample applied.
+```
+
 Now, verify.
 
 ```shell
-$ kubectl get kafkaConnect -n kafka-operator
-NAME            DESIRED REPLICAS   READY
-kafka-connect   1                  True
+$ vela status kafka-connect-sample -n kafka-operator
+About:
+
+  Name:         kafka-connect-sample         
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 14:33:32 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: mx6g7qwc7z
+    name: kafka-connect
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-connect  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-connect
+    Healthy 
+    No trait applied
 ```
 
 **Create kafka-connector to connect with `kafka-connect` cluster and external datasource**
@@ -240,12 +438,50 @@ spec:
           topic: kafka-topic
 ```
 
+```shell
+# First, Create kafka-connector.yaml file using above YAML, Then apply below command.
+$ vela up -f kafka-connector.yaml -n kafka-operator
+Applying an application in vela K8s object format...
+I0406 14:41:29.559970  342274 apply.go:121] "creating object" name="kafka-connector-sample" resource="core.oam.dev/v1beta1, Kind=Application"
+✅ App has been deployed 🚀🚀🚀
+    Port forward: vela port-forward kafka-connector-sample -n kafka-operator
+             SSH: vela exec kafka-connector-sample -n kafka-operator
+         Logging: vela logs kafka-connector-sample -n kafka-operator
+      App status: vela status kafka-connector-sample -n kafka-operator
+        Endpoint: vela status kafka-connector-sample -n kafka-operator --endpoint
+Application kafka-operator/kafka-connector-sample applied.
+```
+
 Now, Verify.
 
 ```shell
-$ kubectl get kafkaConnector -n kafka-operator
-NAME              CLUSTER         CONNECTOR CLASS                                           MAX TASKS   READY
-kafka-connector   kafka-connect   org.apache.kafka.connect.file.FileStreamSourceConnector   1           True
+$ vela status kafka-connector-sample -n kafka-operator
+About:
+
+  Name:         kafka-connector-sample       
+  Namespace:    kafka-operator               
+  Created at:   2023-04-06 14:41:29 +0530 IST
+  Status:       running                      
+
+Workflow:
+
+  mode: DAG-DAG
+  finished: true
+  Suspend: false
+  Terminated: false
+  Steps
+  - id: 1li4qnv9k3
+    name: kafka-connector
+    type: apply-component
+    phase: succeeded 
+
+Services:
+
+  - Name: kafka-connector  
+    Cluster: local  Namespace: kafka-operator
+    Type: kafka-connector
+    Healthy 
+    No trait applied
 ```
 
 Enjoy your Apache Kafka cluster, running on Minikube!.
