@@ -258,6 +258,7 @@ Services:
 Create a NodePort service.
 
 ```shell
+# Create a NodePort service.
 $ kubectl expose -n kafka-operator service kafka-bridge-bridge-service --port=8080 --target-port=8080 --name=kafka-bridge-nodeport --type=NodePort
 
 # Access the NodePort service using minikube.
