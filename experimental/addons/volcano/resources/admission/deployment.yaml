@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: volcano-admission
+  name: volcano-admission
+  namespace: volcano-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volcano-admission
+  template:
+    metadata:
+      labels:
+        app: volcano-admission
+    spec:
+      serviceAccount: volcano-admission
+      priorityClassName: system-cluster-critical
+      containers:
+        - args:
+            - --enabled-admission=/jobs/mutate,/jobs/validate,/podgroups/mutate,/pods/validate,/pods/mutate,/queues/mutate,/queues/validate
+            - --tls-cert-file=/admission.local.config/certificates/tls.crt
+            - --tls-private-key-file=/admission.local.config/certificates/tls.key
+            - --ca-cert-file=/admission.local.config/certificates/ca.crt
+            - --admission-conf=/admission.local.config/configmap/volcano-admission.conf
+            - --webhook-namespace=volcano-system
+            - --webhook-service-name=volcano-admission-service
+            - --enable-healthz=true
+            - --logtostderr
+            - --port=8443
+            - -v=4
+            - 2>&1
+          image: volcanosh/vc-webhook-manager:latest
+          imagePullPolicy: IfNotPresent
+          name: admission
+          volumeMounts:
+            - mountPath: /admission.local.config/certificates
+              name: admission-certs
+              readOnly: true
+            - mountPath: /admission.local.config/configmap
+              name: admission-config
+      volumes:
+        - name: admission-certs
+          secret:
+            defaultMode: 420
+            secretName: volcano-admission-secret
+        - name: admission-config
+          configMap:
+            name: volcano-admission-configmap

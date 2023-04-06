@@ -1,0 +1,12 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: nacos-cluster-sample
+spec:
+  components:
+    - type: nacos-cluster
+      name: nacos-cluster
+      properties:
+        type: cluster
+        image: nacos/nacos-server:1.4.1
+        replicas: 2

@@ -67,15 +67,15 @@ vector: {
 		}
 	}
 	traits: [{
-		type: "command"
+		type:       "command"
 		_configDir: *"/etc/config/" | string
 		if parameter.agent == "vector" && parameter.stdout == "" {
 			_configDir: "/etc/config/,/etc/vector-controller-config/"
-		},
+		}
 		properties: args: [
 			"--config-dir",
 			_configDir,
-			"-w"
+			"-w",
 		]
 	}, {
 		agentServiceAccount
@@ -103,22 +103,24 @@ vectorConfig: {
 					    type: loki
 					    inputs:
 					      - kubernetes-logs
-					    endpoint: http://loki:3100/
-					    compression: none
-					    request:
-					      concurrency: 10
-					    labels:
-					      agent: vector
-					      cluster: $CLUSTER
-					      stream: "{{ stream }}"
-					      forward: daemon
-					      filename: "{{ file }}"
-					      pod: "{{ kubernetes.pod_name }}"
-					      namespace: "{{ kubernetes.pod_namespace }}"
-					      container: "{{ kubernetes.container_name }}"
-					    encoding:
-					      codec: json
-					"""#
+					"""# +
+					"\n    endpoint: " + lokiURL + "\n" +
+					#"""
+						    compression: none
+						    request:
+						      concurrency: 10
+						    labels:
+						      agent: vector
+						      cluster: $CLUSTER
+						      stream: "{{ stream }}"
+						      forward: daemon
+						      filename: "{{ file }}"
+						      pod: "{{ kubernetes.pod_name }}"
+						      namespace: "{{ kubernetes.pod_namespace }}"
+						      container: "{{ kubernetes.container_name }}"
+						    encoding:
+						      codec: json
+						"""#
 			}
 		}
 		if parameter.agent == "vector" && parameter.stdout == "" {
@@ -134,22 +136,24 @@ vectorConfig: {
 					    type: loki
 					    inputs:
 					      - kubernetes-logs
-					    endpoint: http://loki:3100/
-					    compression: none
-					    request:
-					      concurrency: 10
-					    labels:
-					      agent: vector
-					      cluster: $CLUSTER
-					      stream: "{{ stream }}"
-					      forward: daemon
-					      filename: "{{ file }}"
-					      pod: "{{ kubernetes.pod_name }}"
-					      namespace: "{{ kubernetes.pod_namespace }}"
-					      container: "{{ kubernetes.container_name }}"
-					    encoding:
-					      codec: json
-					"""#
+					"""# +
+					"\n    endpoint: " + lokiURL + "\n" +
+					#"""
+						    compression: none
+						    request:
+						      concurrency: 10
+						    labels:
+						      agent: vector
+						      cluster: $CLUSTER
+						      stream: "{{ stream }}"
+						      forward: daemon
+						      filename: "{{ file }}"
+						      pod: "{{ kubernetes.pod_name }}"
+						      namespace: "{{ kubernetes.pod_namespace }}"
+						      container: "{{ kubernetes.container_name }}"
+						    encoding:
+						      codec: json
+						"""#
 			}
 		}
 	}]

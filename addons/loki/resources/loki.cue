@@ -48,3 +48,65 @@ loki: {
 		properties: args: ["-config.file=/etc/loki/loki.yaml"]
 	}]
 }
+
+lokiSteps: *[] | [...{...}]
+if !parameter.agentOnly {
+	lokiSteps: [{
+		type: "deploy"
+		name: "deploy-loki"
+		properties: policies: ["topology-centralized", "loki-components"]
+	}, {
+		type: "collect-service-endpoints"
+		name: "get-loki-endpoint"
+		properties: {
+			name:      const.name
+			namespace: "vela-system"
+			components: [loki.name]
+			portName: "http"
+			outer:    parameter.serviceType != "ClusterIP"
+		}
+		outputs: [{
+			name:      "host"
+			valueFrom: "value.endpoint.host"
+		}, {
+			name:      "port"
+			valueFrom: "value.endpoint.port"
+		}, {
+			name:      "url"
+			valueFrom: "value.url"
+		}]
+	}, {
+		type: "create-config"
+		name: "loki-server-register"
+		properties: {
+			name:     "loki-vela"
+			template: "loki"
+			config: {}
+		}
+		inputs: [{
+			from:         "url"
+			parameterKey: "config.url"
+		}]
+	}, {
+		type: "export-service"
+		name: "export-service"
+		properties: {
+			name:      "loki"
+			namespace: parameter.namespace
+			topology:  "topology-distributed-exclude-local"
+			port:      3100
+		}
+		inputs: [{
+			from:         "host"
+			parameterKey: "ip"
+		}, {
+			from:         "port"
+			parameterKey: "targetPort"
+		}]
+	}]
+}
+
+lokiURL: *"http://loki:3100/" | string
+if parameter.lokiURL != _|_ {
+	lokiURL: parameter.lokiURL
+}
