@@ -137,7 +137,7 @@ $ kubectl get pods -n kafka-operator | grep kafka-bridge
 kafka-bridge-bridge-75549d4f89-c6qjf            1/1     Running   0          34m
 
 # Create a NodePort service
-kubectl expose -n kafka-operator service kafka-bridge-bridge-service --port=8080 --target-port=8080 --name=kafka-bridge-nodeport --type=NodePort
+$ kubectl expose -n kafka-operator service kafka-bridge-bridge-service --port=8080 --target-port=8080 --name=kafka-bridge-nodeport --type=NodePort
 
 # Access the NodePort service using minikube.
 $ svcurl=$(minikube service -n kafka-operator kafka-bridge-nodeport --url)
