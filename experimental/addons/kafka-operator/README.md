@@ -136,11 +136,14 @@ after creating kafka-bridge, verify it.
 $ kubectl get pods -n kafka-operator | grep kafka-bridge
 kafka-bridge-bridge-75549d4f89-c6qjf            1/1     Running   0          34m
 
-# Port forward the above pod
-$ kubectl port-forward -n kafka-operator kafka-bridge-bridge-75549d4f89-c6qjf 8080:8080
+# Create a NodePort service
+kubectl expose -n kafka-operator service kafka-bridge-bridge-service --port=8080 --target-port=8080 --name=kafka-bridge-nodeport --type=NodePort
+
+# Access the NodePort service using minikube.
+$ svcurl=$(minikube service -n kafka-operator kafka-bridge-nodeport --url)
 
 # Visit on the port-forwarding port via CLI
-$ curl http://localhost:8080
+$ curl $svcurl
 {"bridge_version":"0.24.0"}
 ```
 
