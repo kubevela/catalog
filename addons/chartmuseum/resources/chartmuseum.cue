@@ -63,11 +63,14 @@ import (
 			if parameter.persistence.enabled {
 				pvc: [{
 					if parameter.persistence.pvcName != _|_ {
-						name:      parameter.pvcName
+						name:      parameter.persistence.pvcName
 						mountOnly: true
 					}
 					if parameter.persistence.pvcName == _|_ {
 						name: "chartmuseum-local-storage"
+						if parameter.persistence.storageClassName != _|_ {
+							storageClassName: parameter.persistence.storageClassName
+						}
 					}
 					mountPath: "/storage"
 				}]

@@ -1,0 +1,28 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: volcano-controllers
+  namespace: volcano-system
+  labels:
+    app: volcano-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volcano-controller
+  template:
+    metadata:
+      labels:
+        app: volcano-controller
+    spec:
+      serviceAccount: volcano-controllers
+      priorityClassName: system-cluster-critical
+      containers:
+        - name: volcano-controllers
+          image: volcanosh/vc-controller-manager:latest
+          args:
+            - --logtostderr
+            - --enable-healthz=true
+            - -v=4
+            - 2>&1
+          imagePullPolicy: "IfNotPresent"
