@@ -1,0 +1,30 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: elasticsearch-cluster-sample-with-custom-expose-trait
+spec:
+  components:
+    - type: elasticsearch-cluster
+      name: elasticsearch-cluster
+      properties:
+        version: 8.6.2
+        nodeSets:
+          - name: default
+            count: 1
+            podTemplate:
+              spec:
+                containers:
+                  - name: elasticsearch
+                    resources:
+                      requests:
+                        memory: 1Gi
+                        cpu: 1
+                      limits:
+                        memory: 1Gi
+                        cpu: 1
+            config:
+              node.store.allow_mmap: false
+      traits:
+        - type: elasticsearch-cluster-expose
+          properties:
+            type: "NodePort"
