@@ -60,6 +60,10 @@ spec:
                         cpu: 1
             config:
               node.store.allow_mmap: false
+      traits:
+        - type: elasticsearch-cluster-expose
+          properties:
+            type: "NodePort"
 ```
 
 Get an overview of the current Elasticsearch clusters in the Kubernetes cluster, including health, version and number of nodes:
@@ -74,13 +78,12 @@ elasticsearch-cluster    green     1         8.6.2     Ready         1m
 
 **Request Elasticsearch access**
 
-A ClusterIP Service is automatically created for your cluster:
+A NodePort Service is got created for your cluster by trait block of above YAML:
 
 ```shell
-$ kubectl get -n prod service elasticsearch-cluster-es-http
-NAME                            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-elasticsearch-cluster-es-http   ClusterIP   10.104.95.219   <none>        9200/TCP   12m
-```
+$ kubectl get -n prod service | grep elasticsearch-cluster-expose
+NAME                                                          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+elasticsearch-cluster-elasticsearch-cluster-expose-d857b75d   NodePort    10.99.242.232   <none>        9200:31070/TCP   53m```
 
 -   Get the credentials.
 
@@ -90,16 +93,17 @@ elasticsearch-cluster-es-http   ClusterIP   10.104.95.219   <none>        9200/T
     PASSWORD=$(kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
     ```
 
--   Request the Elasticsearch endpoint.
+-   Request the Elasticsearch endpoint if using minikube.
 
     ```shell
-    $ kubectl port-forward -n prod service/elasticsearch-cluster-es-http 9200
+    # Get URL
+    $ eckURL=$(minikube service -n prod elasticsearch-cluster-elasticsearch-cluster-expose-d857b75d --url | sed "s/http/https/")
     ```
 
-    Now, Request.
+    Visit on the obtained url.
 
     ```shell
-    $ curl -u "elastic:$PASSWORD" -k "https://localhost:9200"
+    $ curl -u "elastic:$PASSWORD" -k $eckURL
     {
         "name" : "elasticsearch-cluster-es-default-0",
         "cluster_name" : "elasticsearch-cluster",
@@ -139,6 +143,10 @@ spec:
         count: 1
         elasticsearchRef:
           name: elasticsearch-cluster
+      traits:
+        - type: kibana-expose
+          properties:
+            type: "NodePort"
 ```
 
 Monitor Kibana health and creation progress.
@@ -171,13 +179,28 @@ kibana-kb-http   ClusterIP   10.109.2.144   <none>        5601/TCP   15m
 kubectl port-forward -n prod service/kibana-kb-http 5601
 ```
 
+Login as the elastic user by visiting https://localhost:5601 in your browser.
+
+Otherwise, Use NodePort service created by the above YAML trait block.
+
+```shell
+# Check service name
+$ kubectl get service -n prod | grep kibana-expose
+kibana-kibana-expose-759b4f896                                NodePort    10.105.77.93    <none>        5601:31889/TCP   16m
+
+# Check URL
+$ minikube service kibana-kibana-expose-759b4f896 -n prod --url
+http://192.168.49.2:31889
+```
+
+Visit on the shell printed URL by replacing `http` with `https` in your browser and Login as the elastic user.
+
 Get credentials: 
 
 ```shell
+# Get password
 kubectl get secret -n prod elasticsearch-cluster-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 ```
-
-Login as the elastic user by visiting https://localhost:5601 in your browser.
 
 ###  Elasticsearch agent
 
@@ -492,8 +515,10 @@ spec:
         count: 1
         elasticsearchRef:
           name: elasticsearch-cluster
-        enterpriseSearchRef:
-          name: elasticsearch-enterprise-search
+      traits:
+        - type: kibana-expose
+          properties:
+            type: "NodePort"
 ```
 
 Use kubectl port-forward to access Kibana from your local system.
@@ -502,6 +527,18 @@ Use kubectl port-forward to access Kibana from your local system.
 $ kubectl port-forward service/quickstart-kb-http 5601
 ```
 
-Open https://localhost:5601 in your browser and navigate to the Enterprise Search UI.
+Otherwise, Use NodePort service created by the above YAML trait block.
+
+```shell
+# Check service name
+$ kubectl get service -n prod | grep kibana-expose
+kibana-kibana-expose-759b4f896                                NodePort    10.105.77.93    <none>        5601:31889/TCP   16m
+
+# Check URL
+$ minikube service kibana-kibana-expose-759b4f896 -n prod --url
+http://192.168.49.2:31889
+```
+
+Visit on the shell printed URL by replacing `http` with `https` in your browser and navigate to the Enterprise Search UI.
 
 For more, Please visit on the website https://www.elastic.co/.
