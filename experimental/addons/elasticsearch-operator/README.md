@@ -212,43 +212,159 @@ Apply the following specification to deploy Elastic Agent with the System metric
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: elasticsearch-agent-sample
+  name: elasticsearch-cluster-sample-with-agent
 spec:
   components:
-    - type: elasticsearch-agent
-      name: elasticsearch-agent
+    - type: elasticsearch-cluster
+      name: elasticsearch-cluster
       properties:
         version: 8.6.2
-        elasticsearchRefs:
-          - name: elasticsearch-cluster
-        daemonSet:
-          podTemplate:
-            spec:
-              securityContext:
-                runAsUser: 0
-        config:
-          inputs:
-            - name: system-1
-              revision: 1
-              type: system/metrics
-              use_output: default
-              meta:
-                package:
-                  name: system
-                  version: 0.9.1
-              data_stream:
-                namespace: default
-              streams:
-                - id: system/metrics-system.cpu
+        nodeSets:
+          - name: default
+            count: 1
+            podTemplate:
+              spec:
+                containers:
+                  - name: elasticsearch
+                    resources:
+                      requests:
+                        memory: 1Gi
+                        cpu: 1
+                      limits:
+                        memory: 1Gi
+                        cpu: 1
+            config:
+              node.store.allow_mmap: false
+      traits:
+        - type: elasticsearch-agent
+          properties:
+            version: 8.6.1
+            elasticsearchRefs:
+              - name: elasticsearch-cluster
+            daemonSet:
+              podTemplate:
+                spec:
+                  containers:
+                    - name: agent
+                      securityContext:
+                        runAsUser: 0
+            config:
+              id: 488e0b80-3634-11eb-8208-57893829af4e
+              revision: 2
+              agent:
+                monitoring:
+                  enabled: true
+                  use_output: default
+                  logs: true
+                  metrics: true
+              inputs:
+                - id: 4917ade0-3634-11eb-8208-57893829af4e
+                  name: system-1
+                  revision: 1
+                  type: system/metrics
+                  use_output: default
+                  meta:
+                    package:
+                      name: system
+                      version: 8.6.1
                   data_stream:
-                    dataset: system.cpu
-                    type: metrics
-                  metricsets:
-                    - cpu
-                  cpu.metrics:
-                    - percentages
-                    - normalized_percentages
-                  period: 10s
+                    namespace: prod
+                  streams:
+                    - id: system/metrics-system.cpu
+                      data_stream:
+                        dataset: system.cpu
+                        type: metrics
+                      metricsets:
+                        - cpu
+                      cpu.metrics:
+                        - percentages
+                        - normalized_percentages
+                      period: 10s
+                    - id: system/metrics-system.diskio
+                      data_stream:
+                        dataset: system.diskio
+                        type: metrics
+                      metricsets:
+                        - diskio
+                      diskio.include_devices: null
+                      period: 10s
+                    - id: system/metrics-system.filesystem
+                      data_stream:
+                        dataset: system.filesystem
+                        type: metrics
+                      metricsets:
+                        - filesystem
+                      period: 1m
+                      processors:
+                        - drop_event.when.regexp:
+                            system.filesystem.mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)
+                    - id: system/metrics-system.fsstat
+                      data_stream:
+                        dataset: system.fsstat
+                        type: metrics
+                      metricsets:
+                        - fsstat
+                      period: 1m
+                      processors:
+                        - drop_event.when.regexp:
+                            system.fsstat.mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)
+                    - id: system/metrics-system.load
+                      data_stream:
+                        dataset: system.load
+                        type: metrics
+                      metricsets:
+                        - load
+                      period: 10s
+                    - id: system/metrics-system.memory
+                      data_stream:
+                        dataset: system.memory
+                        type: metrics
+                      metricsets:
+                        - memory
+                      period: 10s
+                    - id: system/metrics-system.network
+                      data_stream:
+                        dataset: system.network
+                        type: metrics
+                      metricsets:
+                        - network
+                      period: 10s
+                      network.interfaces: null
+                    - id: system/metrics-system.process
+                      data_stream:
+                        dataset: system.process
+                        type: metrics
+                      metricsets:
+                        - process
+                      period: 10s
+                      process.include_top_n.by_cpu: 5
+                      process.include_top_n.by_memory: 5
+                      process.cmdline.cache.enabled: true
+                      process.cgroups.enabled: false
+                      process.include_cpu_ticks: false
+                      processes:
+                        - .*
+                    - id: system/metrics-system.process_summary
+                      data_stream:
+                        dataset: system.process_summary
+                        type: metrics
+                      metricsets:
+                        - process_summary
+                      period: 10s
+                    - id: system/metrics-system.socket_summary
+                      data_stream:
+                        dataset: system.socket_summary
+                        type: metrics
+                      metricsets:
+                        - socket_summary
+                      period: 10s
+                    - id: system/metrics-system.uptime
+                      data_stream:
+                        dataset: system.uptime
+                        type: metrics
+                      metricsets:
+                        - uptime
+                      period: 10s
 ```
 
 Monitor the status of Elastic Agent.
@@ -262,15 +378,15 @@ elasticsearch-agent   green    1           1          8.6.2     23m
 List all the Pods that belong to a given Elastic Agent specification.
 
 ```shell
-$ kubectl get pods -n prod --selector='agent.k8s.elastic.co/name=elasticsearch-agent'
-NAME                              READY   STATUS    RESTARTS   AGE
-elasticsearch-agent-agent-kfv9s   1/1     Running   0          21m
+$ kubectl get pods -n prod | grep agent
+NAME                                 READY   STATUS    RESTARTS   AGE
+elasticsearch-cluster-agent-rgh2f    1/1     Running   0          114s
 ```
 
 Access logs for one of the Pods.
 
 ```shell
-$ kubectl logs -n prod -f elasticsearch-agent-agent-kfv9s
+$ kubectl logs -n prod -f elasticsearch-cluster-agent-rgh2f
 ```
 
 Access the CPU metrics ingested by Elastic Agent, Make sure elasticsearch is port-forwarded.
@@ -297,47 +413,67 @@ Apply the following specification to deploy Filebeat and collect the logs of all
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: elasticsearch-beat-sample
+  name: elasticsearch-cluster-sample-with-beat
 spec:
   components:
-    - type: elasticsearch-beat
-      name: elasticsearch-beat
+    - type: elasticsearch-cluster
+      name: elasticsearch-cluster
       properties:
-        type: filebeat
         version: 8.6.2
-        elasticsearchRef:
-          name: elasticsearch-cluster
-        config:
-          filebeat.inputs:
-            - type: container
-              paths:
-                - /var/log/containers/*.log
-        daemonSet:
-          podTemplate:
-            spec:
-              dnsPolicy: ClusterFirstWithHostNet
-              hostNetwork: true
-              securityContext:
-                runAsUser: 0
-              containers:
-                - name: filebeat
-                  volumeMounts:
+        nodeSets:
+          - name: default
+            count: 1
+            podTemplate:
+              spec:
+                containers:
+                  - name: elasticsearch
+                    resources:
+                      requests:
+                        memory: 1Gi
+                        cpu: 1
+                      limits:
+                        memory: 1Gi
+                        cpu: 1
+            config:
+              node.store.allow_mmap: false
+      traits: 
+        - type: elasticsearch-beat
+          properties:
+            type: filebeat
+            version: 8.6.2
+            elasticsearchRef:
+              name: elasticsearch-cluster
+            config:
+              filebeat.inputs:
+                - type: container
+                  paths:
+                    - /var/log/containers/*.log
+            daemonSet:
+              podTemplate:
+                spec:
+                  dnsPolicy: ClusterFirstWithHostNet
+                  hostNetwork: true
+                  securityContext:
+                    runAsUser: 0
+                  containers:
+                    - name: filebeat
+                      volumeMounts:
+                        - name: varlogcontainers
+                          mountPath: /var/log/containers
+                        - name: varlogpods
+                          mountPath: /var/log/pods
+                        - name: varlibdockercontainers
+                          mountPath: /var/lib/docker/containers
+                  volumes:
                     - name: varlogcontainers
-                      mountPath: /var/log/containers
+                      hostPath:
+                        path: /var/log/containers
                     - name: varlogpods
-                      mountPath: /var/log/pods
+                      hostPath:
+                        path: /var/log/pods
                     - name: varlibdockercontainers
-                      mountPath: /var/lib/docker/containers
-              volumes:
-                - name: varlogcontainers
-                  hostPath:
-                    path: /var/log/containers
-                - name: varlogpods
-                  hostPath:
-                    path: /var/log/pods
-                - name: varlibdockercontainers
-                  hostPath:
-                    path: /var/lib/docker/containers
+                      hostPath:
+                        path: /var/lib/docker/containers
 ```
 
 Monitor Beats.
