@@ -12,7 +12,7 @@ parameter: {
 	// +usage=Specify the name of the certificate cecret, if set, means enable the HTTPs.
 	secretName?: string
 	// +usage=Specify the gateway type.
-	gatewayDriver: *"nginx" | "traefik"
+	gatewayDriver: "nginx" | "traefik-gateway" | "traefik-ingress"
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-ux" | string
 	// +usage=Specify the service type.
@@ -27,4 +27,5 @@ parameter: {
 	nodePort: *30000 | int
 	// +usage=Enable impersonation means impersonating the login user to request the KubeAPI.
 	enableImpersonation: true | *false
+
 }
