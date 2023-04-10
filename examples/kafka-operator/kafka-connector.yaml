@@ -1,0 +1,14 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-connector-sample
+spec:
+  components:
+    - type: kafka-connector
+      name: kafka-connector
+      properties:
+        class: org.apache.kafka.connect.file.FileStreamSourceConnector
+        tasksMax: 1
+        config:
+          file: /opt/kafka/LICENSE
+          topic: kafka-topic
