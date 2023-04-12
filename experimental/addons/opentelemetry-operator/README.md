@@ -52,7 +52,7 @@ spec:
           receivers:
             jaeger:
               protocols:
-                thrift_compact:
+                grpc:
           processors:
 
           exporters:
@@ -87,11 +87,12 @@ spec:
           receivers:
             jaeger:
               protocols:
-                thrift_compact:
+                grpc:
           processors:
 
           exporters:
             logging:
+              loglevel: debug
 
           service:
             pipelines:
@@ -124,11 +125,12 @@ spec:
       name: "otel-container"
       properties:
         mode: statefulset
+        replicas: 3
         config: |
           receivers:
             jaeger:
               protocols:
-                thrift_compact:
+                grpc:
           processors:
 
           exporters:
@@ -140,6 +142,7 @@ spec:
                 receivers: [jaeger]
                 processors: []
                 exporters: [logging]
+
 ```
 
 ### Sidecar Mode
