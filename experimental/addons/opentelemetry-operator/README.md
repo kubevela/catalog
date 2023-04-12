@@ -160,7 +160,7 @@ spec:
     - type: "opentelemetry-collector"
       name: "otel-container"
       properties:
-        mode: statefulset
+        mode: sidecar
         config: |
           receivers:
             jaeger:
@@ -185,26 +185,38 @@ Now, Create a pod with below YAML and see an additional otc-container of opentel
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: otel-pod-sample
+  name: otel-deploy-sample
 spec:
   components:
     - type: "k8s-objects"
       name: "otel-pod"
       properties:
         objects:
-          - apiVersion: v1
-            kind: Pod
+          - apiVersion: apps/v1
+            kind: Deployment
             metadata:
-              name: myapp
-              annotations:
-                sidecar.opentelemetry.io/inject: "true"
+              name: my-app
+              labels:
+                app: my-app
             spec:
-              containers:
-                - name: myapp
-                  image: jaegertracing/vertx-create-span:operator-e2e-tests
-                  ports:
-                    - containerPort: 8080
-                      protocol: TCP
+              selector:
+                matchLabels:
+                  app: my-app
+              replicas: 1
+              template:
+                metadata:
+                  labels:
+                    app: my-app
+                  annotations:
+                    sidecar.opentelemetry.io/inject: "true"
+                spec:
+                  containers:
+                    - name: myapp
+                      image: jaegertracing/vertx-create-span:operator-e2e-tests
+                      ports:
+                        - containerPort: 8080
+                          protocol: TCP
+
 ```
 
 Access the metrics by port-forwarding technique
