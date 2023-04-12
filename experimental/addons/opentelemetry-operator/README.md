@@ -216,13 +216,18 @@ spec:
                       ports:
                         - containerPort: 8080
                           protocol: TCP
-
 ```
 
-Access the metrics by port-forwarding technique
+Now, Access all the traces created by the running application container in the pod as the logs of the otc-container created in the same pod the metrics by port-forwarding technique
+
+If you want to access prometheus metrics data :
 
 ```shell
+# Port-forward the port.
 kubectl port-forward -n prod myapp 8888
+
+# Access prometheus metrics.
+curl http://localhost:8888
 ```
 
 For more visit https://opentelemetry.io/docs/k8s-operator/.
