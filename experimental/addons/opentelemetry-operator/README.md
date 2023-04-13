@@ -27,7 +27,7 @@ vela addon disable opentelemetry-operator
 
 ## Use opentelemetry-operator
 
-### OpenTelemetry Collector
+### Opentelemetry Collector
 
 Once the opentelemetry-operator addon enabled successfully, you can deploy OpenTelemetry Collector in your Kubernetes cluster.
 
