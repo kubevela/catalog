@@ -67,7 +67,7 @@ template: {
 		//+usage=MinReplicas sets a lower bound to the autoscaling feature. Set this if your are using autoscaling. It must be at least 1. Deprecated: use "OpenTelemetryCollector.Spec.Autoscaler.MinReplicas" instead.
 		minReplicas: *null | int
 		//+usage=Mode represents how the collector should be deployed (deployment, daemonset, statefulset or sidecar).
-		mode: "sidecar"
+		mode: "deployment" | *string
 		//+usage=NodeSelector to schedule OpenTelemetry Collector pods. This is only relevant to daemonset, statefulset, and deployment mode.
 		nodeSelector: *null | {...}
 		//+usage=PodAnnotations is the set of annotations that will be attached to Collector and Target Allocator pods.
