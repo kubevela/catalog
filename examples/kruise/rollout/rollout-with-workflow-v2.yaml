@@ -27,13 +27,13 @@ spec:
         name: rollout-20
         properties:
           weight: 20
-      - name: suspend
+      - name: suspend-1
         type: suspend
       - type: canary-deploy
         name: rollout-50
         properties:
           weight: 50
-      - name: suspend
+      - name: suspend-2
         type: suspend
       - type: canary-deploy
         name: rollout-100

@@ -108,7 +108,10 @@ template: {
 		}
 	}
 
-	patch: metadata: annotations: "app.oam.dev/disable-health-check": "true"
+	patch: metadata: {
+		 annotations: "app.oam.dev/disable-health-check": "true"
+		 labels:  "kruise-rollout.oam.dev/webhook": "true"
+	}
 
 	outputs: rollout: {
 		apiVersion: "rollouts.kruise.io/v1alpha1"
