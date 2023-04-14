@@ -535,6 +535,6 @@ spec:
         image: myImage3
 ```
 
-In the above case, myapp and myapp2 containers will be instrumented, myapp3 will not.
+In the above case, `myapp` and `myapp2` containers will be instrumented, `myapp3` will not.
 
 For more visit https://opentelemetry.io/docs/k8s-operator/.
