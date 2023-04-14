@@ -15,6 +15,12 @@ output: {
 			url:      "https://openkruise.github.io/charts/"
 			chart:    "kruise-rollout"
 			version:  "0.3.0"
+			values: {
+				rollout: webhook: objectSelector: [{
+					 key: "kruise-rollout.oam.dev/webhook"
+					 operator: "Exists"
+				}]
+			}
 		}
 	}]
 }
