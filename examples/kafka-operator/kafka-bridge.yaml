@@ -1,0 +1,13 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-bridge-sample
+spec:
+  components:
+    - type: kafka-bridge
+      name: kafka-bridge
+      properties:
+        replicas: 1
+        bootstrapServers: 'kafka-cluster-kafka-bootstrap:9092'
+        http:
+          port: 8080

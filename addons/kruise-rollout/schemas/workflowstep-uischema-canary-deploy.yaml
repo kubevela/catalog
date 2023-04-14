@@ -2,7 +2,7 @@
   jsonKey: policies
   uiType: PolicySelect
 - sort: 30
-  jsonKey: component
+  jsonKey: components
   uiType: ComponentSelect
 - sort: 10
   jsonKey: weight
