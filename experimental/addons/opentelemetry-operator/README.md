@@ -302,19 +302,23 @@ Creating the Instrumentation resource correctly is paramount to getting auto-ins
 The following YAML will create a basic Instrumentation resource that is configured specifically for instrumenting .NET services.
 
 ```yaml
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4318
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: "1"
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4318
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: "1"
 ```
 
 By default, the Instrumentation resource that auto-instruments .NET services uses otlp with the http/protobuf protocol. This means that the configured endpoint must be able to receive OTLP over http/protobuf. Therefore, the example uses http://demo-collector:4318, which will connect to the http port of the otlpreceiver of the Collector created in the previous step.
@@ -322,25 +326,29 @@ By default, the Instrumentation resource that auto-instruments .NET services use
 By default, the .NET auto-instrumentation ships with many instrumentation libraries. This makes instrumentation easy, but could result in too much or unwanted data. If there are any libraries you do not want to use you can set the OTEL_DOTNET_AUTO_[SIGNAL]_[NAME]_INSTRUMENTATION_ENABLED=false where [SIGNAL] is the type of the signal and [NAME] is the case-sensitive name of the library.
 
 ```YAML
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4318
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: '1'
-  dotnet:
-    env:
-      - name: OTEL_DOTNET_AUTO_TRACES_GRPCNETCLIENT_INSTRUMENTATION_ENABLED
-        value: false
-      - name: OTEL_DOTNET_AUTO_METRICS_PROCESS_INSTRUMENTATION_ENABLED
-        value: false
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4318
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: "1"
+        dotnet:
+          env:
+            - name: OTEL_DOTNET_AUTO_TRACES_GRPCNETCLIENT_INSTRUMENTATION_ENABLED
+              value: false
+            - name: OTEL_DOTNET_AUTO_METRICS_PROCESS_INSTRUMENTATION_ENABLED
+              value: false
 ```
 
 For more details, see [.NET Auto Instrumentation docs](https://opentelemetry.io/docs/instrumentation/net/automatic/).
@@ -350,19 +358,23 @@ For more details, see [.NET Auto Instrumentation docs](https://opentelemetry.io/
 The following command creates a basic Instrumentation resource that is configured for instrumenting Java services.
 
 ```yaml
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4317
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: "1"
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4317
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: "1"
 ```
 
 By default, the Instrumentation resource that auto-instruments Java services uses otlp with the grpc protocol. This means that the configured endpoint must be able to receive OTLP over grpc. Therefore, the example uses http://demo-collector:4317, which connects to the grpc port of the otlpreceiver of the Collector created in the previous step.
@@ -370,25 +382,29 @@ By default, the Instrumentation resource that auto-instruments Java services use
 By default, the Java auto-instrumentation ships with many instrumentation libraries. This makes instrumentation easy, but could result in too much or unwanted data. If there are any libraries you do not want to use you can set the OTEL_INSTRUMENTATION_[NAME]_ENABLED=false where [NAME] is the name of the library. If you know exactly which libraries you want to use, you can disable the default libraries by setting OTEL_INSTRUMENTATION_COMMON_DEFAULT_ENABLED=false and then use OTEL_INSTRUMENTATION_[NAME]_ENABLED=true where [NAME] is the name of the library. For more details, see [Suppressing specific auto-instrumentation](https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/#suppressing-specific-auto-instrumentation).
 
 ```YAML
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4317
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: '1'
-  java:
-    env:
-      - name: OTEL_INSTRUMENTATION_KAFKA_ENABLED
-        value: false
-      - name: OTEL_INSTRUMENTATION_REDISCALA_ENABLED
-        value: false
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4317
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: '1'
+        java:
+          env:
+            - name: OTEL_INSTRUMENTATION_KAFKA_ENABLED
+              value: false
+            - name: OTEL_INSTRUMENTATION_REDISCALA_ENABLED
+              value: false
 ```
 
 For more details, see [Java Agent Configuration](https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/).
@@ -398,19 +414,23 @@ For more details, see [Java Agent Configuration](https://opentelemetry.io/docs/i
 The following command creates a basic Instrumentation resource that is configured for instrumenting Node.js services.
 
 ```yaml
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4317
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: "1"
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4317
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: "1"
 ```
 
 By default, the Instrumentation resource that auto-instruments Node.js services uses otlp with the grpc protocol. This means that the configured endpoint must be able to receive OTLP over grpc. Therefore, the example uses http://demo-collector:4317, which connects to the grpc port of the otlpreceiver of the Collector created in the previous step.
@@ -424,19 +444,23 @@ For more details, see [Node.js auto-instrumentation](https://opentelemetry.io/do
 The following command will create a basic Instrumentation resource that is configured specifically for instrumenting Python services.
 
 ```yaml
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4318
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: "1"
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4318
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: "1"
 ```
 
 By default, the Instrumentation resource that auto-instruments python services uses otlp with the http/protobuf protocol. This means that the configured endpoint must be able to receive OTLP over http/protobuf. Therefore, the example uses http://demo-collector:4318, which will connect to the http port of the otlpreceiver of the Collector created in the previous step.
@@ -444,25 +468,29 @@ By default, the Instrumentation resource that auto-instruments python services u
 By default the Python auto-instrumentation will detect the packages in your Python service and instrument anything it can. This makes instrumentation easy, but can result in too much or unwanted data. If there are any packages you do not want to instrument, you can set the OTEL_PYTHON_DISABLED_INSTRUMENTATIONS environment variable
 
 ```yaml
-apiVersion: opentelemetry.io/v1alpha1
-kind: Instrumentation
+apiVersion: core.oam.dev/v1beta1
+kind: Application
 metadata:
-  name: demo-instrumentation
+  name: otel-instrumentation-sample
 spec:
-  exporter:
-    endpoint: http://demo-collector:4318
-  propagators:
-    - tracecontext
-    - baggage
-  sampler:
-    type: parentbased_traceidratio
-    argument: '1'
-  python:
-    env:
-      - name: OTEL_PYTHON_DISABLED_INSTRUMENTATIONS
-        value:
-          <comma-separated list of package names to exclude from
-          instrumentation>
+  components:
+    - type: "opentelemetry-instrumentation"
+      name: "opentelemetry-instrumentation"
+      properties:
+        exporter:
+          endpoint: http://demo-collector:4318
+        propagators:
+          - tracecontext
+          - baggage
+        sampler:
+          type: parentbased_traceidratio
+          argument: '1'
+        python:
+          env:
+            - name: OTEL_PYTHON_DISABLED_INSTRUMENTATIONS
+              value:
+                <comma-separated list of package names to exclude from
+                instrumentation>
 ```
 
 Then add an annotation to a pod to enable injection. The annotation can be added to a namespace, so that all pods within that namespace wil get instrumentation, or by adding the annotation to individual PodSpec objects, available as part of Deployment, Statefulset, and other resources.
