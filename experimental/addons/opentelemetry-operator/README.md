@@ -41,26 +41,37 @@ The following YAML creates a pod with a sidecar collector trait:
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: otel-pod-sample-1
+  name: otel-sidecar-collector-sample
 spec:
   components:
     - type: "k8s-objects"
-      name: "otel-pod-1"
+      name: "otel-deploy"
       properties:
         objects:
-          - apiVersion: v1
-            kind: Pod
+          - apiVersion: apps/v1
+            kind: Deployment
             metadata:
-              name: myapp-1
-              annotations:
-                sidecar.opentelemetry.io/inject: "true"
+              name: my-app
+              labels:
+                app: my-app
             spec:
-              containers:
-                - name: myapp
-                  image: jaegertracing/vertx-create-span:operator-e2e-tests
-                  ports:
-                    - containerPort: 8080
-                      protocol: TCP
+              selector:
+                matchLabels:
+                  app: my-app
+              replicas: 1
+              template:
+                metadata:
+                  labels:
+                    app: my-app
+                  annotations:
+                    sidecar.opentelemetry.io/inject: "true" # CORRECT
+                spec:
+                  containers:
+                    - name: myapp
+                      image: jaegertracing/vertx-create-span:operator-e2e-tests
+                      ports:
+                        - containerPort: 8080
+                          protocol: TCP
       traits:
         - type: opentelemetry-collector
           name: otel-container
@@ -84,7 +95,7 @@ spec:
                     exporters: [logging]
 ```
 
-After applying the above yaml an application container gets created with a collector container in the same pod because of collector type `sidecar`, where Collector collects all the traces created by the application as logs as specified in the YAML.
+After applying the above YAML an application container gets created with a collector container in the same pod because of collector type `sidecar`, Where Collector collects all the traces created by the application as logs as specified in the YAML.
 
 ```shell
 # Access the logs of otc-container.
@@ -101,7 +112,7 @@ $ kubectl port-forward -n prod myapp 8888
 $ curl http://localhost:8888
 ```
 
-For more visit https://opentelemetry.io/docs/collector/
+For more about Opentelemetry Collector visit https://opentelemetry.io/docs/collector/.
 
 ### Instrumentation
 
