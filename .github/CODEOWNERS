@@ -5,9 +5,6 @@
 # Owner of addon fluxcd
 addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129
 
-# Owner of addon obeservability
-addons/obeservability              @zzxwill @Somefive
-
 # Owner of addon ocm
 addons/ocm-cluster-manager         @Somefive
 
