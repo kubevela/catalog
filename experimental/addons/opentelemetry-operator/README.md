@@ -31,7 +31,7 @@ vela addon disable opentelemetry-operator
 
 Once the opentelemetry-operator addon enabled successfully, you can deploy OpenTelemetry Collector in your Kubernetes cluster.
 
-The Collector can be deployed as one of four modes: `Deployment`, `DaemonSet`, `StatefulSet` and `Sidecar`. The default mode is `Deployment`. We will introduce the benefits and use cases of each mode as well as giving an example for each.
+The Collector can be deployed as one of four modes: `Deployment`, `DaemonSet`, `StatefulSet` and `Sidecar`. The default mode is `Deployment`.
 
 **Collector as sidecar**
 
@@ -97,7 +97,7 @@ spec:
 After applying the above YAML an application container gets created with a collector container in the same pod because of collector type `sidecar`, Where Collector collects all the traces created by the application as logs as specified in the YAML.
 
 ```shell
-# Access the logs of otc-container.
+# Access the logs of otc-container created by collector.
 $ kubectl logs myapp-1 -n prod -c otc-container
 ```
 
@@ -135,7 +135,7 @@ For more about Opentelemetry Collector visit https://opentelemetry.io/docs/colle
 
 ### Instrumentation
 
-The OpenTelemetry Operator supports injecting and configuring auto-instrumentation libraries for .NET, Java, NodeJS and Python services.
+The OpenTelemetry Operator supports injecting and configuring auto-instrumentation libraries for `.NET`, `Java`, `NodeJS` and `Python` services.
 
 **Configure Autoinstrumentation**
 
