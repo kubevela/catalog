@@ -15,23 +15,20 @@ template: {
 			name: context.name
 		}
 		spec: {
-			gameServerTemplate:   parameter.gameServerTemplate
-			network:              parameter.network
-			replicas:             parameter.replicas
-			reserveGameServerIds: parameter.reserveGameServerIds
-			scaleStrategy:        parameter.scaleStrategy
-			serviceQualities:     parameter.serviceQualities
-			updateStrategy:       parameter.updateStrategy
+			deletionPriority: parameter.deletionPriority
+			networkDisabled:  parameter.networkDisabled
+			opsState:         parameter.opsState
+			updatePriority:   parameter.updatePriority
 		}
 	}
 	parameter: {
 		//+usage=Set delete priority.
 		deletionPriority: *null | int
-        //+usage=Set network disablity.
+		//+usage=Set network disablity.
 		networkDisabled: *null | bool
-        //+usage= OPS state.
+		//+usage= OPS state.
 		opsState: *null | string
-        //+usage=Set update priority.
+		//+usage=Set update priority.
 		updatePriority: *null | int
 	}
 }
