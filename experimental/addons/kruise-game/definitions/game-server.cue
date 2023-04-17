@@ -26,7 +26,7 @@ template: {
 		deletionPriority: *null | int
 		//+usage=Set network disablity.
 		networkDisabled: *null | bool
-		//+usage= OPS state.
+		//+usage=OPS state.
 		opsState: *null | string
 		//+usage=Set update priority.
 		updatePriority: *null | int
