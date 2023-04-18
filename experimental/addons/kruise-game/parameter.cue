@@ -6,6 +6,5 @@
 // container images, ports, and etc.
 parameter: {
 	// +usage=Custom parameter description
-	namespace: "openkruise-system"
 	clusters?: [...string]
 }
