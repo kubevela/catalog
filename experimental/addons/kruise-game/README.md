@@ -39,7 +39,6 @@ $ kubectl create namespace prod
 
 You can use GameServerSet to deploy game servers. A simple deployment case is as follows:
 
-
 ```yaml
 apiVersion: core.oam.dev/v1beta1
 kind: Application
