@@ -80,3 +80,5 @@ minecraft-0   1/1     Running   0          25m
 minecraft-1   1/1     Running   0          25m
 minecraft-2   1/1     Running   0          25m
 ```
+
+For more visit: https://openkruise.io/kruisegame/introduction.
