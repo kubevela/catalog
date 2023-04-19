@@ -96,6 +96,9 @@ template: {
 						if parameter.repoType == "oci" {
 							type: "oci"
 						}
+						if parameter.helmrepository.provider != _|_ {
+							provider: parameter.helmrepository.provider
+						}
 						_secret
 						_sourceCommonArgs
 					}
@@ -148,6 +151,21 @@ template: {
 			if parameter.values != _|_ {
 				values: parameter.values
 			}
+			if parameter.valuesFrom != _|_ {
+				valuesFrom: [for v in parameter.valuesFrom {{
+					kind: v.kind
+					name: v.name
+					if v.valuesKey != _|_ {
+						valuesKey: v.valuesKey
+					}
+					if v.targetPath != _|_ {
+						targetPath: v.targetPath
+					}
+					if v.optional != _|_ {
+						optional: v.optional
+					}
+				}}]
+			}
 			install: {
 				remediation: {
 					retries: parameter.retries
@@ -156,6 +174,11 @@ template: {
 			upgrade: {
 				remediation: {
 					retries: parameter.retries
+				}
+				if parameter.upgradeCRD != _|_ {
+					if parameter.upgradeCRD {
+						 crds: "CreateReplace"
+					}
 				}
 			}
 		}
@@ -203,9 +226,14 @@ template: {
 			// +usage=The bucket's name, required if repoType is oss
 			bucketName: string
 			// +usage="generic" for Minio, Amazon S3, Google Cloud Storage, Alibaba Cloud OSS, "aws" for retrieve credentials from the EC2 service when credentials not specified, default "generic"
-			provider: *"generic" | "aws"
+			provider: *"generic" | "azure" | "aws" | "gcp"
 			// +usage=The bucket region, optional
 			region?: string
+		}
+		helmrepository?: {		   
+			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
+			provider: *"generic" | "azure" | "aws" | "gcp"		
+			
 		}
 		// +usage=Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef.Values files are merged in the order of this list with the last file overriding the first.
 		valuesFiles?: [...string]
@@ -222,6 +250,20 @@ template: {
 		retries: *3 | int
 		// +usage=Chart values
 		values?: #nestedmap
+		// +usage=valuesFrom holds references to resources containing Helm values for this HelmRelease, and information about how they should be merged.
+		valuesFrom?: [...{
+			// +usage=Kind of the values referent, valid values are ('Secret', 'ConfigMap').
+			kind: "Secret" | "ConfigMap"
+			// +usage=Name of the values referent. Should reside in the same namespace as the referring resource.
+			name: string
+			// +usage=ValuesKey is the data key where the values.yaml or a specific value can be found at. Defaults to 'values.yaml'.
+			valuesKey?: string
+			// +usage=TargetPath is the YAML dot notation path the value should be merged at. When set, the ValuesKey is expected to be a single flat value. Defaults to 'None', which results in the values getting merged at the root.
+			targetPath?: string
+			// +usage=Optional marks this ValuesReference as optional. When set, a not found error or the values reference is ignored, but any ValuesKey, TargetPath or transient error will still result in a reconciliation failure.
+			optional?: bool
+		}]
+		upgradeCRD?: *false | bool
 	}
 
 	#nestedmap: {

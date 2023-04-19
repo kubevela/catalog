@@ -4,7 +4,7 @@ output: {
 		repoType: "helm"
 		url:      "https://charts.kubevela.net/addons"
 		chart:    "terraform-controller"
-		version:  "0.7.7"
+		version:  "0.7.10"
 		if parameter.values != _|_ {
 			values: parameter.values
 		}

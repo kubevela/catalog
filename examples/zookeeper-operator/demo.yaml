@@ -1,0 +1,82 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: zookeeper-operator-sample
+spec:
+  components:
+    - type: "zookeeper-cluster"
+      name: "zookeeper"
+      properties:
+        replicas: 3
+        maxUnavailableReplicas: 1
+        triggerRollingRestart: false
+        image:
+          repository: "pravega/zookeeper"
+          tag: 0.2.14
+          pullPolicy: IfNotPresent
+        domainName: ""
+        kubernetesClusterDomain: cluster.local
+        probes:
+          readiness:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 10
+          liveness:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 10
+        labels: {}
+        ports: []
+        pod:
+          labels: {}
+          nodeSelector: {}
+          affinity: {}
+          resources: {}
+          tolerations: []
+          env: []
+          annotations: {}
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          serviceAccountName: zookeeper
+          imagePullSecrets: []
+        clientService:
+          annotations: {}
+        headlessService:
+          annotations: {}
+        adminServerService:
+          annotations: {}
+          external: false
+        config:
+          initLimit: 10
+          tickTime: 2000
+          syncLimit: 2
+          globalOutstandingLimit: 1000
+          preAllocSize: 65536
+          snapCount: 100000
+          commitLogCount: 500
+          snapSizeLimitInKb: 4194304
+          maxCnxns: 0
+          maxClientCnxns: 60
+          minSessionTimeout: 4000
+          maxSessionTimeout: 40000
+          autoPurgeSnapRetainCount: 3
+          autoPurgePurgeInterval: 1
+          quorumListenOnAllIPs: false
+          additionalConfig: {}
+        storageType: persistence
+        persistence:
+          annotations: {}
+          reclaimPolicy: "Delete"
+          storageClassName: ""
+          volumeSize: 20Gi
+        ephemeral:
+          emptydirvolumesource:
+            medium: ""
+            sizeLimit: 20Gi
+        containers: []
+        initContainers: []
+        volumes: []
+        volumeMounts: []

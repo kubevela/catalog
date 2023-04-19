@@ -1,0 +1,49 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: spark-app-v1
+  namespace: spark-cluster
+spec:
+  components:
+  - name: spark-workload-component
+    type: spark-workload
+    properties:
+      name: my-spark-py-app
+      namespace: spark-cluster
+      type: Python
+      pythonVersion: "3"
+      mode: cluster
+      image: "gcr.io/spark-operator/spark-py:v3.1.1"
+      imagePullPolicy: Always
+      mainClass: org.apache.spark.examples.streaming.JavaQueueStream
+      mainApplicationFile: "local:///opt/spark/examples/src/main/python/pi.py"
+      sparkVersion: "3.1.1"
+      restartPolicy:
+        type: OnFailure
+        onFailureRetries: 3
+        onFailureRetryInterval: 10
+        onSubmissionFailureRetries: 5
+        onSubmissionFailureRetryInterval: 20
+      volumes:
+        - name: "test-volume"
+          hostPath:
+            path: "/tmp"
+            type: Directory
+      driver:
+        cores: 1
+        coreLimit: "1200m"
+        memory: "1024m"
+        labels:
+          version: 3.1.1
+        volumeMounts:
+          - name: "test-volume"
+            mountPath: "/tmp"
+      executor:
+        cores: 1
+        instances: 1
+        memory: "1024m"
+        labels:
+          version: 3.1.1
+        volumeMounts:
+          - name: "test-volume"
+            mountPath: "/tmp"

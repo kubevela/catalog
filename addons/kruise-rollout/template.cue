@@ -14,7 +14,14 @@ output: {
 			repoType: "helm"
 			url:      "https://openkruise.github.io/charts/"
 			chart:    "kruise-rollout"
-			version:  "0.2.0"
+			version:  "0.3.0"
+			values: {
+				replicaCount: 1
+				rollout: webhook: objectSelector: [{
+					 key: "kruise-rollout.oam.dev/webhook"
+					 operator: "Exists"
+				}]
+			}
 		}
 	}]
 }

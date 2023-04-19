@@ -12,7 +12,7 @@ helmController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/helm-controller:v0.22.0"
+		image:           _base + "fluxcd/helm-controller:v0.28.1"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -41,6 +41,14 @@ helmController: {
 				},
 			]
 		}
+		ports: [
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
+		]
 	}
 	traits: [
 		{
@@ -63,7 +71,12 @@ helmController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.helmControllerOptions != _|_ {
+					args: controllerArgs + parameter.helmControllerOptions
+				}
+				if parameter.helmControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

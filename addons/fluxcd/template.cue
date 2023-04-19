@@ -56,6 +56,7 @@ output: {
 							// auto-generated from original yaml files
 							bucketCRD,
 							gitRepoCRD,
+							ociRepoCRD,
 							helmChartCRD,
 							helmReleaseCRD,
 							helmRepoCRD,

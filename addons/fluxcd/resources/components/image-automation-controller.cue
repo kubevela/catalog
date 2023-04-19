@@ -12,7 +12,7 @@ imageAutomationController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/image-automation-controller:v0.23.0"
+		image:           _base + "fluxcd/image-automation-controller:v0.28.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -41,6 +41,14 @@ imageAutomationController: {
 				},
 			]
 		}
+		ports: [
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
+		]
 	}
 	traits: [
 		{
@@ -63,7 +71,12 @@ imageAutomationController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.imageAutomationControllerOptions != _|_ {
+					args: controllerArgs + parameter.imageAutomationControllerOptions
+				}
+				if parameter.imageAutomationControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

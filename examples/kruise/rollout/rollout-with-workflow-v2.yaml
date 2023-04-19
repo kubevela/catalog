@@ -1,0 +1,42 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: canary-demo
+  annotations:
+    app.oam.dev/publishVersion: v2
+spec:
+  components:
+    - name: canary-demo
+      type: webservice
+      properties:
+        image: barnett/canarydemo:v2
+        ports:
+          - port: 8090
+      traits:
+        - type: scaler
+          properties:
+            replicas: 5
+        - type: gateway
+          properties:
+            domain: canary-demo.com
+            http:
+              "/version": 8090
+  workflow:
+    steps:
+      - type: canary-deploy
+        name: rollout-20
+        properties:
+          weight: 20
+      - name: suspend-1
+        type: suspend
+      - type: canary-deploy
+        name: rollout-50
+        properties:
+          weight: 50
+      - name: suspend-2
+        type: suspend
+      - type: canary-deploy
+        name: rollout-100
+        properties:
+          weight: 100
+

@@ -1,6 +1,6 @@
 kustomize: {
 	attributes: workload: type: "autodetects.core.oam.dev"
-	description: "kustomize can fetching, building, updating and applying Kustomize manifests from git repo."
+	description: "kustomize can fetching, building, updating and applying Kustomize manifests from Git repo or Bucket or OCI repo."
 	type:        "component"
 	annotations: {
 		"addon.oam.dev/ignore-without-component": "fluxcd-kustomize-controller"
@@ -23,6 +23,9 @@ template: {
 				}
 				if parameter.repoType == "oss" {
 					kind: "Bucket"
+				}
+				if parameter.repoType == "oci" {
+					kind: "OCIRepository"
 				}
 				if parameter.sourceName == _|_ {
 					name: context.name
@@ -78,6 +81,20 @@ template: {
 						if parameter.oss.region != _|_ {
 							region: parameter.oss.region
 						}
+						_secret
+						_sourceCommonArgs
+					}
+				}
+				if parameter.repoType == "oci" {
+					kind: "OCIRepository"
+					spec: {
+						url: parameter.url
+						if parameter.oci.provider != _|_ {
+							provider: parameter.oci.provider
+						}
+						if parameter.oci.tag != _|_ {
+							ref: tag: parameter.oci.tag
+						}						
 						_secret
 						_sourceCommonArgs
 					}
@@ -176,7 +193,7 @@ template: {
 		}
 	}
 	parameter: {
-		repoType: *"git" | "oss"
+		repoType: *"git" | "oss" | "oci"
 		// +usage=The image repository for automatically update image to git
 		imageRepository?: {
 			// +usage=The image url
@@ -217,7 +234,7 @@ template: {
 		}
 		// +usage=The interval at which to check for repository/bucket and release updates, default to 5m
 		pullInterval: *"5m" | string
-		// +usage=The Git or Helm repository URL, OSS endpoint, accept HTTP/S or SSH address as git url,
+		// +usage=The Git or Helm repository URL, OSS endpoint or OCI repo, accept HTTP/S or SSH address as git url
 		url: string
 		// +usage=The name of the secret containing authentication credentials
 		secretRef?: string
@@ -239,6 +256,13 @@ template: {
 			provider: *"generic" | "aws"
 			// +usage=The bucket region, optional
 			region?: string
+		}
+		oci?: {		   
+			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
+			provider: *"generic" | "azure" | "aws" | "gcp"
+			// +usage=The image tag
+			tag: *"latest" | string
+			
 		}
 		//+usage=Path to the directory containing the kustomization.yaml file, or the set of plain YAMLs a kustomization.yaml should be generated for.
 		path: string

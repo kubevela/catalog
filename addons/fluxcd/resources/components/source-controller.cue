@@ -6,6 +6,11 @@ controllerArgs: [...]
 _targetNamespace: string
 _sourceControllerName: "fluxcd-source-controller"
 
+imageControllerDefaultArgs: controllerArgs + [
+					"--storage-path=/data",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
+]
+
 sourceController: {
 	// About this name, refer to #429 for details.
 	name: _sourceControllerName
@@ -13,7 +18,7 @@ sourceController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/source-controller:v0.25.1"
+		image:           _base + "fluxcd/source-controller:v0.33.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -53,6 +58,12 @@ sourceController: {
 				protocol: "TCP"
 				expose:   true
 			},
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
 		]
 		exposeType: "ClusterIP"
 	}
@@ -77,10 +88,12 @@ sourceController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs + [
-					"--storage-path=/data",
-					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
-				]
+				if parameter.sourceControllerOptions != _|_ {
+					args: imageControllerDefaultArgs + parameter.sourceControllerOptions
+				}
+				if parameter.sourceControllerOptions == _|_ {
+					args: imageControllerDefaultArgs
+				}	
 			}
 		},
 	]

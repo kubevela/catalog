@@ -12,7 +12,7 @@ kustomizeController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/kustomize-controller:v0.26.0"
+		image:           _base + "fluxcd/kustomize-controller:v0.32.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -41,6 +41,14 @@ kustomizeController: {
 				},
 			]
 		}
+		ports: [
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
+		]
 	}
 	traits: [
 		{
@@ -63,7 +71,12 @@ kustomizeController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.kustomizeControllerOptions != _|_ {
+					args: controllerArgs + parameter.kustomizeControllerOptions
+				}
+				if parameter.kustomizeControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

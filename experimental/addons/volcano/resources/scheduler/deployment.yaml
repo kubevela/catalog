@@ -1,0 +1,37 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: volcano-scheduler
+  namespace: volcano-system
+  labels:
+    app: volcano-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: volcano-scheduler
+  template:
+    metadata:
+      labels:
+        app: volcano-scheduler
+    spec:
+      serviceAccount: volcano-scheduler
+      priorityClassName: system-cluster-critical
+      containers:
+        - name: volcano-scheduler
+          image: volcanosh/vc-scheduler:latest
+          args:
+            - --logtostderr
+            - --scheduler-conf=/volcano.scheduler/volcano-scheduler.conf
+            - --enable-healthz=true
+            - --enable-metrics=true
+            - -v=3
+            - 2>&1
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: scheduler-config
+              mountPath: /volcano.scheduler
+      volumes:
+        - name: scheduler-config
+          configMap:
+            name: volcano-scheduler-configmap

@@ -1,5 +1,5 @@
 name: example
-version: 1.1.0
+version: 1.2.0
 description: gateway for serving ingress traffic
 
 tags:
@@ -10,3 +10,6 @@ dependencies:
 
 deployTo:
   runtimeCluster: true
+
+uxPlugins:
+  node-dashboard: "https://kubevela-assets.oss-cn-beijing.aliyuncs.com/node-dashboard.tar.gz"

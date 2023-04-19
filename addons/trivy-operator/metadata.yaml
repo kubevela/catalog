@@ -1,5 +1,5 @@
 name: trivy-operator
-version: 3.0.1
+version: 3.1.1
 description: Kubernetes Operator based on the open-source container vulnerability scanner Trivy
 icon: https://raw.githubusercontent.com/aquasecurity/trivy-operator/main/docs/images/trivy-operator-logo.png
 url: https://github.com/aquasecurity/trivy-operator
@@ -11,3 +11,7 @@ dependencies:
   - name: fluxcd
 
 invisible: false
+
+
+system:
+  vela: ">=v1.7.0-alpha.1"

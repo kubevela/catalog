@@ -4,11 +4,18 @@ helmChartCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.7.0"
-		labels: "app.kubernetes.io/instance":                 "flux-system"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		labels: {
+			"app.kubernetes.io/component":           "source-controller"
+			"app.kubernetes.io/instance":            "flux-system"
+			"app.kubernetes.io/part-of":             "flux"			
+			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
+			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+		}
 		name: "helmcharts.source.toolkit.fluxcd.io"
 	}
 	spec: {
+		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmChart"
@@ -211,9 +218,10 @@ helmChartCRD: {
 								description: "Conditions holds the conditions for the HelmChart."
 								items: {
 									description: """
-              		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-              		     // other fields }
-              		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -374,7 +382,8 @@ helmChartCRD: {
 							interval: {
 								description: "Interval is the interval at which to check the Source for updates."
 
-								type: "string"
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							reconcileStrategy: {
 								default:     "ChartVersion"
@@ -431,6 +440,37 @@ helmChartCRD: {
 								items: type: "string"
 								type: "array"
 							}
+							verify: {
+								description: "Verify contains the secret name containing the trusted public keys used to verify the signature and specifies which provider to use to check whether OCI image is authentic. This field is only supported when using HelmRepository source with spec.type 'oci'. Chart dependencies, which are not bundled in the umbrella chart artifact, are not verified."
+
+								properties: {
+									provider: {
+										default:     "cosign"
+										description: "Provider specifies the technology used to sign the OCI Artifact."
+
+										enum: [
+											"cosign",
+										]
+										type: "string"
+									}
+									secretRef: {
+										description: "SecretRef specifies the Kubernetes Secret containing the trusted public keys."
+
+										properties: name: {
+											description: "Name of the referent."
+											type:        "string"
+										}
+										required: [
+											"name",
+										]
+										type: "object"
+									}
+								}
+								required: [
+									"provider",
+								]
+								type: "object"
+							}
 							version: {
 								default:     "*"
 								description: "Version is the chart version semver expression, ignored for charts from GitRepository and Bucket sources. Defaults to latest when omitted."
@@ -463,6 +503,11 @@ helmChartCRD: {
 										format: "date-time"
 										type:   "string"
 									}
+									metadata: {
+										additionalProperties: type: "string"
+										description: "Metadata holds upstream information such as OCI annotations."
+										type:        "object"
+									}
 									path: {
 										description: "Path is the relative file path of the Artifact. It can be used to locate the file in the root of the Artifact storage on the local file system of the controller managing the Source."
 
@@ -494,9 +539,10 @@ helmChartCRD: {
 								description: "Conditions holds the conditions for the HelmChart."
 								items: {
 									description: """
-              		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, type FooStatus struct{     // Represents the observations of a foo's current state.     // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\"     // +patchMergeKey=type     // +patchStrategy=merge     // +listType=map     // +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-              		     // other fields }
-              		"""
+		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+		 // other fields }
+		"""
 
 									properties: {
 										lastTransitionTime: {
@@ -593,8 +639,13 @@ helmChartCRD: {
 	}
 	status: {
 		acceptedNames: {
-			kind:   ""
-			plural: ""
+			kind:     "HelmChart"
+			listKind: "HelmChartList"
+			plural:   "helmcharts"
+			shortNames: [
+				"hc",
+			]
+			singular: "helmchart"
 		}
 		conditions: []
 		storedVersions: []

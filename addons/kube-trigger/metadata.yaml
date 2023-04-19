@@ -1,0 +1,13 @@
+name: kube-trigger
+version: 1.0.0
+description: kube-trigger watches events and triggers actions.
+url: https://github.com/kubevela/kube-trigger
+icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
+
+tags:
+ - Official
+ - Continuous Delivery
+ - Event Trigger
+
+system:
+  vela: ">=1.6.0"

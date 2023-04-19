@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: kafka-rebalance-sample
+spec:
+  components:
+    - type: kafka-rebalance
+      name: kafka-rebalance
+      properties:
+        goals:
+        - CpuCapacityGoal
+        - NetworkInboundCapacityGoal
+        - DiskCapacityGoal
+        - RackAwareGoal
+        - MinTopicLeadersPerBrokerGoal
+        - NetworkOutboundCapacityGoal
+        - ReplicaCapacityGoal

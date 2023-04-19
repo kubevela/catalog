@@ -12,7 +12,7 @@ imageReflectorController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/image-reflector-controller:v0.19.0"
+		image:           _base + "fluxcd/image-reflector-controller:v0.23.1"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -45,6 +45,14 @@ imageReflectorController: {
 				},
 			]
 		}
+		ports: [
+			{
+				name: "http-prom"
+				port: 8080
+				expose: false
+				protocol: "TCP"
+			},
+		]
 	}
 	traits: [
 		{
@@ -67,7 +75,12 @@ imageReflectorController: {
 		{
 			type: "command"
 			properties: {
-				args: controllerArgs
+				if parameter.imageReflectorControllerOptions != _|_ {
+					args: controllerArgs + parameter.imageReflectorControllerOptions
+				}
+				if parameter.imageReflectorControllerOptions == _|_ {
+					args: controllerArgs
+				}
 			}
 		},
 	]

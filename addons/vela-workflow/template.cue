@@ -17,14 +17,14 @@ output: {
 				type: "shared-resource"
 				name: "shared-resource"
 				properties: rules: [{
-					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
+					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding", "Deployment"]
 				}]
 			},
 			{
 				type: "take-over"
 				name: "take-over-resource"
 				properties: rules: [{
-					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
+					selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding", "Deployment"]
 				}]
 			},
 			{
@@ -36,18 +36,6 @@ output: {
 						strategy: "never"
 					},
 					]
-				}
-			},
-			{
-				type: "apply-once"
-				name: "not-keep-resource"
-				properties: {
-					rules: [{
-						selector: resourceTypes: ["CustomResourceDefinition", "ServiceAccount", "ClusterRoleBinding", "Role", "RoleBinding"]
-						strategy: {
-							path: ["*"]
-						}
-					}]
 				}
 			},
 		]
