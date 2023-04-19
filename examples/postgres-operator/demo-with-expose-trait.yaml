@@ -1,0 +1,17 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: postgres-operator-sample-with-postgres-expose-trait
+spec:
+  components:
+    - type: "postgres-cluster"
+      name: "postgres"
+      namespace: "default"
+      properties:
+        replicas: 3
+      traits:
+        - type: postgres-expose
+          properties:
+            type: NodePort
+            port: 5432
+            targetPort: 5432

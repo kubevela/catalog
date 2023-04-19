@@ -65,16 +65,16 @@ With a port-forward on one of the database pods (e.g. the master) you can connec
 
 ```shell
 # get name of master pod of acid-minimal-cluster
-export PGMASTER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=postgres,spilo-role=master -n prod)
+export PGMASTER=$(kubectl get pods -n prod -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=postgres,spilo-role=master -n prod)
 
 # set up port forward
-kubectl port-forward $PGMASTER 6432:5432 -n default
+kubectl port-forward $PGMASTER -n prod 5432:5432 -n default
 ```
 
 Open another CLI and connect to the database using e.g. the psql client. When connecting with a manifest role like foo_user user, read its password from the K8s secret which was generated when creating acid-minimal-cluster. As non-encrypted connections are rejected by default set SSL mode to require:
 
 ```shell
-export PGPASSWORD=$(kubectl get secret postgres.postgres.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' | base64 -d)
+export PGPASSWORD=$(kubectl get secret -n prod postgres.postgres.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' | base64 -d)
 export PGSSLMODE=require
-psql -U postgres -h localhost -p 6432
+psql -U postgres -h localhost -p 5432
 ```
