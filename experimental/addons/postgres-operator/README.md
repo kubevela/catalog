@@ -68,7 +68,7 @@ With a port-forward on one of the database pods (e.g. the master) you can connec
 export PGMASTER=$(kubectl get pods -n prod -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=postgres,spilo-role=master -n prod)
 
 # set up port forward
-kubectl port-forward $PGMASTER -n prod 5432:5432 -n default
+kubectl port-forward $PGMASTER -n prod 5432:5432 -n prod
 ```
 
 Open another CLI and connect to the database using e.g. the psql client. When connecting with a manifest role like foo_user user, read its password from the K8s secret which was generated when creating acid-minimal-cluster. As non-encrypted connections are rejected by default set SSL mode to require:
