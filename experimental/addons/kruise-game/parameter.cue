@@ -6,5 +6,6 @@
 // container images, ports, and etc.
 parameter: {
 	// +usage=Custom parameter description
+	chartVersion: "0.2.1"
 	clusters?: [...string]
 }

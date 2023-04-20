@@ -11,3 +11,4 @@ invisible: false
 
 dependencies:
   - name: fluxcd
+  - name: kruise

@@ -11,9 +11,15 @@ Add experimental registry
 vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
 ```
 
-Enable this addon
+Before enabling this addon enable kruise addon as `kruise-game` addon depends on `kruise` addon
+
+```shell
+$ vela addon enable kruise
 ```
-vela addon enable kruise-game
+
+Enable this addon
+```shell
+$ vela addon enable kruise-game
 ```
 
 ```shell
