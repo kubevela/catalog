@@ -98,5 +98,5 @@ Open another CLI and connect to the database using e.g. the psql client. When co
 ```shell
 $ export PGPASSWORD=$(kubectl get secret -n prod postgres.postgres.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' | base64 -d)
 $ export PGSSLMODE=require
-psql -U postgres -h localhost -p 5432
+$ psql -U postgres -h localhost -p 5432
 ```
