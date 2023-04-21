@@ -21,7 +21,7 @@ output: {
 				properties:	{
 					repoType: "helm"
 					url: "https://openfaas.github.io/faas-netes/"
-					chart: "openfaas-operator"
+					chart: "openfaas"
 					version: "0.16.4"
 				}
 			},
