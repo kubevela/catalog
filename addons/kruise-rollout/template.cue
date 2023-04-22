@@ -16,6 +16,7 @@ output: {
 			chart:    "kruise-rollout"
 			version:  "0.3.0"
 			values: {
+				replicaCount: 1
 				rollout: webhook: objectSelector: [{
 					 key: "kruise-rollout.oam.dev/webhook"
 					 operator: "Exists"

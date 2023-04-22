@@ -7,6 +7,7 @@ import (
 	annotations: {}
 	description: "The dashboard for grafana."
 	type:        "trait"
+	attributes: appliesToWorkloads: ["*"]
 }
 
 template: {
