@@ -36,6 +36,31 @@ output: {
 					}
 				}
 			},
+			{
+				name: "svc-bytebase"
+				type: "k8s-objects"
+				properties: objects: [{
+					apiVersion: "v1"
+					kind: "Service"
+					metadata:{
+						name: "bytebase-nodeport-entrypoint"
+						namespace: parameter.namespace
+					}
+					spec: {
+						type: "NodePort"
+						selector: {
+							app: "bytebase"
+						}
+						ports: [
+							{
+								protocol: "TCP"
+								port: 8080
+								targetPort: parameter.bytebasePort
+							}
+						]
+					}
+				}]
+			},
 		]
 		policies: [
 			{
