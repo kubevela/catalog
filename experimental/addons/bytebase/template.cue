@@ -25,10 +25,14 @@ output: {
 					version:         parameter.chartVersion
 					targetNamespace: parameter.namespace
 					values: {
-						"bytebase.option.port":         parameter.bytebasePort
-						"bytebase.option.external-url": parameter.externalURL
-						"bytebase.option.pg":           parameter.postgresURL
-						"bytebase.version":             parameter.version
+						bytebase: {
+							option: {
+								port:           parameter.bytebasePort,
+								"external-url": parameter.externalURL,
+								pg:             parameter.postgresURL
+							},
+							version: parameter.version
+						}
 					}
 				}
 			},

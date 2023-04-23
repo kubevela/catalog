@@ -13,7 +13,7 @@ parameter: {
 	// +usage=To configure external URL visit: https://www.bytebase.com/docs/get-started/install/external-url.
 	externalURL: *"https://bytebase.example.com" | string
 	// +usage=Version of bytebase.
-	version: *"1.7.0" | string
+	version: *"1.16.0" | string
 	// +usage=Helm Chart Version.
 	chartVersion: *"1.0.2" | string
 	// +usage=To configure postgres URL visit: https://www.bytebase.com/docs/get-started/install/external-postgres.
