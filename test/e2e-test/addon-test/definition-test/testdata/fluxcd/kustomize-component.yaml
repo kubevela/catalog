@@ -1,0 +1,19 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: demo-kust-fluxcd-new
+  namespace: default
+spec:
+  components:
+    - name: demo-kust-fluxcd-new
+      properties:
+        force: false
+        path: ./exmaple
+        prune: true
+        pullInterval: 5m
+        repoType: git
+        secretRef: test
+        suspend: false
+        targetNamespace: default
+        url: https://nobody/kubevela/demo.git
+      type: kustomize
