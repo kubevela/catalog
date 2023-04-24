@@ -10,8 +10,8 @@ vela addon registry add experimental --type=helm --endpoint=https://addons.kubev
 ```
 
 Enable this addon
-```
-vela addon enable bytebase
+```shell
+$ vela addon enable bytebase
 ```
 
 ```shell
@@ -89,5 +89,14 @@ Please access addon-bytebase from the following endpoints:
 ```
 
 Visit on the obtained URL to access bytebase UI.
+
+To configure Postgres with bytebase just set the parameter `postgresURL` as shown below.
+
+```shell
+# It's just an example.
+$ vela addon enable bytebase postgresURL="postgresql://<<user>>:<<secret>>@<<host>>:<<port>>/<<dbname>>"
+```
+
+**Note: Bytebase just need a running Postgres URL to connect with in the format "postgresql://<<user>>:<<secret>>@<<host>>:<<port>>/<<dbname>>"**
 
 To know more about bytebase visit https://www.bytebase.com/docs/.
