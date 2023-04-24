@@ -16,25 +16,78 @@ output: {
 				}]
 			},
 			{
-				name: "bytebase"
-				type: "helm"
-				properties: {
-					repoType:        "helm"
-					url:             "https://bytebase.github.io/bytebase"
-					chart:           "bytebase"
-					version:         parameter.chartVersion
-					targetNamespace: parameter.namespace
-					values: {
-						bytebase: {
-							option: {
-								port:           parameter.bytebasePort,
-								"external-url": parameter.externalURL,
-								pg:             parameter.postgresURL
-							},
-							version: parameter.version
+				name: "deploy-bytebase"
+				type: "k8s-objects"
+				properties: objects: [{
+					apiVersion: "apps/v1"
+					kind: "Deployment"
+					metadata: {
+						name: "bytebase"
+						namespace: parameter.namespace
+					}
+					spec: {
+						selector: {
+							matchLabels: {
+								app: "bytebase"
+							}
+						}
+						template: {
+							metadata: {
+								labels:
+									app: "bytebase"
+							}
+							spec: {
+								containers: [
+									{
+										name: "bytebase"
+										image: "bytebase/bytebase:" + parameter.version
+										imagePullPolicy: "Always"
+										env: [
+											{
+												name: "PG_URL"
+												value: parameter.postgresURL
+											}
+										]
+										args: [
+											"--data",
+											"/var/opt/bytebase",
+											"--external-url",
+											parameter.externalURL,
+											"--port",
+											"8080",
+										]
+										ports: [
+											{
+												containerPort: parameter.bytebasePort
+											}
+										]
+										volumeMounts: [
+											{
+												name: "data"
+												mountPath: "/var/opt/bytebase"
+											}
+										]
+										livenessProbe: {
+											httpGet: {
+												path: "/healthz"
+												port: 8080
+											}
+											initialDelaySeconds: 300
+											periodSeconds: 300
+											timeoutSeconds: 60
+										}
+									}
+								]
+								volumes: [
+									{
+										name: "data"
+          								emptyDir: {}
+									}
+								]
+							}
 						}
 					}
-				}
+				}]
 			},
 			{
 				name: "svc-bytebase"
