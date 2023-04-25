@@ -34,6 +34,7 @@ template: {
 						type: "rolling-release"
 						properties: {
 							weight: parameter.weight
+							rolloutType: parameter.rolloutType
 						}
 					}]
 				}]
@@ -47,5 +48,7 @@ template: {
 		components?: *[] | [...string]
 		//+usage=Specify the percentage of replicas to update to the new version at each step, as well as the routing of traffic to the new version, e.g., 20, 40...
 		weight: int
+		//+usage=Specifies the rollout type. Optional values: "partition", "canary". If not specify, the rolloutType is partition.
+    rolloutType: *"partition" | string
 	}
 }
