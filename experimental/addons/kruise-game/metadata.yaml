@@ -1,0 +1,14 @@
+name: kruise-game
+version: 1.0.0
+description: This addon adds kruise-game to the kubevela to be used across the application installed in kubevela.
+icon: "https://github.com/openkruise/kruise-game/blob/master/docs/images/logo.jpg"
+url: "https://openkruise.io/kruisegame/introduction"
+
+tags:
+- kruise-game
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
+  - name: kruise
