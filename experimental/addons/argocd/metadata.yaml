@@ -1,5 +1,5 @@
 name: argocd
-version: 0.0.2
+version: 0.1.0
 description: "Declarative continuous deployment for Kubernetes."
 icon: "https://argo-cd.readthedocs.io/en/stable/assets/logo.png"
 url: "https://github.com/argoproj/argo-cd"

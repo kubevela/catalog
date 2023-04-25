@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    rules.oam.dev/resource-format: yaml
+    rules.oam.dev/resources: "true"
+  name: game-server-set-relation
+data:
+  rules: |-
+    - parentResourceType:
+        group: game.kruise.io
+        kind: GameServerSet
+      childrenResourceType:
+        - apiVersion: apps.kruise.io/v1beta1
+          kind: StatefulSet
+        - apiVersion: game.kruise.io/v1alpha1
+          kind: GameServer
+    - parentResourceType:
+        group: apps.kruise.io
+        kind: StatefulSet
+      childrenResourceType:
+        - apiVersion: v1
+          kind: Pod
