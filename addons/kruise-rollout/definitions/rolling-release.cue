@@ -9,7 +9,10 @@
 		appliesToWorkloads: ["*"]
 		status: {
 			customStatus: #"""
-				message: context.outputs.rollout.status.message
+				message: *"" | string
+				if context.outputs.rollout.status != _|_ && context.outputs.rollout.status.message != _|_ {
+						 message: context.outputs.rollout.status.message
+				}
 				"""#
 			healthPolicy: #"""
 				outdated: *false | bool

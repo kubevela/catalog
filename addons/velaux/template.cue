@@ -4,6 +4,6 @@ output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	spec: {
-		components: [additionalPrivileges, apiserver, velaux]
+		components: [additionalPrivileges, server]
 	}
 }
