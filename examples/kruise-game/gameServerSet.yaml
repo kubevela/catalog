@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: game-server-set-sample
+spec:
+  components:
+    - type: game-server-set
+      name: minecraft
+      properties:
+        replicas: 3
+        updateStrategy:
+          rollingUpdate:
+            podUpdatePolicy: InPlaceIfPossible
+        gameServerTemplate:
+          spec:
+            containers:
+              - image: registry.cn-hangzhou.aliyuncs.com/acs/minecraft-demo:1.12.2
+                name: minecraft
