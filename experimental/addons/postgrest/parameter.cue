@@ -8,8 +8,6 @@ parameter: {
 	// +usage=Custom parameter description
 	namespace: *"prod" | string
 	clusters?: [...string]
-	// +usage=Postgres URL.	
-	PGRST_DB_URI: *"postgres://foo_user:R56FOCgVHSpDq3rFuX8qlmX4rMKeZHjCVOV7rxKQU4wNAlQfwNIsmM01g6pcpIbE@localhost:5432/postgres" | string
-	// +usage=Proxy server URI for Postgrest..
-	PGRST_OPENAPI_SERVER_PROXY_URI: *"http://localhost:3000" | string
+	// +usage=Type Postgres URL in the format:- postgres://user:password@localhost:5432/postgres.	
+	PGRST_DB_URI: *"postgres://user:password@localhost:5432/postgres" | string
 }

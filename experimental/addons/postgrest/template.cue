@@ -10,30 +10,42 @@ output: {
 				type: "webservice"
 				properties: {
 					image: "postgrest/postgrest"
-					cmd: ["node", "server.js"]
-					port: 3000
-					cpu:  "0.1"
+					port:  3000
 					env: [
 						{
 							name:  "PGRST_DB_URI"
 							value: parameter.PGRST_DB_URI
 						},
-						{
-							name:  "PGRST_OPENAPI_SERVER_PROXY_URI"
-							value: parameter.PGRST_OPENAPI_SERVER_PROXY_URI
-						}
 					]
 				}
 			},
+			{
+				name: "svc-postgrest"
+				type: "k8s-objects"
+				properties: objects: [{
+					apiVersion: "v1"
+					kind:       "Service"
+					metadata: {
+						name:      "postgrest-nodeport-entrypoint"
+						namespace: parameter.namespace
+					}
+					spec: {
+						type: "NodePort"
+						selector: {
+							"app.oam.dev/name": "addon-postgrest"
+						}
+						ports: [
+							{
+								protocol:   "TCP"
+								port:       3000
+								targetPort: 3000
+							},
+						]
+					}
+				}]
+			},
 		]
 		policies: [
-			// {
-			// 	type: "shared-resource"
-			// 	name: "zookeeper-operator-ns"
-			// 	properties: rules: [{
-			// 		selector: resourceTypes: ["Namespace"]
-			// 	}]
-			// },
 			{
 				type: "topology"
 				name: "deploy-postgrest"
