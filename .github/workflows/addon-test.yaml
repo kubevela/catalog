@@ -29,52 +29,57 @@ jobs:
 
   Addon-test:
     name: Addon-test
-    runs-on: aliyun
+    runs-on: self-hosted
     needs: detect-noop
     if: needs.detect-noop.outputs.noop != 'true'
 
     steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install make gcc jq ca-certificates curl gnupg -y
+          snap install docker
+          snap install kubectl --classic
+          snap install helm --classic
 
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9
         with:
           go-version: ${{ env.GO_VERSION }}
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
 
       - name: Check addon semver
         run: |
           make check-addon-semver
 
-      - name: Install ginkgo
-        run:  |
-          sudo apt-get update
-          sudo apt-get install -y golang-ginkgo-dev
+      - name: Tear down K3d if exist
+        run: |
+          k3d cluster delete || true
+          k3d cluster delete worker || true
 
-      - name: Install Helm
-        uses: engineerd/configurator@v0.0.5
+      - name: Setup K3d (Hub)
+        uses: nolar/setup-k3d-k3s@293b8e5822a20bc0d5bcdd4826f1a665e72aba96
         with:
-          name: helm
-          url: https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz
-          pathInArchive: linux-amd64/helm
+          version: ${{ matrix.k8s-version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          k3d-args: ${{ env.EGRESS_ARG }}
 
-      - name: Setup Kind Cluster (Worker)
+      - name: Setup K3d (Worker)
+        uses: nolar/setup-k3d-k3s@293b8e5822a20bc0d5bcdd4826f1a665e72aba96
+        with:
+          version: ${{ matrix.k8s-version }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          k3d-name: worker
+          k3d-args: --kubeconfig-update-default=false --network=k3d-k3s-default ${{ env.EGRESS_ARG }}
+
+      - name: Generating internal worker kubeconfig
         run: |
-          kind delete cluster --name worker
-          kind create cluster --image kindest/node:v1.20.15@sha256:6f2d011dffe182bad80b85f6c00e8ca9d86b5b8922cdf433d53575c4c5212248 --name worker
-          kubectl version
-          kubectl cluster-info
-          kind get kubeconfig --name worker --internal > /tmp/worker.kubeconfig
-          kind get kubeconfig --name worker > /tmp/worker.client.kubeconfig
-
-
-      - name: Setup Kind Cluster (Hub)
-        run: |
-          kind delete cluster
-          kind create cluster --image kindest/node:v1.20.15@sha256:6f2d011dffe182bad80b85f6c00e8ca9d86b5b8922cdf433d53575c4c5212248
-          kubectl version
-          kubectl cluster-info
+          internal_ip=$(docker network inspect k3d-k3s-default|jq ".[0].Containers"| jq -r '.[]| select(.Name=="k3d-worker-server-0")|.IPv4Address' | cut -d/ -f1)
+          k3d kubeconfig get worker > /tmp/worker.client.kubeconfig
+          cp /tmp/worker.client.kubeconfig /tmp/worker.kubeconfig
+          sed -i "s/0.0.0.0:[0-9]\+/$internal_ip:6443/"  /tmp/worker.kubeconfig
 
       - name: Install vela cli
         run: |
@@ -104,6 +109,4 @@ jobs:
         run: |
           go build -o main test/e2e-test/addon-test/main.go
           ./main ${{ steps.changed-files.outputs.all_changed_files }}
-
-
 
