@@ -19,7 +19,7 @@ output: {
 				values: {
 					replicaCount: 1
 					rollout: webhook: objectSelector: [{
-						key: "kruise-rollout.oam.dev/webhook"
+						key:      "kruise-rollout.oam.dev/webhook"
 						operator: "Exists"
 					}]
 				}
