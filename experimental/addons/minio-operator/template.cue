@@ -21,8 +21,8 @@ output: {
 				properties: {
 					repoType: "helm"
 					url:      "https://operator.min.io/"
-					chart:    "minio-operator"
-					version:  "4.3.7"
+					chart:    "operator"
+					version:  "5.0.4"
 				}
 			},
 		]
