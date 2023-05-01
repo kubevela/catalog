@@ -19,6 +19,13 @@ output: {
 			}
 			service: {
 				type: parameter.serviceType
+				ipFamilyPolicy: parameter.ipFamilyPolicy
+				ipFamilies: [ "IPv4", "IPv6" ]
+				annotations: {
+					for entry in parameter.annotations {
+						"\(entry.name)": entry.value
+					}
+				}
 			}
 			if parameter.autoscaling != _|_ {
 				autoscaling: {
