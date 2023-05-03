@@ -124,3 +124,5 @@ For applications *external* to the Kubernetes cluster, you must configure
 [Load Balancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) to
 expose the MinIO Tenant services. Alternatively, you can use the `kubectl port-forward` command
 to temporarily forward traffic from the local host to the MinIO Tenant.
+
+For more please visit https://min.io/docs/minio/kubernetes/upstream/operations/deploy-manage-tenants.html.
