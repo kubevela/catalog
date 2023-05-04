@@ -5,13 +5,13 @@ MinIO is a Kubernetes-native high performance object store with an S3-compatible
 ## Install
 
 Add experimental registry
-```
-vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
+```shell
+$ vela addon registry add experimental --type=helm --endpoint=https://addons.kubevela.net/experimental/
 ```
 
 Enable this addon
-```
-vela addon enable minio-operator
+```shell
+$ vela addon enable minio-operator
 ```
 
 ```shell
@@ -22,8 +22,8 @@ vela-system     └─                      minio-operator                      
 ```
 
 Disable this addon
-```
-vela addon disable minio-operator
+```shell
+$ vela addon disable minio-operator
 ```
 
 ## Use minio-operator
@@ -83,7 +83,7 @@ Use the following command to list the services created by the MinIO
 Operator:
 
 ```sh
-kubectl get svc -n NAMESPACE
+$ kubectl get svc -n NAMESPACE
 ```
 
 Replace `NAMESPACE` with the namespace for the MinIO Tenant. The output
@@ -114,8 +114,7 @@ cluster deployment. While Kubernetes mounts this CA on Pods in the cluster, Pods
 enable validation of MinIO TLS certificates:
 
 ```sh
-
-cp /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /usr/local/share/ca-certificates/
+$ cp /var/run/secrets/kubernetes.io/serviceaccount/ca.crt /usr/local/share/ca-certificates/
 update-ca-certificates
 ```
 
