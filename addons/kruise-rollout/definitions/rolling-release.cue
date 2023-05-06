@@ -83,6 +83,8 @@ template: {
 		final: *false | bool
 		// +usage=Define the workload for rolling. If not specified, it will be auto detected.
 		workloadType?: #WorkloadType
+		//+usage=Specifies the rollout type. Optional values: "partition", "canary". If not specify, the rolloutType is partition.
+    rolloutType: *"partition" | string
 	}
 
 	app: component: {...}
@@ -123,7 +125,7 @@ template: {
 			name:      context.name
 			namespace: context.namespace
 			annotations: {
-				"rollouts.kruise.io/rolling-style":    "partition"
+				"rollouts.kruise.io/rolling-style":    parameter.rolloutType
 				"controller.core.oam.dev/skip-resume": "true"
 			}
 		}
