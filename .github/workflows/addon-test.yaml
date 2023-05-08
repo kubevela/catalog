@@ -83,11 +83,11 @@ jobs:
 
       - name: Install vela cli
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.8.0-alpha.3
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.9.0-alpha.3
 
       - name: Install vela core
         run: |
-          vela install --yes
+          vela install -v v1.9.0-alpha.2 --yes
           kubectl get deploy -n vela-system kubevela-vela-core -oyaml
 
       - name: Vela worker cluster join
