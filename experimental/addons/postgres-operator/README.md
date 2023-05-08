@@ -69,8 +69,7 @@ spec:
         - type: postgres-expose
           properties:
             type: NodePort    # Change this field if you want diffrent type of service.
-            port: 5432
-            targetPort: 5432
+            port: [5432]
 ```
 
 ```shell
