@@ -137,48 +137,33 @@ The following YAML creates a basic Instrumentation resource that is configured f
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: otel-instrumentation-sample
+  name: otel-sidecar-collector-sample
 spec:
   components:
-    - type: "k8s-objects"
+    - type: "webservice"
       name: "otel-deploy"
       properties:
-        objects:
-          - apiVersion: apps/v1
-            kind: Deployment
-            metadata:
-              name: my-app
-              labels:
-                app: my-app
-            spec:
-              selector:
-                matchLabels:
-                  app: my-app
-              replicas: 1
-              template:
-                metadata:
-                  labels:
-                    app: my-app
-                  annotations:
-                    instrumentation.opentelemetry.io/inject-java: "true"
-                spec:
-                  containers:
-                    - name: myapp
-                      image: jaegertracing/vertx-create-span:operator-e2e-tests
-                      ports:
-                        - containerPort: 8080
-                          protocol: TCP
+        labels:
+          app: my-app
+        annotations:
+          instrumentation.opentelemetry.io/inject-java: "true"
+        image: jaegertracing/vertx-create-span:operator-e2e-tests
+        imagePullPolicy: IfNotPresent
+        ports:
+          - port: 8080
+            protocol: TCP
       traits:
         - type: opentelemetry-instrumentation
           properties:
             exporter:
-              # endpoint: ""      // Collector endpoint url here, if configured collector is availble.
+              # endpoint: "Collector endpoint url" 
             propagators:
               - tracecontext
               - baggage
             sampler:
               type: parentbased_traceidratio
               argument: "1"
+
 ```
 
 For more details, see [Java Agent Configuration](https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/).
