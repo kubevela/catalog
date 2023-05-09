@@ -44,36 +44,21 @@ metadata:
   name: otel-sidecar-collector-sample
 spec:
   components:
-    - type: "k8s-objects"
+    - type: "webservice"
       name: "otel-deploy"
       properties:
-        objects:
-          - apiVersion: apps/v1
-            kind: Deployment
-            metadata:
-              name: my-app
-              labels:
-                app: my-app
-            spec:
-              selector:
-                matchLabels:
-                  app: my-app
-              replicas: 1
-              template:
-                metadata:
-                  labels:
-                    app: my-app
-                  annotations:
-                    sidecar.opentelemetry.io/inject: "true" # CORRECT
-                spec:
-                  containers:
-                    - name: myapp
-                      image: jaegertracing/vertx-create-span:operator-e2e-tests
-                      ports:
-                        - containerPort: 8080
-                          protocol: TCP
+        labels:
+          app: my-app
+        annotations:
+          sidecar.opentelemetry.io/inject: "true"
+        image: jaegertracing/vertx-create-span:operator-e2e-tests
+        imagePullPolicy: IfNotPresent
+        ports:
+          - port: 8080
+            protocol: TCP
       traits:
         - type: opentelemetry-collector
+          name: otel-container
           properties:
             mode: sidecar
             config: |
@@ -92,6 +77,7 @@ spec:
                     receivers: [jaeger]
                     processors: []
                     exporters: [logging]
+
 ```
 
 After applying the above YAML an application container gets created with a collector container in the same pod because of collector type `sidecar`, Where Collector collects all the traces created by the application as logs as specified in the YAML.
