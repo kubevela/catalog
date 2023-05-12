@@ -1,3 +1,7 @@
+import (
+	"vela/config"
+)
+
 metadata: {
 	name:        "helm-repository"
 	alias:       "Helm Repository"
@@ -37,6 +41,11 @@ template: {
 			}
 		}
 	}
+
+	validation: config.#HelmRepository & {
+		$params: parameter
+	}
+
 	parameter: {
 		// +usage=The public url of the helm chart repository.
 		url: string
