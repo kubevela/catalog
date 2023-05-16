@@ -24,7 +24,7 @@ output: {
 						"kind":       "CustomResourceDefinition"
 						"metadata": {
 							"annotations": {
-								"cert-manager.io/inject-ca-from":        "observability/jaeger-operator-serving-cert"
+								"cert-manager.io/inject-ca-from":        "jaeger-operator/jaeger-operator-serving-cert"
 								"controller-gen.kubebuilder.io/version": "v0.9.2"
 							}
 							"labels": {
@@ -23537,8 +23537,8 @@ output: {
 						}
 						"spec": {
 							"dnsNames": [
-								"jaeger-operator-webhook-service.observability.svc",
-								"jaeger-operator-webhook-service.observability.svc.cluster.local",
+								"jaeger-operator-webhook-service.jaeger-operator.svc",
+								"jaeger-operator-webhook-service.jaeger-operator.svc.cluster.local",
 							]
 							"issuerRef": {
 								"kind": "Issuer"
@@ -23571,7 +23571,7 @@ output: {
 						"kind":       "MutatingWebhookConfiguration"
 						"metadata": {
 							"annotations": {
-								"cert-manager.io/inject-ca-from": "observability/jaeger-operator-serving-cert"
+								"cert-manager.io/inject-ca-from": "jaeger-operator/jaeger-operator-serving-cert"
 							}
 							"labels": {
 								"name": "jaeger-operator"
@@ -23661,7 +23661,7 @@ output: {
 						"kind":       "ValidatingWebhookConfiguration"
 						"metadata": {
 							"annotations": {
-								"cert-manager.io/inject-ca-from": "observability/jaeger-operator-serving-cert"
+								"cert-manager.io/inject-ca-from": "jaeger-operator/jaeger-operator-serving-cert"
 							}
 							"labels": {
 								"name": "jaeger-operator"
