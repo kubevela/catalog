@@ -27,13 +27,7 @@ vela addon disable jaeger-operator
 
 ## Use jaeger-operator
 
-After you enable this addon, create a namespace `prod`:
-
-```shell
-$ kubectl create namespace prod
-```
-
-Then apply below Application yaml to create a jaeger instance:
+Apply below Application yaml in the namespace `jaeger-operator` to create a jaeger instance:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -48,7 +42,7 @@ spec:
 ```
 
 ```shell
-$ kubectl get po  -n prod  -o wide
+$ kubectl get po  -n jaeger-operator  -o wide
 NAME                      READY   STATUS    RESTARTS        AGE    IP             NODE       NOMINATED NODE   READINESS GATES
 jaeger-6d5cd9d876-lccxg   1/1     Running   0               160m   10.244.6.202   minikube   <none>           <none>
 ```
@@ -56,7 +50,7 @@ jaeger-6d5cd9d876-lccxg   1/1     Running   0               160m   10.244.6.202 
 The Jaeger UI is served via the Ingress, like
 
 ```shell
-$ kubectl get -n observability ingress
+$ kubectl get -n jaeger-operator ingress
 NAME             HOSTS     ADDRESS          PORTS     AGE
 simplest-query   *         192.168.122.34   80        3m
 ```
