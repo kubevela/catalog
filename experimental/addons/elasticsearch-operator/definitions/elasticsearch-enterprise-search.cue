@@ -21,7 +21,7 @@ template: {
 			elasticsearchRef:     parameter.elasticsearchRef
 			http:                 parameter.http
 			image:                parameter.image
-            podTemplate:          parameter.podTemplate
+			podTemplate:          parameter.podTemplate
 			revisionHistoryLimit: parameter.revisionHistoryLimit
 			serviceAccountName:   parameter.serviceAccountName
 			version:              parameter.version

@@ -15,19 +15,19 @@ template: {
 			name: context.name
 		}
 		spec: {
-			config:    				parameter.config
-			configRef: 				parameter.configRef
-            daemonSet:  			parameter.daemonSet
-            deployment: 			parameter.deployment
-            elasticsearchRef:       parameter.elasticsearchRef
-			image:					parameter.image
-			kibanaRef: 				parameter.kibanaRef
-			monitoring:				parameter.monitoring
-			revisionHistoryLimit: 	parameter.revisionHistoryLimit
-			secureSettings:			parameter.secureSettings
-			serviceAccountName: 	parameter.serviceAccountName
-            type:                   parameter.type
-			version: 				parameter.version
+			config:               parameter.config
+			configRef:            parameter.configRef
+			daemonSet:            parameter.daemonSet
+			deployment:           parameter.deployment
+			elasticsearchRef:     parameter.elasticsearchRef
+			image:                parameter.image
+			kibanaRef:            parameter.kibanaRef
+			monitoring:           parameter.monitoring
+			revisionHistoryLimit: parameter.revisionHistoryLimit
+			secureSettings:       parameter.secureSettings
+			serviceAccountName:   parameter.serviceAccountName
+			type:                 parameter.type
+			version:              parameter.version
 		}
 	}
 	parameter: {
@@ -45,17 +45,17 @@ template: {
 		image: *null | string
 		//+usage=KibanaRef is a reference to Kibana where Fleet should be set up and this Beat should be enrolled. Don't set unless `mode` is set to `fleet`.
 		kibanaRef: *null | {...}
-        //+usage=Monitoring enables you to collect and ship logs and metrics for this Beat. Metricbeat and/or Filebeat sidecars are configured and send monitoring data to an Elasticsearch monitoring cluster running in the same Kubernetes cluster.
+		//+usage=Monitoring enables you to collect and ship logs and metrics for this Beat. Metricbeat and/or Filebeat sidecars are configured and send monitoring data to an Elasticsearch monitoring cluster running in the same Kubernetes cluster.
 		monitoring: *null | {...}
-        //+usage=RevisionHistoryLimit is the number of revisions to retain to allow rollback in the underlying DaemonSet or Deployment.
+		//+usage=RevisionHistoryLimit is the number of revisions to retain to allow rollback in the underlying DaemonSet or Deployment.
 		revisionHistoryLimit: *null | int
-        //+usage=SecureSettings is a list of references to Kubernetes Secrets containing sensitive configuration options for the Beat. Secrets data can be then referenced in the Beat config using the Secret's keys or as specified in `Entries` field of each SecureSetting.
+		//+usage=SecureSettings is a list of references to Kubernetes Secrets containing sensitive configuration options for the Beat. Secrets data can be then referenced in the Beat config using the Secret's keys or as specified in `Entries` field of each SecureSetting.
 		secureSettings: *null | [...]
-        //+usage=ServiceAccountName is used to check access from the current resource to an Elasticsearch resource in a different namespace. Can only be used if ECK is enforcing RBAC on references.
+		//+usage=ServiceAccountName is used to check access from the current resource to an Elasticsearch resource in a different namespace. Can only be used if ECK is enforcing RBAC on references.
 		serviceAccountName: *null | string
-        //+usage=Type is the type of the Beat to deploy (filebeat, metricbeat, heartbeat, auditbeat, journalbeat, packetbeat, and so on). Any string can be used, but well-known types will have the image field defaulted and have the appropriate Elasticsearch roles created automatically. It also allows for dashboard setup when combined with a `KibanaRef`.
+		//+usage=Type is the type of the Beat to deploy (filebeat, metricbeat, heartbeat, auditbeat, journalbeat, packetbeat, and so on). Any string can be used, but well-known types will have the image field defaulted and have the appropriate Elasticsearch roles created automatically. It also allows for dashboard setup when combined with a `KibanaRef`.
 		type: *null | string
-        //+usage=Version of the Beat.
+		//+usage=Version of the Beat.
 		version: *null | string
 	}
 }

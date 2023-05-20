@@ -15,21 +15,21 @@ template: {
 			name: context.name
 		}
 		spec: {
-			config:    				parameter.config
-			configRef: 				parameter.configRef
-            daemonSet:  			parameter.daemonSet
-            deployment: 			parameter.deployment
-            fleetServerEnabled: 	parameter.fleetServerEnabled
-			fleetServerRef: 		parameter.fleetServerRef
-			http:					parameter.http
-			image:					parameter.image
-			kibanaRef: 				parameter.kibanaRef
-			mode:					parameter.mode
-			policyID: 				parameter.policyID
-			revisionHistoryLimit: 	parameter.revisionHistoryLimit
-			secureSettings:			parameter.secureSettings
-			serviceAccountName: 	parameter.serviceAccountName
-			version: 				parameter.version
+			config:               parameter.config
+			configRef:            parameter.configRef
+			daemonSet:            parameter.daemonSet
+			deployment:           parameter.deployment
+			fleetServerEnabled:   parameter.fleetServerEnabled
+			fleetServerRef:       parameter.fleetServerRef
+			http:                 parameter.http
+			image:                parameter.image
+			kibanaRef:            parameter.kibanaRef
+			mode:                 parameter.mode
+			policyID:             parameter.policyID
+			revisionHistoryLimit: parameter.revisionHistoryLimit
+			secureSettings:       parameter.secureSettings
+			serviceAccountName:   parameter.serviceAccountName
+			version:              parameter.version
 		}
 	}
 	parameter: {
@@ -51,17 +51,17 @@ template: {
 		image: *null | string
 		//+usage=KibanaRef is a reference to Kibana where Fleet should be set up and this Agent should be enrolled. Don't set unless `mode` is set to `fleet`.
 		kibanaRef: *null | {...}
-        //+usage=Mode specifies the source of configuration for the Agent. The configuration can be specified locally through `config` or `configRef` (`standalone` mode), or come from Fleet during runtime (`fleet` mode). Defaults to `standalone` mode.
+		//+usage=Mode specifies the source of configuration for the Agent. The configuration can be specified locally through `config` or `configRef` (`standalone` mode), or come from Fleet during runtime (`fleet` mode). Defaults to `standalone` mode.
 		mode: *null | string
-        //+usage=PolicyID optionally determines into which Agent Policy this Agent will be enrolled. If left empty the default policy will be used.
+		//+usage=PolicyID optionally determines into which Agent Policy this Agent will be enrolled. If left empty the default policy will be used.
 		policyID: *null | string
-        //+usage=RevisionHistoryLimit is the number of revisions to retain to allow rollback in the underlying DaemonSet or Deployment.
+		//+usage=RevisionHistoryLimit is the number of revisions to retain to allow rollback in the underlying DaemonSet or Deployment.
 		revisionHistoryLimit: *null | int
-        //+usage=SecureSettings is a list of references to Kubernetes Secrets containing sensitive configuration options for the Agent. Secrets data can be then referenced in the Agent config using the Secret's keys or as specified in `Entries` field of each SecureSetting.
+		//+usage=SecureSettings is a list of references to Kubernetes Secrets containing sensitive configuration options for the Agent. Secrets data can be then referenced in the Agent config using the Secret's keys or as specified in `Entries` field of each SecureSetting.
 		secureSettings: *null | [...]
-        //+usage=ServiceAccountName is used to check access from the current resource to an Elasticsearch resource in a different namespace. Can only be used if ECK is enforcing RBAC on references.
+		//+usage=ServiceAccountName is used to check access from the current resource to an Elasticsearch resource in a different namespace. Can only be used if ECK is enforcing RBAC on references.
 		serviceAccountName: *null | string
-        //+usage=Version of the Agent.
+		//+usage=Version of the Agent.
 		version: *null | string
 	}
 }

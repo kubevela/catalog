@@ -9,7 +9,7 @@ output: {
 				name: "ns-elasticsearch-operator"
 				type: "k8s-objects"
 				properties: objects: [{
-					kind: "Namespace"
+					kind:       "Namespace"
 					apiVersion: "v1"
 					metadata:
 						name: parameter.namespace
