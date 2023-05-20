@@ -1,0 +1,10 @@
+name: bytebase
+version: 1.0.0
+description: This addon adds bytebase to the kubevela to be used across the applications installed in kubevela.
+icon: "https://raw.githubusercontent.com/bytebase/bytebase/main/frontend/public/favicon.ico"
+url: "https://www.bytebase.com/"
+
+tags:
+- bytebase
+
+invisible: false

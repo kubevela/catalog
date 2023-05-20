@@ -1,14 +1,11 @@
 name: netlify
-version: 10.5.1
+version: 10.5.2
 description: Interact with Netlify from the comfort of your CLI.
 url: https://github.com/netlify/cli
 icon: https://raw.githubusercontent.com/netlify/cli/main/cli.png
 
 tags:
   - extended_workload
-
-deployTo:
-  runtime_cluster: true
 
 invisible: false
 
