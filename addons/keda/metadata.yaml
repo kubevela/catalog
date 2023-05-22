@@ -2,7 +2,7 @@ name: keda
 tags:
   - Scaler
   - AutoScaler
-version: 2.8.2
+version: 2.8.3
 dependencies:
   - name: fluxcd
 description: An AutoScaler addon for KubeVela.
