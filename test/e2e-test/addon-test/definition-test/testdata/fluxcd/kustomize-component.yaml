@@ -8,12 +8,11 @@ spec:
     - name: demo-kust-fluxcd-new
       properties:
         force: false
-        path: ./exmaple
+        path: ./
         prune: true
         pullInterval: 5m
         repoType: git
-        secretRef: test
         suspend: false
         targetNamespace: default
-        url: https://nobody/kubevela/demo.git
+        url: https://github.com/workman-Lu/kubernetes-demo.git
       type: kustomize
