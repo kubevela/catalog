@@ -1,27 +1,22 @@
-name: Addon Registry
+name: Publish Registry to Github Page
 on:
   push:
     branches:
       - master
-    tags:
-      - "v*"
   workflow_dispatch: {}
 
-env:
-  ACCESS_KEY: ${{ secrets.OSS_ACCESS_KEY }}
-  ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
-
 jobs:
-  packge-addon-gen-index:
+  build-and-publish:
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     env:
-      ADDON_BUCKET: kubevela-addons
-      ADDON_DIR: addons
-      ADDON_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-      EXPERIMENTAL_DIR: experimental/addons
-      URL: https://addons.kubevela.net
-      GO_VERSION: 1.17
-    runs-on: ubuntu-20.04
-
+      URL: https://kubevela.github.io/catalog
+      GO_VERSION: 1.19
+    runs-on: ubuntu-22.04
     steps:
       - name: Setup Go
         uses: actions/setup-go@v2
@@ -29,38 +24,34 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
-
-      - name: copy script to dir
-        run: |
-          cp ./hack/addons/syn_addon_package.go ./addons/
-          cp ./hack/addons/syn_addon_package.go ./experimental/addons/
+        uses: actions/checkout@v3
 
       - name: package-addon-gen-index
         run: |
           cd ./addons/
-          go run ./syn_addon_package.go ./ ${{ env.URL }}
+          go run ../hack/addons/syn_addon_package.go ./ ${{ env.URL }}/official
           ls ./
           cat ./index.yaml
-          mkdir -p addons/
-          cp ./index.yaml addons/
-          cp ./*.tgz addons/
+          mkdir -p ../docs/official
+          mv ./index.yaml ../docs/official/
+          mv ./*.tgz ../docs/official/
 
       - name: package-addon-gen-index-experimental
         run: |
           cd ./experimental/addons/
-          go run ./syn_addon_package.go ./ ${{ env.URL }}/experimental
+          go run ../../hack/addons/syn_addon_package.go ./ ${{ env.URL }}/experimental
           ls ./
           cat ./index.yaml
-          mkdir -p addons/
-          cp ./index.yaml addons/
-          cp ./*.tgz addons/
+          mkdir -p ../../docs/experimental
+          mv ./index.yaml ../../docs/experimental/
+          mv ./*.tgz ../../docs/experimental/
 
-      - name: Install ossutil
-        run: wget http://gosspublic.alicdn.com/ossutil/1.7.0/ossutil64 && chmod +x ossutil64 && mv ossutil64 ossutil
-      - name: Configure Alibaba Cloud ossutil
-        run: ./ossutil --config-file .ossutilconfig config -i $ACCESS_KEY -k $ACCESS_KEY_SECRET -e $ADDON_ENDPOINT
-      - name: sync local to cloud (verified addons)
-        run: |
-          ./ossutil --config-file .ossutilconfig sync $ADDON_DIR/addons/ oss://$ADDON_BUCKET -f
-          ./ossutil --config-file .ossutilconfig sync $EXPERIMENTAL_DIR/addons/ oss://$ADDON_BUCKET/experimental -f
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

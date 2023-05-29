@@ -7,13 +7,13 @@ Addon files in this dir will be synced to alibaba-oss.
 These addon wouldn't be set in KubeVela by default. You can add this addon registry by vela cli and use them.
 
 ```shell
-$ vela addon registry add experimental --type helm --endpoint=https://addons.kubevela.net/experimental/
+$ vela addon registry add experimental --type helm --endpoint=https://kubevela.github.io/catalog/experimental/
 ```
 
 ```shell
 $ vela addon registry list      
 Name            Type    URL                                                                                                      
-experimental    helm    https://addons.kubevela.net/experimental/ 
+experimental    helm    https://kubevela.github.io/catalog/experimental/ 
 ```
 
 Then you will find these addons.

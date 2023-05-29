@@ -8,7 +8,7 @@ Here's the catalog of the shared resources, we called them `addon`.
 
 ## Introduction
 
-This repo is a catalog of [addons](https://kubevela.net/docs/reference/addons/overview) which extend the capability of KubeVela control plane. Generally, an addon consists of Kubernetes CRD and corresponding [X-definition](https://kubevela.net/docs/getting-started/definition), but none of them is necessary. For example, the [fluxcd](addons/fluxcd) addon consists of FluxCD controller and the `helm` component definition, while [VelaUX](addons/velaux) just deploy a web server without any CRD or Definitions.
+This repo is a catalog of [addons](https://kubevela.io/docs/reference/addons/overview) which extend the capability of KubeVela control plane. Generally, an addon consists of Kubernetes CRD and corresponding [X-definition](https://kubevela.net/docs/getting-started/definition), but none of them is necessary. For example, the [fluxcd](addons/fluxcd) addon consists of FluxCD controller and the `helm` component definition, while [VelaUX](addons/velaux) just deploy a web server without any CRD or Definitions.
 
 There're basically two kinds of addons according to maturity. They're [verified addons](./addons) which have been tested for a long time can be used in product environment and [experimental addons](experimental/addons) which contain new features but still need more verification.
 
@@ -27,6 +27,14 @@ Community users can install and use these addons by the following way:
 
 ## How to use
 
+> The https://addons.kubevela.net will be deprecated and changed to https://kubevela.github.io/catalog/official.
+> You can run the following command to set up the new registry.
+> ```shell
+> vela addon registry delete KubeVela
+> vela addon registry update KubeVela --type helm --endpoint=https://kubevela.github.io/catalog/official
+> vela addon registry add experimental --type helm --endpoint=https://kubevela.github.io/catalog/experimental
+> ```
+
 You can enable these addons by vela command line by:
 
 ```
@@ -36,7 +44,7 @@ vela addon enable experimental/<experimental-addon-name>
 
 You can also enable addons by click the page on VelaUX.
 
-Please refer to [doc](https://kubevela.net/docs/reference/addons/overview) for more infos.
+Please refer to [doc](https://kubevela.io/docs/reference/addons/overview) for more infos.
 
 ## History versions
 
@@ -56,7 +64,7 @@ The best way to learn how to build an addon is follow existing examples:
 - Addons consist of CRD controllers as a bunch of YAML files, refer to [vela-workflow](./addons/vela-workflow/)(written in CUE), [argocd](./experimental/addons/argocd/)(just YAMLs) and [clickhouse](./experimental/addons/clickhouse/)(reference URL) as examples.
 - Addons consist of container images, refer to [vela](./addons/velaux/) and [backstage](./experimental/addons/backstage/) as examples.
 
-You can refer [this doc](https://kubevela.net/docs/platform-engineers/addon/intro) to learn all details of how to make an addon and the mechanism behind it.
+You can refer [this doc](https://kubevela.io/docs/platform-engineers/addon/intro) to learn all details of how to make an addon and the mechanism behind it.
 
 ## Contribute an addon
 
@@ -69,7 +77,7 @@ All contributions are welcome, just send a pull request to this repo following t
 
 - An experimental addon must meet these conditions to be promoted as a verified one.
   - This addon must be tested by addon's [e2e-test](./test/e2e-test/addon-test) to guarantee this addon can be enabled successfully.
-  - Provide an introduction in KubeVela [official addon documentation](https://kubevela.net/docs/reference/addons/overview).
+  - Provide an introduction in KubeVela [official addon documentation](https://kubevela.io/docs/reference/addons/overview).
 
 - If you come across with any addon problems, feel free to raise a github issue or just send pull requests to fix them. Please make sure to update the addon version in your pull request.
     
