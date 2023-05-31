@@ -8,3 +8,4 @@ tags:
   - jaeger-operator
 dependencies:
   - name: cert-manager
+  - name: fluxcd
