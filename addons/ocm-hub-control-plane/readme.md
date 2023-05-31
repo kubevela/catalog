@@ -31,7 +31,11 @@ functionalities as atomic "building blocks" to orchestrate their multi-cluster
 control plane. A minimal setup of OCM merely covers the installation of a 
 [registration-operator](https://github.com/open-cluster-management-io/registration-operator)
 which is a typical Kubernetes operator that helps install/upgrade OCM components
-for us. 
+for us.
+
+### OCM and Cluster-Gateway relationship
+
+The integration of OCM with KubeVela is mainly for solving the cluster connectivy issue. OCM manages a reverse proxy from the managed cluster to the hub cluster. So even if the managed cluster is in a private network, Cluster-Gateway can connect to it using the [Cluster-Proxy](https://open-cluster-management.io/getting-started/integration/cluster-proxy/) OCM addon.
  
 ## How to confirm the addon installation is all set?
 
