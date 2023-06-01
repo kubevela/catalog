@@ -14,11 +14,11 @@ spec:
         version: 0.3.0
         values:
           image:
-            registry: hub.kubevela.net
+            registry: docker.io
             repository: oamdev/cloudshell-operator
             tag: "v0.3.0"
           jobTemplate:
             image:
-              registry: hub.kubevela.net
+              registry: docker.io
               repository: oamdev/cloudshell
               tag: "v1.7.2"
