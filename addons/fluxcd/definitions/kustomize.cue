@@ -1,5 +1,61 @@
 kustomize: {
-	attributes: workload: type: "autodetects.core.oam.dev"
+	attributes:{
+	workload: type: "autodetects.core.oam.dev"
+		status: {
+			healthPolicy: #"""
+				isHealth: len(context.output.status.conditions) != 0 && context.output.status.conditions[0]["reason"]=="ReconciliationSucceeded" && context.output.status.conditions[0]["type"]=="Ready" && context.output.status.conditions[0]["status"] == "True"
+				"""#
+			customStatus: #"""
+						repoMessage: 		*"" | string
+						kustMessage: *"Wating repository ready" | string
+						if context.outputs.repo == _|_ {
+						repoMessage: "Use existed repository"
+						}
+						if context.outputs.repo != _|_ && context.outputs.repo.status == _|_ {
+						repoMessage:    "Fetching repository"
+						}
+						if context.outputs.repo != _|_ && context.outputs.repo.status != _|_ && context.outputs.repo.status.conditions != _|_ {
+						repoStatus: context.outputs.repo.status
+					  if len(repoStatus.conditions) != 0 && repoStatus.conditions[0]["reason"] != "Succeeded" {
+					  lastMessage: repoStatus.conditions[0].message
+					  if len(repoStatus.conditions)>1{
+					  repoMessage : repoStatus.conditions[1].message + ", " + lastMessage
+					  }
+					  }
+					  if len(repoStatus.conditions) != 0 && repoStatus.conditions[0]["reason"] == "Succeeded" {
+					  repoMessage: repoStatus.conditions[0].message
+					  }
+						}
+						if context.output.status == _|_ {
+							kustMessage: "Creating git repo"
+						}
+						if context.output.status != _|_ {
+							kustStatus: context.output.status
+							if kustStatus.conditions != _|_ {
+								if len(kustStatus.conditions) > 0 {
+									if kustStatus.conditions[0]["type"] != _|_ && kustStatus.conditions[0]["reason"] != _|_ {
+										if kustStatus.conditions[0]["reason"] != "ReconciliationSucceeded" {
+												kustBasicMessage: "Delivery git kustomize in progress, message: " + kustStatus.conditions[0]["message"]
+												if len(kustStatus.conditions) == 1 {
+													kustMessage: kustBasicMessage
+												}
+												if len(kustStatus.conditions) > 1 {
+													if kustStatus.conditions[1]["message"] != _|_ {
+														kustMessage: kustBasicMessage + ", " + kustStatus.conditions[1]["message"]
+													}
+												}
+										}
+										if kustStatus.conditions[0]["reason"] == "ReconciliationSucceeded"{
+										 kustMessage: "Create kustomize successfully"
+										 }
+									}
+								}
+							}
+						}
+						message: repoMessage + ", " + kustMessage
+				"""#
+		}
+	}
 	description: "kustomize can fetching, building, updating and applying Kustomize manifests from Git repo or Bucket or OCI repo."
 	type:        "component"
 	annotations: {

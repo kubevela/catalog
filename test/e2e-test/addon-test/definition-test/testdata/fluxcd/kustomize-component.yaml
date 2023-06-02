@@ -1,0 +1,18 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: demo-kust-fluxcd-new
+  namespace: default
+spec:
+  components:
+    - name: demo-kust-fluxcd-new
+      properties:
+        force: false
+        path: ./
+        prune: true
+        pullInterval: 5m
+        repoType: git
+        suspend: false
+        targetNamespace: default
+        url: https://github.com/workman-Lu/kubernetes-demo.git
+      type: kustomize
