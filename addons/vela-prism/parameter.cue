@@ -15,7 +15,7 @@ parameter: {
 	// vela-prism parameters
 
 	// +usage=Specify the image of vela-prism
-	image: *"oamdev/vela-prism:v1.5.0" | string
+	image: *"oamdev/vela-prism:v1.7.0" | string
 	// +usage=Specify the imagePullPolicy of the image
 	imagePullPolicy: *"IfNotPresent" | "Never" | "Always"
 	// +usage=Specify the number of CPU units

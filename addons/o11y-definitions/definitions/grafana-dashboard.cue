@@ -5,7 +5,6 @@ import (
 "grafana-dashboard": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "The dashboard for grafana."
 	attributes: workload: type: "autodetects.core.oam.dev"
 	type: "component"

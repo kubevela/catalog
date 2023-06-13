@@ -5,7 +5,6 @@ import (
 "grafana-datasource": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "The datasource for grafana."
 	attributes: workload: type: "autodetects.core.oam.dev"
 	type: "component"

@@ -7,7 +7,6 @@ import (
 "install-datasource-from-config": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "Discover datasource from the config system for grafana."
 	type:        "workflow-step"
 }
