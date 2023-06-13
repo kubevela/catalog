@@ -10,6 +10,7 @@ certManager: {
 		chart:           "cert-manager"
 		targetNamespace: parameter.namespace
 		version:         "v1.9.1"
+		upgradeCRD:      parameter.upgradeCRD
 		values: {
 			installCRDs:  parameter.installCRDs
 			replicaCount: parameter.replicas

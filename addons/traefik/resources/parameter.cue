@@ -13,4 +13,6 @@ parameter: {
 		port:     int
 		protocol: *"TCP" | "UDP"
 	}]
+	// +usage=Specify if upgrade the CRDs when upgrading traefik or not
+	upgradeCRD: *false | bool
 }

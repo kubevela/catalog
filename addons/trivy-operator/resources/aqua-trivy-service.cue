@@ -11,6 +11,7 @@ aquaTrivyHelm: {
 		chart:           "trivy-operator"
 		version:         "0.9.1"
 		targetNamespace: parameter.namespace
+		upgradeCRD:      parameter.upgradeCRD
 		values: {
 			trivy: ignoreUnfixed: true
 		}
