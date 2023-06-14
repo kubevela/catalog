@@ -4,17 +4,18 @@ nginxIngress: {
 	type: "helm"
 	name: "nginx-ingress"
 	properties: {
-		repoType: "helm"
-		url:      "https://kubernetes.github.io/ingress-nginx"
-		chart:    "ingress-nginx"
-		version:  "4.2.0"
+		repoType:   "helm"
+		url:        "https://kubernetes.github.io/ingress-nginx"
+		chart:      "ingress-nginx"
+		version:    "4.2.0"
+		upgradeCRD: parameter.upgradeCRD
 		values: {
 			controller: {
-				service: type: parameter["serviceType"]
+				service: type:    parameter["serviceType"]
 				metrics: enabled: "true"
 				podAnnotations: {
 					"prometheus.io/scrape": "true"
-					"prometheus.io/port": "10254"
+					"prometheus.io/port":   "10254"
 				}
 			}
 		}
