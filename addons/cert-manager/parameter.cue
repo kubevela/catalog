@@ -26,5 +26,18 @@ parameter: {
 			//+usage=Your domain apex, e.g. "example.com"
 			domain: string
 		}
+		//+usage=Alidns DNS01 config
+		alidns?: {
+			//+usage=The email associated with your domain
+			email: string
+			//+usage=Alidns API access token. API token should have RW access to your domain
+			accessToken: string
+			//+usage=Alidns API secret key
+			secretKey: string
+			//+usage=Alidns DNS zone
+			regionId: *"" | string
+			//+usage=Your domain apex, e.g. "example.com"
+			groupName: string
+		}
 	}
 }
