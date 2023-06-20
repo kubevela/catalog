@@ -17,16 +17,13 @@ limitations under the License.
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
-	"path"
 	"path/filepath"
 	"time"
-
+	"github.com/oam-dev/kubevela/pkg/addon"
 	"github.com/Masterminds/semver/v3"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
@@ -131,12 +128,13 @@ func main() {
 			}
 		}
 
-		entry = append(entry, chartVersion)
-		entries[m.Name] = entry
-
-		err = tarAddon(dir, m.Name, info.Name(), m.Version)
-		if err != nil {
-			fmt.Println(err)
+			entry = append(entry, chartVersion)
+			entries[m.Name] = entry
+			filename, err := addon.PackageAddon(dir+info.Name()+"/")
+			if err != nil {
+				fmt.Println(err)
+			} else {
+			    fmt.Printf("addon package %s \n", filename)
 		}
 	}
 	index := repo.IndexFile{APIVersion: "v1", Entries: entries}
@@ -151,22 +149,8 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("handle over")
-}
 
-func tarAddon(dir, name, addonDir, version string) error {
-	filename := fmt.Sprintf("%s-%s.tgz", name, version)
-	var outInfo bytes.Buffer
-	cmd := exec.Command("tar", "zcf", filename, dir+addonDir+"/")
-	cmd.Stdout = &outInfo
-	fmt.Println(cmd.String())
-	if err := cmd.Run(); err != nil {
-		fmt.Println(outInfo.String())
-		fmt.Println(err)
-		return err
-	}
-	fmt.Printf("addon package %s \n", filename)
-	return nil
+	fmt.Println("handle over")
 }
 
 // saveAddonToLocal download addon package
