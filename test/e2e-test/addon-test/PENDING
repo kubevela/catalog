@@ -6,3 +6,4 @@ model-serving
 flink-kubernetes-operator
 vela-core-shard-manager
 o11y-definitions
+grafana
