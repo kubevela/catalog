@@ -13,7 +13,7 @@ output: {
 					clusters: parameter.clusters
 				}
 				if parameter.clusters == _|_ {
-					clusters: ["local"]
+					clusterLabelSelector: {}
 				}
 				namespace: "kube-system"
 			}

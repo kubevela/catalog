@@ -2,7 +2,7 @@ description: provides image registry powered by harbor.
 icon: "https://goharbor.io/img/logos/harbor-horizontal-color.png"
 invisible: false
 name: harbor
-version: 0.0.1
+version: 0.0.2
 url: https://goharbor.io/
 tags:
   - harbor
