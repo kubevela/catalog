@@ -1,7 +1,6 @@
 "grafana-access": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "The access credential for grafana."
 	attributes: workload: type: "autodetects.core.oam.dev"
 	type: "component"

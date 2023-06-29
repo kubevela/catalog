@@ -33,7 +33,7 @@ prism: {
 		type: "init-container"
 		properties: {
 			name:  "init-config"
-			image: "oamdev/openssl-curl:0.1.0"
+			image: "oamdev/openssl-curl:v0.1.0"
 			cmd: ["sh", "-c", #"""
 				cd /etc/k8s-apiserver-certs;
 				echo "authorityKeyIdentifier=keyid,issuer

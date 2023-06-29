@@ -7,7 +7,6 @@ import (
 "install-datasource-from-addon": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "Discover datasource from addon for grafana."
 	labels: "ui-hidden": "true"
 	type: "workflow-step"

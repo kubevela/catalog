@@ -6,7 +6,6 @@ import (
 "install-kubernetes-api-datasource": {
 	alias: ""
 	annotations: {}
-	attributes: podDisruptive: false
 	description: "Create Kubernetes API datasource."
 	labels: "ui-hidden": "true"
 	type: "workflow-step"
