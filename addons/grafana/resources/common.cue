@@ -29,12 +29,7 @@ commonPolicies: [{
 	type: "topology"
 	name: "deploy-topology"
 	properties: {
-		if parameter.clusters != _|_ {
-			clusters: parameter.clusters
-		}
-		if parameter.clusters == _|_ {
-			clusters: ["local"]
-		}
+		clusters: ["local"]
 		namespace: parameter.namespace
 	}
 }]

@@ -12,10 +12,11 @@ output: {
 			name: "kruise-rollout"
 			type: "helm"
 			properties: {
-				repoType: "helm"
-				url:      "https://openkruise.github.io/charts/"
-				chart:    "kruise-rollout"
-				version:  "0.3.0"
+				repoType:   "helm"
+				url:        "https://openkruise.github.io/charts/"
+				chart:      "kruise-rollout"
+				version:    "0.3.0"
+				upgradeCRD: parameter.upgradeCRD
 				values: {
 					replicaCount: 1
 					rollout: webhook: objectSelector: [{

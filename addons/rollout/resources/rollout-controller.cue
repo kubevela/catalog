@@ -7,6 +7,7 @@ output: {
 		url:             "https://charts.kubevela.net/core"
 		targetNamespace: "vela-system"
 		releaseName:     "vela-rollout"
+		upgradeCRD:      parameter.upgradeCRD
 		values: {}
 	}
 }

@@ -1,10 +1,11 @@
 output: {
 	type: "helm"
 	properties: {
-		chart:    "traefik"
-		version:  "10.19.4"
-		url:      "https://charts.kubevela.net/community"
-		repoType: "helm"
+		chart:      "traefik"
+		version:    "10.19.4"
+		url:        "https://charts.kubevela.net/community"
+		repoType:   "helm"
+		upgradeCRD: parameter.upgradeCRD
 		values: {
 			experimental: {
 				kubernetesGateway: {

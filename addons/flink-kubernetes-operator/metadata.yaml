@@ -1,5 +1,5 @@
 name: flink-kubernetes-operator
-version: 1.3.1
+version: 1.3.2
 description: A Kubernetes operator for Apache Flink
 icon: https://flink.apache.org/img/logo/png/500/flink_squirrel_500.png
 url: https://github.com/apache/flink-kubernetes-operator

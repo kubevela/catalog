@@ -1,5 +1,5 @@
 name: velaux
-version: v1.8.1
+version: v1.9.1
 description: KubeVela User Experience (UX). An extensible, application-oriented delivery and management Platform.
 icon: https://static.kubevela.net/images/logos/KubeVela%20-03.png
 url: https://kubevela.io
@@ -13,4 +13,4 @@ deployTo:
   runtimeCluster: false
 
 system:
-  vela: ">=v1.8.0"
+  vela: ">=v1.9.0"

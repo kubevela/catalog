@@ -1,5 +1,5 @@
 name: rollout
-version: 1.3.2
+version: 1.3.3
 description: Provides basic batch publishing capability.
 icon: https://static.kubevela.net/images/logos/KubeVela%20-03.png
 url: https://kubevela.io/docs/end-user/traits/rollout
