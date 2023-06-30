@@ -1,5 +1,5 @@
 name: cert-manager
-version: 2.1.1
+version: 2.2.0
 description: Automatically provision and manage TLS certificates in Kubernetes
 icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/logo-small.png
 url: https://github.com/cert-manager/cert-manager

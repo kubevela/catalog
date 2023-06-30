@@ -46,3 +46,16 @@ cert-manager/certificaterequests-issuer-acme/sign "msg"="certificate issued" "re
 It is time to use your brand-new certificate to a service!
 
 > TODO(charlie0129): I will update this later, with an example to use cert-manager + traefik + nginx to host a TLS-secured website.
+
+## ACME: Auto-Acquire Wildcard TLS Certificates with AliDNS DNS01 Challenge
+
+```console
+vela addon enable cert-manager                       \
+    staging=true                                     \
+    dns01.namespace="default"                        \
+    dns01.alidns.email="your-email@example.com"      \
+    dns01.alidns.accessToken="your-accesstoken-here" \
+    dns01.alidns.secretKey="your-secretKey-here"     \
+    dns01.alidns.regionId="cn-beijing"               \
+    dns01.alidns.groupName="example.com"             \
+```

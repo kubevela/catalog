@@ -27,6 +27,21 @@ output: {
 					]
 				}
 			},
+			if parameter.dns01 != _|_ && parameter.dns01.alidns != _|_ {
+				alidnsWebhook
+			}
+			if parameter.dns01 != _|_ && parameter.dns01.alidns != _|_ {
+				{
+					type: "k8s-objects"
+					name: "certificate-conf"
+					dependsOn: ["alidns-webhook"]
+					properties: objects: [
+						alidnsTokenSecret,
+						alidnsCertificate,
+						alidnsIssuer,
+					]
+				}
+			},			
 		]
 		policies: [
 			{
