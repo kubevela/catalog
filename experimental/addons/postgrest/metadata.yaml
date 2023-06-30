@@ -1,0 +1,10 @@
+name: postgrest
+version: 1.0.0
+description: PostgREST is a standalone web server that turns your PostgreSQL database directly into a RESTful API. The structural constraints and permissions in the database determine the API endpoints and operations.
+icon: "https://github.com/PostgREST/postgrest/blob/main/static/bigger-logo.png"
+url: "https://postgrest.org/en/stable/"
+
+tags:
+- postgrest
+
+invisible: false
