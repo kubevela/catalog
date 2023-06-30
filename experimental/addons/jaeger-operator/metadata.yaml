@@ -1,0 +1,11 @@
+name: jaeger-operator
+version: 1.0.0
+description: "Jaeger is used for monitoring and troubleshooting microservices-based distributed systems"
+icon: "https://github.com/jaegertracing/documentation/blob/main/static/img/jaeger-icon-reverse-color.svg"
+url: "https://www.jaegertracing.io/"
+invisible: false
+tags:
+  - jaeger-operator
+dependencies:
+  - name: cert-manager
+  - name: fluxcd
