@@ -961,17 +961,4 @@ helmReleaseCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "HelmRelease"
-			listKind: "HelmReleaseList"
-			plural:   "helmreleases"
-			shortNames: [
-				"hr",
-			]
-			singular: "helmrelease"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

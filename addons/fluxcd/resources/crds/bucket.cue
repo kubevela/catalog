@@ -555,14 +555,4 @@ bucketCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "Bucket"
-			listKind: "BucketList"
-			plural:   "buckets"
-			singular: "bucket"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

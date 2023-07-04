@@ -342,14 +342,4 @@ imageUpdateCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "ImageUpdateAutomation"
-			listKind: "ImageUpdateAutomationList"
-			plural:   "imageupdateautomations"
-			singular: "imageupdateautomation"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

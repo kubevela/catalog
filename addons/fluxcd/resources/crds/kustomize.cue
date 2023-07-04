@@ -1266,17 +1266,4 @@ kustomizeCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "Kustomization"
-			listKind: "KustomizationList"
-			plural:   "kustomizations"
-			shortNames: [
-				"ks",
-			]
-			singular: "kustomization"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

@@ -872,17 +872,4 @@ gitRepoCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "GitRepository"
-			listKind: "GitRepositoryList"
-			plural:   "gitrepositories"
-			shortNames: [
-				"gitrepo",
-			]
-			singular: "gitrepository"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }
