@@ -230,14 +230,4 @@ imagePolicyCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "ImagePolicy"
-			listKind: "ImagePolicyList"
-			plural:   "imagepolicies"
-			singular: "imagepolicy"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

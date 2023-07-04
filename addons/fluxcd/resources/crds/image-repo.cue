@@ -248,14 +248,4 @@ imageRepoCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "ImageRepository"
-			listKind: "ImageRepositoryList"
-			plural:   "imagerepositories"
-			singular: "imagerepository"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

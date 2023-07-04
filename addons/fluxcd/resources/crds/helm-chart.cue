@@ -637,17 +637,4 @@ helmChartCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "HelmChart"
-			listKind: "HelmChartList"
-			plural:   "helmcharts"
-			shortNames: [
-				"hc",
-			]
-			singular: "helmchart"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

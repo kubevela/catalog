@@ -396,17 +396,4 @@ ociRepoCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "OCIRepository"
-			listKind: "OCIRepositoryList"
-			plural:   "ocirepositories"
-			shortNames: [
-				"ocirepo",
-			]
-			singular: "ocirepository"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }

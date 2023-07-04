@@ -526,17 +526,4 @@ helmRepoCRD: {
 			subresources: status: {}
 		}]
 	}
-	status: {
-		acceptedNames: {
-			kind:     "HelmRepository"
-			listKind: "HelmRepositoryList"
-			plural:   "helmrepositories"
-			shortNames: [
-				"helmrepo",
-			]
-			singular: "helmrepository"
-		}
-		conditions: []
-		storedVersions: []
-	}
 }
