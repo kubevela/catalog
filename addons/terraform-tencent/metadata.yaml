@@ -1,5 +1,5 @@
 name: terraform-tencent
-version: 1.0.3
+version: 1.0.4
 description: Kubernetes Terraform Controller Provider for Tencent Cloud
 url: https://github.com/oam-dev/terraform-controller
 
