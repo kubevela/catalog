@@ -1,0 +1,117 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: Tencent Cloud Sqlserver Instance
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: tencent-sqlserver-instance
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: |
+        terraform {
+          required_providers {
+            tencentcloud = {
+              source = "tencentcloudstack/tencentcloud"
+            }
+          }
+        }
+
+        resource "tencentcloud_sqlserver_instance" "example" {
+          name                   = var.instance_name
+          availability_zone      = var.availability_zone
+          charge_type            = var.charge_type
+          vpc_id                 = var.vpc_id
+          subnet_id              = var.subnet_id
+          security_groups        = var.security_groups
+          project_id             = var.project_id
+          memory                 = var.memory
+          storage                = var.storage
+          maintenance_week_set   = var.maintenance_week_set
+          maintenance_start_time = var.maintenance_start_time
+          maintenance_time_span  = var.maintenance_time_span
+          tags                   = var.tags
+        }
+
+        variable "instance_name" {
+          type        = string
+          description = "Name of the SQL Server instance."
+        }
+
+        variable "availability_zone" {
+          type        = string
+          description = "Availability zone."
+        }
+
+        variable "charge_type" {
+          type        = string
+          default     = "POSTPAID_BY_HOUR"
+          description = "Pay type of the SQL Server instance. Available values `PREPAID`, `POSTPAID_BY_HOUR`."
+        }
+
+        variable "vpc_id" {
+          type        = string
+          description = "ID of VPC."
+        }
+
+        variable "subnet_id" {
+          type        = string
+          description = "ID of subnet."
+        }
+
+        variable "security_groups" {
+          type        = list(string)
+          description = "Security group bound to the instance."
+        }
+
+        variable "project_id" {
+          type        = number
+          default     = 0
+          description = "Project ID, default value is 0."
+        }
+
+        variable "memory" {
+          type        = number
+          description = "Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides."
+        }
+
+        variable "storage" {
+          type        = number
+          description = "Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides."
+        }
+
+        variable "maintenance_week_set" {
+          type        = list(number)
+          description = "A list of integer indicates weekly maintenance. For example, [2,7] presents do weekly maintenance on every Tuesday and Sunday."
+        }
+
+        variable "maintenance_start_time" {
+          type        = string
+          description = "Start time of the maintenance in one day, format like `HH:mm`."
+        }
+
+        variable "maintenance_time_span" {
+          type        = number
+          description = "The timespan of maintenance in one day, unit is hour."
+        }
+
+        variable "tags" {
+          type    = map(string)
+          description = "The tags of the SQL Server."
+        }
+        
+        output "instance_id" {
+          description = "sqlserver instance id"
+          value = tencentcloud_sqlserver_instance.example.id
+        }
+      providerRef:
+        name: tencent
+        namespace: default
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta2
+      kind: Configuration
+status: { }
