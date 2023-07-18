@@ -1,5 +1,5 @@
 name: terraform
-version: 1.1.1
+version: 1.1.2
 description: Terraform Controller is a Kubernetes Controller for Terraform.
 icon: https://static.kubevela.net/images/logos/terraform.png
 url: https://github.com/oam-dev/terraform-controller
