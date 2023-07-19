@@ -1,0 +1,63 @@
+- jsonKey: replicas
+  sort: 1
+- jsonKey: rootpassword
+  sort: 3
+  uiType: Password
+- jsonKey: database
+  sort: 5
+- jsonKey: user
+  sort: 7
+  style:
+    colSpan: 12
+- jsonKey: password
+  sort: 9
+  style:
+    colSpan: 12
+  uiType: Password
+- jsonKey: mysqlVersion
+  sort: 11
+- jsonKey: image
+  sort: 13
+  uiType: ImageInput
+  validate:
+    required: false
+- jsonKey: imagePullSecrets
+  sort: 14
+  disable: true
+- jsonKey: imagePullPolicy
+  sort: 15
+- jsonKey: memory
+  sort: 17
+  style:
+    colSpan: 12
+  uiType: MemoryNumber
+- jsonKey: cpu
+  sort: 18
+  style:
+    colSpan: 12
+  uiType: CPUNumber
+- jsonKey: mysqlConf
+  sort: 19
+- jsonKey: initFileExtraSQL
+  sort: 21
+- jsonKey: queryLimits
+  sort: 23
+  subParameters:
+    - jsonKey: maxQueryTime
+      sort: 1
+    - jsonKey: maxIdleTime
+      sort: 3
+    - jsonKey: kill
+      sort: 5
+      style:
+        colSpan: 12
+    - jsonKey: killMode
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: ignoreCommand
+      sort: 9
+    - jsonKey: ignoreDb
+      sort: 11
+    - jsonKey: ignoreUser
+      sort: 13

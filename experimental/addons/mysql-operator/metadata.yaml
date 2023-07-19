@@ -5,13 +5,13 @@ url: https://github.com/bitpoke/mysql-operator
 
 tags:
   - bitpoke/mysql-operator
-  - v0.6.2
+  - v0.6.2-ext
 
 deployTo:
   control_plane: true
   runtime_cluster: true
 
-needNamespace:
-  - mysql-operator
+# needNamespace:
+#   - mysql-operator
 
 invisible: false

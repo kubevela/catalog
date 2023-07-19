@@ -1,0 +1,143 @@
+- jsonKey: backupSchedule
+  sort: 1
+- jsonKey: backupURL
+  sort: 3
+- jsonKey: backupTarget
+  sort: 5
+- jsonKey: s3
+  sort: 7
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: backupTarget
+      op: "=="
+      value: "s3"
+  subParameters:
+    - jsonKey: S3_PROVIDER
+      sort: 1
+      style:
+        colSpan: 12
+    - jsonKey: S3_ENDPOINT
+      sort: 3
+      style:
+        colSpan: 12
+    - jsonKey: AWS_ACCESS_KEY_ID
+      uiType: Password
+      sort: 5
+      style:
+        colSpan: 12
+    - jsonKey: AWS_SECRET_ACCESS_KEY
+      uiType: Password
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: AWS_REGION
+      sort: 9
+      style:
+        colSpan: 24
+    - jsonKey: AWS_ACL
+      sort: 11
+      style:
+        colSpan: 24
+    - jsonKey: AWS_STORAGE_CLASS
+      sort: 13
+      style:
+        colSpan: 24
+    - jsonKey: AWS_SESSION_TOKEN
+      sort: 15
+      style:
+        colSpan: 24
+- jsonKey: googleCloud
+  sort: 9
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: backupTarget
+      op: "=="
+      value: "googleCloud"
+  subParameters:
+    - jsonKey: GCS_SERVICE_ACCOUNT_JSON_KEY
+      sort: 1
+      style:
+        colSpan: 12
+    - jsonKey: GCS_PROJECT_ID
+      sort: 3
+      style:
+        colSpan: 12
+    - jsonKey: GCS_OBJECT_ACL
+      sort: 5
+      style:
+        colSpan: 12
+    - jsonKey: GCS_BUCKET_ACL
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: GCS_LOCATION
+      sort: 9
+      style:
+        colSpan: 12
+    - jsonKey: GCS_STORAGE_CLASS
+      sort: 11
+      style:
+        colSpan: 12
+- jsonKey: http
+  sort: 11
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: backupTarget
+      op: "=="
+      value: "http"
+  subParameters:
+    - jsonKey: HTTP_URL
+      sort: 1
+      style:
+        colSpan: 24
+- jsonKey: googleDriver
+  sort: 13
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: backupTarget
+      op: "=="
+      value: "googleDriver"
+  subParameters:
+    - jsonKey: GDRIVE_CLIENT_ID
+      sort: 1
+      style:
+        colSpan: 24
+    - jsonKey: GDRIVE_ROOT_FOLDER_ID
+      sort: 3
+      style:
+        colSpan: 12
+    - jsonKey: GDRIVE_IMPERSONATOR
+      sort: 5
+      style:
+        colSpan: 12
+- jsonKey: azure
+  sort: 15
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: backupTarget
+      op: "=="
+      value: "azure"
+  subParameters:
+    - jsonKey: AZUREBLOB_ACCOUNT
+      sort: 1
+      style:
+        colSpan: 12
+    - jsonKey: AZUREBLOB_KEY
+      sort: 3
+      style:
+        colSpan: 12
+- jsonKey: backupScheduleJobsHistoryLimit
+  sort: 17
+- jsonKey: backupRemoteDeletePolicy
+  sort: 19
+
