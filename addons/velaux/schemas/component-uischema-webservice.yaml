@@ -2,7 +2,7 @@
   jsonKey: image
   label: Container Image
   sort: 1
-- jsonKey: imagePullSecret
+- jsonKey: imagePullSecrets
   sort: 2
   disable: true
 - jsonKey: memory
