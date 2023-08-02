@@ -23,8 +23,9 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	"github.com/oam-dev/kubevela/pkg/addon"
+
 	"github.com/Masterminds/semver/v3"
+	"github.com/oam-dev/kubevela/pkg/addon"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
 	"sigs.k8s.io/yaml"
@@ -130,11 +131,11 @@ func main() {
 
 			entry = append(entry, chartVersion)
 			entries[m.Name] = entry
-			filename, err := addon.PackageAddon(dir+info.Name()+"/")
+			filename, err := addon.PackageAddon(dir + info.Name() + "/")
 			if err != nil {
 				fmt.Println(err)
 			} else {
-			    fmt.Printf("addon package %s \n", filename)
+				fmt.Printf("addon package %s \n", filename)
 		}
 	}
 	index := repo.IndexFile{APIVersion: "v1", Entries: entries}
