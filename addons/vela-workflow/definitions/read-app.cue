@@ -36,6 +36,11 @@ template: {
 				}
 			}
 		}
+		if read.err == _|_ {
+			msg: op.#Message & {
+				message: "Application read successfully"
+			}
+		}
 	}
 	parameter: {
 		name:      string
