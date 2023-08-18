@@ -7,12 +7,13 @@ additionalPrivileges: {
 		{
 			apiVersion: "v1"
 			kind:       "ServiceAccount"
-			metadata:
+			metadata: {
 				name: "vela-workflow"
-			labels: {
-				"app.kubernetes.io/name":     const.name
-				"app.kubernetes.io/instance": const.name
-				"app.kubernetes.io/version":  parameter.version
+				labels: {
+					"app.kubernetes.io/name":     const.name
+					"app.kubernetes.io/instance": const.name
+					"app.kubernetes.io/version":  parameter.version
+				}
 			}
 		}, {
 			apiVersion: "rbac.authorization.k8s.io/v1"
