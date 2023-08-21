@@ -1,0 +1,8 @@
+- jsonKey: persistentVolumeDirs
+  disable: true
+- jsonKey: portForward
+  disable: true
+- jsonKey: gitUrl
+  disable: true
+- jsonKey: storageClass
+  disable: true
