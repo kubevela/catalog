@@ -20,4 +20,5 @@ A Kubernetes [Terraform Controller](https://github.com/oam-dev/terraform-control
 | 1.0.11          |        v0.7.5        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
 | 1.0.12          |        v0.7.6        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
 | 1.0.13          |        v0.7.7        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
-| 1.1.2          |        v0.7.11        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
+| 1.1.2           |       v0.7.11        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
+| 1.1.3           |       v0.7.12        |      1.0.2       | alicloud 1.140.0; random 3.1.0 |
