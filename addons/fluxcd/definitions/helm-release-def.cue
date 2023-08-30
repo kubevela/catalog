@@ -89,7 +89,7 @@ template: {
 					}
 				}
 				if parameter.repoType == "oss" {
-					apiVersion: "source.toolkit.fluxcd.io/v1beta1"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 					kind:       "Bucket"
 					spec: {
 						endpoint:   parameter.url
@@ -103,7 +103,7 @@ template: {
 					}
 				}
 				if parameter.repoType == "helm" || parameter.repoType == "oci" {
-					apiVersion: "source.toolkit.fluxcd.io/v1beta1"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 					kind:       "HelmRepository"
 					spec: {
 						url: parameter.url

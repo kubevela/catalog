@@ -77,7 +77,8 @@ template: {
 					}
 				}
 				if parameter.repoType == "oss" {
-					kind: "Bucket"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					kind:       "Bucket"
 					spec: {
 						endpoint:   parameter.url
 						bucketName: parameter.oss.bucketName
@@ -90,7 +91,7 @@ template: {
 					}
 				}
 				if parameter.repoType == "oci" {
-					apiVersion: "source.toolkit.fluxcd.io/v1beta1"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 					kind:       "OCIRepository"
 					spec: {
 						url: parameter.url
@@ -125,7 +126,7 @@ template: {
 			}
 
 			imagePolicy: {
-				apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+				apiVersion: "image.toolkit.fluxcd.io/v1beta2"
 				kind:       "ImagePolicy"
 				metadata: {
 					name:      context.name
