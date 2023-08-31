@@ -41,10 +41,13 @@ template: {
 		if parameter.type == "google" && parameter.google != _|_ {
 			stringData: google: json.Marshal(parameter.google)
 		}
+		if parameter.type == "oauth" && parameter.oauth != _|_ {
+			stringData: oauth: json.Marshal(parameter.oauth)
+		}
 	}
 	parameter: {
 		// +usage=Connetor type
-		type: *"github" | "ldap" | "gitlab" | "oidc" | "saml" | "google"
+		type: *"github" | "ldap" | "gitlab" | "oidc" | "saml" | "google" | "oauth"
 		// +usage=GitHub connector
 		github?: {
 			// +usage=GitHub client ID
@@ -131,6 +134,43 @@ template: {
 			usernameAttr: string
 			// +usage=Email of attributes in the returned assertions to map to ID token claims.
 			emailAttr: string
+		}
+		// +usage=OAuth connector
+		oauth?: {
+			// +usage=OAuth client ID
+			clientID: string
+			// +usage=OAuth client secret
+			clientSecret: string
+			// +usage=OAuth redirect URI - for instance [VelaUX address:port]/dex/callback
+			redirectURI: string
+			// +usage=OAuth token URL
+			tokenURL: string
+			// +usage=OAuth authorization URL
+			authorizationURL: string
+			// +usage=OAuth user info URL
+			userInfoURL: string
+			// +usage=Optional: Specify whether to communicate to Auth provider without validating SSL certificates
+			insecureSkipVerify?: bool | *false
+			// +usage=Optional: The location of file containing SSL certificates to communicate to Auth provider
+			rootCAs?: string
+			// +usage=Optional: Configurable keys for user ID look up
+			userIDKey?: string | *"username"
+			// +usage=Optional: List of scopes to request Auth provider for access user account
+			scopes?: [...string]
+			// +usage=Auth providers return non-standard user identity profile. Use claimMapping to map those user informations to standard claims:
+			claimMapping: {
+				// +usage=Optional: Configurable keys for user name look up
+				userNameKey?: string | *"name"
+				// +usage=Optional: Configurable keys for preferred username look up
+				preferredUsernameKey? : string | *"username"
+				// +usage=Optional: Configurable keys for user groups look up
+				groupsKey?: string
+				// +usage=Optional: Configurable keys for email look up
+				emailKey?: string 
+				// +usage=Configurable keys for email verified look up
+				emailVerifiedKey?: string
+			}
+
 		}
 	}
 }
