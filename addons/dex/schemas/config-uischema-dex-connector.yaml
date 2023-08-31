@@ -172,3 +172,78 @@
         colSpan: 12
     - jsonKey: startTLS
       sort: 103
+
+- jsonKey: oauth
+  sort: 15
+  uiType: Ignore
+  validate:
+    required: true
+  conditions:
+    - jsonKey: type
+      op: "=="
+      value: "oauth"
+  subParameters:
+    - jsonKey: clientID
+      uiType: Password
+      sort: 3
+      style:
+        colSpan: 12
+    - jsonKey: clientSecret
+      uiType: Password
+      sort: 5
+      style:
+        colSpan: 12
+    - jsonKey: redirectURI
+      sort: 7
+      style:
+        colSpan: 12
+    - jsonKey: tokenURL
+      sort: 9
+      style:
+        colSpan: 12
+    - jsonKey: authorizationURL
+      sort: 11
+      style:
+        colSpan: 12
+    - jsonKey: userInfoURL
+      sort: 13
+      style:
+        colSpan: 12
+    
+    - jsonKey: claimMapping
+      sort: 15
+      style:
+        colSpan: 24
+      subParameters:
+      - jsonKey: userNameKey
+        style:
+          colSpan: 12
+      - jsonKey: preferredUsernameKey
+        style:
+          colSpan: 12
+      - jsonKey: groupsKey
+        style:
+          colSpan: 12
+      - jsonKey: emailKey
+        style:
+          colSpan: 12
+      - jsonKey: emailVerifiedKey
+        style:
+          colSpan: 12
+    
+    - jsonKey: insecureSkipVerify
+      sort: 19
+      style:
+        colSpan: 24
+    - jsonKey: userIDKey
+      sort: 21
+      style:
+        colSpan: 12
+    - jsonKey: scopes
+      sort: 23
+      style:
+        colSpan: 24
+    - jsonKey: rootCAs
+      sort: 25
+      style:
+        colSpan: 24
