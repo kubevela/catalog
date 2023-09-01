@@ -101,6 +101,12 @@ template: {
 						if parameter.oci.tag != _|_ {
 							ref: tag: parameter.oci.tag
 						}
+						if parameter.oci.semver != _|_ {
+							ref: semver: parameter.oci.semver
+						}
+						if parameter.oci.digest != _|_ {
+							ref: digest: parameter.oci.digest
+						}
 						_secret
 						_sourceCommonArgs
 					}
@@ -273,7 +279,11 @@ template: {
 			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
 			provider: *"generic" | "azure" | "aws" | "gcp"
 			// +usage=The image tag
-			tag: *"latest" | string
+			tag?: string
+			// +usage=The image digest, takes precedence over all fields.
+			digest?: string
+			// +usage=Semver tag expression to checkout and monitor for changes, takes precedence over tag
+			semver?: string
 		}
 		//+usage=Path to the directory containing the kustomization.yaml file, or the set of plain YAMLs a kustomization.yaml should be generated for.
 		path: string
