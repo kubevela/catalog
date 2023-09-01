@@ -4,18 +4,16 @@ ociRepoCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.12.0"
 		labels: {
-			"app.kubernetes.io/component":           "source-controller"
-			"app.kubernetes.io/instance":            "flux-system"
-			"app.kubernetes.io/part-of":             "flux"			
-			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
-			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+			"app.kubernetes.io/component": "source-controller"
+			"app.kubernetes.io/instance":  "flux-system"
+			"app.kubernetes.io/part-of":   "flux"
+			"app.kubernetes.io/version":   "v2.1.0"
 		}
 		name: "ocirepositories.source.toolkit.fluxcd.io"
 	}
 	spec: {
-		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "OCIRepository"
@@ -65,10 +63,11 @@ ociRepoCRD: {
 						properties: {
 							certSecretRef: {
 								description: """
-		CertSecretRef can be given the name of a secret containing either or both of 
-		 - a PEM-encoded client certificate (`certFile`) and private key (`keyFile`); - a PEM-encoded CA certificate (`caFile`) 
-		 and whichever are supplied, will be used for connecting to the registry. The client cert and key are useful if you are authenticating with a certificate; the CA cert is useful if you are using a self-signed server certificate.
-		"""
+			CertSecretRef can be given the name of a Secret containing either or both of 
+			 - a PEM-encoded client certificate (`tls.crt`) and private key (`tls.key`); - a PEM-encoded CA certificate (`ca.crt`) 
+			 and whichever are supplied, will be used for connecting to the registry. The client cert and key are useful if you are authenticating with a certificate; the CA cert is useful if you are using a self-signed server certificate. The Secret must be of type `Opaque` or `kubernetes.io/tls`. 
+			 Note: Support for the `caFile`, `certFile` and `keyFile` keys have been deprecated.
+			"""
 
 								properties: name: {
 									description: "Name of the referent."
@@ -90,9 +89,10 @@ ociRepoCRD: {
 								type: "boolean"
 							}
 							interval: {
-								description: "The interval at which to check for image updates."
-								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
-								type:        "string"
+								description: "Interval at which the OCIRepository URL is checked for updates. This interval is approximate and may be subject to jitter to ensure efficient use of resources."
+
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							layerSelector: {
 								description: "LayerSelector specifies which layer should be extracted from the OCI artifact. When not specified, the first layer found in the artifact is selected."
@@ -229,8 +229,9 @@ ociRepoCRD: {
 								description: "Artifact represents the output of the last successful OCI Repository sync."
 
 								properties: {
-									checksum: {
-										description: "Checksum is the SHA256 checksum of the Artifact file."
+									digest: {
+										description: "Digest is the digest of the file in the form of '<algorithm>:<checksum>'."
+										pattern:     "^[a-z0-9]+(?:[.+_-][a-z0-9]+)*:[a-zA-Z0-9=_-]+$"
 										type:        "string"
 									}
 									lastUpdateTime: {
@@ -266,7 +267,9 @@ ociRepoCRD: {
 									}
 								}
 								required: [
+									"lastUpdateTime",
 									"path",
+									"revision",
 									"url",
 								]
 								type: "object"
@@ -275,10 +278,10 @@ ociRepoCRD: {
 								description: "Conditions holds the conditions for the OCIRepository."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {
@@ -338,9 +341,9 @@ ociRepoCRD: {
 							}
 							contentConfigChecksum: {
 								description: """
-		ContentConfigChecksum is a checksum of all the configurations related to the content of the source artifact: - .spec.ignore - .spec.layerSelector observed in .status.observedGeneration version of the object. This can be used to determine if the content configuration has changed and the artifact needs to be rebuilt. It has the format of `<algo>:<checksum>`, for example: `sha256:<checksum>`. 
-		 Deprecated: Replaced with explicit fields for observed artifact content config in the status.
-		"""
+			ContentConfigChecksum is a checksum of all the configurations related to the content of the source artifact: - .spec.ignore - .spec.layerSelector observed in .status.observedGeneration version of the object. This can be used to determine if the content configuration has changed and the artifact needs to be rebuilt. It has the format of `<algo>:<checksum>`, for example: `sha256:<checksum>`. 
+			 Deprecated: Replaced with explicit fields for observed artifact content config in the status.
+			"""
 
 								type: "string"
 							}

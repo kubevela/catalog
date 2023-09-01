@@ -4,18 +4,16 @@ helmReleaseCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.12.0"
 		labels: {
-			"app.kubernetes.io/component":           "helm-controller"
-			"app.kubernetes.io/instance":            "flux-system"
-			"app.kubernetes.io/part-of":             "flux"			
-			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
-			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+			"app.kubernetes.io/component": "helm-controller"
+			"app.kubernetes.io/instance":  "flux-system"
+			"app.kubernetes.io/part-of":   "flux"
+			"app.kubernetes.io/version":   "v2.1.0"
 		}
 		name: "helmreleases.helm.toolkit.fluxcd.io"
 	}
 	spec: {
-		conversion: strategy: "None"
 		group: "helm.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmRelease"
@@ -62,120 +60,141 @@ helmReleaseCRD: {
 							chart: {
 								description: "Chart defines the template of the v1beta2.HelmChart that should be created for this HelmRelease."
 
-								properties: spec: {
-									description: "Spec holds the template for the v1beta2.HelmChartSpec for this HelmRelease."
+								properties: {
+									metadata: {
+										description: "ObjectMeta holds the template for metadata like labels and annotations."
 
-									properties: {
-										chart: {
-											description: "The name or path the Helm chart is available at in the SourceRef."
+										properties: {
+											annotations: {
+												additionalProperties: type: "string"
+												description: "Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/"
 
-											type: "string"
-										}
-										interval: {
-											description: "Interval at which to check the v1beta2.Source for updates. Defaults to 'HelmReleaseSpec.Interval'."
-
-											pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
-											type:    "string"
-										}
-										reconcileStrategy: {
-											default:     "ChartVersion"
-											description: "Determines what enables the creation of a new artifact. Valid values are ('ChartVersion', 'Revision'). See the documentation of the values for an explanation on their behavior. Defaults to ChartVersion when omitted."
-
-											enum: [
-												"ChartVersion",
-												"Revision",
-											]
-											type: "string"
-										}
-										sourceRef: {
-											description: "The name and namespace of the v1beta2.Source the chart is available at."
-
-											properties: {
-												apiVersion: {
-													description: "APIVersion of the referent."
-													type:        "string"
-												}
-												kind: {
-													description: "Kind of the referent."
-													enum: [
-														"HelmRepository",
-														"GitRepository",
-														"Bucket",
-													]
-													type: "string"
-												}
-												name: {
-													description: "Name of the referent."
-													maxLength:   253
-													minLength:   1
-													type:        "string"
-												}
-												namespace: {
-													description: "Namespace of the referent."
-													maxLength:   63
-													minLength:   1
-													type:        "string"
-												}
+												type: "object"
 											}
-											required: [
-												"name",
-											]
-											type: "object"
+											labels: {
+												additionalProperties: type: "string"
+												description: "Map of string keys and values that can be used to organize and categorize (scope and select) objects. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/"
+
+												type: "object"
+											}
 										}
-										valuesFile: {
-											description: "Alternative values file to use as the default chart values, expected to be a relative path in the SourceRef. Deprecated in favor of ValuesFiles, for backwards compatibility the file defined here is merged before the ValuesFiles items. Ignored when omitted."
+										type: "object"
+									}
+									spec: {
+										description: "Spec holds the template for the v1beta2.HelmChartSpec for this HelmRelease."
 
-											type: "string"
-										}
-										valuesFiles: {
-											description: "Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef. Values files are merged in the order of this list with the last file overriding the first. Ignored when omitted."
+										properties: {
+											chart: {
+												description: "The name or path the Helm chart is available at in the SourceRef."
 
-											items: type: "string"
-											type: "array"
-										}
-										verify: {
-											description: "Verify contains the secret name containing the trusted public keys used to verify the signature and specifies which provider to use to check whether OCI image is authentic. This field is only supported for OCI sources. Chart dependencies, which are not bundled in the umbrella chart artifact, are not verified."
+												type: "string"
+											}
+											interval: {
+												description: "Interval at which to check the v1beta2.Source for updates. Defaults to 'HelmReleaseSpec.Interval'."
 
-											properties: {
-												provider: {
-													default:     "cosign"
-													description: "Provider specifies the technology used to sign the OCI Helm chart."
+												pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+												type:    "string"
+											}
+											reconcileStrategy: {
+												default:     "ChartVersion"
+												description: "Determines what enables the creation of a new artifact. Valid values are ('ChartVersion', 'Revision'). See the documentation of the values for an explanation on their behavior. Defaults to ChartVersion when omitted."
 
-													enum: [
-														"cosign",
-													]
-													type: "string"
-												}
-												secretRef: {
-													description: "SecretRef specifies the Kubernetes Secret containing the trusted public keys."
+												enum: [
+													"ChartVersion",
+													"Revision",
+												]
+												type: "string"
+											}
+											sourceRef: {
+												description: "The name and namespace of the v1beta2.Source the chart is available at."
 
-													properties: name: {
-														description: "Name of the referent."
+												properties: {
+													apiVersion: {
+														description: "APIVersion of the referent."
 														type:        "string"
 													}
-													required: [
-														"name",
-													]
-													type: "object"
+													kind: {
+														description: "Kind of the referent."
+														enum: [
+															"HelmRepository",
+															"GitRepository",
+															"Bucket",
+														]
+														type: "string"
+													}
+													name: {
+														description: "Name of the referent."
+														maxLength:   253
+														minLength:   1
+														type:        "string"
+													}
+													namespace: {
+														description: "Namespace of the referent."
+														maxLength:   63
+														minLength:   1
+														type:        "string"
+													}
 												}
+												required: [
+													"name",
+												]
+												type: "object"
 											}
-											required: [
-												"provider",
-											]
-											type: "object"
-										}
-										version: {
-											default:     "*"
-											description: "Version semver expression, ignored for charts from v1beta2.GitRepository and v1beta2.Bucket sources. Defaults to latest when omitted."
+											valuesFile: {
+												description: "Alternative values file to use as the default chart values, expected to be a relative path in the SourceRef. Deprecated in favor of ValuesFiles, for backwards compatibility the file defined here is merged before the ValuesFiles items. Ignored when omitted."
 
-											type: "string"
+												type: "string"
+											}
+											valuesFiles: {
+												description: "Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef. Values files are merged in the order of this list with the last file overriding the first. Ignored when omitted."
+
+												items: type: "string"
+												type: "array"
+											}
+											verify: {
+												description: "Verify contains the secret name containing the trusted public keys used to verify the signature and specifies which provider to use to check whether OCI image is authentic. This field is only supported for OCI sources. Chart dependencies, which are not bundled in the umbrella chart artifact, are not verified."
+
+												properties: {
+													provider: {
+														default:     "cosign"
+														description: "Provider specifies the technology used to sign the OCI Helm chart."
+
+														enum: [
+															"cosign",
+														]
+														type: "string"
+													}
+													secretRef: {
+														description: "SecretRef specifies the Kubernetes Secret containing the trusted public keys."
+
+														properties: name: {
+															description: "Name of the referent."
+															type:        "string"
+														}
+														required: [
+															"name",
+														]
+														type: "object"
+													}
+												}
+												required: [
+													"provider",
+												]
+												type: "object"
+											}
+											version: {
+												default:     "*"
+												description: "Version semver expression, ignored for charts from v1beta2.GitRepository and v1beta2.Bucket sources. Defaults to latest when omitted."
+
+												type: "string"
+											}
 										}
+										required: [
+											"chart",
+											"sourceRef",
+										]
+										type: "object"
 									}
-									required: [
-										"chart",
-										"sourceRef",
-									]
-									type: "object"
 								}
 								required: [
 									"spec",
@@ -212,12 +231,12 @@ helmReleaseCRD: {
 								properties: {
 									crds: {
 										description: """
-		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Create` and if omitted CRDs are installed but not updated. 
-		 Skip: do neither install nor replace (update) any CRDs. 
-		 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
-		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
-		 By default, CRDs are applied (installed) during Helm install action. With this option users can opt-in to CRD replace existing CRDs on Helm install actions, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
-		"""
+			CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Create` and if omitted CRDs are installed but not updated. 
+			 Skip: do neither install nor replace (update) any CRDs. 
+			 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
+			 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
+			 By default, CRDs are applied (installed) during Helm install action. With this option users can opt-in to CRD replace existing CRDs on Helm install actions, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
+			"""
 
 										enum: [
 											"Skip",
@@ -280,9 +299,9 @@ helmReleaseCRD: {
 									}
 									skipCRDs: {
 										description: """
-		SkipCRDs tells the Helm install action to not install any CRDs. By default, CRDs are installed if not already present. 
-		 Deprecated use CRD policy (`crds`) attribute with value `Skip` instead.
-		"""
+			SkipCRDs tells the Helm install action to not install any CRDs. By default, CRDs are installed if not already present. 
+			 Deprecated use CRD policy (`crds`) attribute with value `Skip` instead.
+			"""
 
 										type: "boolean"
 									}
@@ -296,15 +315,16 @@ helmReleaseCRD: {
 								type: "object"
 							}
 							interval: {
-								description: "Interval at which to reconcile the Helm release."
-								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
-								type:        "string"
+								description: "Interval at which to reconcile the Helm release. This interval is approximate and may be subject to jitter to ensure efficient use of resources."
+
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							kubeConfig: {
 								description: "KubeConfig for reconciling the HelmRelease on a remote cluster. When used in combination with HelmReleaseSpec.ServiceAccountName, forces the controller to act on behalf of that Service Account at the target cluster. If the --default-service-account flag is set, its value will be used as a controller level fallback for when HelmReleaseSpec.ServiceAccountName is empty."
 
 								properties: secretRef: {
-									description: "SecretRef holds the name to a secret that contains a key with the kubeconfig file as the value. If no key is specified the key will default to 'value'. The secret must be in the same namespace as the HelmRelease. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling the HelmRelease."
+									description: "SecretRef holds the name of a secret that contains a key with the kubeconfig file as the value. If no key is set, the key will default to 'value'. It is recommended that the kubeconfig is self-contained, and the secret is regularly updated if credentials such as a cloud-access-token expire. Cloud specific `cmd-path` auth helpers will not function without adding binaries and credentials to the Pod that is responsible for reconciling Kubernetes resources."
 
 									properties: {
 										key: {
@@ -322,12 +342,24 @@ helmReleaseCRD: {
 									]
 									type: "object"
 								}
+								required: [
+									"secretRef",
+								]
 								type: "object"
 							}
 							maxHistory: {
 								description: "MaxHistory is the number of revisions saved by Helm for this HelmRelease. Use '0' for an unlimited number of revisions; defaults to '10'."
 
 								type: "integer"
+							}
+							persistentClient: {
+								description: """
+			PersistentClient tells the controller to use a persistent Kubernetes client for this release. When enabled, the client will be reused for the duration of the reconciliation, instead of being created and destroyed for each (step of a) Helm action. 
+			 This can improve performance, but may cause issues with some Helm charts that for example do create Custom Resource Definitions during installation outside Helm's CRD lifecycle hooks, which are then not observed to be available by e.g. post-install hooks. 
+			 If not set, it defaults to true.
+			"""
+
+								type: "boolean"
 							}
 							postRenderers: {
 								description: "PostRenderers holds an array of Helm PostRenderers, which will be applied in order of their definition."
@@ -424,6 +456,9 @@ helmReleaseCRD: {
 															type: "object"
 														}
 													}
+													required: [
+														"patch",
+													]
 													type: "object"
 												}
 												type: "array"
@@ -647,6 +682,17 @@ helmReleaseCRD: {
 								description: "Uninstall holds the configuration for Helm uninstall actions for this HelmRelease."
 
 								properties: {
+									deletionPropagation: {
+										default:     "background"
+										description: "DeletionPropagation specifies the deletion propagation policy when a Helm uninstall is performed."
+
+										enum: [
+											"background",
+											"foreground",
+											"orphan",
+										]
+										type: "string"
+									}
 									disableHooks: {
 										description: "DisableHooks prevents hooks from running during the Helm rollback action."
 
@@ -682,12 +728,12 @@ helmReleaseCRD: {
 									}
 									crds: {
 										description: """
-		CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Skip` and if omitted CRDs are neither installed nor upgraded. 
-		 Skip: do neither install nor replace (update) any CRDs. 
-		 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
-		 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
-		 By default, CRDs are not applied during Helm upgrade action. With this option users can opt-in to CRD upgrade, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
-		"""
+			CRDs upgrade CRDs from the Helm Chart's crds directory according to the CRD upgrade policy provided here. Valid values are `Skip`, `Create` or `CreateReplace`. Default is `Skip` and if omitted CRDs are neither installed nor upgraded. 
+			 Skip: do neither install nor replace (update) any CRDs. 
+			 Create: new CRDs are created, existing CRDs are neither updated nor deleted. 
+			 CreateReplace: new CRDs are created, existing CRDs are updated (replaced) but not deleted. 
+			 By default, CRDs are not applied during Helm upgrade action. With this option users can opt-in to CRD upgrade, which is not (yet) natively supported by Helm. https://helm.sh/docs/chart_best_practices/custom_resource_definitions.
+			"""
 
 										enum: [
 											"Skip",
@@ -836,10 +882,10 @@ helmReleaseCRD: {
 								description: "Conditions holds the conditions for the HelmRelease."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {

@@ -4,18 +4,16 @@ imageUpdateCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.12.0"
 		labels: {
-			"app.kubernetes.io/component":           "image-automation-controller"
-			"app.kubernetes.io/instance":            "flux-system"
-			"app.kubernetes.io/part-of":             "flux"
-			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
-			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+			"app.kubernetes.io/component": "image-automation-controller"
+			"app.kubernetes.io/instance":  "flux-system"
+			"app.kubernetes.io/part-of":   "flux"
+			"app.kubernetes.io/version":   "v2.1.0"
 		}
 		name: "imageupdateautomations.image.toolkit.fluxcd.io"
 	}
 	spec: {
-		conversion: strategy: "None"
 		group: "image.toolkit.fluxcd.io"
 		names: {
 			kind:     "ImageUpdateAutomation"
@@ -61,18 +59,23 @@ imageUpdateCRD: {
 
 											properties: {
 												branch: {
-													description: """
-		Branch to check out, defaults to 'master' if no other field is defined. 
-		 When GitRepositorySpec.GitImplementation is set to 'go-git', a shallow clone of the specified branch is performed.
-		"""
+													description: "Branch to check out, defaults to 'master' if no other field is defined."
 
 													type: "string"
 												}
 												commit: {
 													description: """
-		Commit SHA to check out, takes precedence over all reference fields. 
-		 When GitRepositorySpec.GitImplementation is set to 'go-git', this can be combined with Branch to shallow clone the branch, in which the commit is expected to exist.
-		"""
+			Commit SHA to check out, takes precedence over all reference fields. 
+			 This can be combined with Branch to shallow clone the branch, in which the commit is expected to exist.
+			"""
+
+													type: "string"
+												}
+												name: {
+													description: """
+			Name of the reference to check out; takes precedence over Branch, Tag and SemVer. 
+			 It must be a valid Git reference: https://git-scm.com/docs/git-check-ref-format#_description Examples: \"refs/heads/main\", \"refs/tags/v0.1.0\", \"refs/pull/420/head\", \"refs/merge-requests/1/head\"
+			"""
 
 													type: "string"
 												}
@@ -147,14 +150,24 @@ imageUpdateCRD: {
 									push: {
 										description: "Push specifies how and where to push commits made by the automation. If missing, commits are pushed (back) to `.spec.checkout.branch` or its default."
 
-										properties: branch: {
-											description: "Branch specifies that commits should be pushed to the branch named. The branch is created using `.spec.checkout.branch` as the starting point, if it doesn't already exist."
+										properties: {
+											branch: {
+												description: "Branch specifies that commits should be pushed to the branch named. The branch is created using `.spec.checkout.branch` as the starting point, if it doesn't already exist."
 
-											type: "string"
+												type: "string"
+											}
+											options: {
+												additionalProperties: type: "string"
+												description: "Options specifies the push options that are sent to the Git server when performing a push operation. For details, see: https://git-scm.com/docs/git-push#Documentation/git-push.txt---push-optionltoptiongt"
+
+												type: "object"
+											}
+											refspec: {
+												description: "Refspec specifies the Git Refspec to use for a push operation. If both Branch and Refspec are provided, then the commit is pushed to the branch and also using the specified refspec. For more details about Git Refspecs, see: https://git-scm.com/book/en/v2/Git-Internals-The-Refspec"
+
+												type: "string"
+											}
 										}
-										required: [
-											"branch",
-										]
 										type: "object"
 									}
 								}
@@ -245,10 +258,10 @@ imageUpdateCRD: {
 							conditions: {
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {

@@ -4,18 +4,16 @@ helmChartCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.12.0"
 		labels: {
-			"app.kubernetes.io/component":           "source-controller"
-			"app.kubernetes.io/instance":            "flux-system"
-			"app.kubernetes.io/part-of":             "flux"			
-			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
-			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+			"app.kubernetes.io/component": "source-controller"
+			"app.kubernetes.io/instance":  "flux-system"
+			"app.kubernetes.io/part-of":   "flux"
+			"app.kubernetes.io/version":   "v2.1.0"
 		}
 		name: "helmcharts.source.toolkit.fluxcd.io"
 	}
 	spec: {
-		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmChart"
@@ -218,10 +216,10 @@ helmChartCRD: {
 								description: "Conditions holds the conditions for the HelmChart."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {
@@ -380,7 +378,7 @@ helmChartCRD: {
 								type: "string"
 							}
 							interval: {
-								description: "Interval is the interval at which to check the Source for updates."
+								description: "Interval at which the HelmChart SourceRef is checked for updates. This interval is approximate and may be subject to jitter to ensure efficient use of resources."
 
 								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
 								type:    "string"
@@ -493,8 +491,9 @@ helmChartCRD: {
 								description: "Artifact represents the output of the last successful reconciliation."
 
 								properties: {
-									checksum: {
-										description: "Checksum is the SHA256 checksum of the Artifact file."
+									digest: {
+										description: "Digest is the digest of the file in the form of '<algorithm>:<checksum>'."
+										pattern:     "^[a-z0-9]+(?:[.+_-][a-z0-9]+)*:[a-zA-Z0-9=_-]+$"
 										type:        "string"
 									}
 									lastUpdateTime: {
@@ -530,7 +529,9 @@ helmChartCRD: {
 									}
 								}
 								required: [
+									"lastUpdateTime",
 									"path",
+									"revision",
 									"url",
 								]
 								type: "object"
@@ -539,10 +540,10 @@ helmChartCRD: {
 								description: "Conditions holds the conditions for the HelmChart."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {

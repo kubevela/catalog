@@ -18,7 +18,7 @@ sourceController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/source-controller:v0.33.0"
+		image:           _base + "fluxcd/source-controller:v1.1.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

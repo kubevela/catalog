@@ -12,7 +12,7 @@ imageReflectorController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/image-reflector-controller:v0.23.1"
+		image:           _base + "fluxcd/image-reflector-controller:v0.30.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"

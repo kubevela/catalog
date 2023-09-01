@@ -4,18 +4,16 @@ helmRepoCRD: {
 	apiVersion: "apiextensions.k8s.io/v1"
 	kind:       "CustomResourceDefinition"
 	metadata: {
-		annotations: "controller-gen.kubebuilder.io/version": "v0.8.0"
+		annotations: "controller-gen.kubebuilder.io/version": "v0.12.0"
 		labels: {
-			"app.kubernetes.io/component":           "source-controller"
-			"app.kubernetes.io/instance":            "flux-system"
-			"app.kubernetes.io/part-of":             "flux"			
-			"kustomize.toolkit.fluxcd.io/name":      "flux-system"
-			"kustomize.toolkit.fluxcd.io/namespace": "flux-system"
+			"app.kubernetes.io/component": "source-controller"
+			"app.kubernetes.io/instance":  "flux-system"
+			"app.kubernetes.io/part-of":   "flux"
+			"app.kubernetes.io/version":   "v2.1.0"
 		}
 		name: "helmrepositories.source.toolkit.fluxcd.io"
 	}
 	spec: {
-		conversion: strategy: "None"
 		group: "source.toolkit.fluxcd.io"
 		names: {
 			kind:     "HelmRepository"
@@ -97,7 +95,7 @@ helmRepoCRD: {
 								type: "boolean"
 							}
 							secretRef: {
-								description: "The name of the secret containing authentication credentials for the Helm repository. For HTTP/S basic auth the secret must contain username and password fields. For TLS the secret must contain a certFile and keyFile, and/or caCert fields."
+								description: "The name of the secret containing authentication credentials for the Helm repository. For HTTP/S basic auth the secret must contain username and password fields. For TLS the secret must contain a certFile and keyFile, and/or caFile fields."
 
 								properties: name: {
 									description: "Name of the referent."
@@ -172,10 +170,10 @@ helmRepoCRD: {
 								description: "Conditions holds the conditions for the HelmRepository."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {
@@ -317,10 +315,28 @@ helmRepoCRD: {
 								]
 								type: "object"
 							}
+							certSecretRef: {
+								description: """
+			CertSecretRef can be given the name of a Secret containing either or both of 
+			 - a PEM-encoded client certificate (`tls.crt`) and private key (`tls.key`); - a PEM-encoded CA certificate (`ca.crt`) 
+			 and whichever are supplied, will be used for connecting to the registry. The client cert and key are useful if you are authenticating with a certificate; the CA cert is useful if you are using a self-signed server certificate. The Secret must be of type `Opaque` or `kubernetes.io/tls`. 
+			 It takes precedence over the values specified in the Secret referred to by `.spec.secretRef`.
+			"""
+
+								properties: name: {
+									description: "Name of the referent."
+									type:        "string"
+								}
+								required: [
+									"name",
+								]
+								type: "object"
+							}
 							interval: {
-								description: "Interval at which to check the URL for updates."
-								pattern:     "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
-								type:        "string"
+								description: "Interval at which the HelmRepository URL is checked for updates. This interval is approximate and may be subject to jitter to ensure efficient use of resources."
+
+								pattern: "^([0-9]+(\\.[0-9]+)?(ms|s|m|h))+$"
+								type:    "string"
 							}
 							passCredentials: {
 								description: "PassCredentials allows the credentials from the SecretRef to be passed on to a host that does not match the host as defined in URL. This may be required if the host of the advertised chart URLs in the index differ from the defined URL. Enabling this should be done with caution, as it can potentially result in credentials getting stolen in a MITM-attack."
@@ -340,7 +356,7 @@ helmRepoCRD: {
 								type: "string"
 							}
 							secretRef: {
-								description: "SecretRef specifies the Secret containing authentication credentials for the HelmRepository. For HTTP/S basic auth the secret must contain 'username' and 'password' fields. For TLS the secret must contain a 'certFile' and 'keyFile', and/or 'caCert' fields."
+								description: "SecretRef specifies the Secret containing authentication credentials for the HelmRepository. For HTTP/S basic auth the secret must contain 'username' and 'password' fields. Support for TLS auth using the 'certFile' and 'keyFile', and/or 'caFile' keys is deprecated. Please use `.spec.certSecretRef` instead."
 
 								properties: name: {
 									description: "Name of the referent."
@@ -392,8 +408,9 @@ helmRepoCRD: {
 								description: "Artifact represents the last successful HelmRepository reconciliation."
 
 								properties: {
-									checksum: {
-										description: "Checksum is the SHA256 checksum of the Artifact file."
+									digest: {
+										description: "Digest is the digest of the file in the form of '<algorithm>:<checksum>'."
+										pattern:     "^[a-z0-9]+(?:[.+_-][a-z0-9]+)*:[a-zA-Z0-9=_-]+$"
 										type:        "string"
 									}
 									lastUpdateTime: {
@@ -429,7 +446,9 @@ helmRepoCRD: {
 									}
 								}
 								required: [
+									"lastUpdateTime",
 									"path",
+									"revision",
 									"url",
 								]
 								type: "object"
@@ -438,10 +457,10 @@ helmRepoCRD: {
 								description: "Conditions holds the conditions for the HelmRepository."
 								items: {
 									description: """
-		Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
-		 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
-		 // other fields }
-		"""
+			Condition contains details for one aspect of the current state of this API Resource. --- This struct is intended for direct use as an array at the field path .status.conditions.  For example, 
+			 type FooStatus struct{ // Represents the observations of a foo's current state. // Known .status.conditions.type are: \"Available\", \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge // +listType=map // +listMapKey=type Conditions []metav1.Condition `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"` 
+			 // other fields }
+			"""
 
 									properties: {
 										lastTransitionTime: {
