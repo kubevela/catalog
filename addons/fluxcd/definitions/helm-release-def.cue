@@ -49,7 +49,12 @@ helm: {
 								}
 							}
 					}
-					message: repoMessage + ", " + releaseMessage
+					if repoMessage == "" {
+					    message: releaseMessage
+					}
+					if repoMessage != "" {
+					    message: repoMessage + ", " + releaseMessage
+					}
 				"""#
 		}
 	}
