@@ -1,5 +1,5 @@
 name: envoy-gateway
-version: v0.1.0+vela.addon
+version: v0.1.1
 description: Manages Envoy Proxy as a standalone or Kubernetes-based application gateway.
 icon: https://raw.githubusercontent.com/envoyproxy/envoy-website/main/img/envoy-icon.svg
 url: https://gateway.envoyproxy.io/

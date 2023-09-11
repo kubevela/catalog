@@ -1,5 +1,5 @@
 name: o11y-definitions
-version: v0.3.0+vela.addon
+version: v0.3.1
 description: Grafana definitions is an auxiliary addon that creates definitions for grafana installation and use.
 icon: https://artifacthub.io/image/e69a4034-cfe7-4fa8-95ce-df3837f5d717@1x
 url: https://grafana.com/

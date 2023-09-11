@@ -1,5 +1,5 @@
 name: vector-config
-version: v0.1.0+vela.addon
+version: v0.1.1
 description: Vector is a lightweight, ultra-fast tool for building observability pipelines.
 url: https://vector.dev/
 
