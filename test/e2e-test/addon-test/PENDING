@@ -5,8 +5,6 @@ ocm-gateway-manager-addon
 model-serving
 flink-kubernetes-operator
 vela-core-shard-manager
-o11y-definitions
-vela-prism
 grafana
 loki
 prometheus-server
