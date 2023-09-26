@@ -9,7 +9,7 @@ spec:
       type: helm
       properties:
         chart: dex
-        version: "0.6.5"
+        version: "0.15.3"
         url: "https://charts.dexidp.io"
         repoType: helm
         values:

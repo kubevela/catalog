@@ -9,6 +9,10 @@ Please refer to [Dex's Website](https://dexidp.io/docs/) for more details.
 
 ## Versions
 
-* 0.6.6
+* 0.7.0
+    * upgrade the dex chart to [v 0.15.3](https://artifacthub.io/packages/helm/dex/dex/0.15.3) that deploys dex `2.37.0`
+    * add support of [Dex OAuth connector](https://dexidp.io/docs/connectors/oauth/
 
-Change the dex-connector component definition to the config template.
+* 0.6.6
+    * Change the dex-connector component definition to the config template.
+
