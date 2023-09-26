@@ -205,6 +205,13 @@ output: {
 								"regex": true
 							},
 							{
+								"source_labels": [
+									"__meta_kubernetes_service_annotation_oam_dev_addon_name",
+								]
+								"action": "drop"
+								"regex":  "kube-state-metric"
+							},
+							{
 								"action": "keep_if_equal"
 								"source_labels": [
 									"__meta_kubernetes_service_annotation_prometheus_io_port",
