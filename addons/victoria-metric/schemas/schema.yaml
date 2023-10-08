@@ -1,0 +1,9 @@
+# We put UI Schemas that correspond to Definitions in schemas directory.
+# References:
+# - https://kubevela.net/docs/platform-engineers/addon/intro#schemas-directoryoptional
+# - https://kubevela.net/docs/reference/ui-schema
+- jsonKey: namespace
+  label: Namespace
+  validate:
+    required: true
+    defaultValue: vm-system
