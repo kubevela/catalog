@@ -1,7 +1,7 @@
 - jsonKey: caFile
   sort: 11
   uiType: CertBase64
-  description: The ca certificate of helm repository. Please encode this data with base64.
+  description: The ca certificate of helm repository. don't need base64 encode.
 - jsonKey: url
   sort: 5
   label: URL
