@@ -253,7 +253,7 @@ template: {
 
 		decryption?: {
 			// +usage=Determines which decrypt method to use. Defaults to sops
-			provider?: *"sops"
+			provider: string
 			secretRef: {
 				// +usage=Decrypt secretRef to use
 				name: string
