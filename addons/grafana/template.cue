@@ -23,7 +23,7 @@ output: {
 		policies: commonPolicies + [{
 			type: "override"
 			name: "grafana-core"
-			properties: selector: [o11yNamespace.name, "grafanaStorage",grafanaAccess.name, grafana.name]
+			properties: selector: [o11yNamespace.name, grafanaStorage.name,grafanaAccess.name, grafana.name]
 		}, {
 			type: "override"
 			name: "grafana-dashboards"
