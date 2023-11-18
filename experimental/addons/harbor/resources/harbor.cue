@@ -7,7 +7,7 @@ harbor: {
 		repoType:        "helm"
 		url:             "https://helm.goharbor.io"
 		chart:           "harbor"
-		version:         "1.10.2"
+		version:         "1.13.1"
 		targetNamespace: "vela-system"
 		releaseName:     "harbor"
 		values: {
