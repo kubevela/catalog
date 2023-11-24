@@ -13,7 +13,7 @@ parameter: {
 	secretName?: string
 	// +usage=Specify the gateway type.
 	gatewayDriver: *"nginx" | "traefik"
-	// +usage=Set ingress class name in 'kubernetes.io/ingress.class' annotation.
+	// +usage=Specify the ingress class name if gateway driver is nginx.
 	class: *"nginx" | string
 	// +usage=Specify the serviceAccountName for apiserver
 	serviceAccountName: *"kubevela-ux" | string
