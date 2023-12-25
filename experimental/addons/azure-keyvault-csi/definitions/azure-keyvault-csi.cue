@@ -8,7 +8,7 @@ import "strings"
     labels: {}
     description: "Add filesystem-mounted values from Azure KeyVault, using Azure key vault provider for secrets store csi driver which must be installed separately, see https://azure.github.io/secrets-store-csi-driver-provider-azure/docs/getting-started/installation/"
     attributes: {
-        appliesToWorkloads: ["deployments.apps"]
+        appliesToWorkloads: ["deployments.apps","cronjobs.batch"]
         podDisruptive: true
     }
 }
@@ -26,7 +26,7 @@ template: {
 
     kvObjectsString: "array:\n- |\n" + strings.Join(kvObjects,"\n- |\n")
 
-    patch: spec: template: spec: {
+    let patchContent=template: spec: {
         // +patchKey=name
         volumes: [{
           name: "secrets-store",
@@ -46,6 +46,15 @@ template: {
             readOnly: true
           },]
         },]
+    }
+
+    patch: {
+        if context.output.spec.template != _|_ {
+            spec: patchContent
+        }
+        if context.output.spec.jobTemplate != _|_ {
+            spec: jobTemplate: spec: template: patchContent
+        }
     }
 
     outputs: {
