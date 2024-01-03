@@ -95,7 +95,7 @@ parameter: {
 		tls: *false | bool
 		// +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
 		tlsSecret?: string
-		// +Specify the ingress class name to use
+		// +usage=Specify the ingress class name to use
 		class?: string
 	}
 }
