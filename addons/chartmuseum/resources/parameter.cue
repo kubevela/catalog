@@ -31,9 +31,9 @@ parameter: {
 		// +usage=Server side encryption algorithm
 		sse?: string
 		// +usage=AWS access key id
-		accessKeyID: string
+		accessKeyID?: string
 		// +usage=AWS access key secret
-		accessKeySecret: string
+		accessKeySecret?: string
 	}
 	// +usage=GCP storage backend settings
 	google?: {
@@ -95,5 +95,7 @@ parameter: {
 		tls: *false | bool
 		// +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
 		tlsSecret?: string
+		// +usage=Specify the ingress class name to use
+		class?: string
 	}
 }
