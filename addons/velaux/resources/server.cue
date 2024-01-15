@@ -15,7 +15,7 @@ enableImpersonation: *[ if parameter["enableImpersonation"] {
 }] | []
 
 _nginxTrait: *[
-		if parameter["domain"] != _|_ && parameter["gatewayDriver"] == "nginx" {
+		if parameter["domain"] != _|_ && parameter["gatewayDriver"] != "traefik" {
 		{
 			type: "gateway"
 			properties: {
@@ -23,7 +23,7 @@ _nginxTrait: *[
 				http: {
 					"/": 8000
 				}
-				class: parameter["ingressClass"]
+				class: parameter["gatewayDriver"]
 			}
 		}
 	},
