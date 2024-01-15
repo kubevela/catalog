@@ -92,6 +92,9 @@ import (
 		type:    "gateway"
 		properties: {
 			domain: parameter.ingressHost.name
+			if parameter.ingressHost.class != _|_ {
+				class: parameter.ingressHost.class
+			}
 			http: {
 				"\(parameter.ingressHost.path)": parameter.externalPort
 			}
