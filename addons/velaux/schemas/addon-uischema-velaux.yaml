@@ -35,5 +35,3 @@
   sort: 11
 - jsonKey: imagePullSecrets
   sort: 13
-- jsonKey: ingressClass
-  sort: 14
