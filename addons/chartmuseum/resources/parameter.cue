@@ -60,7 +60,7 @@ parameter: {
 	// +usage=Disable all routes prefixed with /api
 	disableAPI: *false | bool
 	// +usage=Override the default for updating the cache index-cache.yaml e.g. 5m, 1s
-	cacheRefresh?: string
+	cacheRefresh: *"5m" | string
 	// +usage=Allow chart versions to be re-uploaded
 	allowOverwrite: *true | bool
 	// +usage=Allow anonymous GET operations when auth is used
