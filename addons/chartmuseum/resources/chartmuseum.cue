@@ -36,6 +36,7 @@ import (
 	}
 	DEBUG:              strconv.FormatBool(parameter.debug)
 	DISABLE_API:        strconv.FormatBool(parameter.disableAPI)
+	CACHE_INTERVAL:     strconv.FormatBool(parameter.cacheRefresh)
 	ALLOW_OVERWRITE:    strconv.FormatBool(parameter.allowOverwrite)
 	AUTH_ANONYMOUS_GET: strconv.FormatBool(parameter.authAnonymousGet)
 	if parameter.basicAuth != _|_ {
