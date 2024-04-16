@@ -26,26 +26,28 @@ template: {
 
     kvObjectsString: "array:\n- |\n" + strings.Join(kvObjects,"\n- |\n")
 
-    let patchContent=template: spec: {
-        // +patchKey=name
-        volumes: [{
-          name: "secrets-store",
-          csi: {
-            driver: "secrets-store.csi.k8s.io",
-            readOnly: true,
-            volumeAttributes: {
-              secretProviderClass: context.name
-            }
-          }
-        },]
-        containers: [{
-          // +patchKey=name
-          volumeMounts: [{
-            mountPath: "/mnt/secrets-store",
-            name: "secrets-store",
-            readOnly: true
-          },]
-        },]
+    let patchContent={
+        spec: {
+            // +patchKey=name
+            volumes: [{
+              name: "secrets-store",
+              csi: {
+                driver: "secrets-store.csi.k8s.io",
+                readOnly: true,
+                volumeAttributes: {
+                  secretProviderClass: context.name
+                }
+              }
+            },]
+            containers: [{
+              // +patchKey=name
+              volumeMounts: [{
+                mountPath: "/mnt/secrets-store",
+                name: "secrets-store",
+                readOnly: true
+              },]
+            },]
+        }
     }
 
     patch: {
