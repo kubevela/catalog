@@ -27,26 +27,28 @@ template: {
     kvObjectsString: "array:\n- |\n" + strings.Join(kvObjects,"\n- |\n")
 
     let patchContent={
-        spec: {
-            // +patchKey=name
-            volumes: [{
-              name: "secrets-store",
-              csi: {
-                driver: "secrets-store.csi.k8s.io",
-                readOnly: true,
-                volumeAttributes: {
-                  secretProviderClass: context.name
-                }
-              }
-            },]
-            containers: [{
-              // +patchKey=name
-              volumeMounts: [{
-                mountPath: "/mnt/secrets-store",
-                name: "secrets-store",
-                readOnly: true
-              },]
-            },]
+        template: {
+            spec: {
+                // +patchKey=name
+                volumes: [{
+                  name: "secrets-store",
+                  csi: {
+                    driver: "secrets-store.csi.k8s.io",
+                    readOnly: true,
+                    volumeAttributes: {
+                      secretProviderClass: context.name
+                    }
+                  }
+                },]
+                containers: [{
+                  // +patchKey=name
+                  volumeMounts: [{
+                    mountPath: "/mnt/secrets-store",
+                    name: "secrets-store",
+                    readOnly: true
+                  },]
+                },]
+            }
         }
     }
 
@@ -55,7 +57,7 @@ template: {
             spec: patchContent
         }
         if context.output.spec.jobTemplate != _|_ {
-            spec: jobTemplate: spec: template: patchContent
+            spec: jobTemplate: spec: patchContent
         }
     }
 
