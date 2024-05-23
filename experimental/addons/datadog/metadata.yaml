@@ -1,5 +1,5 @@
 name: datadog
-version: 0.0.3
+version: 0.0.4
 system:
   vela: ">=v1.9.0"
 description: Sets up the annotations and environment variables to assist a webservice or cron-task component to have correct collection of logs and apm stats by a datadog agent installed on the host nodes.

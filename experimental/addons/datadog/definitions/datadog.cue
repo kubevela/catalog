@@ -46,7 +46,7 @@ template: {
                 },
                 {
                     name: "DD_LOGS_INJECTION",
-                    value: true
+                    value: "true"
                 },
                 if parameter.source != _|_ {
                     {
@@ -64,12 +64,12 @@ template: {
     ]    
 
     let volumeMount = {
-        name: parameter.volumeName,
+        name: "\(parameter.volumeName)",
         mountPath: parameter.mountPath
     }
 
     let volume = {
-        name: parameter.volumeName,
+        name: "\(parameter.volumeName)",
         hostPath: path: parameter.hostMountPath
     }
 
