@@ -7,6 +7,7 @@ kubeStateMetrics: {
 	properties: {
 		image:           parameter["image"]
 		imagePullPolicy: parameter["imagePullPolicy"]
+		ports: [{port: 8080}]
 		livenessProbe: {
 			httpGet: {
 				path: "/healthz"
@@ -47,6 +48,7 @@ kubeStateMetrics: {
 				"prometheus.io/port":   "8080"
 				"prometheus.io/scrape": "true"
 				"prometheus.io/path":   "/metrics"
+				"oam.dev/addon-name": "kube-state-metric"
 			}
 		}
 	}, {

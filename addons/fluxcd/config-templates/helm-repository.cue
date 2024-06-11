@@ -33,9 +33,6 @@ template: {
 			if parameter.password != _|_ {
 				password: parameter.password
 			}
-
-		}
-		data: {
 			if parameter.caFile != _|_ {
 				caFile: parameter.caFile
 			}
@@ -53,7 +50,7 @@ template: {
 		username?: string
 		// +usage=The password of basic auth repo.
 		password?: string
-		// +usage=The ca certificate of helm repository. Please encode this data with base64.
+		// +usage=The ca certificate of helm repository. don't need base64 encode.
 		caFile?: string
 	}
 }

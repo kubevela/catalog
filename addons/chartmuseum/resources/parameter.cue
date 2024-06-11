@@ -31,9 +31,9 @@ parameter: {
 		// +usage=Server side encryption algorithm
 		sse?: string
 		// +usage=AWS access key id
-		accessKeyID: string
+		accessKeyID?: string
 		// +usage=AWS access key secret
-		accessKeySecret: string
+		accessKeySecret?: string
 	}
 	// +usage=GCP storage backend settings
 	google?: {
@@ -59,6 +59,8 @@ parameter: {
 	debug: *false | bool
 	// +usage=Disable all routes prefixed with /api
 	disableAPI: *false | bool
+	// +usage=Override the default for updating the cache index-cache.yaml e.g. 5m, 1s
+	cacheRefresh: *"5m" | string
 	// +usage=Allow chart versions to be re-uploaded
 	allowOverwrite: *true | bool
 	// +usage=Allow anonymous GET operations when auth is used
@@ -95,5 +97,7 @@ parameter: {
 		tls: *false | bool
 		// +usage=If TLS is set to true, you must declare what secret will store the key/certificate for TLS. Secrets must be added manually to the vela-system.
 		tlsSecret?: string
+		// +usage=Specify the ingress class name to use
+		class?: string
 	}
 }

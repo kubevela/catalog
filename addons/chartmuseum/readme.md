@@ -163,3 +163,12 @@ amazon: {
 	accessKeySecret: "secret"
 }
 ```
+
+#### Caching
+
+Override the default for updating the cache index-cache.yaml
+
+```yaml
+// +usage=Override the default for updating the cache index-cache.yaml e.g. 5m, 1s
+cacheRefresh: string
+```

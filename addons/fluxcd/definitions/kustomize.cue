@@ -35,6 +35,14 @@ template: {
 				}
 				namespace: context.namespace
 			}
+			if parameter.decryption != _|_ {
+				decryption: {
+					provider: parameter.decryption.provider
+					secretRef: {
+						name: parameter.decryption.secretRef.name
+					}
+				}
+			}
 			path:    parameter.path
 			suspend: parameter.suspend
 			prune:   parameter.prune
@@ -255,6 +263,14 @@ template: {
 		// +usage=The name of the source already existed
 		sourceName?: string
 
+		decryption?: {
+			// +usage=Determines which decrypt method to use. Defaults to sops
+			provider: string
+			secretRef: {
+				// +usage=Decrypt secretRef to use
+				name: string
+			}
+		}
 		git?: {
 			// +usage=The Git branch to checkout and monitor for changes, defaults to main branch
 			branch?: *"main" | string

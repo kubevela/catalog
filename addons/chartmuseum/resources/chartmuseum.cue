@@ -36,6 +36,7 @@ import (
 	}
 	DEBUG:              strconv.FormatBool(parameter.debug)
 	DISABLE_API:        strconv.FormatBool(parameter.disableAPI)
+	CACHE_INTERVAL:     parameter.cacheRefresh
 	ALLOW_OVERWRITE:    strconv.FormatBool(parameter.allowOverwrite)
 	AUTH_ANONYMOUS_GET: strconv.FormatBool(parameter.authAnonymousGet)
 	if parameter.basicAuth != _|_ {
@@ -92,6 +93,9 @@ import (
 		type:    "gateway"
 		properties: {
 			domain: parameter.ingressHost.name
+			if parameter.ingressHost.class != _|_ {
+				class: parameter.ingressHost.class
+			}
 			http: {
 				"\(parameter.ingressHost.path)": parameter.externalPort
 			}
