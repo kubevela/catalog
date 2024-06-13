@@ -1,0 +1,24 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: hive-postgres-cluster
+spec:
+  components:
+    - type: hive-cluster
+      name: hive-postgres-cluster
+      properties:
+        image:
+          productVersion: 3.1.3
+          stackableVersion: 23.1.0
+        clusterConfig:
+          database:
+            connString: jdbc:postgresql://postgresql:5432/hive
+            user: hive
+            password: hive
+            dbType: postgres
+          s3:
+            reference: minio
+        metastore:
+          roleGroups:
+            default:
+              replicas: 1
