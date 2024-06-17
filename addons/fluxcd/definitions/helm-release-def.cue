@@ -66,23 +66,36 @@ template: {
 	outputs: {
 		if parameter.sourceName == _|_ {
 			repo: {
-				apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 				metadata: {
 					name: context.name
 				}
 				if parameter.repoType == "git" {
-					kind: "GitRepository"
+					apiVersion: "source.toolkit.fluxcd.io/v1"
+					kind:       "GitRepository"
 					spec: {
 						url: parameter.url
 						if parameter.git.branch != _|_ {
 							ref: branch: parameter.git.branch
+						}
+						if parameter.git.commit != _|_ {
+							ref: commit: parameter.git.commit
+						}
+						if parameter.git.name != _|_ {
+							ref: name: parameter.git.name
+						}
+						if parameter.git.semver != _|_ {
+							ref: semver: parameter.git.semver
+						}
+						if parameter.git.tag != _|_ {
+							ref: tag: parameter.git.tag
 						}
 						_secret
 						_sourceCommonArgs
 					}
 				}
 				if parameter.repoType == "oss" {
-					kind: "Bucket"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					kind:       "Bucket"
 					spec: {
 						endpoint:   parameter.url
 						bucketName: parameter.oss.bucketName
@@ -95,7 +108,8 @@ template: {
 					}
 				}
 				if parameter.repoType == "helm" || parameter.repoType == "oci" {
-					kind: "HelmRepository"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					kind:       "HelmRepository"
 					spec: {
 						url: parameter.url
 						if parameter.repoType == "oci" {
@@ -157,7 +171,7 @@ template: {
 				values: parameter.values
 			}
 			if parameter.valuesFrom != _|_ {
-				valuesFrom: [for v in parameter.valuesFrom {{
+				valuesFrom: [ for v in parameter.valuesFrom {{
 					kind: v.kind
 					name: v.name
 					if v.valuesKey != _|_ {
@@ -182,7 +196,7 @@ template: {
 				}
 				if parameter.upgradeCRD != _|_ {
 					if parameter.upgradeCRD {
-						 crds: "CreateReplace"
+						crds: "CreateReplace"
 					}
 				}
 			}
@@ -224,8 +238,16 @@ template: {
 		sourceName?: string
 
 		git?: {
-			// +usage=The Git reference to checkout and monitor for changes, defaults to main branch
-			branch: *"main" | string
+			// +usage=The Git branch to checkout and monitor for changes, defaults to main branch
+			branch?: *"main" | string
+			// +usage=The Git commit to checkout and monitor for changes, takes precedence over all reference fields
+			commit?: string
+			// +usage=The Git reference name to checkout and monitor for changes, takes precendence over branch, tag and semver
+			name?: string
+			// +usage=Semver tag expression to checkout and monitor for changes, takes precedence over tag
+			semver?: string
+			// +usage=The Git tag to checkout and monitor for changes, takes precedence over branch
+			tag?: string
 		}
 		oss?: {
 			// +usage=The bucket's name, required if repoType is oss
@@ -235,10 +257,9 @@ template: {
 			// +usage=The bucket region, optional
 			region?: string
 		}
-		helmrepository?: {		   
+		helmrepository?: {
 			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
-			provider: *"generic" | "azure" | "aws" | "gcp"		
-			
+			provider: *"generic" | "azure" | "aws" | "gcp"
 		}
 		// +usage=Alternative list of values files to use as the chart values (values.yaml is not included by default), expected to be a relative path in the SourceRef.Values files are merged in the order of this list with the last file overriding the first.
 		valuesFiles?: [...string]

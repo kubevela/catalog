@@ -9,7 +9,7 @@ kustomize: {
 
 template: {
 	output: {
-		apiVersion: "kustomize.toolkit.fluxcd.io/v1beta2"
+		apiVersion: "kustomize.toolkit.fluxcd.io/v1"
 		kind:       "Kustomization"
 		metadata: {
 			name:      context.name
@@ -56,32 +56,37 @@ template: {
 	outputs: {
 		if parameter.sourceName == _|_ {
 			repo: {
-				apiVersion: "source.toolkit.fluxcd.io/v1beta2"
 				metadata: {
 					name:      context.name
 					namespace: context.namespace
 				}
 				if parameter.repoType == "git" {
-					kind: "GitRepository"
+					apiVersion: "source.toolkit.fluxcd.io/v1"
+					kind:       "GitRepository"
 					spec: {
 						url: parameter.url
 						if parameter.git.branch != _|_ {
 							ref: branch: parameter.git.branch
 						}
-						if parameter.git.provider != _|_ {
-							if parameter.git.provider == "GitHub" {
-								gitImplementation: "go-git"
-							}
-							if parameter.git.provider == "AzureDevOps" {
-								gitImplementation: "libgit2"
-							}
+						if parameter.git.commit != _|_ {
+							ref: commit: parameter.git.commit
+						}
+						if parameter.git.name != _|_ {
+							ref: name: parameter.git.name
+						}
+						if parameter.git.semver != _|_ {
+							ref: semver: parameter.git.semver
+						}
+						if parameter.git.tag != _|_ {
+							ref: tag: parameter.git.tag
 						}
 						_secret
 						_sourceCommonArgs
 					}
 				}
 				if parameter.repoType == "oss" {
-					kind: "Bucket"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					kind:       "Bucket"
 					spec: {
 						endpoint:   parameter.url
 						bucketName: parameter.oss.bucketName
@@ -94,7 +99,8 @@ template: {
 					}
 				}
 				if parameter.repoType == "oci" {
-					kind: "OCIRepository"
+					apiVersion: "source.toolkit.fluxcd.io/v1beta2"
+					kind:       "OCIRepository"
 					spec: {
 						url: parameter.url
 						if parameter.oci.provider != _|_ {
@@ -102,7 +108,13 @@ template: {
 						}
 						if parameter.oci.tag != _|_ {
 							ref: tag: parameter.oci.tag
-						}						
+						}
+						if parameter.oci.semver != _|_ {
+							ref: semver: parameter.oci.semver
+						}
+						if parameter.oci.digest != _|_ {
+							ref: digest: parameter.oci.digest
+						}
 						_secret
 						_sourceCommonArgs
 					}
@@ -112,7 +124,7 @@ template: {
 
 		if parameter.imageRepository != _|_ {
 			imageRepo: {
-				apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+				apiVersion: "image.toolkit.fluxcd.io/v1beta2"
 				kind:       "ImageRepository"
 				metadata: {
 					name:      context.name
@@ -128,7 +140,7 @@ template: {
 			}
 
 			imagePolicy: {
-				apiVersion: "image.toolkit.fluxcd.io/v1beta1"
+				apiVersion: "image.toolkit.fluxcd.io/v1beta2"
 				kind:       "ImagePolicy"
 				metadata: {
 					name:      context.name
@@ -260,10 +272,16 @@ template: {
 			}
 		}
 		git?: {
-			// +usage=The Git reference to checkout and monitor for changes, defaults to master branch
-			branch: string
-			// +usage=Determines which git client library to use. Defaults to GitHub, it will pick go-git. AzureDevOps will pick libgit2.
-			provider?: *"GitHub" | "AzureDevOps"
+			// +usage=The Git branch to checkout and monitor for changes, defaults to main branch
+			branch?: *"main" | string
+			// +usage=The Git commit to checkout and monitor for changes, takes precedence over all reference fields
+			commit?: string
+			// +usage=The Git reference name to checkout and monitor for changes, takes precendence over branch, tag and semver
+			name?: string
+			// +usage=Semver tag expression to checkout and monitor for changes, takes precedence over tag
+			semver?: string
+			// +usage=The Git tag to checkout and monitor for changes, takes precedence over branch
+			tag?: string
 		}
 		oss?: {
 			// +usage=The bucket's name, required if repoType is oss
@@ -273,12 +291,15 @@ template: {
 			// +usage=The bucket region, optional
 			region?: string
 		}
-		oci?: {		   
+		oci?: {
 			// +usage=The OIDC provider used for authentication purposes.The generic provider can be used for public repositories or when static credentials are used for authentication, either with spec.secretRef or spec.serviceAccountName
 			provider: *"generic" | "azure" | "aws" | "gcp"
 			// +usage=The image tag
-			tag: *"latest" | string
-			
+			tag?: string
+			// +usage=The image digest, takes precedence over all fields.
+			digest?: string
+			// +usage=Semver tag expression to checkout and monitor for changes, takes precedence over tag
+			semver?: string
 		}
 		//+usage=Path to the directory containing the kustomization.yaml file, or the set of plain YAMLs a kustomization.yaml should be generated for.
 		path: string
