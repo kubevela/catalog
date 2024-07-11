@@ -22,7 +22,9 @@ template: {
 				name:      context.name + "-" + context.stepSessionID
 				namespace: "vela-system"
 				labels: {
-					"enable-addon.oam.dev": context.name
+					"enable-addon.oam.dev":     context.name
+					"workflow.oam.dev/name":    context.name
+					"workflow.oam.dev/session": context.stepSessionID
 				}
 				annotations: {
 					"workflowrun.oam.dev/step": context.stepName
