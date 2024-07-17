@@ -20,10 +20,10 @@ output: {
 				dependsOn: ["flink-operator-ns"]
 				properties: {
 					repoType:        "helm"
-					url:             "https://downloads.apache.org/flink/flink-kubernetes-operator-1.3.1/"
+					url:             "https://downloads.apache.org/flink/flink-kubernetes-operator-" + parameter["flinkOperatorVersion"] + "/"
 					chart:           "flink-kubernetes-operator"
 					targetNamespace: parameter["namespace"]
-					version:         "1.3.1"
+					version:         parameter["flinkOperatorVersion"]
 					upgradeCRD:      parameter.upgradeCRD
 					values: {
 						webhook: {
