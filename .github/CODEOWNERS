@@ -1,26 +1,26 @@
 # This file is a github code protect rule follow the codeowners https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners#example-of-a-codeowners-file
 
-*                                  @wangyikewxgm @wonderflow @barnettZQG
+*                                  @wangyikewxgm @wonderflow @barnettZQG @FogDong @anoop2811 @dhiguero
 
 # Owner of addon fluxcd
-addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129
+addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129 @anoop2811 @dhiguero
 
 # Owner of addon ocm
-addons/ocm-cluster-manager         @Somefive
+addons/ocm-cluster-manager         @Somefive @FogDong @anoop2811 @dhiguero
 
 # Owner of addon terraform
-addons/terraform                   @chivalryq
-addons/terraform-alibaba           @chivalryq
-addons/terraform-aws               @chivalryq
-addons/terraform-azure             @chivalryq
+addons/terraform                   @chivalryq @FogDong @anoop2811 @dhiguero
+addons/terraform-alibaba           @chivalryq @FogDong @anoop2811 @dhiguero
+addons/terraform-aws               @chivalryq @FogDong @anoop2811 @dhiguero
+addons/terraform-azure             @chivalryq @FogDong @anoop2811 @dhiguero
 
 # Owner of health addon velaux
-addons/velaux                      @barnettZQG
+addons/velaux                      @barnettZQG @FogDong @anoop2811 @dhiguero
 
 # Owner of chartMuseum addon
-addons/chartmuseum                 @charlie0129 @wangyikewxgm
-addons/loki                        @Somefive @wangyikewxgm
-addons/grafana                     @Somefive @wangyikewxgm
-addons/o11y-definitions            @Somefive @barnettZQG
-addons/prometheus-server           @Somefive @wangyikewxgm
-addons/vela-workflow               @FogDong @barnettZQG
+addons/chartmuseum                 @charlie0129 @wangyikewxgm @FogDong @anoop2811 @dhiguero
+addons/loki                        @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero
+addons/grafana                     @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero
+addons/o11y-definitions            @Somefive @barnettZQG @FogDong @anoop2811 @dhiguero
+addons/prometheus-server           @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero
+addons/vela-workflow               @FogDong @barnettZQG @anoop2811 @dhiguero
