@@ -76,7 +76,7 @@ template: {
     let sourceAnnotation = {
         if parameter.source != _|_ {
             metadata: annotations: {
-                ("ad.datadoghq.com/"+parameter.serviceName+".logs"): "[{\"source\": \""+parameter.source+"\"}]"
+                ("ad.datadoghq.com/"+context.name+".logs"): "[{\"source\": \""+parameter.source+"\"}]"
             }
         }
     }
@@ -135,7 +135,7 @@ template: {
       // +usage=name of host mount volume (default datadog)
       volumeName: *"datadog" | string
 
-      // +usage=source for logging - added as an annotation 'ad.datadoghq.com/<serviceName>.logs: [{"source":"<this value>"}]', and if logDirectSubmissionIntegrations is given, also assigned to DD_LOGS_DIRECT_SUBMISSION_SOURCE env var.
+      // +usage=source for logging - added as an annotation 'ad.datadoghq.com/<component name>.logs: [{"source":"<this value>"}]', and if logDirectSubmissionIntegrations is given, also assigned to DD_LOGS_DIRECT_SUBMISSION_SOURCE env var.
       source?: string
 
       // +usage=auto-map standard dependencies to <serviceName>-dependency by setting DD_TRACE_SERVICE_MAPPING env var (default false)
