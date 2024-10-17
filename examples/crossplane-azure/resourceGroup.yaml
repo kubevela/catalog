@@ -1,0 +1,11 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: crossplane-azure-rg-app
+spec:
+  components:
+    - name: resource-group
+      type: azure-rg
+      properties:
+        Name: crossplane-test-rg
+        Location: eastus # Refer to the Azure region names reference for a complete list: https://azuretracks.com/2021/04/current-azure-region-names-reference/

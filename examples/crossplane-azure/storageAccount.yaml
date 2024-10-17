@@ -1,0 +1,15 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: crossplane-azure-storage-acct-app
+spec:
+  components:
+    - name: storage-account
+      type: azure-storage-account
+      properties:
+        Name: crossplanetestacct
+        ResourceGroupName: test-rg  # Ensure the Resource Group exists already in the Azure account.
+        Location: eastus   # Refer to the Azure region names reference for a complete list: https://azuretracks.com/2021/04/current-azure-region-names-reference/
+        SKU_Name: Standard_GRS
+        Kind: Storage
+        secretName: storageaccount-connection-secret
