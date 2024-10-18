@@ -65,6 +65,9 @@ vela addon disable istio
 vela addon enable experimental/addons/dapr
 vela addon disable dapr
 
+# crossplane-azure
+vela addon enable experimental/addons/crossplane-azure
+vela addon disable crossplane-azure
 
 ## test dependencies-addon unInstall
 for i in $(seq 1 1 5)

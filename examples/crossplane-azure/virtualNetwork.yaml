@@ -1,0 +1,16 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: crossplane-azure-vnet-app
+spec:
+  components:
+    - name: virtual-network
+      type: azure-vnet
+      properties:
+        Name: crossplane-vnet
+        ResourceGroupName: crossplane-test-rg
+        Location: eastus # Refer to the Azure region names reference for a complete list: https://azuretracks.com/2021/04/current-azure-region-names-reference/
+        AddressPrefixes:
+          - "10.0.0.0/16"
+          - "192.168.0.0/16"
+          - "172.16.0.0/12"
