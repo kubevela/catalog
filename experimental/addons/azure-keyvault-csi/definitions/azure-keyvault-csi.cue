@@ -8,7 +8,7 @@ import "strings"
     labels: {}
     description: "Add filesystem-mounted values from Azure KeyVault, using Azure key vault provider for secrets store csi driver which must be installed separately, see https://azure.github.io/secrets-store-csi-driver-provider-azure/docs/getting-started/installation/"
     attributes: {
-        appliesToWorkloads: ["deployments.apps","cronjobs.batch"]
+        appliesToWorkloads: ["deployments.apps","cronjobs.batch","statefulsets.apps"]
         podDisruptive: true
     }
 }
