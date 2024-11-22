@@ -6,7 +6,7 @@ import "strings"
     labels: {}
     description: "Add required env vars, annotations and host volume mount for datadog instrumentation"
     attributes: {
-        appliesToWorkloads: ["deployments.apps","cronjobs.batch"]
+        appliesToWorkloads: ["deployments.apps","cronjobs.batch","statefulsets.apps"]
         podDisruptive: true
     }
 }
