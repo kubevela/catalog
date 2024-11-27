@@ -4,6 +4,16 @@ _base: string
 _rules: [...]
 controllerArgs: [...]
 _targetNamespace: string
+defaultResources: {
+	limits: {
+		cpu:    parameter.helmControllerResourceLimits.cpu    | *"1000m"
+		memory: parameter.helmControllerResourceLimits.memory | *"1Gi"
+	}
+	requests: {
+		cpu:    parameter.helmControllerResourceRequests.cpu    | *"100m"
+		memory: parameter.helmControllerResourceRequests.memory | *"64Mi"
+	}
+}
 
 helmController: {
 	// About this name, refer to #429 for details.
@@ -12,12 +22,20 @@ helmController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/helm-controller:v0.36.0"
+		image:           _base + "fluxcd/helm-controller:v1.1.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
 				value: _targetNamespace
 			},
+			{
+				name:  "GOMAXPROCS"
+				value: defaultResources.limits.cpu
+			},
+			{
+				name:  "GOMEMLIMIT"
+				value: defaultResources.limits.memory
+			}
 		]
 		livenessProbe: {
 			httpGet: {
@@ -67,6 +85,17 @@ helmController: {
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "helm-controller"
 			}
+		},
+		{
+			type: "annotations"
+			properties: {
+				"prometheus.io/port": "8080"
+				"prometheus.io/scrape": "true"
+			}
+		},
+		{
+			type: "resource"
+			properties: defaultResources 
 		},
 		{
 			type: "command"
