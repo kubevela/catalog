@@ -1,5 +1,5 @@
 name: postgres-operator
-version: 1.0.0
+version: 1.0.1
 description: This addon adds postgres-operator to the kubevela to be used by across the application installed in kubevela.
 icon: ""
 url: "https://www.postgresql.org/"
