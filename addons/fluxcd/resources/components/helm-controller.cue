@@ -4,16 +4,6 @@ _base: string
 _rules: [...]
 controllerArgs: [...]
 _targetNamespace: string
-defaultResources: {
-	limits: {
-		cpu:    parameter.helmControllerResourceLimits.cpu    | *"1000m"
-		memory: parameter.helmControllerResourceLimits.memory | *"1Gi"
-	}
-	requests: {
-		cpu:    parameter.helmControllerResourceRequests.cpu    | *"100m"
-		memory: parameter.helmControllerResourceRequests.memory | *"64Mi"
-	}
-}
 
 helmController: {
 	// About this name, refer to #429 for details.
@@ -29,12 +19,20 @@ helmController: {
 				value: _targetNamespace
 			},
 			{
-				name:  "GOMAXPROCS"
-				value: defaultResources.limits.cpu
+				name: "GOMAXPROCS"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.cpu"
+					}
+				}			
 			},
 			{
-				name:  "GOMEMLIMIT"
-				value: defaultResources.limits.memory
+				name: "GOMEMLIMIT"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.memory"
+					}
+				}			
 			}
 		]
 		livenessProbe: {
@@ -95,16 +93,45 @@ helmController: {
 		},
 		{
 			type: "resource"
-			properties: defaultResources 
+			properties: {
+				limits: {
+					if parameter.helmControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.helmControllerResourceLimits.cpu	
+					}
+					if parameter.helmControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.limits.cpu
+					}
+					if parameter.helmControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.helmControllerResourceLimits.memory	
+					}
+					if parameter.helmControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.limits.memory
+					}
+				}
+				requests: {
+					if parameter.helmControllerResourceRequests.cpu  != _|_ {
+						cpu:    parameter.helmControllerResourceRequests.cpu	
+					}
+					if parameter.helmControllerResourceRequests.cpu  == _|_ {
+						cpu:    deploymentResources.requests.cpu
+					}
+					if parameter.helmControllerResourceRequests.memory  != _|_ {
+						memory:    parameter.helmControllerResourceRequests.memory	
+					}
+					if parameter.helmControllerResourceRequests.memory  == _|_ {
+						memory:    deploymentResources.requests.memory
+					}
+				}
+			} 
 		},
 		{
 			type: "command"
 			properties: {
 				if parameter.helmControllerOptions != _|_ {
-					args: controllerArgs + parameter.helmControllerOptions
+					args: eventAddrArgs + parameter.helmControllerOptions
 				}
 				if parameter.helmControllerOptions == _|_ {
-					args: controllerArgs
+					args: eventAddrArgs
 				}
 			}
 		},

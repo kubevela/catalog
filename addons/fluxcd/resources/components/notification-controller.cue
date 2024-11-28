@@ -4,18 +4,15 @@ _base: string
 _rules: [...]
 controllerArgs: [...]
 _targetNamespace: string
-// imageControllerDefaultArgs: controllerArgs + [
-// 	"--events-addr=" + "http://fluxcd-notification-controller." + _targetNamespace + ".svc:9090"
-// ]
 
-imageAutomationController: {
+notificationController: {
 	// About this name, refer to #429 for details.
-	name: "fluxcd-image-automation-controller"
+	name: "fluxcd-notification-controller"
 	type: "webservice"
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/image-automation-controller:v0.39.0"
+		image:           _base + "fluxcd/notification-controller:v1.4.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
@@ -58,9 +55,25 @@ imageAutomationController: {
 					name:      "temp"
 					mountPath: "/tmp"
 				},
+				{
+					name:      "data"
+					mountPath: "/data"
+				},
 			]
 		}
 		ports: [
+			{
+				port:     9090
+				name:     "http"
+				protocol: "TCP"
+				expose:   true
+			},
+			{
+				port:     9292
+				name:     "http-webhook"
+				protocol: "TCP"
+				expose:   true
+			},
 			{
 				name: "http-prom"
 				port: 8080
@@ -68,12 +81,13 @@ imageAutomationController: {
 				protocol: "TCP"
 			},
 		]
+		exposeType: "ClusterIP"
 	}
 	traits: [
 		{
 			type: "service-account"
 			properties: {
-				name:       "sa-image-automation-controller"
+				name:       "sa-notification-controller"
 				create:     true
 				privileges: _rules
 			}
@@ -84,7 +98,7 @@ imageAutomationController: {
 				"control-plane": "controller"
 				// This label is kept to avoid breaking existing 
 				// KubeVela e2e tests (makefile e2e-setup).
-				"app": "image-automation-controller"
+				"app": "notification-controller"
 			}
 		},
 		{
@@ -98,30 +112,30 @@ imageAutomationController: {
 			type: "resource"
 			properties: {
 				limits: {
-					if parameter.imageAutomationControllerResourceLimits.cpu  != _|_ {
-						cpu:    parameter.imageAutomationControllerResourceLimits.cpu	
+					if parameter.notificationControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.notificationControllerResourceLimits.cpu	
 					}
-					if parameter.imageAutomationControllerResourceLimits.cpu  == _|_ {
+					if parameter.notificationControllerResourceLimits.cpu  == _|_ {
 						cpu:    deploymentResources.limits.cpu
 					}
-					if parameter.imageAutomationControllerResourceLimits.memory  != _|_ {
-						memory:    parameter.imageAutomationControllerResourceLimits.memory	
+					if parameter.notificationControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.notificationControllerResourceLimits.memory	
 					}
-					if parameter.imageAutomationControllerResourceLimits.memory  == _|_ {
+					if parameter.sourceControllerResourceLimits.memory  == _|_ {
 						memory:    deploymentResources.limits.memory
 					}
 				}
 				requests: {
-					if parameter.imageAutomationControllerResourceRequests.cpu  != _|_ {
-						cpu:    parameter.imageAutomationControllerResourceRequests.cpu	
+					if parameter.notificationControllerResourceRequests.cpu  != _|_ {
+						cpu:    parameter.notificationControllerResourceRequests.cpu	
 					}
-					if parameter.imageAutomationControllerResourceRequests.cpu  == _|_ {
+					if parameter.notificationControllerResourceRequests.cpu  == _|_ {
 						cpu:    deploymentResources.requests.cpu
 					}
-					if parameter.imageAutomationControllerResourceRequests.memory  != _|_ {
-						memory:    parameter.imageAutomationControllerResourceRequests.memory	
+					if parameter.notificationControllerResourceRequests.memory  != _|_ {
+						memory:    parameter.notificationControllerResourceRequests.memory	
 					}
-					if parameter.imageAutomationControllerResourceRequests.memory  == _|_ {
+					if parameter.notificationControllerResourceRequests.memory  == _|_ {
 						memory:    deploymentResources.requests.memory
 					}
 				}
@@ -130,11 +144,11 @@ imageAutomationController: {
 		{
 			type: "command"
 			properties: {
-				if parameter.imageAutomationControllerOptions != _|_ {
-					args: eventAddrArgs + parameter.imageAutomationControllerOptions
+				if parameter.notificationControllerOptions != _|_ {
+					args: controllerArgs + parameter.notificationControllerOptions
 				}
-				if parameter.imageAutomationControllerOptions == _|_ {
-					args: eventAddrArgs
+				if parameter.notificationControllerOptions == _|_ {
+					args: controllerArgs
 				}
 			}
 		},
