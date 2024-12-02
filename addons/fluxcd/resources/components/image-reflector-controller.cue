@@ -4,9 +4,6 @@ _base: string
 _rules: [...]
 controllerArgs: [...]
 _targetNamespace: string
-// imageControllerDefaultArgs: controllerArgs + [
-// 	"--events-addr=" + "http://fluxcd-notification-controller." + _targetNamespace + ".svc:9090"
-// ]
 
 imageReflectorController: {
 	// About this name, refer to #429 for details.
