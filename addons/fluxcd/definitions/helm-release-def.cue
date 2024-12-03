@@ -133,7 +133,7 @@ template: {
 		}
 		spec: {
 			timeout:  parameter.installTimeout
-			interval: parameter.pullInterval
+			interval: parameter.interval
 			chart: {
 				spec: {
 					chart:   parameter.chart
@@ -155,7 +155,7 @@ template: {
 							name: parameter.sourceName
 						}
 					}
-					interval: parameter.interval
+					interval: parameter.pullInterval
 					if parameter["valuesFiles"] != _|_ {
 						valuesFiles: parameter["valuesFiles"]
 					}
