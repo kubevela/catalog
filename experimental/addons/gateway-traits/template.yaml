@@ -1,7 +1,7 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: gateway-traits
+  name: gateway-api
   namespace: vela-system
 spec:
   components:
