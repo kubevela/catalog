@@ -12,12 +12,28 @@ kustomizeController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/kustomize-controller:v1.1.0"
+		image:           _base + "fluxcd/kustomize-controller:v1.4.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
 				value: _targetNamespace
 			},
+			{
+				name: "GOMAXPROCS"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.cpu"
+					}
+				}			
+			},
+			{
+				name: "GOMEMLIMIT"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.memory"
+					}
+				}			
+			}
 		]
 		livenessProbe: {
 			httpGet: {
@@ -69,13 +85,53 @@ kustomizeController: {
 			}
 		},
 		{
+			type: "annotations"
+			properties: {
+				"prometheus.io/port": "8080"
+				"prometheus.io/scrape": "true"
+			}
+		},
+		{
+			type: "resource"
+			properties: {
+				limits: {
+					if parameter.kustomizeControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.kustomizeControllerResourceLimits.cpu	
+					}
+					if parameter.kustomizeControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.limits.cpu
+					}
+					if parameter.kustomizeControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.kustomizeControllerResourceLimits.memory	
+					}
+					if parameter.kustomizeControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.limits.memory
+					}
+				}
+				requests: {
+					if parameter.kustomizeControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.kustomizeControllerResourceLimits.cpu	
+					}
+					if parameter.kustomizeControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.requests.cpu
+					}
+					if parameter.kustomizeControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.kustomizeControllerResourceLimits.memory	
+					}
+					if parameter.kustomizeControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.requests.memory
+					}
+				}
+			} 
+		},
+		{
 			type: "command"
 			properties: {
 				if parameter.kustomizeControllerOptions != _|_ {
-					args: controllerArgs + parameter.kustomizeControllerOptions
+					args: eventAddrArgs + parameter.kustomizeControllerOptions
 				}
 				if parameter.kustomizeControllerOptions == _|_ {
-					args: controllerArgs
+					args: eventAddrArgs
 				}
 			}
 		},
