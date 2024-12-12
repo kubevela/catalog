@@ -7,7 +7,7 @@ kedacore: {
 		repoType:   "helm"
 		url:        "https://kedacore.github.io/charts"
 		chart:      "keda"
-		version:    "2.8.2"
+		version:    "2.12.0"
 		upgradeCRD: parameter.upgradeCRD
 	}
 }
