@@ -15,16 +15,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     env:
       URL: https://kubevela.github.io/catalog
-      GO_VERSION: 1.19
+      GO_VERSION: 1.22
     runs-on: ubuntu-22.04
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: package-addon-gen-index
         run: |
@@ -47,11 +47,11 @@ jobs:
           mv ./*.tgz ../../docs/experimental/
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: docs/
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4

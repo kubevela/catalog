@@ -2,17 +2,15 @@ name: Addon-test
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 env:
   # Common versions
-  GO_VERSION: '1.19'
-
+  GO_VERSION: "1.22"
 
 jobs:
-
   detect-noop:
     runs-on: ubuntu-latest
     outputs:
@@ -20,7 +18,7 @@ jobs:
     steps:
       - name: Detect No-op Changes
         id: noop
-        uses: fkirc/skip-duplicate-actions@v3.3.0
+        uses: fkirc/skip-duplicate-actions@v5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           paths_ignore: '["**.md", "**.mdx", "**.png", "**.jpg"]'
@@ -29,23 +27,47 @@ jobs:
 
   Addon-test:
     name: Addon-test
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: detect-noop
     if: needs.detect-noop.outputs.noop != 'true'
 
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        uses: actions/checkout@v4
 
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install make gcc jq ca-certificates curl gnupg -y
-          sudo snap install kubectl --classic
-          sudo snap install helm --classic
+          sudo apt-get install -y make gcc jq ca-certificates curl gnupg
+
+          # Detect OS and ARCH
+          OS=$(uname | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m)
+
+          if [[ "$ARCH" == "x86_64" ]]; then
+            ARCH="amd64"
+          elif [[ "$ARCH" == "aarch64" ]]; then
+            ARCH="arm64"
+          fi
+
+          echo "Detected OS: $OS"
+          echo "Detected ARCH: $ARCH"
+
+          # Install kubectl dynamically
+          KUBECTL_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+          curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/${OS}/${ARCH}/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+          # Install Helm dynamically
+          HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r .tag_name)
+          curl -LO "https://get.helm.sh/helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz"
+          tar -zxvf helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz
+          sudo mv ${OS}-${ARCH}/helm /usr/local/bin/helm
+          rm -rf ${OS}-${ARCH} helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz
 
       - name: Setup Go
-        uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9
+        uses: actions/setup-go@5
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -55,20 +77,20 @@ jobs:
 
       - name: Setup KinD
         run: |
-          go install sigs.k8s.io/kind@v0.19.0
+          go install sigs.k8s.io/kind@v0.22.0
           kind delete cluster --name worker || true
-          kind create cluster --name worker --image=kindest/node:v1.26.4
+          kind create cluster --name worker --image=kindest/node:v1.29.12
           kind export kubeconfig --internal --name worker --kubeconfig /tmp/worker.kubeconfig
           kind delete cluster || true
-          kind create cluster --image=kindest/node:v1.26.4
+          kind create cluster --image=kindest/node:v1.29.12
 
       - name: Install vela cli
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.9.0-alpha.3
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.10.1
 
       - name: Install vela core
         run: |
-          vela install -v v1.9.0-alpha.2 --yes
+          vela install -v v1.10.1 --yes
           kubectl get deploy -n vela-system kubevela-vela-core -oyaml
 
       - name: Vela worker cluster join
@@ -78,16 +100,15 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v37.0.1
+        uses: tj-actions/changed-files@v45.0.7
 
       - name: List all changed files
         run: |
-            for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-              echo "$file was changed"
-            done
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
 
       - name: Addon e2e-test
         run: |
           go build -o main test/e2e-test/addon-test/main.go
           ./main ${{ steps.changed-files.outputs.all_changed_files }}
-
