@@ -67,7 +67,7 @@ jobs:
           rm -rf ${OS}-${ARCH} helm-${HELM_VERSION}-${OS}-${ARCH}.tar.gz
 
       - name: Setup Go
-        uses: actions/setup-go@5
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
