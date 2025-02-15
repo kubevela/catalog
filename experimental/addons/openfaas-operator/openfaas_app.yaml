@@ -1,0 +1,13 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: marketing-list
+  namespace: openfaas-fn
+spec:
+  components:
+    - type: "openfaas-cluster"
+      name: "marketing-list"
+      properties:
+        name: marketing-list
+        image: docker.io/functions/marketing-list:0.1.0
+        
