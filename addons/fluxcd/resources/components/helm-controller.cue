@@ -12,12 +12,28 @@ helmController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/helm-controller:v0.36.0"
+		image:           _base + "fluxcd/helm-controller:v1.1.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
 				value: _targetNamespace
 			},
+			{
+				name: "GOMAXPROCS"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.cpu"
+					}
+				}			
+			},
+			{
+				name: "GOMEMLIMIT"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.memory"
+					}
+				}			
+			}
 		]
 		livenessProbe: {
 			httpGet: {
@@ -69,13 +85,53 @@ helmController: {
 			}
 		},
 		{
+			type: "annotations"
+			properties: {
+				"prometheus.io/port": "8080"
+				"prometheus.io/scrape": "true"
+			}
+		},
+		{
+			type: "resource"
+			properties: {
+				limits: {
+					if parameter.helmControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.helmControllerResourceLimits.cpu	
+					}
+					if parameter.helmControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.limits.cpu
+					}
+					if parameter.helmControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.helmControllerResourceLimits.memory	
+					}
+					if parameter.helmControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.limits.memory
+					}
+				}
+				requests: {
+					if parameter.helmControllerResourceRequests.cpu  != _|_ {
+						cpu:    parameter.helmControllerResourceRequests.cpu	
+					}
+					if parameter.helmControllerResourceRequests.cpu  == _|_ {
+						cpu:    deploymentResources.requests.cpu
+					}
+					if parameter.helmControllerResourceRequests.memory  != _|_ {
+						memory:    parameter.helmControllerResourceRequests.memory	
+					}
+					if parameter.helmControllerResourceRequests.memory  == _|_ {
+						memory:    deploymentResources.requests.memory
+					}
+				}
+			} 
+		},
+		{
 			type: "command"
 			properties: {
 				if parameter.helmControllerOptions != _|_ {
-					args: controllerArgs + parameter.helmControllerOptions
+					args: eventAddrArgs + parameter.helmControllerOptions
 				}
 				if parameter.helmControllerOptions == _|_ {
-					args: controllerArgs
+					args: eventAddrArgs
 				}
 			}
 		},

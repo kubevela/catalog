@@ -9,3 +9,7 @@ controllerArgs: [
 	// Refer to #429 for details.
 	// "--enable-leader-election",
 ]
+
+eventAddrArgs: controllerArgs + [
+	"--events-addr=http://fluxcd-notification-controller" + "." + _targetNamespace + ".svc.cluster.local:9090",
+]

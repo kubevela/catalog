@@ -39,6 +39,18 @@ _rules: [
 	},
 	{
 		apiGroups: [
+			"notification.toolkit.fluxcd.io",
+		]
+		resources: [
+			"*",
+		]
+		verbs: [
+			"*",
+		]
+		scope: "cluster"
+	},
+	{
+		apiGroups: [
 			"image.toolkit.fluxcd.io",
 		]
 		resources: [
@@ -126,6 +138,17 @@ _rules: [
 			"update",
 			"patch",
 			"delete",
+		]
+		scope: "cluster"
+	},
+	// required for flow control
+	{
+		nonResourceURLs: [
+			"/livez/ping",
+		]
+
+		verbs: [
+			"head",
 		]
 		scope: "cluster"
 	},
