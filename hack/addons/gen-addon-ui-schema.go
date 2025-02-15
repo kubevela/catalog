@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -32,7 +31,7 @@ func main() {
 				}
 			}
 		}
-		if err := ioutil.WriteFile(schema, []byte(SchemaTemple), 0644); err != nil {
+		if err := os.WriteFile(schema, []byte(SchemaTemple), 0644); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -50,7 +49,7 @@ func listTerraformSchemaFiles() ([]string, error) {
 	}
 
 	addons := filepath.Join(pwd, "addons")
-	infos, err := ioutil.ReadDir(addons)
+	infos, err := os.ReadDir(addons)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +58,7 @@ func listTerraformSchemaFiles() ([]string, error) {
 		if info.IsDir() && strings.HasPrefix(info.Name(), "terraform-") {
 			providerPath := filepath.Join(addons, info.Name())
 			definitionsPath := filepath.Join(providerPath, "definitions")
-			definitions, err := ioutil.ReadDir(definitionsPath)
+			definitions, err := os.ReadDir(definitionsPath)
 			if err != nil {
 				return nil, err
 			}
