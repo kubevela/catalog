@@ -22,6 +22,7 @@ output: {
 				type: "ref-objects"
 				name: "\(parameter.deploymentName)-\(key)"
 				properties: objects: [{
+					group:    "apps"
 					resource: "deployments"
 					name:     parameter.deploymentName
 				}]
