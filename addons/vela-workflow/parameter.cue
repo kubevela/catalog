@@ -9,7 +9,7 @@ const: {
 
 parameter: {
 	image:                *"oamdev/vela-workflow" | string
-	version:              *"0.6.0" | string
+	version:              *"0.6.2" | string
 	imagePullPolicy:      *"IfNotPresent" | "Never" | "Always"
 	concurrentReconciles: *4 | int
 	kubeQPS:              *50 | int
