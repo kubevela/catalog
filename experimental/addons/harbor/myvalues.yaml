@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  harbor.yaml: |
+    expose:
+      tls:
+        enabled: false
+      type: NodePort
+    externalURL: http://117.88.40.57:30002
+kind: ConfigMap
+metadata:
+  name: myhelmharbor
