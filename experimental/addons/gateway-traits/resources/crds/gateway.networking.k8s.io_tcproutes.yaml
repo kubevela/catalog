@@ -2,20 +2,20 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/1086
-    gateway.networking.k8s.io/bundle-version: v0.5.0
+    api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/1538
+    gateway.networking.k8s.io/bundle-version: v0.6.0
     gateway.networking.k8s.io/channel: experimental
   creationTimestamp: null
-  name: udproutes.gateway.networking.k8s.io
+  name: tcproutes.gateway.networking.k8s.io
 spec:
   group: gateway.networking.k8s.io
   names:
     categories:
     - gateway-api
-    kind: UDPRoute
-    listKind: UDPRouteList
-    plural: udproutes
-    singular: udproute
+    kind: TCPRoute
+    listKind: TCPRouteList
+    plural: tcproutes
+    singular: tcproute
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -25,9 +25,9 @@ spec:
     name: v1alpha2
     schema:
       openAPIV3Schema:
-        description: UDPRoute provides a way to route UDP traffic. When combined with
-          a Gateway listener, it can be used to forward traffic on the port specified
-          by the listener to a set of backends specified by the UDPRoute.
+        description: TCPRoute provides a way to route TCP requests. When combined
+          with a Gateway listener, it can be used to forward connections on the port
+          specified by the listener to a set of backends specified by the TCPRoute.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -42,7 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec defines the desired state of UDPRoute.
+            description: Spec defines the desired state of TCPRoute.
             properties:
               parentRefs:
                 description: "ParentRefs references the resources (usually Gateways)
@@ -59,7 +59,12 @@ spec:
                   that may be collapsed by an implementation. For example, some implementations
                   may choose to merge compatible Gateway Listeners together. If that
                   is the case, the list of routes attached to those resources should
-                  also be merged."
+                  also be merged. \n Note that for ParentRefs that cross namespace
+                  boundaries, there are specific rules. Cross-namespace references
+                  are only valid if they are explicitly allowed by something in the
+                  namespace they are referring to. For example, Gateway has the AllowedRoutes
+                  field, and ReferenceGrant provides a generic way to enable any other
+                  kind of cross-namespace reference."
                 items:
                   description: "ParentReference identifies an API object (usually
                     a Gateway) that can be considered a parent of this resource (usually
@@ -71,7 +76,10 @@ spec:
                   properties:
                     group:
                       default: gateway.networking.k8s.io
-                      description: "Group is the group of the referent. \n Support:
+                      description: "Group is the group of the referent. When unspecified,
+                        \"gateway.networking.k8s.io\" is inferred. To set the core
+                        API group (such as for a \"Service\" kind referent), Group
+                        must be explicitly set to \"\" (empty string). \n Support:
                         Core"
                       maxLength: 253
                       pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
@@ -79,7 +87,7 @@ spec:
                     kind:
                       default: Gateway
                       description: "Kind is kind of the referent. \n Support: Core
-                        (Gateway) \n Support: Custom (Other Resources)"
+                        (Gateway) \n Support: Implementation-specific (Other Resources)"
                       maxLength: 63
                       minLength: 1
                       pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
@@ -92,8 +100,14 @@ spec:
                       type: string
                     namespace:
                       description: "Namespace is the namespace of the referent. When
-                        unspecified (or empty string), this refers to the local namespace
-                        of the Route. \n Support: Core"
+                        unspecified, this refers to the local namespace of the Route.
+                        \n Note that there are specific rules for ParentRefs which
+                        cross namespace boundaries. Cross-namespace references are
+                        only valid if they are explicitly allowed by something in
+                        the namespace they are referring to. For example: Gateway
+                        has the AllowedRoutes field, and ReferenceGrant provides a
+                        generic way to enable any other kind of cross-namespace reference.
+                        \n Support: Core"
                       maxLength: 63
                       minLength: 1
                       pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
@@ -153,20 +167,20 @@ spec:
                 maxItems: 32
                 type: array
               rules:
-                description: Rules are a list of UDP matchers and actions.
+                description: Rules are a list of TCP matchers and actions.
                 items:
-                  description: UDPRouteRule is the configuration for a given rule.
+                  description: TCPRouteRule is the configuration for a given rule.
                   properties:
                     backendRefs:
                       description: "BackendRefs defines the backend(s) where matching
                         requests should be sent. If unspecified or invalid (refers
                         to a non-existent resource or a Service with no endpoints),
                         the underlying implementation MUST actively reject connection
-                        attempts to this backend. Packet drops must respect weight;
-                        if an invalid backend is requested to have 80% of the packets,
-                        then 80% of packets must be dropped instead. \n Support: Core
-                        for Kubernetes Service Support: Custom for any other resource
-                        \n Support for weight: Extended"
+                        attempts to this backend. Connection rejections must respect
+                        weight; if an invalid backend is requested to have 80% of
+                        connections, then 80% of connections must be rejected instead.
+                        \n Support: Core for Kubernetes Service \n Support: Implementation-specific
+                        for any other resource \n Support for weight: Extended"
                       items:
                         description: "BackendRef defines how a Route should forward
                           a request to a Kubernetes resource. \n Note that when a
@@ -178,8 +192,8 @@ spec:
                           group:
                             default: ""
                             description: Group is the group of the referent. For example,
-                              "networking.k8s.io". When unspecified (empty string),
-                              core API group is inferred.
+                              "gateway.networking.k8s.io". When unspecified or empty
+                              string, core API group is inferred.
                             maxLength: 253
                             pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                             type: string
@@ -200,11 +214,11 @@ spec:
                           namespace:
                             description: "Namespace is the namespace of the backend.
                               When unspecified, the local namespace is inferred. \n
-                              Note that when a different namespace is specified, a
-                              ReferenceGrant object with ReferenceGrantTo.Kind=Service
-                              is required in the referent namespace to allow that
-                              namespace's owner to accept the reference. See the ReferenceGrant
-                              documentation for details. \n Support: Core"
+                              Note that when a namespace is specified, a ReferenceGrant
+                              object is required in the referent namespace to allow
+                              that namespace's owner to accept the reference. See
+                              the ReferenceGrant documentation for details. \n Support:
+                              Core"
                             maxLength: 63
                             minLength: 1
                             pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
@@ -212,9 +226,10 @@ spec:
                           port:
                             description: Port specifies the destination port number
                               to use for this resource. Port is required when the
-                              referent is a Kubernetes Service. For other resources,
-                              destination port might be derived from the referent
-                              resource or this field.
+                              referent is a Kubernetes Service. In this case, the
+                              port number is the service port number, not the target
+                              port. For other resources, destination port might be
+                              derived from the referent resource or this field.
                             format: int32
                             maximum: 65535
                             minimum: 1
@@ -252,7 +267,7 @@ spec:
             - rules
             type: object
           status:
-            description: Status defines the current state of UDPRoute.
+            description: Status defines the current state of TCPRoute.
             properties:
               parents:
                 description: "Parents is a list of parent resources (usually Gateways)
@@ -292,14 +307,15 @@ spec:
                         description: "Condition contains details for one aspect of
                           the current state of this API Resource. --- This struct
                           is intended for direct use as an array at the field path
-                          .status.conditions.  For example, type FooStatus struct{
-                          \    // Represents the observations of a foo's current state.
-                          \    // Known .status.conditions.type are: \"Available\",
-                          \"Progressing\", and \"Degraded\"     // +patchMergeKey=type
-                          \    // +patchStrategy=merge     // +listType=map     //
-                          +listMapKey=type     Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                          patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`
-                          \n     // other fields }"
+                          .status.conditions.  For example, \n \ttype FooStatus struct{
+                          \t    // Represents the observations of a foo's current
+                          state. \t    // Known .status.conditions.type are: \"Available\",
+                          \"Progressing\", and \"Degraded\" \t    // +patchMergeKey=type
+                          \t    // +patchStrategy=merge \t    // +listType=map \t
+                          \   // +listMapKey=type \t    Conditions []metav1.Condition
+                          `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
+                          protobuf:\"bytes,1,rep,name=conditions\"` \n \t    // other
+                          fields \t}"
                         properties:
                           lastTransitionTime:
                             description: lastTransitionTime is the last time the condition
@@ -386,15 +402,19 @@ spec:
                       properties:
                         group:
                           default: gateway.networking.k8s.io
-                          description: "Group is the group of the referent. \n Support:
-                            Core"
+                          description: "Group is the group of the referent. When unspecified,
+                            \"gateway.networking.k8s.io\" is inferred. To set the
+                            core API group (such as for a \"Service\" kind referent),
+                            Group must be explicitly set to \"\" (empty string). \n
+                            Support: Core"
                           maxLength: 253
                           pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                           type: string
                         kind:
                           default: Gateway
                           description: "Kind is kind of the referent. \n Support:
-                            Core (Gateway) \n Support: Custom (Other Resources)"
+                            Core (Gateway) \n Support: Implementation-specific (Other
+                            Resources)"
                           maxLength: 63
                           minLength: 1
                           pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
@@ -407,8 +427,14 @@ spec:
                           type: string
                         namespace:
                           description: "Namespace is the namespace of the referent.
-                            When unspecified (or empty string), this refers to the
-                            local namespace of the Route. \n Support: Core"
+                            When unspecified, this refers to the local namespace of
+                            the Route. \n Note that there are specific rules for ParentRefs
+                            which cross namespace boundaries. Cross-namespace references
+                            are only valid if they are explicitly allowed by something
+                            in the namespace they are referring to. For example: Gateway
+                            has the AllowedRoutes field, and ReferenceGrant provides
+                            a generic way to enable any other kind of cross-namespace
+                            reference. \n Support: Core"
                           maxLength: 63
                           minLength: 1
                           pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
