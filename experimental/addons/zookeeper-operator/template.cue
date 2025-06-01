@@ -21,7 +21,7 @@ output: {
 					repoType: "helm"
 					url: "https://charts.pravega.io"
 					chart: "zookeeper-operator"
-					version: "0.2.14"
+					version: "0.2.15"
 				}
 			},
 		]

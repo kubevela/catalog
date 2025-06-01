@@ -50,7 +50,7 @@ template: {
                         //+usage=Image repository
                         repository: *"pravega/zookeeper" | string
                         //+usage=Image tag
-                        tag: *"0.2.14" | string
+                        tag: *"0.2.15" | string
                         //+usage=Image pull policy
                         pullPolicy: *"IfNotPresent" | string
                 }
