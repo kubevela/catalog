@@ -19,6 +19,7 @@ template: {
 		metadata: name: context.name
 		spec: {
             replicas:                   parameter.replicas
+            //solrSecurity:               parameter.solrSecurity
             solrImage:                  parameter.solrImage
             solrJavaMem:                parameter.solrJavaMem
             solrOpts:                   parameter.solrOpts
@@ -30,6 +31,9 @@ template: {
 	parameter: {
 	    //+usage=the size of the solrcloud cluster.
         replicas: *3 | int
+        //solrSecurity: {
+        //  authenticationType: *"Basic" | string
+        //}
         //+usage=Image configuration
         solrImage: {
                 //+usage=Image repository
