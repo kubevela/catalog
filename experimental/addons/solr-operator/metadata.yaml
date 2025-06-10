@@ -1,0 +1,14 @@
+name: solr-operator
+version: 0.0.1
+description: Solr Operator creates/configures/manages Solr Cloud atop Kubernetes.
+icon: https://solr.apache.org/theme/images/identity/Solr_Logo_on_white.png
+url: https://github.com/apache/solr-operator/
+tags:
+- solr-operator
+invisible: false
+dependencies:
+  - name: fluxcd
+  - name: zookeeper-operator
+system:
+  vela: ">=v1.5.0"
+  kubernetes: ">=1.19"

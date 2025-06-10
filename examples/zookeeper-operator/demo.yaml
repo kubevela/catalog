@@ -12,7 +12,7 @@ spec:
         triggerRollingRestart: false
         image:
           repository: "pravega/zookeeper"
-          tag: 0.2.14
+          tag: 0.2.15
           pullPolicy: IfNotPresent
         domainName: ""
         kubernetesClusterDomain: cluster.local
