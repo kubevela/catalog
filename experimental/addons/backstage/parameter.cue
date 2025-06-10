@@ -6,7 +6,7 @@ parameter: {
 	name:        "addon-backstage"
 	// +usage=The clusters to install
 	clusters?: [...string]
-	image:      *"wonderflow/backstage:v0.3" | string
+	image:      *"oamdev/backstage@sha256:e42e7de7c1007f456751a17fb3eb11794e6d80fb99eda0c03f7a4e34e91e6bec" | string
 	pluginOnly: *false | bool
 	// +usage=Specify the number of CPU units
 	cpu: *0.1 | number
