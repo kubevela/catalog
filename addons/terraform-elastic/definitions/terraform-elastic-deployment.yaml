@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1beta1
+kind: ComponentDefinition
+metadata:
+  annotations:
+    definition.oam.dev/description: ""
+  creationTimestamp: null
+  labels:
+    type: terraform
+  name: elastic-deployment
+  namespace: vela-system
+spec:
+  schematic:
+    terraform:
+      configuration: https://github.com/puppetlabs/terraform-ec-deployment.git
+      providerRef:
+        name: elastic
+        namespace: default
+      type: remote
+  workload:
+    definition:
+      apiVersion: terraform.core.oam.dev/v1beta1
+      kind: Configuration
+status: {}
