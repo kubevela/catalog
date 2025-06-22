@@ -12,12 +12,28 @@ imageReflectorController: {
 	dependsOn: ["fluxcd-ns"]
 	properties: {
 		imagePullPolicy: "IfNotPresent"
-		image:           _base + "fluxcd/image-reflector-controller:v0.30.0"
+		image:           _base + "fluxcd/image-reflector-controller:v0.33.0"
 		env: [
 			{
 				name:  "RUNTIME_NAMESPACE"
 				value: _targetNamespace
 			},
+			{
+				name: "GOMAXPROCS"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.cpu"
+					}
+				}			
+			},
+			{
+				name: "GOMEMLIMIT"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.memory"
+					}
+				}			
+			}
 		]
 		livenessProbe: {
 			httpGet: {
@@ -73,13 +89,53 @@ imageReflectorController: {
 			}
 		},
 		{
+			type: "annotations"
+			properties: {
+				"prometheus.io/port": "8080"
+				"prometheus.io/scrape": "true"
+			}
+		},
+		{
+			type: "resource"
+			properties: {
+				limits: {
+					if parameter.imageReflectorControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.imageReflectorControllerResourceLimits.cpu	
+					}
+					if parameter.imageReflectorControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.limits.cpu
+					}
+					if parameter.imageReflectorControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.imageReflectorControllerResourceLimits.memory	
+					}
+					if parameter.imageReflectorControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.limits.memory
+					}
+				}
+				requests: {
+					if parameter.imageReflectorControllerResourceRequests.cpu  != _|_ {
+						cpu:    parameter.imageReflectorControllerResourceRequests.cpu	
+					}
+					if parameter.imageReflectorControllerResourceRequests.cpu  == _|_ {
+						cpu:    deploymentResources.requests.cpu
+					}
+					if parameter.imageReflectorControllerResourceRequests.memory  != _|_ {
+						memory:    parameter.imageReflectorControllerResourceRequests.memory	
+					}
+					if parameter.imageReflectorControllerResourceRequests.memory  == _|_ {
+						memory:    deploymentResources.requests.memory
+					}
+				}
+			} 
+		},
+		{
 			type: "command"
 			properties: {
 				if parameter.imageReflectorControllerOptions != _|_ {
-					args: controllerArgs + parameter.imageReflectorControllerOptions
+					args: eventAddrArgs + parameter.imageReflectorControllerOptions
 				}
 				if parameter.imageReflectorControllerOptions == _|_ {
-					args: controllerArgs
+					args: eventAddrArgs
 				}
 			}
 		},
