@@ -1,0 +1,13 @@
+name: hbase-operator
+version: 1.0.0
+description: This addon adds hbase-operator to the kubevela to be used by across the application installed in kubevela.
+icon: ""
+url: "https://hbase.apache.org/"
+
+tags:
+- hbase-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
