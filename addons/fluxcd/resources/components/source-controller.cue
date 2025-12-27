@@ -6,9 +6,9 @@ controllerArgs: [...]
 _targetNamespace: string
 _sourceControllerName: "fluxcd-source-controller"
 
-imageControllerDefaultArgs: controllerArgs + [
+imageControllerDefaultArgs: eventAddrArgs + [
 					"--storage-path=/data",
-					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
+					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc.cluster.local:9090",
 ]
 
 sourceController: {
@@ -24,6 +24,22 @@ sourceController: {
 				name:  "RUNTIME_NAMESPACE"
 				value: _targetNamespace
 			},
+			{
+				name: "GOMAXPROCS"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.cpu"
+					}
+				}			
+			},
+			{
+				name: "GOMEMLIMIT"
+				valueFrom: {
+					resourceFieldRef: {
+						resource: "limits.memory"
+					}
+				}			
+			}
 		]
 		livenessProbe: {
 			httpGet: {
@@ -53,7 +69,8 @@ sourceController: {
 		}
 		ports: [
 			{
-				port:     9090
+				port: 80
+				containerPort: 9090
 				name:     "http"
 				protocol: "TCP"
 				expose:   true
@@ -84,6 +101,46 @@ sourceController: {
 				// KubeVela e2e tests (makefile e2e-setup).
 				"app": "source-controller"
 			}
+		},
+		{
+			type: "annotations"
+			properties: {
+				"prometheus.io/port": "8080"
+				"prometheus.io/scrape": "true"
+			}
+		},
+		{
+			type: "resource"
+			properties: {
+				limits: {
+					if parameter.sourceControllerResourceLimits.cpu  != _|_ {
+						cpu:    parameter.sourceControllerResourceLimits.cpu	
+					}
+					if parameter.sourceControllerResourceLimits.cpu  == _|_ {
+						cpu:    deploymentResources.limits.cpu
+					}
+					if parameter.sourceControllerResourceLimits.memory  != _|_ {
+						memory:    parameter.sourceControllerResourceLimits.memory	
+					}
+					if parameter.sourceControllerResourceLimits.memory  == _|_ {
+						memory:    deploymentResources.limits.memory
+					}
+				}
+				requests: {
+					if parameter.sourceControllerResourceRequests.cpu  != _|_ {
+						cpu:    parameter.sourceControllerResourceRequests.cpu	
+					}
+					if parameter.sourceControllerResourceRequests.cpu  == _|_ {
+						cpu:    deploymentResources.requests.cpu
+					}
+					if parameter.sourceControllerResourceRequests.memory  != _|_ {
+						memory:    parameter.sourceControllerResourceRequests.memory	
+					}
+					if parameter.sourceControllerResourceRequests.memory  == _|_ {
+						memory:    deploymentResources.requests.memory
+					}
+				}
+			} 
 		},
 		{
 			type: "command"

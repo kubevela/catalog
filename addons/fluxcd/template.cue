@@ -60,10 +60,14 @@ output: {
 							helmChartCRD,
 							helmReleaseCRD,
 							helmRepoCRD,
+							notificationAlertCRD,
+							notificationProviderCRD,
+							notificationReceiverCRD,
 				] + kustomizeResourcesCRD
 			},
 			helmController,
 			sourceController,
+			notificationController,
 		] + gitOpsController
 		policies: [
 			{
