@@ -82,6 +82,10 @@ server: {
 				}
 			},
 		]
+
+		if parameter.env != _|_ {
+			env: parameter.env
+		}
 	}
 	dependsOn: ["velaux-additional-privileges"]
 	traits: [
