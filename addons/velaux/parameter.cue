@@ -27,15 +27,15 @@ parameter: {
 	enableImpersonation: true | *false
 	// +usage=Environment variables for velaux server.
 	env?: [...{
-		name: string
+		name:   string
 		value?: string
 		valueFrom?: {
 			configMapKeyRef?: {
-				key: string
+				key:  string
 				name: string
 			}
 			secretKeyRef?: {
-				key: string
+				key:  string
 				name: string
 			}
 		}
