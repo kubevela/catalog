@@ -15,7 +15,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     env:
       URL: https://kubevela.github.io/catalog
-      GO_VERSION: 1.22
+      GO_VERSION: 1.23.8
     runs-on: ubuntu-22.04
     steps:
       - name: Setup Go
