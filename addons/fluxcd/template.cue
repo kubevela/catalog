@@ -18,9 +18,9 @@ if registry == "" || strings.HasSuffix(registry, "/") {
 
 _targetNamespace: parameter.namespace
 
-gitOpsController: [...] | []
+gitOpsController: *[] | [...]
 
-kustomizeResourcesCRD: [...] | []
+kustomizeResourcesCRD: *[] | [...]
 
 if parameter.onlyHelmComponents == false {
 	gitOpsController: [imageAutomationController, imageReflectorController, kustomizeController]
