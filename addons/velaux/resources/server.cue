@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 _version: context.metadata.version
 
 database: *[ if parameter["database"] != _|_ {
@@ -71,7 +73,7 @@ server: {
 			exposeType: parameter["serviceType"]
 		}
 
-		cmd: ["server", "--datastore-type=" + parameter["dbType"], "--feature-gates=EnableCacheJSFile=true"] + database + dbURL + enableImpersonation
+		cmd: list.Concat([["server", "--datastore-type=" + parameter["dbType"], "--feature-gates=EnableCacheJSFile=true"], database, dbURL, enableImpersonation])
 		ports: [
 			{
 				port:     8000
@@ -84,11 +86,11 @@ server: {
 		]
 	}
 	dependsOn: ["velaux-additional-privileges"]
-	traits: [
+	traits: list.Concat([[
 		{
 			type: "service-account"
 			properties: name: parameter["serviceAccountName"]
 		},
 		{type: "scaler", properties: replicas: parameter["replicas"]},
-	] + _nginxTrait + _traefikTrait + _httpsTrait
+	], _nginxTrait, _traefikTrait, _httpsTrait])
 }

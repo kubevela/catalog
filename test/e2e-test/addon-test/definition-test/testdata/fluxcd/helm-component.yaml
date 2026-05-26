@@ -1,21 +1,15 @@
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: helm-redis
+  name: helm-podinfo
   namespace: default
 spec:
   components:
-    - name: redis
+    - name: podinfo
       type: helm
       properties:
         repoType: "helm"
-        url: "https://charts.bitnami.com/bitnami"
-        chart: "redis"
-        values:
-          master:
-            persistence:
-              size: 16Gi
-          replica:
-            persistence:
-              size: 16Gi
+        url: "https://stefanprodan.github.io/podinfo"
+        chart: "podinfo"
+        version: "6.5.4"
         upgradeCRD: true

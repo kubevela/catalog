@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 _base: string
 _rules: [...]
 controllerArgs: [...]
@@ -72,7 +74,7 @@ helmController: {
 			type: "command"
 			properties: {
 				if parameter.helmControllerOptions != _|_ {
-					args: controllerArgs + parameter.helmControllerOptions
+					args: list.Concat([controllerArgs, parameter.helmControllerOptions])
 				}
 				if parameter.helmControllerOptions == _|_ {
 					args: controllerArgs

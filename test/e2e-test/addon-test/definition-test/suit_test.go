@@ -112,7 +112,7 @@ var _ = Describe("Test definition of addons", func() {
 					if checkApp.Status.Phase != common.ApplicationRunning {
 						return fmt.Errorf("test addon %s failed, app %s is not ready yet, status is: %s", addon, app.Name, checkApp.Status.Phase)
 					}
-					fmt.Printf(color.GreenString("Successfully to test addon %s with %s \n", addon, filepath.Join(dir, file.Name())))
+					fmt.Print(color.GreenString("Successfully to test addon %s with %s \n", addon, filepath.Join(dir, file.Name())))
 					err = k8sClient.Delete(ctx, &checkApp)
 					if err != nil {
 						return errors.Wrap(err, "fail to delete app")

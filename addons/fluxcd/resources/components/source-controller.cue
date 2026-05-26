@@ -1,15 +1,17 @@
 package main
 
+import "list"
+
 _base: string
 _rules: [...]
 controllerArgs: [...]
 _targetNamespace: string
 _sourceControllerName: "fluxcd-source-controller"
 
-imageControllerDefaultArgs: controllerArgs + [
+imageControllerDefaultArgs: list.Concat([controllerArgs, [
 					"--storage-path=/data",
 					"--storage-adv-addr=http://" + _sourceControllerName + "." + _targetNamespace + ".svc:9090",
-]
+]])
 
 sourceController: {
 	// About this name, refer to #429 for details.
@@ -89,7 +91,7 @@ sourceController: {
 			type: "command"
 			properties: {
 				if parameter.sourceControllerOptions != _|_ {
-					args: imageControllerDefaultArgs + parameter.sourceControllerOptions
+					args: list.Concat([imageControllerDefaultArgs, parameter.sourceControllerOptions])
 				}
 				if parameter.sourceControllerOptions == _|_ {
 					args: imageControllerDefaultArgs

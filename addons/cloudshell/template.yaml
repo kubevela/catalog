@@ -9,9 +9,10 @@ spec:
       type: helm
       properties:
         repoType: helm
-        url: https://release.daocloud.io/chartrepo/cloudshell
+        url: https://cloudtty.github.io/cloudtty
         chart: cloudtty
         version: 0.3.0
+        upgradeCRD: true
         values:
           image:
             registry: docker.io
