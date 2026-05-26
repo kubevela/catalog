@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"list"
+	"strings"
+)
 
 // controller images prefix
 _base:    *"" | string
@@ -31,7 +34,7 @@ output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
 	spec: {
-		components: [
+		components: list.Concat([[
 				{
 				type: "k8s-objects"
 				name: "fluxcd-ns"
@@ -52,7 +55,7 @@ output: {
 			{
 				type: "k8s-objects"
 				name: "fluxcd-CRD"
-				properties: objects: [
+				properties: objects: list.Concat([[
 							// auto-generated from original yaml files
 							bucketCRD,
 							gitRepoCRD,
@@ -60,11 +63,11 @@ output: {
 							helmChartCRD,
 							helmReleaseCRD,
 							helmRepoCRD,
-				] + kustomizeResourcesCRD
+				], kustomizeResourcesCRD])
 			},
 			helmController,
 			sourceController,
-		] + gitOpsController
+		], gitOpsController])
 		policies: [
 			{
 				type: "shared-resource"

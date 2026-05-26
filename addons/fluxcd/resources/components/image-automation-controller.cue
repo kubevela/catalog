@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 _base: string
 _rules: [...]
 controllerArgs: [...]
@@ -72,7 +74,7 @@ imageAutomationController: {
 			type: "command"
 			properties: {
 				if parameter.imageAutomationControllerOptions != _|_ {
-					args: controllerArgs + parameter.imageAutomationControllerOptions
+					args: list.Concat([controllerArgs, parameter.imageAutomationControllerOptions])
 				}
 				if parameter.imageAutomationControllerOptions == _|_ {
 					args: controllerArgs

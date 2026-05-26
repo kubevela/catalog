@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 _base: string
 _rules: [...]
 controllerArgs: [...]
@@ -76,7 +78,7 @@ imageReflectorController: {
 			type: "command"
 			properties: {
 				if parameter.imageReflectorControllerOptions != _|_ {
-					args: controllerArgs + parameter.imageReflectorControllerOptions
+					args: list.Concat([controllerArgs, parameter.imageReflectorControllerOptions])
 				}
 				if parameter.imageReflectorControllerOptions == _|_ {
 					args: controllerArgs
