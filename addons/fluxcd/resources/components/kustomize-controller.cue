@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 _base: string
 _rules: [...]
 controllerArgs: [...]
@@ -72,7 +74,7 @@ kustomizeController: {
 			type: "command"
 			properties: {
 				if parameter.kustomizeControllerOptions != _|_ {
-					args: controllerArgs + parameter.kustomizeControllerOptions
+					args: list.Concat([controllerArgs, parameter.kustomizeControllerOptions])
 				}
 				if parameter.kustomizeControllerOptions == _|_ {
 					args: controllerArgs
