@@ -1,0 +1,37 @@
+apiVersion: core.oam.dev/v1beta1
+kind: TraitDefinition
+metadata:
+  name: aws-alb-ingress
+spec:
+  schematic:
+    cue:
+      template: |
+        outputs: ingress: {
+            apiVersion: "networking.k8s.io/v1"
+            kind:       "Ingress"
+            metadata: name: context.name
+            metadata: annotations: "alb.ingress.kubernetes.io/scheme": "internet-facing"
+            metadata: annotations: "alb.ingress.kubernetes.io/target-type": "ip"
+            spec: {
+                ingressClassName: "alb"
+                rules: [{
+                    http: {
+                        paths: [{
+                            path:  "/"
+                            pathType: "Prefix"
+                            backend: {
+                                service: {
+                                    name: context.name
+                                    port: {
+                                        number: parameter.port
+                                    }
+                                }
+                            }
+                        }]    
+                    }        
+                }]
+            }    
+        }
+        parameter: {
+            port:   *9000 | int
+        }    

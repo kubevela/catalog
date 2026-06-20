@@ -1,0 +1,14 @@
+name: cloudshell
+version: 0.0.9
+description: A Friendly Kubernetes CloudShell (Web Terminal)
+url: https://github.com/cloudtty/cloudtty
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: false
+
+dependencies:
+- name: fluxcd
+
+tags:
+  - Official
