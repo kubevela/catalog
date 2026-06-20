@@ -1,10 +1,10 @@
-name: gateway-traits
-version: v0.0.1
-description: traits(HttpRoute, HttpsRoute, tcpRoute) for gateway
+name: gateway-api
+version: v0.6.0
+icon: https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/main/site-src/images/k8s-favicon.png
+description: The GWAPI traits (Gateway, HTTPRoute, TLSRoute, TCPRoute, UDPRoute, GRPCRoute, ReferenceGrant) for API Gateway.
 
 tags:
   - Gateway
-  - Trait
 
 deployTo:
   controlPlane: true

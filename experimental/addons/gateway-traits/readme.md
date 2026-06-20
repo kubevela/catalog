@@ -1,11 +1,13 @@
-# gateway-traits
+# gateway-api
 
-This addon provides traits(HttpRoute, HttpsRoute, tcpRoute) for gateway.
+This addon provides GWAPI traits (Gateway, HTTPRoute, TLSRoute, TCPRoute, UDPRoute, GRPCRoute, ReferenceGrant) for API Gateway.
 
-## Preconditions
+## Usage
 
-Enable one of the following plugins or use another gateway controller implementation.
+Enable one of the following addons or use another gateway controller implementation. (listed in alphabetical order)
 
-* traefik
+* envoy-gateway
 
 * istio-gateway
+
+* traefik

@@ -19,4 +19,3 @@ Specify the istio entry points.
 * GatewayListeners
 
 Specify the gateway listeners. Only configured listeners can be used.
-
