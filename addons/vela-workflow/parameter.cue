@@ -9,7 +9,7 @@ const: {
 
 parameter: {
 	image:                *"oamdev/vela-workflow" | string
-	version:              *"0.7.0" | string
+	version:              *"0.7.1" | string
 	imagePullPolicy:      *"IfNotPresent" | "Never" | "Always"
 	concurrentReconciles: *4 | int
 	kubeQPS:              *50 | int
@@ -27,4 +27,6 @@ parameter: {
 	maxWorkflowWaitBackoffTime:     *60 | int
 	maxWorkflowFailedBackoffTime:   *300 | int
 	maxWorkflowStepErrorRetryTimes: *10 | int
+	// +usage=Inject the CUE_EXPERIMENT env var (evalv3=0,keepvalidators=0) into the controller to disable experimental CUE features during the v0.14.x migration window
+	enableCueExpVariable: *true | bool
 }

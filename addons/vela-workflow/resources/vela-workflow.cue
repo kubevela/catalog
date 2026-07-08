@@ -55,6 +55,12 @@ workflow: {
 							"image":           "\(parameter.image):v\(parameter.version)"
 							"imagePullPolicy": parameter.imagePullPolicy
 							"name":            const.name
+							if parameter.enableCueExpVariable {
+								"env": [{
+									"name":  "CUE_EXPERIMENT"
+									"value": "evalv3=0,keepvalidators=0"
+								}]
+							}
 							"resources": {
 								"limits": {
 									"cpu":    parameter.resources.limits.cpu
