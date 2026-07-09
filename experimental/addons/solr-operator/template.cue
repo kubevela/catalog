@@ -5,7 +5,7 @@ output: {
 	spec: {
 		components: [
 			{
-				name: "ns-zookeeper-operator"
+				name: "ns-solr-operator"
 				type: "k8s-objects"
 				properties: objects: [{
 					kind: "Namespace"
@@ -15,27 +15,27 @@ output: {
 				}]
 			},
 			{
-				name: "zookeeper-operator"
+				name: "solr-operator"
 				type: "helm"
 				properties:	{
 					repoType: "helm"
-					url: "https://charts.pravega.io"
-					chart: "zookeeper-operator"
-					version: "0.2.15"
+					url: "https://solr.apache.org/charts"
+					chart: "solr-operator"
+					version: "0.9.1"
 				}
 			},
 		]
 		policies: [
 			{
 				type: "shared-resource"
-				name: "zookeeper-operator-ns"
+				name: "solr-operator-ns"
 				properties: rules: [{
 					selector: resourceTypes: ["Namespace"]
 				}]
 			},
 			{
 				type: "topology"
-				name: "deploy-zookeeper-operator"
+				name: "deploy-solr-operator"
 				properties: {
 					namespace: parameter.namespace
 					if parameter.clusters != _|_ {
