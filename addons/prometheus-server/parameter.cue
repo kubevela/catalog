@@ -17,13 +17,13 @@ parameter: {
 	// prometheus-server parameters
 
 	// +usage=Specify the image of prometheus-server
-	image: *"quay.io/prometheus/prometheus:v2.34.0" | string
+	image: *"bitnami/prometheus:2.48.0" | string
 	// +usage=Specify the imagePullPolicy of the image
 	imagePullPolicy: *"IfNotPresent" | "Never" | "Always"
 	// +usage=Specify the number of CPU units
 	cpu: *0.5 | number
 	// +usage=Specifies the attributes of the memory resource required for the container.
-	memory: *"1024Mi" | string
+	memory: *"1560Mi" | string
 	// +usage=Specify the service type for expose prometheus server. If empty, it will be not exposed.
 	serviceType: *"ClusterIP" | "NodePort" | "LoadBalancer" | ""
 	// +usage=Specify the storage size to use. If empty, emptyDir will be used. Otherwise pvc will be used.
@@ -36,5 +36,5 @@ parameter: {
 	thanos: *false | bool
 
 	// +usage=The interval for scraping pods, services, endpoints.
-	scrapeInterval: *"15s" | =~"^([1-9][0-9]?)(s|m)$"
+	scrapeInterval: *"20s" | =~"^([1-9][0-9]?)(s|m)$"
 }
