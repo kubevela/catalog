@@ -1,0 +1,14 @@
+description: A distributed and multi-tenant gateway to provide serverless SQL on lakehouses.
+icon: "https://raw.githubusercontent.com/apache/kyuubi/master/docs/imgs/logo.png"
+invisible: false
+name: kyuubi
+tags:
+- apache/kyuubi
+version: 1.6
+url: https://github.com/apache/kyuubi
+
+dependencies:
+  - name: fluxcd
+
+system:
+  vela: ">=1.5.0-beta.3"
