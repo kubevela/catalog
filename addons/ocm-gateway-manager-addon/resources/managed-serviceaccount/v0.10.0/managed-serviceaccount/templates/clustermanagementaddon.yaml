@@ -1,0 +1,21 @@
+---
+# Source: managed-serviceaccount/templates/clustermanagementaddon.yaml
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: managed-serviceaccount
+spec:
+  addOnMeta:
+    displayName: managed-serviceaccount
+    description: managed-serviceaccount
+  installStrategy:
+    placements:
+    - name: global
+      namespace: open-cluster-management-addon
+      rolloutStrategy:
+        type: All
+    type: Placements
+  supportedConfigs:
+  - group: addon.open-cluster-management.io
+    resource: addondeploymentconfigs
+

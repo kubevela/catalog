@@ -1,0 +1,10 @@
+---
+# Source: cluster-proxy/templates/clustersetbinding.yaml
+apiVersion: cluster.open-cluster-management.io/v1beta2
+kind: ManagedClusterSetBinding
+metadata:
+  name: global
+  namespace: open-cluster-management-addon
+spec:
+  clusterSet: global
+

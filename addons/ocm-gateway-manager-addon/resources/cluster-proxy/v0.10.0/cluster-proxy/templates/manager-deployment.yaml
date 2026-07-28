@@ -1,0 +1,44 @@
+---
+# Source: cluster-proxy/templates/manager-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: open-cluster-management-addon
+  name: cluster-proxy-addon-manager
+  labels:
+    component: cluster-proxy-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-cluster-management.io/addon: cluster-proxy
+      component: cluster-proxy-manager
+  template:
+    metadata:
+      labels:
+        open-cluster-management.io/addon: cluster-proxy
+        component: cluster-proxy-manager
+    spec:
+      serviceAccount: cluster-proxy
+      containers:
+        - name: manager
+          image: quay.io/open-cluster-management/cluster-proxy:v0.10.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /manager
+          args:
+            - --leader-elect=true
+            - --signer-secret-namespace=open-cluster-management-addon
+            - --enable-kube-api-proxy=true
+            - --enable-service-proxy=false
+            - --image-pull-policy=IfNotPresent
+            - --feature-gates=ClusterProfileAccessProvider=false
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+

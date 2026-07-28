@@ -1,0 +1,30 @@
+---
+# Source: managed-serviceaccount/templates/manager-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: open-cluster-management-addon
+  name: managed-serviceaccount-addon-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-cluster-management.io/addon: managed-serviceaccount
+  template:
+    metadata:
+      labels:
+        open-cluster-management.io/addon: managed-serviceaccount
+    spec:
+      serviceAccount: managed-serviceaccount
+      containers:
+        - name: manager
+          image: quay.io/open-cluster-management/managed-serviceaccount:v0.10.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /msa
+            - manager
+          args:
+            - --deploy-mode=Deployment
+            - --agent-image-name=quay.io/open-cluster-management/managed-serviceaccount:v0.10.0
+            - --feature-gates=EphemeralIdentity=false,ClusterProfileCredSyncer=false
+

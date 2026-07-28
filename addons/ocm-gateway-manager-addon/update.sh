@@ -1,8 +1,8 @@
 #!/bin/bash
 
-RELEASE_CLUSTER_GATEWAY=v1.4.0
-RELEASE_CLUSTER_PROXY=v0.2.2
-RELEASE_MANAGED_SERVICE_ACCOUNT=v0.2.0
+RELEASE_CLUSTER_GATEWAY=v1.8.0
+RELEASE_CLUSTER_PROXY=v0.10.0
+RELEASE_MANAGED_SERVICE_ACCOUNT=v0.10.0
 
 REPO_CLUSTER_PROXY=git@github.com:open-cluster-management-io/cluster-proxy.git
 REPO_MANAGED_SERVICEACCOUNT=git@github.com:open-cluster-management-io/managed-serviceaccount.git
@@ -23,8 +23,8 @@ pushd cluster-proxy
 helm template -n open-cluster-management-addon \
   ./charts/cluster-proxy/ --output-dir "${BASEDIR}"/resources/cluster-proxy/"${RELEASE_CLUSTER_PROXY}"/ \
   --set tag=${RELEASE_CLUSTER_PROXY} \
-  --set proxyServerImage=quay.io/open-cluster-management/cluster-proxy:$RELEASE_CLUSTER_PROXY \
-  --set proxyAgentImage=quay.io/open-cluster-management/cluster-proxy:$RELEASE_CLUSTER_PROXY
+  --set proxyServerImage=quay.io/open-cluster-management/cluster-proxy \
+  --set proxyAgentImage=quay.io/open-cluster-management/cluster-proxy
 popd
 rm -rf cluster-proxy
 

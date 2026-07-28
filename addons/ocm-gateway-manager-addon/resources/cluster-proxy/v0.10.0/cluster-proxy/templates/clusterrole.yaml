@@ -1,0 +1,203 @@
+---
+# Source: cluster-proxy/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: open-cluster-management:cluster-proxy:addon-manager
+rules:
+  - apiGroups:
+      - cluster.open-cluster-management.io
+    resources:
+      - managedclusters
+      - managedclustersets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - addon.open-cluster-management.io
+    resources:
+      - clustermanagementaddons
+      - managedclusteraddons
+      - clustermanagementaddons/status
+      - clustermanagementaddons/finalizers
+      - managedclusteraddons/status
+    verbs:
+      - '*'
+  - apiGroups:
+      - addon.open-cluster-management.io
+    resources:
+      - addondeploymentconfigs
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - addon.open-cluster-management.io
+    resources:
+      - managedclusteraddons/finalizers
+    verbs:
+      - '*'
+  - apiGroups:
+      - proxy.open-cluster-management.io
+    resources:
+      - managedproxyconfigurations
+      - managedproxyconfigurations/status
+      - managedproxyconfigurations/finalizers
+      - managedproxyserviceresolvers
+      - managedproxyserviceresolvers/status
+      - managedproxyserviceresolvers/finalizers
+    verbs:
+      - '*'
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - certificatesigningrequests
+      - certificatesigningrequests/approval
+      - certificatesigningrequests/status
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - patch
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - signers
+    verbs:
+      - "*"
+    resourceNames:
+      - open-cluster-management.io/proxy-agent-signer
+      - kubernetes.io/kube-apiserver-client
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - secrets
+      - pods
+      - pods/portforward
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - serviceaccounts
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+  - apiGroups:
+      - work.open-cluster-management.io
+    resources:
+      - manifestworks
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - "*"
+  - apiGroups:
+      - ""
+    resources:
+      - "configmaps"
+      - "secrets"
+    verbs:
+      - "*"
+  - apiGroups:
+      - "apps"
+    resources:
+      - "replicasets"
+    verbs:
+      - "get"
+  - apiGroups:
+      - ""
+      - "events.k8s.io"
+    resources:
+      - "events"
+    verbs:
+      - "create"
+      - "patch"
+      - "update"
+  # Allow cluster-proxy hub controller to run with addon-framwork
+  - apiGroups:
+      - ""
+    resources:
+      - "configmaps"
+      - "secrets"
+    verbs:
+      - "*"
+  # Allow cluster-proxy hub controller to get managed cluster image registries
+  - apiGroups:
+      - "imageregistry.open-cluster-management.io"
+    resources:
+      - "managedclusterimageregistries"
+      - "managedclusterimageregistries"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  # Allow cluster-proxy to do impersonation
+  # Needs to create a clusterrole for the addon-agent to create tokenreview to hub
+  # Although hub side doesn't need to create token view, it still requires the tokenreview create permission
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+      - delete
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - multicluster.x-k8s.io
+    resources:
+      - clusterprofiles
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - multicluster.x-k8s.io
+    resources:
+      - clusterprofiles/status
+    verbs:
+      - update
+      - patch

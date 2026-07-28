@@ -4,7 +4,13 @@ __TL;DR__: "OCM Cluster-Gateway Manager" addon installs an operator component
 into the hub cluster that help the administrator to easily operate the 
 configuration of cluster-gateway instances via "ClusterGatewayConfiguration"
 custom resource. *WARNING* this addon will restart the cluster-gateway 
-instances upon the first-time installation.
+instances upon the first-time installation. **Read that warning as: this
+addon creates its own, separate `cluster-gateway` deployment and takes
+over the singleton `APIService` registration — it does not reconfigure
+an existing gateway in place.** If KubeVela's own `--enable-cluster-gateway`
+bootstrap was ever enabled on this hub before installing this addon, be
+aware this causes a split-brain gateway issue — remove the bootstrap
+deployment/flags before installing this addon.
 
 ## What does "Cluster-Gateway Manager" do?
 

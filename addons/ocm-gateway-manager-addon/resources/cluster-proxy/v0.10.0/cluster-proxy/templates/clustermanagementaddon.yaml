@@ -1,0 +1,25 @@
+---
+# Source: cluster-proxy/templates/clustermanagementaddon.yaml
+apiVersion: addon.open-cluster-management.io/v1alpha1
+kind: ClusterManagementAddOn
+metadata:
+  name: cluster-proxy
+  annotations:
+    "addon.open-cluster-management.io/lifecycle": "addon-manager"
+spec:
+  addOnMeta:
+    displayName: cluster-proxy
+    description: cluster-proxy
+  supportedConfigs:
+  - group: proxy.open-cluster-management.io
+    resource: managedproxyconfigurations
+    defaultConfig:
+      name: cluster-proxy
+  - group: addon.open-cluster-management.io
+    resource: addondeploymentconfigs
+  installStrategy:
+    type: Placements
+    placements:
+      - name: cluster-proxy-placement
+        namespace: open-cluster-management-addon
+
