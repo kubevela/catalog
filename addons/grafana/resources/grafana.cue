@@ -20,10 +20,20 @@ grafana: {
 			path: "/api/health"
 			port: 3000
 		}
-		volumeMounts: emptyDir: [{
-			name:      "storage"
-			mountPath: "/var/lib/grafana"
-		}]
+		 
+		if parameter.storage == _|_ {
+			volumeMounts: emptyDir: [{
+				name:      "storage-volume"
+		    	mountPath: "/var/lib/grafana"
+			}]
+		}
+		if parameter.storage != _|_ {
+			volumeMounts: pvc: [{
+               name:      "storage-volume"
+			   mountPath: "/var/lib/grafana"
+				claimName: "grafana-storage"
+			}]
+		}
 		env: [{
 			name: "GF_SECURITY_ADMIN_USER"
 			valueFrom: secretKeyRef: {
