@@ -1,0 +1,13 @@
+name: hive-operator
+version: 1.0.0
+description: This addon adds hive-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://github.com/apache/hive/blob/master/docs/images/hive-logo.jpg"
+url: "https://hive.apache.org/"
+
+tags:
+- hive-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
