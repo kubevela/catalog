@@ -1,26 +1,26 @@
 # This file is a github code protect rule follow the codeowners https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/about-code-owners#example-of-a-codeowners-file
 
-*                                  @wangyikewxgm @wonderflow @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+*                                  @wangyikewxgm @wonderflow @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
 
 # Owner of addon fluxcd
-addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129 @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+addons/fluxcd                      @wangyikewxgm @FogDong @charlie0129 @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
  
 # Owner of addon ocm
-addons/ocm-cluster-manager         @Somefive @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+addons/ocm-cluster-manager         @Somefive @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
 
 # Owner of addon terraform
-addons/terraform                   @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/terraform-alibaba           @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/terraform-aws               @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/terraform-azure             @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+addons/terraform                   @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/terraform-alibaba           @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/terraform-aws               @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/terraform-azure             @chivalryq @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
 
 # Owner of health addon velaux
-addons/velaux                      @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+addons/velaux                      @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
 
 # Owner of chartMuseum addon
-addons/chartmuseum                 @charlie0129 @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/loki                        @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/grafana                     @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/o11y-definitions            @Somefive @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/prometheus-server           @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
-addons/vela-workflow               @FogDong @barnettZQG @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu
+addons/chartmuseum                 @charlie0129 @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/loki                        @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/grafana                     @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/o11y-definitions            @Somefive @barnettZQG @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/prometheus-server           @Somefive @wangyikewxgm @FogDong @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
+addons/vela-workflow               @FogDong @barnettZQG @anoop2811 @dhiguero @briankane @jguionnet @roguepikachu @jerrinfrancis
