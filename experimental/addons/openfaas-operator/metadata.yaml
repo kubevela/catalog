@@ -1,0 +1,13 @@
+name: openfaas-operator
+version: 0.15.6
+description: This addon adds openfaas-operator to the kubevela to be used by across the application installed in kubevela.
+icon: ""
+url: "https://www.openfaas.com/"
+
+tags:
+- faas-cli
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
