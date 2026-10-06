@@ -1,0 +1,11 @@
+name: defkit
+version: 0.1.0
+description: "Experimental: install DefKit definition modules as Applications. Each module renders in a Job and its definitions are applied, tracked and garbage collected by its Application."
+url: https://github.com/kubevela/kubevela/tree/master/pkg/definition/defkit
+tags:
+  - experimental
+  - definitions
+deployTo:
+  runtimeCluster: false
+dependencies: []
+invisible: false

@@ -1,0 +1,34 @@
+# A DefKit module installed as an Application: render, wait for review, apply.
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: defkit-vela-definitions
+  namespace: vela-system
+  labels:
+    defkit.oam.dev/module: vela-definitions
+spec:
+  components: []
+  policies:
+    - name: keep-removed-definitions
+      type: garbage-collect
+      properties:
+        keepLegacyResource: true
+  workflow:
+    steps:
+      - name: render
+        type: defkit-render
+        properties:
+          git: https://github.com/kubevela/vela-go-definitions
+          version: main
+          prefix: dk-
+          types: [trait]
+        outputs:
+          - name: rendered
+            valueFrom: configMap
+      - name: review
+        type: suspend
+      - name: apply
+        type: defkit-apply
+        inputs:
+          - from: rendered
+            parameterKey: configMap
