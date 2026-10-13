@@ -6,13 +6,15 @@ metadata:
 spec:
   components:
     - name: cloudshell-operator
-      type: helm
+      type: helmchart
       properties:
-        repoType: helm
-        url: https://cloudtty.github.io/cloudtty
-        chart: cloudtty
-        version: 0.3.0
-        upgradeCRD: true
+        chart:
+          source: cloudtty
+          repoURL: https://cloudtty.github.io/cloudtty
+          version: "0.3.0"
+        release:
+          name: cloudshell-operator
+          namespace: vela-system
         values:
           image:
             registry: docker.io
