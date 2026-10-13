@@ -17,7 +17,6 @@ import (
 	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-	"sigs.k8s.io/controller-runtime/pkg/envtest/printer"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/yaml"
@@ -27,9 +26,7 @@ import (
 
 func TestTerraformTest(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecsWithDefaultAndCustomReporters(t,
-		"Terraform Test suite",
-		[]Reporter{printer.NewlineReporter{}})
+	RunSpecs(t, "Terraform Test suite")
 }
 
 var (
