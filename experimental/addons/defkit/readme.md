@@ -57,5 +57,5 @@ spec:
 `render/` holds `defkit-render` and its Dockerfile. The image needs Go, since loading a module runs `go mod download` and `go run`.
 
 ```shell
-docker buildx build --platform linux/amd64,linux/arm64 -t oamdev/defkit-render:v0.1.0 render/
+docker buildx build --platform linux/amd64,linux/arm64 -t oamdev/defkit-render:v0.1.0 --push render/
 ```
