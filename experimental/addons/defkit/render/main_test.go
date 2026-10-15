@@ -3,6 +3,8 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"k8s.io/apimachinery/pkg/labels"
 )
 
 func TestCollectEmptyMarshalsAsList(t *testing.T) {
@@ -36,5 +38,18 @@ func TestCloneErrorRedactsCredentials(t *testing.T) {
 	}
 	if strings.Contains(err.Error(), "s3cret") {
 		t.Errorf("clone error carries the credentials: %v", err)
+	}
+}
+
+func TestPruneSelectsRendersOnly(t *testing.T) {
+	sel, err := labels.Parse(pruneSelector("defs"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !sel.Matches(labels.Set(renderLabels("defs"))) {
+		t.Error("selector misses the module's renders")
+	}
+	if sel.Matches(labels.Set{"defkit.oam.dev/module": "defs"}) {
+		t.Error("selector matches a ConfigMap that is not a render")
 	}
 }

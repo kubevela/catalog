@@ -21,6 +21,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
@@ -213,21 +214,30 @@ func write(ctx context.Context, target, owner string, data map[string]string) er
 	if err != nil {
 		return err
 	}
-	labels := map[string]string{"defkit.oam.dev/render": "true", "defkit.oam.dev/module": owner}
 	annotations := map[string]string{"defkit.oam.dev/rendered-at": time.Now().UTC().Format("2006-01-02T15:04:05.000000000Z")}
 	cms := cli.CoreV1().ConfigMaps(ns)
 	cm, err := cms.Get(ctx, name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		_, err = cms.Create(ctx, &corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: ns,
-			Labels: labels, Annotations: annotations}, Data: data}, metav1.CreateOptions{})
+			Labels: renderLabels(owner), Annotations: annotations}, Data: data}, metav1.CreateOptions{})
 		return err
 	}
 	if err != nil {
 		return err
 	}
-	cm.Labels, cm.Annotations, cm.Data = labels, annotations, data
+	cm.Labels, cm.Annotations, cm.Data = renderLabels(owner), annotations, data
 	_, err = cms.Update(ctx, cm, metav1.UpdateOptions{})
 	return err
+}
+
+// renderLabels returns the labels that mark a ConfigMap as one of a module's renders.
+func renderLabels(owner string) map[string]string {
+	return map[string]string{"defkit.oam.dev/render": "true", "defkit.oam.dev/module": owner}
+}
+
+// pruneSelector selects a module's renders.
+func pruneSelector(owner string) string {
+	return labels.SelectorFromSet(renderLabels(owner)).String()
 }
 
 // keepRenders is how many of a module's renders are kept: every run writes one.
@@ -245,7 +255,7 @@ func prune(ctx context.Context, target, owner string) error {
 		return err
 	}
 	cms := cli.CoreV1().ConfigMaps(ns)
-	list, err := cms.List(ctx, metav1.ListOptions{LabelSelector: "defkit.oam.dev/module=" + owner})
+	list, err := cms.List(ctx, metav1.ListOptions{LabelSelector: pruneSelector(owner)})
 	if err != nil {
 		return err
 	}
