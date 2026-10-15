@@ -9,6 +9,7 @@ metadata:
 spec:
   components: []
   policies:
+    # Definitions a new version drops are kept, not garbage collected: Applications may still use them.
     - name: keep-removed-definitions
       type: garbage-collect
       properties:

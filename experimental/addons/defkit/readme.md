@@ -6,7 +6,7 @@ Each module is an Application whose workflow:
 
 1. **renders** the module in a Job (`defkit-render`), the way `vela def apply-module` loads it, into a ConfigMap;
 2. waits for **review** (optional, a `suspend` step);
-3. **applies** the rendered definitions (`defkit-apply`), so the Application tracks them and garbage collects the ones a new version drops.
+3. **applies** the rendered definitions (`defkit-apply`), so the Application tracks them and garbage collects the ones a new version drops, unless it keeps them with the `garbage-collect` policy's `keepLegacyResource`, as the example does.
 
 The render Job runs in the `vela-defkit` namespace. The module's code runs in a container with no service account token; a second container then writes the result to a ConfigMap, under an account that may only write ConfigMaps there.
 
