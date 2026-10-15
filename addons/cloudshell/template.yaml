@@ -11,13 +11,15 @@ spec:
         repoType: helm
         url: https://cloudtty.github.io/cloudtty
         chart: cloudtty
-        version: 0.3.0
+        version: 0.5.0
         upgradeCRD: true
         values:
+          # The chart's own operator: the chart and the operator move together,
+          # since the chart's job template needs fields the operator renders.
           image:
-            registry: docker.io
-            repository: oamdev/cloudshell-operator
-            tag: "v0.3.0"
+            registry: ghcr.io
+            repository: cloudtty/cloudshell-operator
+            tag: "v0.5.0"
           jobTemplate:
             image:
               registry: docker.io
