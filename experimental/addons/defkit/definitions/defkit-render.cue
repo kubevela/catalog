@@ -78,7 +78,8 @@ template: {
 	wait: builtin.#ConditionalWait & {
 		$params: {
 			continue: _succeeded || _failed
-			message:  "rendering \(parameter.ref)\(parameter.git) \(parameter.version)"
+			// The git URL is left out: it may carry credentials.
+			message: strings.Join([for w in ["rendering DefKit module", parameter.ref, parameter.version] if w != "" {w}], " ")
 		}
 	}
 	if _failed {
