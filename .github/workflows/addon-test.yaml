@@ -93,7 +93,12 @@ jobs:
           # Released vela-core charts can't finish a fresh install on Kubernetes 1.36+
           # with secure TLS for cluster-gateway (https://github.com/kubevela/kubevela/issues/7452).
           # Drop this --set once a release has the fix: https://github.com/kubevela/catalog/issues/803
-          vela install -v v1.11.0 --yes --set multicluster.clusterGateway.secureTLS.enabled=false
+          # Without secure TLS, direct mode leaves the controller's gateway client insecure
+          # but still holding its in-cluster CA file, which client-go refuses, so every
+          # request to a managed cluster fails. direct=false sends those requests through
+          # the APIService instead. Drop it with the secureTLS --set.
+          vela install -v v1.11.0 --yes --set multicluster.clusterGateway.secureTLS.enabled=false \
+            --set multicluster.clusterGateway.direct=false
           kubectl get deploy -n vela-system kubevela-vela-core -oyaml
 
       - name: Vela worker cluster join

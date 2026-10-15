@@ -1,4 +1,5 @@
 import (
+	cuelist "list"
 	"encoding/json"
 )
 
@@ -62,7 +63,7 @@ template: {
 			}]
 		}
 
-		templating: list: varList + extList
+		templating: list: cuelist.Concat([varList, extList])
 	}
 
 	model: {
