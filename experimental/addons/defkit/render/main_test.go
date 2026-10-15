@@ -1,6 +1,9 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -54,5 +57,23 @@ func TestPruneSelectsRendersOnly(t *testing.T) {
 	}
 	if sel.Matches(labels.Set(renderLabels("defs", "team-b"))) {
 		t.Error("selector matches a same-named module in another namespace")
+	}
+}
+
+func TestResultFileRoundTrips(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "result.json")
+	data := map[string]string{keyModule: "{}", keyDefinitions: `[{"kind":"TraitDefinition"}]`, keyErrors: `["x: boom"]`}
+	if err := os.WriteFile(path, []byte(mustJSON(data)), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	got, err := readResult(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, data) {
+		t.Errorf("readResult = %v, want %v", got, data)
+	}
+	if defs, errs := tally(got); defs != 1 || errs != 1 {
+		t.Errorf("tally = %d, %d, want 1, 1", defs, errs)
 	}
 }

@@ -43,11 +43,27 @@ template: {
 				ttlSecondsAfterFinished: 300
 				template: spec: {
 					serviceAccountName: "defkit-render"
-					restartPolicy:      "Never"
+					// The module's code runs in the render container, which has no
+					// token; only the write container mounts the account's.
+					automountServiceAccountToken: false
+					restartPolicy:                "Never"
 					securityContext: {runAsNonRoot: true, runAsUser: 65532}
-					containers: [{
-						name:  "render"
-						image: settings.$returns.value.data.image
+					volumes: [{
+						name: "work"
+						emptyDir: {}
+					}, {
+						name: "token"
+						projected: sources: [{
+							serviceAccountToken: path: "token"
+						}, {
+							configMap: {name: "kube-root-ca.crt", items: [{key: "ca.crt", path: "ca.crt"}]}
+						}, {
+							downwardAPI: items: [{path: "namespace", fieldRef: fieldPath: "metadata.namespace"}]
+						}]
+					}]
+					initContainers: [{
+						name:            "render"
+						image:           settings.$returns.value.data.image
 						imagePullPolicy: "IfNotPresent"
 						args: [
 							if parameter.git != "" {"--git=\(parameter.git)"},
@@ -55,9 +71,7 @@ template: {
 							"--version=\(parameter.version)",
 							"--prefix=\(parameter.prefix)",
 							"--types=\(strings.Join(parameter.types, ","))",
-							"--configmap=vela-defkit/\(_name)",
-							"--module=\(context.name)",
-							"--module-namespace=\(context.namespace)",
+							"--out=/work/result.json",
 						]
 						// Without requests the limits are requested too, and a render
 						// waits for two free CPUs.
@@ -65,6 +79,31 @@ template: {
 							requests: {cpu: "100m", memory: "256Mi"}
 							limits: {cpu: "2", memory: "2Gi"}
 						}
+						volumeMounts: [{name: "work", mountPath: "/work"}]
+					}]
+					containers: [{
+						name:            "write"
+						image:           settings.$returns.value.data.image
+						imagePullPolicy: "IfNotPresent"
+						args: [
+							"--from=/work/result.json",
+							"--configmap=vela-defkit/\(_name)",
+							"--module=\(context.name)",
+							"--module-namespace=\(context.namespace)",
+						]
+						resources: {
+							requests: {cpu: "10m", memory: "32Mi"}
+							limits: {cpu: "200m", memory: "128Mi"}
+						}
+						volumeMounts: [{
+							name:      "work"
+							mountPath: "/work"
+							readOnly:  true
+						}, {
+							name:      "token"
+							mountPath: "/var/run/secrets/kubernetes.io/serviceaccount"
+							readOnly:  true
+						}]
 					}]
 				}
 			}

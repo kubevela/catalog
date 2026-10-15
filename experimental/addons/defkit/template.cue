@@ -1,7 +1,8 @@
 import "encoding/json"
 
 // The render Job's sandbox: a namespace of its own, and an account that may
-// write ConfigMaps there and nothing else.
+// write ConfigMaps there and nothing else, whose token only the Job's write
+// container mounts, never the container running the module's code.
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"

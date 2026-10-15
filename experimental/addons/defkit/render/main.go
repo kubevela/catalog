@@ -4,6 +4,12 @@
 //
 //	defkit-render --ref github.com/org/defs --version v1.2.0 --configmap ns/name
 //	defkit-render --git https://github.com/org/defs --version main --configmap ns/name
+//
+// The render Job splits the two halves, so the module's code never runs
+// beside the account's token:
+//
+//	defkit-render --git https://github.com/org/defs --out /work/result.json
+//	defkit-render --from /work/result.json --configmap ns/name
 package main
 
 import (
@@ -69,67 +75,115 @@ func main() {
 	version := flag.String("version", "", "module version, or with --git a branch, tag or commit; latest or the default branch when empty")
 	prefix := flag.String("prefix", "", "prefix for every definition name")
 	types := flag.String("types", "", "comma-separated definition types; all when empty")
+	out := flag.String("out", "", "file to write the result to as JSON, making no API calls")
+	from := flag.String("from", "", "result file written with --out, written to --configmap in place of a render")
 	target := flag.String("configmap", "", "namespace/name of the ConfigMap to write; stdout when empty")
 	owner := flag.String("module", "", "the module Application, labelled on the ConfigMap")
 	ownerNS := flag.String("module-namespace", "", "the module Application's namespace, labelled on the ConfigMap")
 	flag.Parse()
-	if (*ref == "") == (*gitURL == "") {
+	switch {
+	case *out != "" && *target != "":
+		fail(fmt.Errorf("--out and --configmap are exclusive"))
+	case *from != "" && *target == "":
+		fail(fmt.Errorf("--from wants --configmap"))
+	case *from == "" && (*ref == "") == (*gitURL == ""):
 		fail(fmt.Errorf("one of --ref and --git is required"))
 	}
-	source := *ref
-	if *gitURL != "" {
-		dir, err := clone(*gitURL, *version)
-		if err != nil {
+
+	ctx := context.Background()
+	var data map[string]string
+	var err error
+	if *from != "" {
+		data, err = readResult(*from)
+	} else {
+		data, err = render(ctx, *ref, *gitURL, *version, *prefix, *types)
+	}
+	if err != nil {
+		fail(err)
+	}
+	switch {
+	case *out != "":
+		if err := os.WriteFile(*out, []byte(mustJSON(data)), 0o644); err != nil {
 			fail(err)
+		}
+	case *target == "":
+		fmt.Println(mustJSON(data))
+		return
+	default:
+		if err := write(ctx, *target, *owner, *ownerNS, data); err != nil {
+			fail(err)
+		}
+		if *owner != "" {
+			if err := prune(ctx, *target, *owner, *ownerNS); err != nil {
+				fmt.Fprintln(os.Stderr, "defkit-render: pruning old renders:", err)
+			}
+		}
+	}
+	defs, errs := tally(data)
+	fmt.Printf("%d definitions, %d failed, written to %s\n", defs, errs, *out+*target)
+}
+
+// render loads a module and returns the result ConfigMap's data.
+func render(ctx context.Context, ref, gitURL, version, prefix, types string) (map[string]string, error) {
+	source := ref
+	if gitURL != "" {
+		dir, err := clone(gitURL, version)
+		if err != nil {
+			return nil, err
 		}
 		source = dir
 	}
 
 	opts := goloader.DefaultModuleLoadOptions()
-	if *gitURL == "" {
-		opts.Version = *version
+	if gitURL == "" {
+		opts.Version = version
 	}
-	opts.NamePrefix = *prefix
-	if *types != "" {
-		opts.Types = strings.Split(*types, ",")
+	opts.NamePrefix = prefix
+	var typeList []string
+	if types != "" {
+		typeList = strings.Split(types, ",")
+		opts.Types = typeList
 	}
-	ctx := context.Background()
 	module, err := goloader.LoadModule(ctx, source, opts)
 	if err != nil {
-		fail(fmt.Errorf("load %s: %w", source, err))
+		return nil, fmt.Errorf("load %s: %w", source, err)
 	}
 
-	defs, errs := collect(module.Definitions, *prefix)
+	defs, errs := collect(module.Definitions, prefix)
 	meta := module.Metadata
-	var typeList []string
-	if *types != "" {
-		typeList = strings.Split(*types, ",")
-	}
 	info := moduleInfo{
-		Source: renderSource{Ref: *ref, Git: redact(*gitURL), Version: *version, Prefix: *prefix, Types: typeList},
-		Name:   meta.Metadata.Name, Ref: *ref + redact(*gitURL), Version: module.Version,
+		Source: renderSource{Ref: ref, Git: redact(gitURL), Version: version, Prefix: prefix, Types: typeList},
+		Name:   meta.Metadata.Name, Ref: ref + redact(gitURL), Version: module.Version,
 		Description: meta.Spec.Description, Maintainers: meta.Spec.Maintainers,
 		Categories: meta.Spec.Categories, Placement: meta.Spec.Placement,
 		HasHooks: meta.Spec.Hooks != nil && (meta.Spec.Hooks.HasPreApply() || meta.Spec.Hooks.HasPostApply()),
 	}
-	data := map[string]string{
+	return map[string]string{
 		keyModule:      mustJSON(info),
 		keyDefinitions: mustJSON(defs),
 		keyErrors:      mustJSON(errs),
+	}, nil
+}
+
+// readResult reads a result file written with --out.
+func readResult(path string) (map[string]string, error) {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
 	}
-	if *target == "" {
-		fmt.Println(mustJSON(data))
-		return
+	data := map[string]string{}
+	if err := json.Unmarshal(b, &data); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
 	}
-	if err := write(ctx, *target, *owner, *ownerNS, data); err != nil {
-		fail(err)
-	}
-	if *owner != "" {
-		if err := prune(ctx, *target, *owner, *ownerNS); err != nil {
-			fmt.Fprintln(os.Stderr, "defkit-render: pruning old renders:", err)
-		}
-	}
-	fmt.Printf("%d definitions, %d failed, written to %s\n", len(defs), len(errs), *target)
+	return data, nil
+}
+
+// tally counts the definitions and errors in a result.
+func tally(data map[string]string) (defs, errs int) {
+	var d, e []json.RawMessage
+	_ = json.Unmarshal([]byte(data[keyDefinitions]), &d)
+	_ = json.Unmarshal([]byte(data[keyErrors]), &e)
+	return len(d), len(e)
 }
 
 // collect converts a module's results to definition objects, and the ones
