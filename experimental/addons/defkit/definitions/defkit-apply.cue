@@ -38,7 +38,18 @@ template: {
 	if rendered.$returns.value.data != _|_ {
 		_data: rendered.$returns.value.data
 	}
+	// A render with errors fails the step and applies none of its definitions.
+	_errs: *[] | [...string]
+	if _data["errors.json"] != _|_ {
+		_errs: json.Unmarshal(_data["errors.json"])
+	}
+	if len(_errs) > 0 {
+		renderFailed: builtin.#Fail & {
+			$params: message: "render vela-defkit/\(parameter.configMap) failed for \(len(_errs)) definitions: \(strings.Join(list.Take(_errs, 3), "; "))"
+		}
+	}
 	_defs: *[] | [...{...}]
+	if len(_errs) == 0
 	if _data["definitions.json"] != _|_ {
 		_defs: json.Unmarshal(_data["definitions.json"])
 	}
