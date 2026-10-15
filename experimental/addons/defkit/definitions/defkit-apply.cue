@@ -20,7 +20,21 @@ template: {
 			metadata: {name: parameter.configMap, namespace: "vela-defkit"}
 		}
 	}
+	// A render that cannot be read, or has no definitions.json, fails the step.
+	if rendered.$returns.err != _|_ {
+		renderUnreadable: builtin.#Fail & {
+			$params: message: "read render vela-defkit/\(parameter.configMap): \(rendered.$returns.err)"
+		}
+	}
+	if rendered.$returns.err == _|_
+	if rendered.$returns.value != _|_
+	if rendered.$returns.value.data["definitions.json"] == _|_ {
+		renderIncomplete: builtin.#Fail & {
+			$params: message: "render vela-defkit/\(parameter.configMap) has no definitions.json"
+		}
+	}
 	_data: *{} | {...}
+	if rendered.$returns.err == _|_
 	if rendered.$returns.value.data != _|_ {
 		_data: rendered.$returns.value.data
 	}
