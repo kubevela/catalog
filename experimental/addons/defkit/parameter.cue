@@ -7,11 +7,14 @@ parameter: {
 		git:         "https://github.com/kubevela/vela-go-definitions"
 		version:     "main"
 		description: "KubeVela's built-in definitions, written with DefKit"
-	}] | [...{
-		name:         string
-		git?:         string
-		ref?:         string
-		version?:     string
-		description?: string
-	}]
+	}] | [...#Repository]
+}
+
+// #Repository names its module by git or by ref, never both.
+#Repository: ({git!: string, ref?: _|_, ...} | {ref!: string, git?: _|_, ...}) & {
+	name:         string
+	git?:         string
+	ref?:         string
+	version?:     string
+	description?: string
 }
