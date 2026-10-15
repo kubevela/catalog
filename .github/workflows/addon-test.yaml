@@ -8,7 +8,7 @@ on:
 
 env:
   # Common versions
-  GO_VERSION: "1.22"
+  GO_VERSION: "1.27.1"
 
 jobs:
   detect-noop:
@@ -77,20 +77,23 @@ jobs:
 
       - name: Setup KinD
         run: |
-          go install sigs.k8s.io/kind@v0.22.0
+          go install sigs.k8s.io/kind@v0.33.0
           kind delete cluster --name worker || true
-          kind create cluster --name worker --image=kindest/node:v1.29.12
+          kind create cluster --name worker --image=kindest/node:v1.37.0
           kind export kubeconfig --internal --name worker --kubeconfig /tmp/worker.kubeconfig
           kind delete cluster || true
-          kind create cluster --image=kindest/node:v1.29.12
+          kind create cluster --image=kindest/node:v1.37.0
 
       - name: Install vela cli
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.10.1
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s v1.11.0
 
       - name: Install vela core
         run: |
-          vela install -v v1.10.1 --yes
+          # Released vela-core charts can't finish a fresh install on Kubernetes 1.36+
+          # with secure TLS for cluster-gateway (https://github.com/kubevela/kubevela/issues/7452).
+          # Drop this --set once a release has the fix: https://github.com/kubevela/catalog/issues/803
+          vela install -v v1.11.0 --yes --set multicluster.clusterGateway.secureTLS.enabled=false
           kubectl get deploy -n vela-system kubevela-vela-core -oyaml
 
       - name: Vela worker cluster join

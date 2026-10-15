@@ -138,6 +138,7 @@ func determineNeedEnableAddon(changedFile []string) []string {
 	for _, addon := range changedAddons {
 		changedAddons = MergeSlice(false, changedAddons, checkAddonDependency(addon))
 	}
+	changedAddons = sortAddonsByDependency(changedAddons)
 
 	fmt.Printf("This PR need to test the addons: %s \n", changedAddons)
 	return changedAddons
@@ -555,4 +556,58 @@ func MergeSlice(right bool, source []string, target []string) []string {
 		}
 	}
 	return source
+}
+
+// sortAddonsByDependency orders addons so an addon's declared dependencies are
+// enabled before the addon itself, pulling in any dependency missing from the
+// list. `vela addon enable <local dir>` refuses to install an addon whose
+// dependencies are not already enabled (helper.go's checkDependency), rather
+// than resolving them from a registry the way a registry install does, so an
+// arbitrary order fails whenever a dependent happens to come first.
+func sortAddonsByDependency(addons []string) []string {
+	localAddons, err := readAllAddons()
+	if err != nil {
+		panic(err)
+	}
+	isLocal := make(map[string]bool, len(localAddons))
+	for _, addon := range localAddons {
+		isLocal[addon] = true
+	}
+
+	var ordered []string
+	visited := make(map[string]bool)
+	// visiting tracks the current DFS path so a dependency cycle stops instead
+	// of recursing forever.
+	visiting := make(map[string]bool)
+
+	var visit func(addon string)
+	visit = func(addon string) {
+		if visited[addon] || visiting[addon] {
+			return
+		}
+		visiting[addon] = true
+		if meta, err := readAddonMeta(addon); err == nil {
+			for _, dep := range meta.Dependencies {
+				if isLocal[dep.Name] {
+					visit(dep.Name)
+				}
+			}
+		}
+		visiting[addon] = false
+		visited[addon] = true
+		ordered = append(ordered, addon)
+	}
+
+	for _, addon := range addons {
+		if isLocal[addon] {
+			visit(addon)
+			continue
+		}
+
+		if !visited[addon] {
+			visited[addon] = true
+			ordered = append(ordered, addon)
+		}
+	}
+	return ordered
 }
