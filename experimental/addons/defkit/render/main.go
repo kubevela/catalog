@@ -96,23 +96,7 @@ func main() {
 		fail(fmt.Errorf("load %s: %w", source, err))
 	}
 
-	var defs []map[string]interface{}
-	var errs []string
-	for _, r := range module.Definitions {
-		if r.Error != nil {
-			errs = append(errs, fmt.Sprintf("%s: %v", r.Definition.Name, r.Error))
-			continue
-		}
-		def := pkgdef.Definition{}
-		if err := def.FromCUEString(r.CUE, nil); err != nil {
-			errs = append(errs, fmt.Sprintf("%s: %v", r.Definition.Name, err))
-			continue
-		}
-		if *prefix != "" && !strings.HasPrefix(def.GetName(), *prefix) {
-			def.SetName(*prefix + def.GetName())
-		}
-		defs = append(defs, def.Object)
-	}
+	defs, errs := collect(module.Definitions, *prefix)
 	meta := module.Metadata
 	var typeList []string
 	if *types != "" {
@@ -143,6 +127,29 @@ func main() {
 		}
 	}
 	fmt.Printf("%d definitions, %d failed, written to %s\n", len(defs), len(errs), *target)
+}
+
+// collect converts a module's results to definition objects, and the ones
+// that failed to errors.
+func collect(results []goloader.LoadResult, prefix string) ([]map[string]interface{}, []string) {
+	defs := []map[string]interface{}{}
+	errs := []string{}
+	for _, r := range results {
+		if r.Error != nil {
+			errs = append(errs, fmt.Sprintf("%s: %v", r.Definition.Name, r.Error))
+			continue
+		}
+		def := pkgdef.Definition{}
+		if err := def.FromCUEString(r.CUE, nil); err != nil {
+			errs = append(errs, fmt.Sprintf("%s: %v", r.Definition.Name, err))
+			continue
+		}
+		if prefix != "" && !strings.HasPrefix(def.GetName(), prefix) {
+			def.SetName(prefix + def.GetName())
+		}
+		defs = append(defs, def.Object)
+	}
+	return defs, errs
 }
 
 // clone fetches one revision of a repository into a temporary directory. A
