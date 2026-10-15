@@ -30,7 +30,10 @@ template: {
 			metadata: {
 				name:      _name
 				namespace: "vela-defkit"
-				labels: "defkit.oam.dev/module": context.name
+				labels: {
+					"defkit.oam.dev/module":           context.name
+					"defkit.oam.dev/module-namespace": context.namespace
+				}
 			}
 			spec: {
 				backoffLimit: 1
@@ -54,6 +57,7 @@ template: {
 							"--types=\(strings.Join(parameter.types, ","))",
 							"--configmap=vela-defkit/\(_name)",
 							"--module=\(context.name)",
+							"--module-namespace=\(context.namespace)",
 						]
 						// Without requests the limits are requested too, and a render
 						// waits for two free CPUs.

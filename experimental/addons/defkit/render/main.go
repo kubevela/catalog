@@ -71,6 +71,7 @@ func main() {
 	types := flag.String("types", "", "comma-separated definition types; all when empty")
 	target := flag.String("configmap", "", "namespace/name of the ConfigMap to write; stdout when empty")
 	owner := flag.String("module", "", "the module Application, labelled on the ConfigMap")
+	ownerNS := flag.String("module-namespace", "", "the module Application's namespace, labelled on the ConfigMap")
 	flag.Parse()
 	if (*ref == "") == (*gitURL == "") {
 		fail(fmt.Errorf("one of --ref and --git is required"))
@@ -120,11 +121,11 @@ func main() {
 		fmt.Println(mustJSON(data))
 		return
 	}
-	if err := write(ctx, *target, *owner, data); err != nil {
+	if err := write(ctx, *target, *owner, *ownerNS, data); err != nil {
 		fail(err)
 	}
 	if *owner != "" {
-		if err := prune(ctx, *target, *owner); err != nil {
+		if err := prune(ctx, *target, *owner, *ownerNS); err != nil {
 			fmt.Fprintln(os.Stderr, "defkit-render: pruning old renders:", err)
 		}
 	}
@@ -201,7 +202,7 @@ func scrub(text, raw string) string {
 
 // write creates or replaces the ConfigMap; the Job's account may do nothing else.
 // A review's decisions, written beside the render, are dropped with it.
-func write(ctx context.Context, target, owner string, data map[string]string) error {
+func write(ctx context.Context, target, owner, ownerNS string, data map[string]string) error {
 	ns, name, ok := strings.Cut(target, "/")
 	if !ok {
 		return fmt.Errorf("--configmap wants namespace/name, got %q", target)
@@ -219,32 +220,36 @@ func write(ctx context.Context, target, owner string, data map[string]string) er
 	cm, err := cms.Get(ctx, name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
 		_, err = cms.Create(ctx, &corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: ns,
-			Labels: renderLabels(owner), Annotations: annotations}, Data: data}, metav1.CreateOptions{})
+			Labels: renderLabels(owner, ownerNS), Annotations: annotations}, Data: data}, metav1.CreateOptions{})
 		return err
 	}
 	if err != nil {
 		return err
 	}
-	cm.Labels, cm.Annotations, cm.Data = renderLabels(owner), annotations, data
+	cm.Labels, cm.Annotations, cm.Data = renderLabels(owner, ownerNS), annotations, data
 	_, err = cms.Update(ctx, cm, metav1.UpdateOptions{})
 	return err
 }
 
 // renderLabels returns the labels that mark a ConfigMap as one of a module's renders.
-func renderLabels(owner string) map[string]string {
-	return map[string]string{"defkit.oam.dev/render": "true", "defkit.oam.dev/module": owner}
+func renderLabels(owner, ownerNS string) map[string]string {
+	return map[string]string{
+		"defkit.oam.dev/render":           "true",
+		"defkit.oam.dev/module":           owner,
+		"defkit.oam.dev/module-namespace": ownerNS,
+	}
 }
 
 // pruneSelector selects a module's renders.
-func pruneSelector(owner string) string {
-	return labels.SelectorFromSet(renderLabels(owner)).String()
+func pruneSelector(owner, ownerNS string) string {
+	return labels.SelectorFromSet(renderLabels(owner, ownerNS)).String()
 }
 
 // keepRenders is how many of a module's renders are kept: every run writes one.
 const keepRenders = 3
 
 // prune deletes a module's renders beyond the newest keepRenders.
-func prune(ctx context.Context, target, owner string) error {
+func prune(ctx context.Context, target, owner, ownerNS string) error {
 	ns, _, _ := strings.Cut(target, "/")
 	cfg, err := rest.InClusterConfig()
 	if err != nil {
@@ -255,7 +260,7 @@ func prune(ctx context.Context, target, owner string) error {
 		return err
 	}
 	cms := cli.CoreV1().ConfigMaps(ns)
-	list, err := cms.List(ctx, metav1.ListOptions{LabelSelector: pruneSelector(owner)})
+	list, err := cms.List(ctx, metav1.ListOptions{LabelSelector: pruneSelector(owner, ownerNS)})
 	if err != nil {
 		return err
 	}

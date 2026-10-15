@@ -42,14 +42,17 @@ func TestCloneErrorRedactsCredentials(t *testing.T) {
 }
 
 func TestPruneSelectsRendersOnly(t *testing.T) {
-	sel, err := labels.Parse(pruneSelector("defs"))
+	sel, err := labels.Parse(pruneSelector("defs", "team-a"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !sel.Matches(labels.Set(renderLabels("defs"))) {
+	if !sel.Matches(labels.Set(renderLabels("defs", "team-a"))) {
 		t.Error("selector misses the module's renders")
 	}
-	if sel.Matches(labels.Set{"defkit.oam.dev/module": "defs"}) {
+	if sel.Matches(labels.Set{"defkit.oam.dev/module": "defs", "defkit.oam.dev/module-namespace": "team-a"}) {
 		t.Error("selector matches a ConfigMap that is not a render")
+	}
+	if sel.Matches(labels.Set(renderLabels("defs", "team-b"))) {
+		t.Error("selector matches a same-named module in another namespace")
 	}
 }
