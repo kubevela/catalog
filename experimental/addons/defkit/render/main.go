@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net/url"
 	"os"
 	"os/exec"
 	"sort"
@@ -103,8 +104,8 @@ func main() {
 		typeList = strings.Split(*types, ",")
 	}
 	info := moduleInfo{
-		Source: renderSource{Ref: *ref, Git: *gitURL, Version: *version, Prefix: *prefix, Types: typeList},
-		Name:   meta.Metadata.Name, Ref: *ref + *gitURL, Version: module.Version,
+		Source: renderSource{Ref: *ref, Git: redact(*gitURL), Version: *version, Prefix: *prefix, Types: typeList},
+		Name:   meta.Metadata.Name, Ref: *ref + redact(*gitURL), Version: module.Version,
 		Description: meta.Spec.Description, Maintainers: meta.Spec.Maintainers,
 		Categories: meta.Spec.Categories, Placement: meta.Spec.Placement,
 		HasHooks: meta.Spec.Hooks != nil && (meta.Spec.Hooks.HasPreApply() || meta.Spec.Hooks.HasPostApply()),
@@ -154,7 +155,7 @@ func collect(results []goloader.LoadResult, prefix string) ([]map[string]interfa
 
 // clone fetches one revision of a repository into a temporary directory. A
 // fetch by name takes a branch, a tag or a commit alike.
-func clone(url, revision string) (string, error) {
+func clone(repo, revision string) (string, error) {
 	dir, err := os.MkdirTemp("", "defkit-")
 	if err != nil {
 		return "", err
@@ -164,17 +165,37 @@ func clone(url, revision string) (string, error) {
 	}
 	for _, args := range [][]string{
 		{"init", "-q"},
-		{"remote", "add", "origin", url},
+		{"remote", "add", "origin", repo},
 		{"fetch", "-q", "--depth", "1", "origin", revision},
 		{"checkout", "-q", "FETCH_HEAD"},
 	} {
 		cmd := exec.Command("git", args...)
 		cmd.Dir = dir
 		if out, err := cmd.CombinedOutput(); err != nil {
-			return "", fmt.Errorf("git %s: %w: %s", args[0], err, strings.TrimSpace(string(out)))
+			return "", fmt.Errorf("git %s: %w: %s", args[0], err, scrub(strings.TrimSpace(string(out)), repo))
 		}
 	}
 	return dir, nil
+}
+
+// redact drops the credentials a repository URL may carry.
+func redact(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil || u.User == nil {
+		return raw
+	}
+	u.User = nil
+	return u.String()
+}
+
+// scrub removes the credentials of the repository URL raw wherever text
+// repeats them, as git's output does.
+func scrub(text, raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil || u.User == nil {
+		return text
+	}
+	return strings.ReplaceAll(strings.ReplaceAll(text, raw, redact(raw)), u.User.String()+"@", "")
 }
 
 // write creates or replaces the ConfigMap; the Job's account may do nothing else.
