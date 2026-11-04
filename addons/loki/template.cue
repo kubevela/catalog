@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
@@ -8,14 +10,14 @@ output: {
 		namespace: "vela-system"
 	}
 	spec: {
-		components: [
+		components: list.Concat([[
 				o11yNamespace,
 				loki,
 				lokiConfig,
 				if parameter.storage != _|_ {lokiStorage},
-		] + agentComponents
+		], agentComponents])
 
-		policies: commonPolicies + [{
+		policies: list.Concat([commonPolicies, [{
 			type: "override"
 			name: "loki-components"
 			properties: selector: [
@@ -24,12 +26,12 @@ output: {
 				loki.name,
 				if parameter.storage != _|_ {lokiStorage.name},
 			]
-		}] + agentPolicies
+		}], agentPolicies])
 
-		workflow: steps: [{
+		workflow: steps: list.Concat([[{
 			type: "deploy"
 			name: "deploy-ns"
 			properties: policies: ["topology-distributed", "o11y-namespace"]
-		}] + lokiSteps + agentWorkflowSteps
+		}], lokiSteps, agentWorkflowSteps])
 	}
 }

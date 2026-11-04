@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 grafanaDashboardComponents: [
 	grafanaDashboardKubernetesAPIServer,
 	grafanaDashboardKubevelaSystem,
@@ -13,14 +15,14 @@ grafanaDashboardComponents: [
 
 output: {
 	spec: {
-		components: [
+		components: list.Concat([[
 				o11yNamespace,
 				grafanaAccess,
 				grafana,
 				if parameter.storage != _|_ {grafanaStorage},
 				if !parameter.install {grafanaReaderRoleAndBinding},
-		] + grafanaDashboardComponents
-		policies: commonPolicies + [{
+		], grafanaDashboardComponents])
+		policies: list.Concat([commonPolicies, [{
 			type: "override"
 			name: "grafana-core"
 			properties: selector: [o11yNamespace.name, grafanaAccess.name, grafana.name]
@@ -32,8 +34,8 @@ output: {
 			type: "override"
 			name: "grafana-kubernetes-role"
 			properties: selector: [grafanaReaderRoleAndBinding.name]
-		}]
-		workflow: steps: [
+		}]])
+		workflow: steps: list.Concat([[
 					if parameter.install {
 				type: "deploy"
 				name: "Deploy Grafana"
@@ -74,6 +76,6 @@ output: {
 				name: "Install Dashboards"
 				properties: policies: ["deploy-topology", "grafana-dashboards"]
 			},
-		] + postDeploySteps
+		], postDeploySteps])
 	}
 }
