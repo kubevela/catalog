@@ -25,6 +25,6 @@ parameter: {
 	nodePort: *30000 | int
 	// +usage=Enable impersonation means impersonating the login user to request the KubeAPI.
 	enableImpersonation: true | *false
-	// +usage=Offer $( ) CEL expression editing in forms. Set it to match the vela-core EnableCelExpressions feature gate.
-	enableCelExpressions: true | *false
+	// +usage=Offer $( ) CEL expression editing in forms. On by default; set it to false unless vela-core runs with the EnableCelExpressions feature gate.
+	enableCelExpressions: *true | false
 }

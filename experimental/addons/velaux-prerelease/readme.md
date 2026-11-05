@@ -29,7 +29,7 @@ The `dex` addon depends on `velaux`, so enabling it beside this addon tries to i
 
 | Parameter | Description |
 | --- | --- |
-| `enableCelExpressions` | Offer `$( )` CEL expression editing in forms. Set it to match the vela-core `EnableCelExpressions` feature gate. |
+| `enableCelExpressions` | Offer `$( )` CEL expression editing in forms. On by default; set it to `false` unless vela-core runs with the `EnableCelExpressions` feature gate, since forms otherwise save expressions the controller passes through as plain strings. |
 
 The other parameters are the same as the `velaux` addon's.
 
