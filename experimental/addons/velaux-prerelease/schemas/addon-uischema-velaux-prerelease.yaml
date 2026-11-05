@@ -1,0 +1,39 @@
+- jsonKey: dbType
+  label: DBType
+  validate: 
+    required: true
+    defaultValue: kubeapi
+    options:
+      - label: MongoDB
+        value: mongodb
+      - label: KubeAPI
+        value: kubeapi
+  sort: 1
+- jsonKey: dbURL
+  label: DatabaseURL
+  sort: 3
+  conditions:
+    - jsonKey: dbType
+      op: "=="
+      value: "mongodb"
+  validate:
+    required: true
+- jsonKey: database
+  sort: 7
+  validate:
+    defaultValue: kubevela
+    required: true
+- jsonKey: serviceAccountName
+  disable: true
+- jsonKey: serviceType
+  sort: 8
+- jsonKey: domain
+  sort: 9
+- jsonKey: gatewayDriver
+  sort: 10
+- jsonKey: repo
+  sort: 11
+- jsonKey: imagePullSecrets
+  sort: 13
+- jsonKey: enableCelExpressions
+  sort: 14

@@ -1,0 +1,24 @@
+- jsonKey: registry
+  sort: 1
+- jsonKey: insecure
+  sort: 3
+  style:
+      colSpan: 12
+- jsonKey: useHTTP
+  sort: 5
+  style:
+      colSpan: 12
+- jsonKey: auth
+  subParameters:
+  - jsonKey: username
+    sort: 1
+    style:
+      colSpan: 12
+
+  - jsonKey: password
+    sort: 3
+    style:
+      colSpan: 12
+    uiType: Password
+  - jsonKey: email
+    sort: 8

@@ -1,0 +1,14 @@
+- sort: 10
+  label: Policies
+  jsonKey: policies
+  uiType: PolicySelect
+  validate:
+    required: true
+- sort: 20
+  jsonKey: parallelism
+  style:
+    colSpan: 12
+- sort: 30
+  jsonKey: auto
+  style:
+    colSpan: 12

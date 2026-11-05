@@ -1,0 +1,86 @@
+- jsonKey: pvc
+  sort: 1
+  label: PersistentVolumeClaim
+  subParameters:
+  - jsonKey: name
+    sort: 1
+    validate:
+      required: true
+      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])$
+      maxLength: 32
+  - jsonKey: mountPath
+    sort: 3
+    validate:
+      required: true
+      pattern: ^/(.*)$
+  - jsonKey: resources
+    sort: 7
+    validate:
+      required: true
+      defaultValue: {requests: {storage: "8Gi"}, limits: {storage: "8Gi"}}
+    subParameters:
+      - jsonKey: requests
+        uiType: Ignore
+        style:
+          colSpan: 12
+        subParameters:
+          - jsonKey: storage
+            uiType: DiskNumber
+            label: Request Storage
+            validate:
+              required: true
+              immutable: true
+        sort: 1
+      - jsonKey: limits
+        sort: 3
+        uiType: Ignore
+        style:
+          colSpan: 12
+        subParameters:
+          - jsonKey: storage
+            uiType: DiskNumber
+            label: Limit Storage
+            validate:
+              required: true
+              immutable: true
+  - jsonKey: storageClassName
+    sort: 9
+    description: If not specified, the cluster default StorageClass is used.
+  - jsonKey: accessModes
+    sort: 11
+    validate:
+      required: false
+      defaultValue: ["ReadWriteOnce"]
+  - jsonKey: volumeMode
+    sort: 12
+    description: You can set the value of volumeMode to Block to use a volume as a raw block device.
+    uiType: Select
+    validate:
+      defaultValue: Filesystem
+      options: 
+        - label: Filesystem
+          value: Filesystem
+        - label: Block
+          value: Block
+  - jsonKey: volumeName
+    sort: 14
+    description: The VolumeName is the binding reference to the PersistentVolume backing this claim.
+  - jsonKey: selector
+    sort: 17
+  - jsonKey: dataSource
+    sort: 19
+    description: It will create a new volume based on the contents of the specified data source.
+  - jsonKey: dataSourceRef
+    sort: 20
+    disable: true 
+  - jsonKey: mountOnly
+    disable: true
+  
+- jsonKey: secret
+  sort: 3
+  disable: true
+- jsonKey: configMap
+  sort: 5
+  disable: true
+- jsonKey: emptyDir
+  disable: true
