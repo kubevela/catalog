@@ -1,0 +1,17 @@
+name: velaux-prerelease
+version: v1.12.0-alpha.1
+description: "Prerelease of VelaUX, the KubeVela User Experience (UX). Replaces the velaux addon: disable velaux before enabling this one."
+icon: https://static.kubevela.net/images/logos/KubeVela%20-03.png
+url: https://kubevela.io
+
+tags:
+  - experimental
+  - prerelease
+  - Dashboard
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: false
+
+system:
+  vela: ">=v1.11.0"
