@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 loki: {
 	name: "loki"
 	type: "webservice"
@@ -13,13 +15,13 @@ loki: {
 				mountPath: "/etc/loki"
 				cmName:    "loki"
 			}]
-			emptyDir: [{
+			emptyDir: list.Concat([[{
 				name:      "tmp"
 				mountPath: "/tmp"
-			}] + [ if parameter.storage == _|_ {
+			}], [ if parameter.storage == _|_ {
 				name:      "storage"
 				mountPath: "/data"
-			}]
+			}]])
 			if parameter.storage != _|_ {
 				pvc: [{
 					name:      "storage"
