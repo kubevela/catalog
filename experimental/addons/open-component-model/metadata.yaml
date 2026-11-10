@@ -1,0 +1,16 @@
+name: open-component-model
+version: 0.23.0
+description: Deliver Open Component Model (OCM) component versions to KubeVela applications.
+icon: https://raw.githubusercontent.com/open-component-model/open-component-model/main/website/assets/logo-image.png
+url: https://ocm.software
+
+tags:
+  - experimental
+  - Delivery
+
+deployTo:
+  controlPlane: true
+  runtimeCluster: false
+
+system:
+  vela: ">=v1.11.0"
