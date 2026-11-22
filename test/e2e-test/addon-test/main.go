@@ -156,7 +156,7 @@ func checkUpgradeAddonVersion(changedFiles []string) error {
 
 		if strings.HasPrefix(changedFile, "addons/") {
 			elem := strings.Split(changedFile, "/")
-			if len(elem) < 2 {
+			if len(elem) < 3 {
 				continue
 			}
 			addon := elem[1]
