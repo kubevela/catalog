@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -75,5 +76,59 @@ func TestResultFileRoundTrips(t *testing.T) {
 	}
 	if defs, errs := tally(got); defs != 1 || errs != 1 {
 		t.Errorf("tally = %d, %d, want 1, 1", defs, errs)
+	}
+}
+
+func TestRestrictKeepsDefinitionsOnly(t *testing.T) {
+	data := map[string]string{
+		keyModule: "{}",
+		keyDefinitions: mustJSON([]map[string]interface{}{
+			{"apiVersion": "core.oam.dev/v1beta1", "kind": "ComponentDefinition", "metadata": map[string]interface{}{"name": "webservice"}},
+			{"apiVersion": "core.oam.dev/v1beta1", "kind": "TraitDefinition", "metadata": map[string]interface{}{"name": "scaler"}},
+			{"apiVersion": "core.oam.dev/v1beta1", "kind": "PolicyDefinition", "metadata": map[string]interface{}{"name": "topology"}},
+			{"apiVersion": "core.oam.dev/v1beta1", "kind": "WorkflowStepDefinition", "metadata": map[string]interface{}{"name": "deploy"}},
+			{"apiVersion": "core.oam.dev/v1beta1", "kind": "WorkloadDefinition", "metadata": map[string]interface{}{"name": "worker"}},
+			{"apiVersion": "v1", "kind": "ConfigMap", "metadata": map[string]interface{}{"name": "payload"}},
+			{"apiVersion": "rbac.authorization.k8s.io/v1", "kind": "ClusterRoleBinding", "metadata": map[string]interface{}{"name": "admin"}},
+			{"apiVersion": "evil.example/v1", "kind": "TraitDefinition", "metadata": map[string]interface{}{"name": "lookalike"}},
+		}),
+		keyErrors: `["broken: boom"]`,
+	}
+	got, err := restrict(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var defs []map[string]interface{}
+	if err := json.Unmarshal([]byte(got[keyDefinitions]), &defs); err != nil {
+		t.Fatal(err)
+	}
+	var kept []string
+	for _, d := range defs {
+		kept = append(kept, d["kind"].(string)+"/"+d["metadata"].(map[string]interface{})["name"].(string))
+	}
+	wantKept := []string{"ComponentDefinition/webservice", "TraitDefinition/scaler", "PolicyDefinition/topology", "WorkflowStepDefinition/deploy"}
+	if !reflect.DeepEqual(kept, wantKept) {
+		t.Errorf("kept %v, want %v", kept, wantKept)
+	}
+	var errs []string
+	if err := json.Unmarshal([]byte(got[keyErrors]), &errs); err != nil {
+		t.Fatal(err)
+	}
+	if len(errs) != 5 || errs[0] != "broken: boom" {
+		t.Fatalf("errors = %q, want the render's error and four dropped objects", errs)
+	}
+	for i, want := range []string{"WorkloadDefinition worker", "ConfigMap payload", "ClusterRoleBinding admin", "TraitDefinition lookalike (evil.example/v1)"} {
+		if !strings.Contains(errs[i+1], want) {
+			t.Errorf("errors[%d] = %q, want it to name %q", i+1, errs[i+1], want)
+		}
+	}
+	if got[keyModule] != "{}" {
+		t.Errorf("module.json = %s, want it unchanged", got[keyModule])
+	}
+}
+
+func TestRestrictRejectsMalformedDefinitions(t *testing.T) {
+	if _, err := restrict(map[string]string{keyDefinitions: `{"kind":"ConfigMap"}`}); err == nil {
+		t.Error("restrict accepted a definitions.json that is not a list")
 	}
 }
