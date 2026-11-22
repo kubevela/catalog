@@ -1,6 +1,6 @@
 parameter: {
 	// +usage=Image of the render Job: Go plus defkit-render
-	image: *"oamdev/defkit-render:v0.1.0" | string
+	image: *"ghcr.io/kubevela/defkit-render:v0.1.0" | string
 	// +usage=Repositories VelaUX offers when adding a module; a module can still come from anywhere
 	repositories: *[{
 		name:        "KubeVela definitions"
