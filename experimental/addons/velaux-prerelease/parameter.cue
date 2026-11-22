@@ -27,4 +27,19 @@ parameter: {
 	enableImpersonation: true | *false
 	// +usage=Offer $( ) CEL expression editing in forms. On by default; set it to false unless vela-core runs with the EnableCelExpressions feature gate.
 	enableCelExpressions: *true | false
+	// +usage=Environment variables for velaux server.
+	env?: [...{
+		name:   string
+		value?: string
+		valueFrom?: {
+			configMapKeyRef?: {
+				key:  string
+				name: string
+			}
+			secretKeyRef?: {
+				key:  string
+				name: string
+			}
+		}
+	}]
 }

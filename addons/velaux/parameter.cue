@@ -25,4 +25,19 @@ parameter: {
 	nodePort: *30000 | int
 	// +usage=Enable impersonation means impersonating the login user to request the KubeAPI.
 	enableImpersonation: true | *false
+	// +usage=Environment variables for velaux server.
+	env?: [...{
+		name:   string
+		value?: string
+		valueFrom?: {
+			configMapKeyRef?: {
+				key:  string
+				name: string
+			}
+			secretKeyRef?: {
+				key:  string
+				name: string
+			}
+		}
+	}]
 }
