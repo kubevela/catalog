@@ -1,11 +1,10 @@
 output: {
 	type: "helm"
 	properties: {
-		chart:    "grafana"
-		version:  "6.14.1"
-		repoType: "helm"
-		// original url: https://grafana.github.io/helm-charts
-		url:             "https://charts.kubevela.net/addons"
+		chart:           "grafana"
+		version:         "6.14.1"
+		repoType:        "helm"
+		url:             "https://grafana.github.io/helm-charts"
 		targetNamespace: "vela-system"
 		releaseName:     "grafana"
 		values: {

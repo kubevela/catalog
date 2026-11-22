@@ -2,11 +2,10 @@
 output: {
 	type: "helm"
 	properties: {
-		chart:    "prometheus"
-		version:  "14.4.1"
-		repoType: "helm"
-		// original url: https://prometheus-community.github.io/helm-charts
-		url:             "https://charts.kubevela.net/addons"
+		chart:           "prometheus"
+		version:         "14.4.1"
+		repoType:        "helm"
+		url:             "https://prometheus-community.github.io/helm-charts"
 		targetNamespace: "vela-system"
 		releaseName:     "prometheus"
 		values: {
