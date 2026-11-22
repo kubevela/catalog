@@ -1,7 +1,7 @@
 name: vela-prism
-version: v1.6.0
+version: v1.6.1
 description: "Prism provides API Extensions to the core KubeVela. It works as a Kubernetes Aggregated API Server."
-icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
+icon: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.png
 url: "https://github.com/kubevela/prism"
 
 tags:
