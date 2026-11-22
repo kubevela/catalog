@@ -29,7 +29,7 @@ _nginxTrait: *[
 				http: {
 					"/": 8000
 				}
-				class: "nginx"
+				class: *parameter["ingressClassName"] | "nginx"
 			}
 		}
 	},
