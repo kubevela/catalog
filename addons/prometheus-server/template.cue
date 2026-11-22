@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 output: {
 	apiVersion: "core.oam.dev/v1beta1"
 	kind:       "Application"
@@ -15,7 +17,7 @@ output: {
 			if parameter.storage != _|_ {prometheusStorage},
 			if parameter.thanos {thanosQuery},
 		]
-		policies: commonPolicies + [{
+		policies: list.Concat([commonPolicies, [{
 			type: "override"
 			name: "component-prometheus"
 			properties: selector: [o11yNamespace.name, "prometheus-config", "prometheus-storage", "prometheus-server"]
@@ -23,8 +25,8 @@ output: {
 			type: "override"
 			name: "component-thanos"
 			properties: selector: ["thanos-query"]
-		}]
-		workflow: steps: [{
+		}]])
+		workflow: steps: list.Concat([[{
 			type: "deploy"
 			name: "deploy-prometheus"
 			properties: policies: ["component-prometheus", "topology-distributed"]
@@ -32,6 +34,6 @@ output: {
 			type: "deploy"
 			name: "deploy-thanos"
 			properties: policies: ["component-thanos", "topology-centralized"]
-		}] + postDeploySteps
+		}], postDeploySteps])
 	}
 }

@@ -1,5 +1,7 @@
 package main
 
+import "list"
+
 promtail: {
 	name: "promtail"
 	type: "daemon"
@@ -41,7 +43,7 @@ promtail: {
 			initialDelaySeconds: 10
 		}
 	}
-	traits: [{
+	traits: list.Concat([[{
 		type: "command"
 		properties: args: ["-config.file=/etc/config/agent.yaml"]
 	}, {
@@ -55,10 +57,10 @@ promtail: {
 				readOnlyRootFilesystem: true
 			}
 		}]
-	}] + [agentInitContainer, {
+	}], [agentInitContainer, {
 		agentServiceAccount
 		properties: name: "promtail"
-	}]
+	}]])
 }
 
 promtailConfig: {
