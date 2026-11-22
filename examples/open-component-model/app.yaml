@@ -1,0 +1,35 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ocm-cli-demo
+spec:
+  components:
+    - name: ocm-cli
+      type: ocm-component
+      properties:
+        repository:
+          type: OCIRegistry
+          baseUrl: ghcr.io/open-component-model
+        component: ocm.software/cli
+        semver: 0.23.0
+    - name: ocm-cli-image
+      type: ocm-resource
+      dependsOn: [ocm-cli]
+      properties:
+        componentRef: ocm-cli
+        resource:
+          name: image
+        additionalStatusFields:
+          image: resource.access.imageReference
+      outputs:
+        - name: image
+          valueFrom: output.status.additional.image
+    - name: ocm-version
+      type: task
+      dependsOn: [ocm-cli-image]
+      inputs:
+        - from: image
+          parameterKey: image
+      properties:
+        image: placeholder
+        cmd: ["/ocm", "version"]
