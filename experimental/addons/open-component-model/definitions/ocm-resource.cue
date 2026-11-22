@@ -50,7 +50,7 @@ template: {
 		componentRef: string
 		// +usage=The identity of the resource in the component version, for example {name: "chart"}
 		resource: {
-			name: string
+			name:     string
 			[string]: string
 		}
 		// +usage=Identities of component references to follow to reach the resource
@@ -60,6 +60,12 @@ template: {
 		// +usage=CEL expressions evaluated against the resource, published under status.additional, for example {image: "resource.access.imageReference"}
 		additionalStatusFields?: {...}
 		// +usage=References to secrets or config maps with OCM configuration, such as credentials
-		ocmConfig?: [...{...}]
+		ocmConfig?: [...{
+			kind:        "Secret" | "ConfigMap" | "Repository" | "Component" | "Resource"
+			name:        string
+			apiVersion?: string
+			namespace?:  string
+			policy?:     *"Propagate" | "DoNotPropagate"
+		}]
 	}
 }

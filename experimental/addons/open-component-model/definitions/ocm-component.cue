@@ -72,6 +72,12 @@ template: {
 		// +usage=How often the repository is checked for new component versions
 		interval: *"10m" | string
 		// +usage=References to secrets or config maps with OCM configuration, such as credentials
-		ocmConfig?: [...{...}]
+		ocmConfig?: [...{
+			kind:        "Secret" | "ConfigMap" | "Repository" | "Component" | "Resource"
+			name:        string
+			apiVersion?: string
+			namespace?:  string
+			policy?:     *"Propagate" | "DoNotPropagate"
+		}]
 	}
 }

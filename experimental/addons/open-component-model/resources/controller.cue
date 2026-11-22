@@ -12,11 +12,13 @@ ocmController: {
 			name:      "ocm-k8s-toolkit"
 			namespace: parameter.namespace
 		}
-		if parameter.values != _|_ {
-			values: parameter.values
+		values: {
+			if parameter.values != _|_ {
+				parameter.values
+			}
+			fullnameOverride: "ocm-k8s-toolkit"
 		}
-		// I needed to add this for the health reporting to work properly once the release is applied.
-		// The name was needed because vela 1.11.1 did not use the match criteria without this being set.
+		// KubeVela 1.11's helmchart health check needs the resource name; fullnameOverride is fixed so this one is stable.
 		healthStatus: [{
 			resource: {
 				kind: "Deployment"
