@@ -52,8 +52,8 @@ const (
 	globalRexPattern         = "^.github.*|Makefile|.*.go"
 	pendingAddonFilename     = "test/e2e-test/addon-test/PENDING"
 	defTestDir               = "test/e2e-test/addon-test/definition-test/testdata/"
-	repoURL                  = "https://addons.kubevela.net"
-	experimentalRepoURL      = "https://addons.kubevela.net/experimental"
+	repoURL                  = "https://kubevela.github.io/catalog/official"
+	experimentalRepoURL      = "https://kubevela.github.io/catalog/experimental"
 )
 
 func main() {
