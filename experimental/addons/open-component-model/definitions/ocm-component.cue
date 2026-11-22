@@ -71,7 +71,7 @@ template: {
 		downgradePolicy: *"Deny" | "Allow"
 		// +usage=How often the repository is checked for new component versions
 		interval: *"10m" | string
-		// +usage=References to secrets or config maps with OCM configuration, such as credentials
+		// +usage=References to objects that can provide ocm configuration data to the referring object. These can be secrets, config maps, or other OCM objects that have configuration to propagate.
 		ocmConfig?: [...{
 			kind:        "Secret" | "ConfigMap" | "Repository" | "Component" | "Resource"
 			name:        string
