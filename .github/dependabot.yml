@@ -1,0 +1,42 @@
+# Dependabot version updates. Options:
+# https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # A release has to be a week old before it is proposed, so a bad or
+    # compromised version has time to be pulled first.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "Chore: "
+      include: "scope"
+    # k8s.io modules move together with controller-runtime and KubeVela, which are bumped by hand.
+    ignore:
+      - dependency-name: k8s.io/*
+    groups:
+      # Minor and patch updates arrive as one weekly PR; each major stays on its own.
+      go-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "Chore: "
+      include: "scope"
+    groups:
+      actions-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
