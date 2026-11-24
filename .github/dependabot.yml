@@ -7,17 +7,18 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    # A release has to be a week old before it is proposed, so a bad or
-    # compromised version has time to be pulled first.
+    # A version update waits until the release is a week old, so a bad or
+    # compromised version has time to be pulled first. Security updates skip the wait.
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
     commit-message:
       prefix: "Chore: "
       include: "scope"
-    # k8s.io modules move together with controller-runtime and KubeVela, which are bumped by hand.
+    # k8s.io modules, controller-runtime and KubeVela move together, and are bumped by hand.
     ignore:
       - dependency-name: k8s.io/*
+      - dependency-name: sigs.k8s.io/controller-runtime
     groups:
       # Minor and patch updates arrive as one weekly PR; each major stays on its own.
       go-minor-patch:
