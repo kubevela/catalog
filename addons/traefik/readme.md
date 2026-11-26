@@ -28,6 +28,10 @@ Enabled means you could access the traefik dashboard, the default address is `<I
 
 Enabled means the traefik instances will be auto-scaling by HorizontalPodAutoscaler.
 
+* GatewayAPI
+
+Enabled means Traefik serves the Kubernetes Gateway API, which the `http-route`, `https-route` and `tcp-route` traits need. It is off by default, since the addon does not ship the Gateway API CRDs: other addons install their own versions of them, and these are cluster-scoped. Install the v1alpha2 CRDs (Gateway API v0.4 to v0.6) in each cluster first, for example `kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v0.5.1/experimental-install.yaml`, then enable the addon with `gatewayAPI=true`. If you are upgrading from an earlier version of this addon, pass `gatewayAPI=true` to keep your routes working.
+
 * EntryPoints
 
 Specify the traefik entry points, the built-in values are `8443`(for HTTPS) and `8000`(for HTTP). Only configured ports can be used for the `tcp-route` trait.

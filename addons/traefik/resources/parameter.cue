@@ -13,6 +13,8 @@ parameter: {
 		port:     int
 		protocol: *"TCP" | "UDP"
 	}]
+	// +usage=Enable the Kubernetes Gateway provider, used by the http-route, https-route and tcp-route traits. Needs the Gateway API v1alpha2 CRDs (v0.4 to v0.6) in each cluster first
+	gatewayAPI: *false | bool
 	// +usage=Specify if upgrade the CRDs when upgrading traefik or not
 	upgradeCRD: *false | bool
 }

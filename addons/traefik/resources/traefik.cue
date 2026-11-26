@@ -1,7 +1,5 @@
 output: {
 	type: "helm"
-	// The chart renders a Gateway and GatewayClass, so the Gateway API CRDs in crds/ go first.
-	dependsOn: ["traefik-resources"]
 	properties: {
 		chart:      "traefik"
 		version:    "10.19.4"
@@ -11,7 +9,7 @@ output: {
 		values: {
 			experimental: {
 				kubernetesGateway: {
-					enabled:         true
+					enabled:         parameter.gatewayAPI
 					namespacePolicy: "All"
 				}
 			}

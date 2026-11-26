@@ -12,6 +12,10 @@
   sort: 5
   style:
     colSpan: 8
+- jsonKey: gatewayAPI
+  sort: 6
+  style:
+    colSpan: 8
 - jsonKey: entryPoints
   sort: 7
   
