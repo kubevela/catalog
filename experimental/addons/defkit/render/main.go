@@ -27,6 +27,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -97,6 +98,9 @@ func main() {
 		data, err = readResult(*from)
 	} else {
 		data, err = render(ctx, *ref, *gitURL, *version, *prefix, *types)
+	}
+	if err == nil {
+		data, err = restrict(data)
 	}
 	if err != nil {
 		fail(err)
@@ -207,6 +211,49 @@ func collect(results []goloader.LoadResult, prefix string) ([]map[string]interfa
 		defs = append(defs, def.Object)
 	}
 	return defs, errs
+}
+
+// definitionKinds are the only kinds a result may carry, all in definitionGroup.
+var definitionKinds = map[string]bool{
+	"ComponentDefinition":    true,
+	"TraitDefinition":        true,
+	"PolicyDefinition":       true,
+	"WorkflowStepDefinition": true,
+}
+
+const definitionGroup = "core.oam.dev"
+
+// restrict drops every object of a result that is not one of definitionKinds,
+// recording each as an error so the apply step applies none of the result.
+// The write container runs it too, since the render container's file is the
+// module's to write.
+func restrict(data map[string]string) (map[string]string, error) {
+	var objs []map[string]interface{}
+	if err := json.Unmarshal([]byte(data[keyDefinitions]), &objs); err != nil {
+		return nil, fmt.Errorf("%s: %w", keyDefinitions, err)
+	}
+	errs := []string{}
+	if raw, ok := data[keyErrors]; ok {
+		if err := json.Unmarshal([]byte(raw), &errs); err != nil {
+			return nil, fmt.Errorf("%s: %w", keyErrors, err)
+		}
+	}
+	defs := []map[string]interface{}{}
+	for _, o := range objs {
+		u := unstructured.Unstructured{Object: o}
+		if definitionKinds[u.GetKind()] && u.GroupVersionKind().Group == definitionGroup {
+			defs = append(defs, o)
+			continue
+		}
+		errs = append(errs, fmt.Sprintf("%s %s (%s): not a ComponentDefinition, TraitDefinition, PolicyDefinition or WorkflowStepDefinition, dropped",
+			u.GetKind(), u.GetName(), u.GetAPIVersion()))
+	}
+	out := make(map[string]string, len(data))
+	for k, v := range data {
+		out[k] = v
+	}
+	out[keyDefinitions], out[keyErrors] = mustJSON(defs), mustJSON(errs)
+	return out, nil
 }
 
 // clone fetches one revision of a repository into a temporary directory. A

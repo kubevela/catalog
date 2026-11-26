@@ -6,7 +6,7 @@ import (
 
 "defkit-render": {
 	type: "workflow-step"
-	annotations: category: "DefKit"
+	annotations: category:         "DefKit"
 	labels: "defkit.oam.dev/step": "render"
 	description: "Render a DefKit module in a Job into a ConfigMap of definitions (experimental)"
 }
@@ -116,7 +116,8 @@ template: {
 	}
 	_succeeded: (_status.succeeded & >0) != _|_
 	// Failed covers retries exhausted and the deadline passed alike.
-	_failed: len([for c in *_status.conditions | [] if c.type == "Failed" && c.status == "True" {c}]) > 0
+	_failedConditions: [for c in *_status.conditions | [] if c.type == "Failed" && c.status == "True" {c}]
+	_failed: len(_failedConditions) > 0
 
 	wait: builtin.#ConditionalWait & {
 		$params: {
@@ -126,8 +127,15 @@ template: {
 		}
 	}
 	if _failed {
+		_cause: strings.Join([for x in [*_failedConditions[0].reason | "", *_failedConditions[0].message | ""] if x != "" {x}], ": ")
 		fail: builtin.#Fail & {
-			$params: message: "render Job vela-defkit/\(_name) failed; see its logs"
+			// A pod that cannot pull its image or be scheduled shows why only in
+			// its events, and the Job deletes it at the deadline.
+			$params: message: strings.Join([for x in [
+				"render Job vela-defkit/\(_name) failed",
+				_cause,
+				"check the events and logs of its pod in the vela-defkit namespace",
+			] if x != "" {x}], "; ")
 		}
 	}
 

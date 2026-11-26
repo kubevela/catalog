@@ -49,13 +49,20 @@ spec:
 
 | Name | Default | Description |
 | --- | --- | --- |
-| `image` | `oamdev/defkit-render:v0.1.0` | Image of the render Job: Go plus `defkit-render` |
+| `image` | `ghcr.io/kubevela/defkit-render:v0.1.0` | Image of the render Job: Go plus `defkit-render` |
 | `repositories` | vela-go-definitions | Repositories a UI offers when adding a module; a module can still come from anywhere |
 
 ## The render image
 
 `render/` holds `defkit-render` and its Dockerfile. The image needs Go, since loading a module runs `go mod download` and `go run`.
 
+The `DefKit render image` workflow builds it for `linux/amd64` and `linux/arm64`. A pull request builds it without pushing; a push to `master` that changes `render/` publishes `ghcr.io/kubevela/defkit-render:sha-<short sha>`. To publish a version, push a tag named after it:
+
 ```shell
-docker buildx build --platform linux/amd64,linux/arm64 -t oamdev/defkit-render:v0.1.0 --push render/
+git tag defkit-render-v0.1.0
+git push upstream defkit-render-v0.1.0
 ```
+
+which publishes `ghcr.io/kubevela/defkit-render:v0.1.0`. Then point the `image` parameter's default in `parameter.cue` at it and bump the addon's version in `metadata.yaml`.
+
+The render only outputs ComponentDefinitions, TraitDefinitions, PolicyDefinitions and WorkflowStepDefinitions. Any other object a module produces is dropped and reported in the render's errors, so the apply step applies nothing from that render.
