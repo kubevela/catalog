@@ -9,7 +9,7 @@ output: {
 		values: {
 			experimental: {
 				kubernetesGateway: {
-					enabled:         parameter.gatewayAPI
+					enabled:         true
 					namespacePolicy: "All"
 				}
 			}

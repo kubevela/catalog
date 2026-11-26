@@ -10,6 +10,16 @@ This version depends on VelaUX with version `1.5.0-alpha.3`, because the `config
 
 > The traefik version is v2.6.3
 
+## Before you enable it
+
+Traefik serves the Kubernetes Gateway API, which the `http-route`, `https-route` and `tcp-route` traits use, so each cluster the addon deploys to needs the Gateway API v1alpha2 CRDs (Gateway API v0.4 to v0.6) first. The addon does not install them, since they are cluster-scoped and other gateways install their own. If your clusters have none yet:
+
+```shell
+for crd in gatewayclasses gateways httproutes referencegrants tcproutes tlsroutes; do
+  kubectl apply --server-side -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v0.5.1/config/crd/experimental/gateway.networking.k8s.io_${crd}.yaml
+done
+```
+
 ## How to configure
 
 * ServiceType
@@ -27,10 +37,6 @@ Enabled means you could access the traefik dashboard, the default address is `<I
 * Autoscaling
 
 Enabled means the traefik instances will be auto-scaling by HorizontalPodAutoscaler.
-
-* GatewayAPI
-
-Enabled means Traefik serves the Kubernetes Gateway API, which the `http-route`, `https-route` and `tcp-route` traits need. It is off by default, since the addon does not ship the Gateway API CRDs: other addons install their own versions of them, and these are cluster-scoped. Install the v1alpha2 CRDs (Gateway API v0.4 to v0.6) in each cluster first, for example `kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v0.5.1/experimental-install.yaml`, then enable the addon with `gatewayAPI=true`. If you are upgrading from an earlier version of this addon, pass `gatewayAPI=true` to keep your routes working.
 
 * EntryPoints
 

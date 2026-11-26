@@ -312,7 +312,50 @@ func enableAddonsByOrder(dirPattern string, changedAddon []string, loopCheck boo
 	return failedAddons, nil
 }
 
+// gatewayAPICRDs are the Gateway API v1alpha2 CRDs that traefik's readme asks a cluster to have.
+var gatewayAPICRDs = []string{"gatewayclasses", "gateways", "httproutes", "referencegrants", "tcproutes", "tlsroutes"}
+
+// clusterPrerequisites are the manifests an addon expects each cluster to have before it is enabled,
+// applied to the hub and the worker cluster.
+var clusterPrerequisites = map[string][]string{
+	"traefik": func() []string {
+		var urls []string
+		for _, crd := range gatewayAPICRDs {
+			urls = append(urls, "https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v0.5.1/config/crd/experimental/gateway.networking.k8s.io_"+crd+".yaml")
+		}
+		return urls
+	}(),
+}
+
+// workerContext is the kubeconfig context of the KinD worker cluster the workflow joins.
+const workerContext = "kind-worker"
+
+func applyClusterPrerequisites(dir string) error {
+	urls := clusterPrerequisites[filepath.Base(dir)]
+	if len(urls) == 0 {
+		return nil
+	}
+	contexts := [][]string{nil}
+	if exec.Command("kubectl", "config", "get-contexts", workerContext).Run() == nil {
+		contexts = append(contexts, []string{"--context", workerContext})
+	}
+	for _, ctxArgs := range contexts {
+		for _, url := range urls {
+			args := append(append([]string{}, ctxArgs...), "apply", "--server-side", "-f", url)
+			cmd := exec.Command("kubectl", args...)
+			fmt.Println("\033[1;32m==> " + cmd.String() + "\033[0m")
+			if out, err := cmd.CombinedOutput(); err != nil {
+				return errors.Wrapf(err, "apply prerequisite %s: %s", url, out)
+			}
+		}
+	}
+	return nil
+}
+
 func enableOneAddon(dir string) error {
+	if err := applyClusterPrerequisites(dir); err != nil {
+		return err
+	}
 	var cmd *exec.Cmd
 	switch {
 	case strings.Contains(dir, "fluxcd"):
