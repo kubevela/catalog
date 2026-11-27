@@ -35,6 +35,14 @@ jobs:
           tar -xzf /tmp/vela.tar.gz -C /tmp linux-amd64/vela
           sudo install /tmp/linux-amd64/vela /usr/local/bin/vela
 
+      - name: Check the addons built on the shared install
+        run: |
+          # Each addon's copy of the shared install and its generated resources are in step, and
+          # its metadata, icon, docs and tests are there.
+          hack/addon-install/sync.sh --check
+          hack/addon-optional/sync.sh --check
+          hack/addon-check/check.sh
+
       - name: Test the changed addons
         env:
           EVENT: ${{ github.event_name }}

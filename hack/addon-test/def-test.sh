@@ -4,8 +4,8 @@
 # Takes the changed paths, relative to the repository root, as arguments or one per
 # line on stdin. A path under addons/<name>/ or experimental/addons/<name>/ selects
 # that addon, unless it is documentation: docs/, Markdown or an image (png, jpg,
-# jpeg, gif, svg, webp, avif, ico). A change to
-# this script or its workflow selects every addon. Each selected addon with
+# jpeg, gif, svg, webp, avif, ico). A change to the shared addon tooling
+# (hack/addon-*/) or this workflow selects every addon. Each selected addon with
 # tests/*_test.cue is tested; one without tests is skipped.
 #
 #   hack/addon-test/def-test.sh [-v] [--all] [path...]
@@ -55,7 +55,7 @@ fi
 # Paths that change how every addon is tested.
 everything() {
 	case $1 in
-	hack/addon-test/* | .github/workflows/addon-def-test.yaml) return 0 ;;
+	hack/addon-*/* | .github/workflows/addon-def-test.yaml) return 0 ;;
 	esac
 	return 1
 }
