@@ -32,45 +32,52 @@ func versions(name string, vs ...string) repo.ChartVersions {
 	return out
 }
 
-func names(index *repo.IndexFile) map[string]int {
-	out := map[string]int{}
+// published lists each addon in the index with its versions, in order.
+func published(index *repo.IndexFile) map[string][]string {
+	out := map[string][]string{}
 	for name, entry := range index.Entries {
-		out[name] = len(entry)
+		for _, v := range entry {
+			if v.Name != name {
+				out[name] = append(out[name], "wrong addon "+v.Name)
+				continue
+			}
+			out[name] = append(out[name], v.Version)
+		}
 	}
 	return out
 }
 
 func TestPruneDropsAddonsNoLongerInTheCatalog(t *testing.T) {
-	published := &repo.IndexFile{Entries: map[string]repo.ChartVersions{
+	index := &repo.IndexFile{Entries: map[string]repo.ChartVersions{
 		"kept":      versions("kept", "1.0.0", "1.1.0"),
 		"removed-a": versions("removed-a", "1.0.0"),
 		"removed-b": versions("removed-b", "0.1.0", "0.2.0"),
 	}}
 
-	removed := Prune(published, map[string]struct{}{"kept": {}, "new": {}})
+	removed := Prune(index, map[string]struct{}{"kept": {}, "new": {}})
 
 	if want := []string{"removed-a", "removed-b"}; !reflect.DeepEqual(want, removed) {
 		t.Errorf("removed: got %v, want %v", removed, want)
 	}
 	// Every published version of an addon still in the catalog stays.
-	if want := map[string]int{"kept": 2}; !reflect.DeepEqual(want, names(published)) {
-		t.Errorf("entries left: got %v, want %v", names(published), want)
+	if want := map[string][]string{"kept": {"1.0.0", "1.1.0"}}; !reflect.DeepEqual(want, published(index)) {
+		t.Errorf("entries left: got %v, want %v", published(index), want)
 	}
 }
 
 func TestPruneLeavesAnIndexWhoseAddonsAreAllPresent(t *testing.T) {
-	published := &repo.IndexFile{Entries: map[string]repo.ChartVersions{
+	index := &repo.IndexFile{Entries: map[string]repo.ChartVersions{
 		"a": versions("a", "1.0.0"),
 		"b": versions("b", "1.0.0"),
 	}}
 
-	removed := Prune(published, map[string]struct{}{"a": {}, "b": {}})
+	removed := Prune(index, map[string]struct{}{"a": {}, "b": {}})
 
 	if len(removed) != 0 {
 		t.Errorf("removed: got %v, want none", removed)
 	}
-	if want := map[string]int{"a": 1, "b": 1}; !reflect.DeepEqual(want, names(published)) {
-		t.Errorf("entries left: got %v, want %v", names(published), want)
+	if want := map[string][]string{"a": {"1.0.0"}, "b": {"1.0.0"}}; !reflect.DeepEqual(want, published(index)) {
+		t.Errorf("entries left: got %v, want %v", published(index), want)
 	}
 }
 
