@@ -1,17 +1,13 @@
 name: crossplane
-version: 0.0.1
-description: Crossplane assembles infrastructure from multiple vendors
+version: 1.0.0
+description: Crossplane turns the cluster into a control plane for infrastructure, from providers' managed resources to your own composite APIs
+icon: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
 url: https://crossplane.io/
 
 tags:
-  - IaC
-  - cloud resource
+  - Graduated
+  - Scheduling & Orchestration
 
-deployTo:
-  control_plane: true
-  runtime_cluster: false
+system:
+  vela: ">=1.12.0-alpha.3"
 
-dependencies:
-  - name: fluxcd
-
-invisible: false

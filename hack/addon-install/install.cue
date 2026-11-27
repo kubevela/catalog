@@ -22,6 +22,8 @@ _install: {
 		version: string
 		// minVersion is the oldest chart the addon's values and definitions work with, if any.
 		minVersion?: string
+		// major is the only major version the addon's definitions suit, when it ships a set per major.
+		major?: int
 	}
 	// values are the addon's own, as defaults the user's values can override.
 	values: {...}
@@ -48,16 +50,21 @@ _install: {
 
 	// Compared by number: major, minor, patch. A pre-release counts as its release.
 	let Semver = "^v?([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
-	if parameter.chartInstall && chart.minVersion != _|_ {
+	if parameter.chartInstall && (chart.minVersion != _|_ || chart.major != _|_) {
 		if _chart.version !~ Semver {
 			_refuseVersion: "chart.version \(_chart.version) is not a version like \(chart.version)": true & false
 		}
 		if _chart.version =~ Semver {
 			_have: [for x in regexp.FindSubmatch(Semver, _chart.version)[1:4] {strconv.Atoi(x)}]
-			_min: [for x in regexp.FindSubmatch(Semver, chart.minVersion)[1:4] {strconv.Atoi(x)}]
-			_older: _have[0] < _min[0] || (_have[0] == _min[0] && (_have[1] < _min[1] || (_have[1] == _min[1] && _have[2] < _min[2])))
-			if _older {
-				_refuseVersion: "chart.version \(_chart.version) is older than \(chart.minVersion), the oldest this addon supports": true & false
+			if chart.major != _|_ if _have[0] != chart.major {
+				_refuseVersion: "chart.version \(_chart.version) is major \(_have[0]), but major \(chart.major) is selected: set major to match": true & false
+			}
+			if chart.minVersion != _|_ {
+				_min: [for x in regexp.FindSubmatch(Semver, chart.minVersion)[1:4] {strconv.Atoi(x)}]
+				_older: _have[0] < _min[0] || (_have[0] == _min[0] && (_have[1] < _min[1] || (_have[1] == _min[1] && _have[2] < _min[2])))
+				if _older {
+					_refuseVersion: "chart.version \(_chart.version) is older than \(chart.minVersion), the oldest this addon supports": true & false
+				}
 			}
 		}
 	}
