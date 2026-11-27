@@ -1,0 +1,41 @@
+name: Addon-def-test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # vela def test and the addon test helpers (test.#AddonRender and the rest) arrived in 1.12.
+  VELA_VERSION: v1.12.0-alpha.3
+
+jobs:
+  Addon-def-test:
+    name: Addon-def-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install vela cli
+        run: |
+          curl -fsSl https://kubevela.io/script/install.sh | bash -s ${{ env.VELA_VERSION }}
+
+      - name: Test the changed addons
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # A run by hand, or a push with no earlier commit to compare, tests every addon.
+          if [ "$EVENT" = workflow_dispatch ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            hack/addon-test/def-test.sh --all
+          else
+            git diff --name-only "$BASE" HEAD | hack/addon-test/def-test.sh
+          fi
