@@ -3,7 +3,8 @@
 #
 # Takes the changed paths, relative to the repository root, as arguments or one per
 # line on stdin. A path under addons/<name>/ or experimental/addons/<name>/ selects
-# that addon, unless it is documentation: docs/, Markdown or an image. A change to
+# that addon, unless it is documentation: docs/, Markdown or an image (png, jpg,
+# jpeg, gif, svg, webp, avif, ico). A change to
 # this script or its workflow selects every addon. Each selected addon with
 # tests/*_test.cue is tested; one without tests is skipped.
 #
@@ -16,6 +17,7 @@
 # Exit: 0 when every test passes, 1 when any fails, 2 on a usage or tool error.
 set -euo pipefail
 
+self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
 cd "$(git rev-parse --show-toplevel)"
 vela=${VELA:-vela}
 verbose=0
@@ -26,7 +28,7 @@ while [ $# -gt 0 ]; do
 	-v) verbose=1 ;;
 	--all) all=1 ;;
 	-h | --help)
-		sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//'
+		sed -n '2,17p' "$self" | sed 's/^# \{0,1\}//'
 		exit 0
 		;;
 	-*)
@@ -43,6 +45,10 @@ fi
 
 if ! command -v "$vela" >/dev/null 2>&1; then
 	echo "def-test: $vela not found; install the vela CLI (1.12.0-alpha.3 or later) or set VELA" >&2
+	exit 2
+fi
+if ! "$vela" def test --help >/dev/null 2>&1; then
+	echo "def-test: $vela has no 'def test'; it needs 1.12.0-alpha.3 or later" >&2
 	exit 2
 fi
 
@@ -74,7 +80,7 @@ if [ "$all" = 0 ]; then
 		*) continue ;;
 		esac
 		case ${rest#*/} in
-		docs/* | *.md | *.png | *.jpg | *.jpeg | *.gif | *.svg) continue ;;
+		docs/* | *.md | *.png | *.jpg | *.jpeg | *.gif | *.svg | *.webp | *.avif | *.ico) continue ;;
 		esac
 		add "$dir"
 	done <<EOF

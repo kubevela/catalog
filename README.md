@@ -75,7 +75,8 @@ All contributions are welcome, just send a pull request to this repo following t
   - A detail introduction include a basic example about how to use and what's the benefit of this addon in `README.md`.
   - It's more likely to be accepted if useful examples are provided in example [dir](examples/).
   - Tests in the addon's `tests/` folder (`*_test.cue`, run with `vela def test <addon>/tests`, KubeVela 1.12 or later)
-    run on every pull request that changes the addon, so put them alongside the addon rather than in
+    run on every pull request that changes the addon (changes to its `docs/`, Markdown and png, jpg, gif, svg,
+    webp, avif or ico images alone do not run them), so put them alongside the addon rather than in
     `definitions/` or `resources/`, which the addon loader applies.
 
 - An experimental addon must meet these conditions to be promoted as a verified one.

@@ -25,8 +25,15 @@ jobs:
           fetch-depth: 0
 
       - name: Install vela cli
+        env:
+          # The release tarball's sha256, from the release's sha256sums.txt; change it with VELA_VERSION.
+          VELA_SHA256: 08cfbd49cf281a04f1b91123807bd01a711868651c8273bec57d690c1ce076e9
         run: |
-          curl -fsSl https://kubevela.io/script/install.sh | bash -s ${{ env.VELA_VERSION }}
+          curl -fsSL -o /tmp/vela.tar.gz \
+            "https://github.com/kubevela/kubevela/releases/download/${VELA_VERSION}/vela-${VELA_VERSION}-linux-amd64.tar.gz"
+          echo "${VELA_SHA256}  /tmp/vela.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/vela.tar.gz -C /tmp linux-amd64/vela
+          sudo install /tmp/linux-amd64/vela /usr/local/bin/vela
 
       - name: Test the changed addons
         env:
@@ -37,5 +44,7 @@ jobs:
           if [ "$EVENT" = workflow_dispatch ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
             hack/addon-test/def-test.sh --all
           else
-            git diff --name-only "$BASE" HEAD | hack/addon-test/def-test.sh
+            # Written to a file first, so a failed diff fails the step.
+            git diff --name-only "$BASE" HEAD >"$RUNNER_TEMP/changed.txt"
+            hack/addon-test/def-test.sh <"$RUNNER_TEMP/changed.txt"
           fi
