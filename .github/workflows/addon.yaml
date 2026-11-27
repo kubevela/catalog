@@ -26,6 +26,9 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v4
 
+      - name: Test the registry tooling
+        run: go test ./hack/addons/registry/
+
       - name: package-addon-gen-index
         run: |
           cd ./addons/

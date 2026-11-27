@@ -31,6 +31,8 @@ import (
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
 	"sigs.k8s.io/yaml"
+
+	"github.com/oam-dev/catalog/hack/addons/registry"
 )
 
 type Metadata struct {
@@ -48,6 +50,27 @@ type Metadata struct {
 type SystemRequirements struct {
 	Vela       string `json:"vela"`
 	Kubernetes string `json:"kubernetes"`
+}
+
+// presentAddons returns the names of the addons under dir, as their
+// metadata.yaml gives them.
+func presentAddons(dir string, entries []os.DirEntry) map[string]struct{} {
+	present := map[string]struct{}{}
+	for _, info := range entries {
+		if !info.IsDir() {
+			continue
+		}
+		b, err := os.ReadFile(filepath.Join(dir, info.Name(), "metadata.yaml"))
+		if err != nil {
+			continue
+		}
+		m := Metadata{}
+		if err := yaml.Unmarshal(b, &m); err != nil || m.Name == "" {
+			continue
+		}
+		present[m.Name] = struct{}{}
+	}
+	return present
 }
 
 func main() {
@@ -83,6 +106,12 @@ func main() {
 				fmt.Println(err)
 			}
 		}
+	}
+
+	// An addon deleted from the catalog leaves the registry too: its entries are
+	// dropped here, before their packages would be fetched and published again.
+	for _, name := range registry.Prune(originIndex, presentAddons(dir, f)) {
+		fmt.Println("no longer in the catalog, removed from the registry:", name)
 	}
 
 	for chartName, entry := range originIndex.Entries {
