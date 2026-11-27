@@ -1,0 +1,13 @@
+name: minio-operator
+version: 1.0.0
+description: MinIO is a High Performance Object Storage released under GNU AGPLv3 or later. It is API compatible with Amazon S3 cloud storage service. Use MinIO to build high performance infrastructure for machine learning, analytics and application data workloads.
+icon: "https://min.io/resources/img/logo/MINIO_wordmark.png"
+url: "https://min.io/"
+
+tags:
+- minio-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd

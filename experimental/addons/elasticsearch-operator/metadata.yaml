@@ -1,0 +1,13 @@
+name: elasticsearch-operator
+version: 1.0.0
+description: This addon adds elasticsearch-operator to the kubevela to be used across the application installed in kubevela.
+icon: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Elasticsearch_logo.svg"
+url: "https://www.elastic.co/"
+
+tags:
+  - elasticsearch-operator
+
+invisible: false
+
+dependencies:
+  - name: fluxcd
