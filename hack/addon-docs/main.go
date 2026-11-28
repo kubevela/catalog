@@ -200,7 +200,7 @@ func (g *generator) addon(name string) (int, error) {
 		if i == 0 {
 			latest = a
 			if g.logos {
-				p.Logo = fetchLogo(firstNonEmpty(ov.Logo, a.Meta.Icon), dir, name)
+				p.Logo = fetchLogo(firstNonEmpty(ov.Logo, a.Meta.Icon), dir, name, ov.LogoCrop == "square")
 			}
 		} else {
 			target = filepath.Join(dir, r.Version)
@@ -274,8 +274,9 @@ func firstNonEmpty(s ...string) string {
 }
 
 // fetchLogo downloads a logo beside the pages, so the site never hotlinks it, and returns its file name; "" when
-// there is none or it isn't an image under 1 MB (the site then draws the addon's initial).
-func fetchLogo(url, dir, name string) string {
+// there is none or it isn't an image under 4 MB (the site then draws a placeholder). Raster logos are shrunk to
+// logoSize, and cropped to their centre square when square is set.
+func fetchLogo(url, dir, name string, square bool) string {
 	if !strings.HasPrefix(url, "https://") && !strings.HasPrefix(url, "http://") {
 		return ""
 	}
@@ -290,11 +291,17 @@ func fetchLogo(url, dir, name string) string {
 		return ""
 	}
 	defer resp.Body.Close() // nolint:errcheck
-	data, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20+1))
+	data, err := io.ReadAll(io.LimitReader(resp.Body, maxLogoBytes+1))
 	kind := imageKind(data)
-	if err != nil || resp.StatusCode != http.StatusOK || len(data) > 1<<20 || kind == "" {
-		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %s, not an image under 1 MB\n", name, redact(url), resp.Status)
+	if err != nil || resp.StatusCode != http.StatusOK || len(data) > maxLogoBytes || kind == "" {
+		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %s, not an image under 4 MB\n", name, redact(url), resp.Status)
 		return ""
+	}
+	if kind != "svg" {
+		if data, kind, err = shrinkLogo(data, kind, square); err != nil {
+			fmt.Fprintf(os.Stderr, "%s: no logo, %s: %v\n", name, redact(url), err)
+			return ""
+		}
 	}
 	file := "logo." + kind
 	if err := writeFile(filepath.Join(dir, file), data); err != nil {

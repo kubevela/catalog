@@ -1,7 +1,8 @@
 # Each addon's category, and a logo where its metadata.yaml has none or a stale one, until metadata.yaml carries
 # them. A logo here wins over the metadata's icon: CNCF artwork, or the project's GitHub organisation avatar, which
-# the project keeps current. An addon's category must be one of `categories`; the site lists KubeVela first, then the
-# rest by name, and an addon with none under Other.
+# the project keeps current; `logoCrop: square` takes the centre square of a project's banner. An addon's category
+# must be one of `categories`; the site lists KubeVela first, then the rest by name, and an addon with none under
+# Other.
 categories:
   - KubeVela
   - Delivery and GitOps
@@ -50,6 +51,7 @@ addons:
     logo: https://github.com/gocrane.png?size=200
   cronhpa:
     category: Scaling and Scheduling
+    logo: https://github.com/AliyunContainerService.png
   crossplane:
     category: Cloud Resources
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
@@ -79,8 +81,10 @@ addons:
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/envoy/icon/color/envoy-icon-color.svg
   example:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   example-cue:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   flink-kubernetes-operator:
     category: AI and Big Data
     logo: https://github.com/apache.png?size=200
@@ -152,8 +156,10 @@ addons:
     logo: https://github.com/minio.png?size=200
   model-serving:
     category: AI and Big Data
+    logo: https://github.com/SeldonIO.png
   model-training:
     category: AI and Big Data
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubeflow/icon/color/kubeflow-icon.svg
   mongodb-operator:
     category: Data and Messaging
     logo: https://github.com/mongodb.png?size=200
@@ -177,8 +183,10 @@ addons:
     logo: https://github.com/grafana.png?size=200
   observability:
     category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   observability-assets:
     category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   ocm-cluster-manager:
     category: Multi-cluster
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/open-cluster-management/icon/color/ocm-icon-color.svg
@@ -193,6 +201,7 @@ addons:
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/opentelemetry/icon/color/opentelemetry-icon-color.svg
   postgres-operator:
     category: Data and Messaging
+    logo: https://raw.githubusercontent.com/zalando/postgres-operator/master/docs/diagrams/logo.png
   postgrest:
     category: Data and Messaging
     logo: https://github.com/PostgREST.png?size=200
@@ -276,6 +285,8 @@ addons:
     logo: https://github.com/vectordotdev.png?size=200
   vegeta:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/tsenart/vegeta/master/assets/hero.png
+    logoCrop: square
   vela-core-shard-manager:
     category: KubeVela
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
