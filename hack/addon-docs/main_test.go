@@ -90,14 +90,12 @@ func TestNextLabel(t *testing.T) {
 	}
 }
 
-// The revamped addons, rendered from their files as a fixed release. UPDATE_GOLDEN=1 rewrites the goldens.
+// A test addon covering what the pages show, rendered from its files as a fixed release. UPDATE_GOLDEN=1 rewrites the goldens.
 func TestGolden(t *testing.T) {
 	cfg := testConfig(t)
 	cases := map[string]*Release{
-		"cert-manager": {Version: "3.0.0", Tag: "release/cert-manager/3.0.0", Date: "2026-11-27",
-			Path: "addons/cert-manager", Minors: []string{"1.12"}, Included: true},
-		"crossplane": {Version: "1.0.0", Tag: "release/crossplane/1.0.0", Date: "2026-11-27",
-			Path: "experimental/addons/crossplane", Minors: []string{"1.12"}, Included: true},
+		"sample": {Version: "1.0.0", Tag: "release/sample/1.0.0", Date: "2026-11-27",
+			Path: "addons/sample", Minors: []string{"1.11", "1.12"}, Included: true},
 	}
 	for name, rel := range cases {
 		t.Run(name, func(t *testing.T) {

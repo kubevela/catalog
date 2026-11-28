@@ -1,0 +1,29 @@
+{
+ "name": "sample",
+ "latest": "1.0.0",
+ "description": "A test addon for the docs generator, covering what its pages show.",
+ "experimental": false,
+ "tags": [
+  "Testing"
+ ],
+ "logo": "",
+ "category": "Test",
+ "versions": [
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-27",
+   "pages": [
+    "",
+    "definitions/sample-app",
+    "definitions/sample-tag",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}
