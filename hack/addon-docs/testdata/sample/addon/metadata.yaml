@@ -1,0 +1,12 @@
+name: sample
+version: 1.0.0
+description: A test addon for the docs generator, covering what its pages show.
+icon: https://example.com/sample.svg
+url: https://example.com
+tags:
+  - Testing
+dependencies:
+  - name: fluxcd
+system:
+  vela: ">=v1.11.0"
+  kubernetes: ">=1.30.0"

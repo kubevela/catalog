@@ -1,0 +1,308 @@
+# Each addon's category, and a logo where its metadata.yaml has none or a stale one, until metadata.yaml carries
+# them. A logo here wins over the metadata's icon: CNCF artwork, or the project's GitHub organisation avatar, which
+# the project keeps current. An addon's category must be one of `categories`; the site lists KubeVela first, then the
+# rest by name, and an addon with none under Other.
+categories:
+  - KubeVela
+  - Delivery and GitOps
+  - Networking
+  - Observability
+  - Security
+  - Multi-cluster
+  - Cloud Resources
+  - Data and Messaging
+  - AI and Big Data
+  - Scaling and Scheduling
+  - Workloads and Testing
+addons:
+  argocd:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/argo/icon/color/argo-icon-color.svg
+  azure-keyvault-csi:
+    category: Security
+    logo: https://github.com/Azure.png?size=200
+  backstage:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/backstage/icon/color/backstage-icon-color.svg
+  bytebase:
+    category: Data and Messaging
+    logo: https://github.com/bytebase.png?size=200
+  canary-rollout-istio:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/istio/icon/color/istio-icon-color.svg
+  cert-manager:
+    category: Security
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/cert-manager/icon/color/cert-manager-icon-color.svg
+  chaosblade-operator:
+    category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/chaosblade/icon/color/chaosblade-icon-color.svg
+  chartmuseum:
+    category: Delivery and GitOps
+    logo: https://github.com/helm.png?size=200
+  clickhouse:
+    category: Data and Messaging
+    logo: https://github.com/ClickHouse.png?size=200
+  cloudshell:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  crane:
+    category: Scaling and Scheduling
+    logo: https://github.com/gocrane.png?size=200
+  cronhpa:
+    category: Scaling and Scheduling
+  crossplane:
+    category: Cloud Resources
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
+  crossplane-aws:
+    category: Cloud Resources
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
+  crossplane-azure:
+    category: Cloud Resources
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
+  dapr:
+    category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/dapr/icon/color/dapr-icon-color.svg
+  datadog:
+    category: Observability
+    logo: https://github.com/DataDog.png?size=200
+  defkit:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  dex:
+    category: Security
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/dex/icon/color/dex-icon-color.svg
+  elasticsearch-operator:
+    category: Data and Messaging
+    logo: https://github.com/elastic.png?size=200
+  envoy-gateway:
+    category: Networking
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/envoy/icon/color/envoy-icon-color.svg
+  example:
+    category: Workloads and Testing
+  example-cue:
+    category: Workloads and Testing
+  flink-kubernetes-operator:
+    category: AI and Big Data
+    logo: https://github.com/apache.png?size=200
+  fluxcd:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/flux/icon/color/flux-icon-color.svg
+  gateway-traits:
+    category: Networking
+    logo: https://github.com/kubernetes-sigs.png?size=200
+  grafana:
+    category: Observability
+    logo: https://github.com/grafana.png?size=200
+  grafana-definitions:
+    category: Observability
+    logo: https://github.com/grafana.png?size=200
+  harbor:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/harbor/icon/color/harbor-icon-color.svg
+  ingress-nginx:
+    category: Networking
+    logo: https://github.com/kubernetes.png?size=200
+  istio:
+    category: Networking
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/istio/icon/color/istio-icon-color.svg
+  istio-gateway:
+    category: Networking
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/istio/icon/color/istio-icon-color.svg
+  jaeger-operator:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/jaeger/icon/color/jaeger-icon-color.svg
+  kafka-operator:
+    category: Data and Messaging
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/strimzi/icon/color/strimzi-icon-color.svg
+  keda:
+    category: Scaling and Scheduling
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/keda/icon/color/keda-icon-color.svg
+  koordinator:
+    category: Scaling and Scheduling
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/koordinator/icon/color/koordinator-icon-color.svg
+  kruise:
+    category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/openkruise/icon/color/openkruise-icon-color.svg
+  kruise-game:
+    category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/openkruise/icon/color/openkruise-icon-color.svg
+  kruise-rollout:
+    category: Delivery and GitOps
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/openkruise/icon/color/openkruise-icon-color.svg
+  kube-state-metrics:
+    category: Observability
+    logo: https://github.com/kubernetes.png?size=200
+  kube-trigger:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  kubeflow:
+    category: AI and Big Data
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubeflow/icon/color/kubeflow-icon.svg
+  kubeflow-pipeline:
+    category: AI and Big Data
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubeflow/icon/color/kubeflow-icon.svg
+  kubevela-io:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  loki:
+    category: Observability
+    logo: https://github.com/grafana.png?size=200
+  minio-operator:
+    category: Data and Messaging
+    logo: https://github.com/minio.png?size=200
+  model-serving:
+    category: AI and Big Data
+  model-training:
+    category: AI and Big Data
+  mongodb-operator:
+    category: Data and Messaging
+    logo: https://github.com/mongodb.png?size=200
+  mysql-exporter:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg
+  mysql-operator:
+    category: Data and Messaging
+    logo: https://github.com/mysql.png?size=200
+  nacos-operator:
+    category: Data and Messaging
+    logo: https://github.com/nacos-group.png?size=200
+  netlify:
+    category: Delivery and GitOps
+    logo: https://github.com/netlify.png?size=200
+  node-exporter:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg
+  o11y-definitions:
+    category: Observability
+    logo: https://github.com/grafana.png?size=200
+  observability:
+    category: Observability
+  observability-assets:
+    category: Observability
+  ocm-cluster-manager:
+    category: Multi-cluster
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/open-cluster-management/icon/color/ocm-icon-color.svg
+  ocm-gateway-manager-addon:
+    category: Multi-cluster
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/open-cluster-management/icon/color/ocm-icon-color.svg
+  ocm-hub-control-plane:
+    category: Multi-cluster
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/open-cluster-management/icon/color/ocm-icon-color.svg
+  opentelemetry-operator:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/opentelemetry/icon/color/opentelemetry-icon-color.svg
+  postgres-operator:
+    category: Data and Messaging
+  postgrest:
+    category: Data and Messaging
+    logo: https://github.com/PostgREST.png?size=200
+  process-exporter:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg
+  prometheus-server:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg
+  pyroscope:
+    category: Observability
+    logo: https://github.com/grafana.png?size=200
+  rabbitmq-operator:
+    category: Data and Messaging
+    logo: https://github.com/rabbitmq.png?size=200
+  redis-exporter:
+    category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/prometheus/icon/color/prometheus-icon-color.svg
+  redis-operator:
+    category: Data and Messaging
+    logo: https://github.com/redis.png?size=200
+  rollout:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  sae-apiserver-proxy:
+    category: Cloud Resources
+    logo: https://github.com/aliyun.png?size=200
+  spark-kubernetes-operator:
+    category: AI and Big Data
+    logo: https://github.com/apache.png?size=200
+  terraform:
+    category: KubeVela
+    logo: https://github.com/hashicorp.png?size=200
+  terraform-alibaba:
+    category: Cloud Resources
+    logo: https://github.com/aliyun.png?size=200
+  terraform-aws:
+    category: Cloud Resources
+    logo: https://github.com/aws.png?size=200
+  terraform-azure:
+    category: Cloud Resources
+    logo: https://github.com/Azure.png?size=200
+  terraform-baidu:
+    category: Cloud Resources
+    logo: https://github.com/baidubce.png?size=200
+  terraform-ec:
+    category: Cloud Resources
+    logo: https://github.com/elastic.png?size=200
+  terraform-gcp:
+    category: Cloud Resources
+    logo: https://github.com/GoogleCloudPlatform.png?size=200
+  terraform-provider-alibaba:
+    category: Cloud Resources
+    logo: https://github.com/aliyun.png?size=200
+  terraform-provider-aws:
+    category: Cloud Resources
+    logo: https://github.com/aws.png?size=200
+  terraform-provider-azure:
+    category: Cloud Resources
+    logo: https://github.com/Azure.png?size=200
+  terraform-tencent:
+    category: Cloud Resources
+    logo: https://github.com/tencentcloud.png?size=200
+  terraform-ucloud:
+    category: Cloud Resources
+    logo: https://github.com/ucloud.png?size=200
+  terraform-vsphere:
+    category: Cloud Resources
+    logo: https://github.com/vmware.png?size=200
+  traefik:
+    category: Networking
+    logo: https://github.com/traefik.png?size=200
+  traefik-gateway:
+    category: Networking
+    logo: https://github.com/traefik.png?size=200
+  trivy-operator:
+    category: Security
+    logo: https://github.com/aquasecurity.png?size=200
+  vector-config:
+    category: Observability
+    logo: https://github.com/vectordotdev.png?size=200
+  vegeta:
+    category: Workloads and Testing
+  vela-core-shard-manager:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  vela-prism:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  vela-workflow:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  velaux:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  velaux-dev:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  velaux-prerelease:
+    category: KubeVela
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
+  velero:
+    category: Data and Messaging
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/velero/icon/color/velero-icon-color.svg
+  victoria-metric:
+    category: Observability
+    logo: https://github.com/VictoriaMetrics.png?size=200
+  volcano:
+    category: AI and Big Data
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/volcano/icon/color/volcano-icon-color.svg
+  zookeeper-operator:
+    category: Data and Messaging
+    logo: https://github.com/apache.png?size=200
