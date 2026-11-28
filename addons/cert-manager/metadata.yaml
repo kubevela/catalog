@@ -1,18 +1,14 @@
 name: cert-manager
-version: 2.2.0
+version: 3.0.0
 description: Automatically provision and manage TLS certificates in Kubernetes
-icon: https://raw.githubusercontent.com/cert-manager/cert-manager/master/logo/logo-small.png
-url: https://github.com/cert-manager/cert-manager
+icon: https://raw.githubusercontent.com/cncf/artwork/main/projects/cert-manager/icon/color/cert-manager-icon-color.svg
+url: https://cert-manager.io
 
 tags:
-  - Let's Encrypt
-  - TLS
-  - Certificate
-  - ACME
-
-dependencies:
-  - name: fluxcd
+  - Graduated
+  - Security & Compliance
 
 system:
-  vela: ">=v1.7.0-alpha.1"
-
+  vela: ">=1.12.0-alpha.3"
+  # The oldest Kubernetes the pinned cert-manager release supports.
+  kubernetes: ">=1.33.0"

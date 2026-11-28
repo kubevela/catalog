@@ -1,0 +1,36 @@
+# Tags an addon may use: the project's CNCF maturity, then the CNCF landscape subcategory it sits in.
+# Subcategories are those holding a CNCF project, from https://github.com/cncf/landscape (landscape.yml).
+# A tool outside the CNCF takes the subcategory it would sit in, and Non-CNCF for its maturity.
+Graduated
+Incubating
+Sandbox
+Non-CNCF
+Automation & Configuration
+Container Registry
+Security & Compliance
+Key Management
+Cloud Native Storage
+Container Runtime
+Cloud Native Network
+Scheduling & Orchestration
+Coordination & Service Discovery
+Remote Procedure Call
+Service Proxy
+API Gateway
+Service Mesh
+Database
+Streaming & Messaging
+Application Definition & Image Build
+Continuous Integration & Delivery
+Certified Kubernetes - Distribution
+Certified Kubernetes - Installer
+Installable Platform
+Feature Flagging
+Chaos Engineering
+Continuous Optimization
+Observability
+Workflow Orchestration
+Framework
+Post Training
+Orchestration and Scheduling
+Model Asset and Registry
