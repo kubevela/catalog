@@ -38,7 +38,7 @@ func TestDefaultInUsage(t *testing.T) {
 		"Registry. Default: quay.io, or your mirror's.": {"Registry.", "quay.io, or your mirror's"},
 	} {
 		row := fieldRow(&Field{Name: "x", Type: "string", Usage: usage}, "x", false)
-		if !strings.Contains(row, want[0]) {
+		if !strings.Contains(row, `addon-param-desc">`+esc(want[0])+`</div>`) {
 			t.Errorf("%q: usage should read %q, got %s", usage, want[0], row)
 		}
 		if gotDef := strings.Contains(row, "addon-param-default"); gotDef != (want[1] != "") ||
@@ -98,8 +98,35 @@ func TestMalformedMetadata(t *testing.T) {
 	}
 }
 
-// An addon that fails part way leaves nothing behind for publish.sh to push.
+// An addon that fails part way leaves nothing behind for publish.sh to push; the same addon, healthy, is written.
 func TestFailedAddonLeavesNoPages(t *testing.T) {
+	for name, older := range map[string]string{"healthy": "parameter: {}\n", "1.0.0 broken": "parameter: {\n"} {
+		t.Run(name, func(t *testing.T) {
+			repo := addonRepo(t, older)
+			out := t.TempDir()
+			cfg := Config{Current: "1.12", Oldest: "1.9", Minors: map[string]string{"1.11": "2020-01-01"}}
+			g := &generator{repo: repo, out: out, cfg: cfg, today: "2030-01-01"}
+			_, err := g.addon("x")
+			_, statErr := os.Stat(filepath.Join(out, "x", "versions.json"))
+			if name == "healthy" {
+				if err != nil || statErr != nil {
+					t.Fatalf("a healthy addon is written: %v, %v", err, statErr)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), "1.0.0: parameter.cue") {
+				t.Fatalf("want 1.0.0's parameter.cue to fail the addon, got %v", err)
+			}
+			if _, err := os.Stat(filepath.Join(out, "x")); !os.IsNotExist(err) {
+				t.Errorf("the failed addon left %s behind (%v)", filepath.Join(out, "x"), err)
+			}
+		})
+	}
+}
+
+// addonRepo is a catalog with addon x at 1.0.0, whose parameter.cue is the one given, and a healthy 2.0.0.
+func addonRepo(t *testing.T, olderParams string) string {
+	t.Helper()
 	repo := t.TempDir()
 	run := func(args ...string) {
 		t.Helper()
@@ -116,24 +143,15 @@ func TestFailedAddonLeavesNoPages(t *testing.T) {
 	}
 	run("init", "-q")
 	write("addons/x/metadata.yaml", "name: x\nversion: 1.0.0\n")
-	write("addons/x/parameter.cue", "parameter: {\n")
+	write("addons/x/parameter.cue", olderParams)
 	run("add", "-A")
-	run("commit", "-q", "-m", "1.0.0, broken")
+	run("commit", "-q", "-m", "1.0.0")
 	run("tag", "release/x/1.0.0")
 	write("addons/x/metadata.yaml", "name: x\nversion: 2.0.0\n")
 	write("addons/x/parameter.cue", "parameter: {}\n")
 	run("commit", "-q", "-am", "2.0.0")
 	run("tag", "release/x/2.0.0")
-
-	out := t.TempDir()
-	cfg := Config{Current: "1.12", Oldest: "1.9", Minors: map[string]string{"1.11": "2020-01-01"}}
-	g := &generator{repo: repo, out: out, cfg: cfg, today: "2030-01-01"}
-	if _, err := g.addon("x"); err == nil {
-		t.Fatal("1.0.0's parameter.cue doesn't compile, so the addon fails")
-	}
-	if _, err := os.Stat(filepath.Join(out, "x")); !os.IsNotExist(err) {
-		t.Errorf("the failed addon left %s behind (%v)", filepath.Join(out, "x"), err)
-	}
+	return repo
 }
 
 func TestJobsAtLeastOne(t *testing.T) {
