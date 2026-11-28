@@ -1,0 +1,33 @@
+{
+ "name": "crossplane-azure",
+ "latest": "0.0.1",
+ "description": "Azure Provider for Crossplane, enabling Azure resource management directly from KubeVela.",
+ "experimental": true,
+ "tags": [
+  "Crossplane provider",
+  "Azure"
+ ],
+ "logo": "logo.svg",
+ "category": "Cloud Resources",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2024-10-18",
+   "pages": [
+    "",
+    "definitions/azure-rg",
+    "definitions/azure-storage-account",
+    "definitions/azure-vnet",
+    "definitions/crossplane-azure",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "name": "backstage",
+ "latest": "1.2.0",
+ "description": "Backstage addon for KubeVela.",
+ "experimental": true,
+ "tags": [
+  "Backstage"
+ ],
+ "logo": "logo.svg",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "1.2.0",
+   "for": [
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2025-06-10",
+   "pages": [
+    "",
+    "definitions/backstage",
+    "definitions/backstage-location",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "1.1.1",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10"
+   ],
+   "deprecated": false,
+   "released": "2023-01-31",
+   "pages": [
+    "",
+    "definitions/backstage",
+    "definitions/backstage-location",
+    "parameters"
+   ]
+  }
+ ]
+}

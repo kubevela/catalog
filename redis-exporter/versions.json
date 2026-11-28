@@ -1,0 +1,32 @@
+{
+ "name": "redis-exporter",
+ "latest": "0.0.1",
+ "description": "Prometheus Redis metrics exporter.",
+ "experimental": true,
+ "tags": [
+  "Observability"
+ ],
+ "logo": "logo.svg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-03-20",
+   "pages": [
+    "",
+    "definitions/redis-exporter-component",
+    "definitions/redis-exporter-trait",
+    "versions"
+   ]
+  }
+ ]
+}

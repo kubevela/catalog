@@ -1,0 +1,53 @@
+{
+ "name": "terraform",
+ "latest": "1.1.3",
+ "description": "Terraform Controller is a Kubernetes Controller for Terraform.",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "IaC",
+  "Cloud Resource"
+ ],
+ "logo": "logo.png",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.1.3",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-08-25",
+   "pages": [
+    "",
+    "versions"
+   ]
+  },
+  {
+   "version": "1.1.2",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-07-18",
+   "pages": [
+    ""
+   ]
+  },
+  {
+   "version": "1.1.1",
+   "for": [
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-06-13",
+   "pages": [
+    ""
+   ]
+  }
+ ]
+}

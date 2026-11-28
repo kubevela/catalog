@@ -1,0 +1,43 @@
+{
+ "name": "victoria-metric",
+ "latest": "0.10.1",
+ "description": "VictoriaMetrics addon for KubeVela.",
+ "experimental": false,
+ "tags": [
+  "Prometheus",
+  "Observability",
+  "VictoriaMetrics"
+ ],
+ "logo": "logo.jpg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.10.1",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-09-10",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.10.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11"
+   ],
+   "deprecated": false,
+   "released": "2023-09-25",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

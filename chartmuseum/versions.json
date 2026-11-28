@@ -1,0 +1,55 @@
+{
+ "name": "chartmuseum",
+ "latest": "4.2.1",
+ "description": "ChartMuseum is an open-source and easy to deploy Helm Chart Repository server.",
+ "experimental": false,
+ "tags": [
+  "helm",
+  "registry",
+  "helm_chart",
+  "chartmuseum"
+ ],
+ "logo": "logo.png",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "4.2.1",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2024-04-11",
+   "pages": [
+    "",
+    "versions"
+   ]
+  },
+  {
+   "version": "4.2.0",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2024-01-08",
+   "pages": [
+    ""
+   ]
+  },
+  {
+   "version": "4.1.0",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-03-27",
+   "pages": [
+    ""
+   ]
+  }
+ ]
+}

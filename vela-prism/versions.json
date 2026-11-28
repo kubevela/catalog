@@ -1,0 +1,30 @@
+{
+ "name": "vela-prism",
+ "latest": "1.6.0",
+ "description": "Prism provides API Extensions to the core KubeVela. It works as a Kubernetes Aggregated API Server.",
+ "experimental": false,
+ "tags": [
+  "Official"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.6.0",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

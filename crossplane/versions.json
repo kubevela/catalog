@@ -1,0 +1,33 @@
+{
+ "name": "crossplane",
+ "latest": "0.0.1",
+ "description": "Crossplane assembles infrastructure from multiple vendors",
+ "experimental": true,
+ "tags": [
+  "IaC",
+  "cloud resource"
+ ],
+ "logo": "logo.svg",
+ "category": "Cloud Resources",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-06-16",
+   "pages": [
+    "",
+    "versions"
+   ]
+  }
+ ]
+}

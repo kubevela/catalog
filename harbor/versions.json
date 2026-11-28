@@ -1,0 +1,45 @@
+{
+ "name": "harbor",
+ "latest": "0.0.2",
+ "description": "provides image registry powered by harbor.",
+ "experimental": true,
+ "tags": [
+  "harbor",
+  "image registry"
+ ],
+ "logo": "logo.svg",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "0.0.2",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-27",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2022-11-30",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

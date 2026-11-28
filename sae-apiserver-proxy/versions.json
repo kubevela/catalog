@@ -1,0 +1,31 @@
+{
+ "name": "sae-apiserver-proxy",
+ "latest": "0.1.0",
+ "description": "sae-apiserver-proxy is a proxy server that implements the Kubernetes aggregated APIServer and provide proxy access to SAE APIServer.",
+ "experimental": true,
+ "tags": [
+  "Official"
+ ],
+ "logo": "logo.png",
+ "category": "Cloud Resources",
+ "versions": [
+  {
+   "version": "0.1.0",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-02-13",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "name": "kube-state-metrics",
+ "latest": "0.3.1",
+ "description": "A simple service that listens to the Kubernetes API server and generates metrics about the state of the objects.",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "Observability",
+  "Kubernetes",
+  "Metrics",
+  "Prometheus"
+ ],
+ "logo": "logo.png",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.3.1",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-09-25",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.3.0",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-02-02",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

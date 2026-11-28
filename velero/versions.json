@@ -1,0 +1,32 @@
+{
+ "name": "velero",
+ "latest": "0.0.1",
+ "description": "Velero is an open source tool to safely backup and restore, perform disaster recovery, and migrate Kubernetes cluster resources and persistent volumes.",
+ "experimental": true,
+ "tags": [
+  "Backup",
+  "Disaster Recovery"
+ ],
+ "logo": "logo.svg",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-03-29",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

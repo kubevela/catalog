@@ -1,0 +1,30 @@
+{
+ "name": "netlify",
+ "latest": "10.5.2",
+ "description": "Interact with Netlify from the comfort of your CLI.",
+ "experimental": false,
+ "tags": [
+  "extended_workload"
+ ],
+ "logo": "logo.png",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "10.5.2",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-04-27",
+   "pages": [
+    "",
+    "definitions/netlify",
+    "versions"
+   ]
+  }
+ ]
+}

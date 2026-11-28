@@ -1,0 +1,84 @@
+{
+ "name": "azure-keyvault-csi",
+ "latest": "0.0.7",
+ "description": "Trait providing access to Azure Keyvault values via csi driver",
+ "experimental": true,
+ "tags": [
+  "alpha",
+  "azure",
+  "keyvault",
+  "secret",
+  "csi"
+ ],
+ "logo": "logo.png",
+ "category": "Security",
+ "versions": [
+  {
+   "version": "0.0.7",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2024-10-22",
+   "pages": [
+    "",
+    "definitions/azure-keyvault-csi",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.0.6",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2024-05-23",
+   "pages": [
+    "",
+    "definitions/azure-keyvault-csi"
+   ]
+  },
+  {
+   "version": "0.0.5",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2024-04-17",
+   "pages": [
+    "",
+    "definitions/azure-keyvault-csi"
+   ]
+  },
+  {
+   "version": "0.0.4",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-12-25",
+   "pages": [
+    "",
+    "definitions/azure-keyvault-csi"
+   ]
+  },
+  {
+   "version": "0.0.3",
+   "for": [
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2022-11-10",
+   "pages": [
+    "",
+    "definitions/azure-keyvault-csi"
+   ]
+  }
+ ]
+}

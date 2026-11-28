@@ -1,0 +1,44 @@
+{
+ "name": "defkit",
+ "latest": "0.1.1",
+ "description": "Experimental: install DefKit definition modules as Applications. Each module renders in a Job and its definitions are applied, tracked and garbage collected by its Application.",
+ "experimental": true,
+ "tags": [
+  "experimental",
+  "definitions"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "0.1.1",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-26",
+   "pages": [
+    "",
+    "definitions/defkit-apply",
+    "definitions/defkit-render",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.1.0",
+   "for": [
+    "1.11"
+   ],
+   "deprecated": false,
+   "released": "2026-10-15",
+   "pages": [
+    "",
+    "definitions/defkit-apply",
+    "definitions/defkit-render",
+    "parameters"
+   ]
+  }
+ ]
+}

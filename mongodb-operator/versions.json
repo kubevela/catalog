@@ -1,0 +1,35 @@
+{
+ "name": "mongodb-operator",
+ "latest": "0.3.0",
+ "description": "MongoDB Operator is an operator created in Golang to create, update, and manage MongoDB standalone, replicated, and arbiter replicated setup on Kubernetes and Openshift clusters. This operator is capable of doing the setup for MongoDB with all the required best practices.",
+ "experimental": true,
+ "tags": [
+  "NoSQL"
+ ],
+ "logo": "logo.jpg",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "0.3.0",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-10-09",
+   "pages": [
+    "",
+    "definitions/mongodb-cluster",
+    "definitions/mongodb-standalone",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "name": "postgrest",
+ "latest": "1.0.0",
+ "description": "PostgREST is a standalone web server that turns your PostgreSQL database directly into a RESTful API. The structural constraints and permissions in the database determine the API endpoints and operations.",
+ "experimental": true,
+ "tags": [
+  "postgrest"
+ ],
+ "logo": "logo.png",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-30",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

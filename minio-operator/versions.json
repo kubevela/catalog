@@ -1,0 +1,42 @@
+{
+ "name": "minio-operator",
+ "latest": "1.0.1",
+ "description": "MinIO is a high-performance object store, API compatible with the Amazon S3 cloud storage service. This addon installs the MinIO Operator from MinIO's own Helm repository. See https://github.com/minio/operator for the operator and its licence.",
+ "experimental": true,
+ "tags": [
+  "minio-operator"
+ ],
+ "logo": "logo.png",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "1.0.1",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-27",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11"
+   ],
+   "deprecated": false,
+   "released": "2023-05-19",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

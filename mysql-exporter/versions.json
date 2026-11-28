@@ -1,0 +1,34 @@
+{
+ "name": "mysql-exporter",
+ "latest": "0.0.1",
+ "description": "Prometheus exporter for MySQL server metrics.",
+ "experimental": false,
+ "tags": [
+  "Observability"
+ ],
+ "logo": "logo.svg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-07-13",
+   "pages": [
+    "",
+    "definitions/mysql-exporter-component",
+    "definitions/mysql-exporter-trait",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+---
+title: Guide
+sidebar_position: 20
+displayed_sidebar: addons
+---
+
+<!-- The addon's README at release/defkit/0.1.1. -->
+
+Installs [DefKit](https://github.com/kubevela/kubevela/tree/master/pkg/definition/defkit) definition modules as Applications. A module is a Go module of X-Definitions written with DefKit, such as [vela-go-definitions](https://github.com/kubevela/vela-go-definitions).
+
+Each module is an Application whose workflow:
+
+1. **renders** the module in a Job (`defkit-render`), the way `vela def apply-module` loads it, into a ConfigMap;
+2. waits for **review** (optional, a `suspend` step);
+3. **applies** the rendered definitions (`defkit-apply`), so the Application tracks them and garbage collects the ones a new version drops, unless it keeps them with the `garbage-collect` policy's `keepLegacyResource`, as the example does.
+
+The render Job runs in the `vela-defkit` namespace. The module's code runs in a container with no service account token; a second container then writes the result to a ConfigMap, under an account that may only write ConfigMaps there.
+
+## Install a module
+
+```yaml
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: defkit-vela-definitions
+  namespace: vela-system
+  labels:
+    defkit.oam.dev/module: vela-definitions
+spec:
+  components: []
+  workflow:
+    steps:
+      - name: render
+        type: defkit-render
+        properties:
+          git: https://github.com/kubevela/vela-go-definitions
+          version: main
+          prefix: dk-        # optional: a prefix for every definition's name
+          types: [trait]     # optional: only these kinds
+        outputs:
+          - name: rendered
+            valueFrom: configMap
+      - name: review
+        type: suspend
+      - name: apply
+        type: defkit-apply
+        inputs:
+          - from: rendered
+            parameterKey: configMap
+```
+
+`vela workflow resume -n vela-system defkit-vela-definitions` applies what was rendered. The full example is in `examples/`.
+
+## Parameters
+
+| Name | Default | Description |
+| --- | --- | --- |
+| `image` | `ghcr.io/kubevela/defkit-render:v0.1.0` | Image of the render Job: Go plus `defkit-render` |
+| `repositories` | vela-go-definitions | Repositories a UI offers when adding a module; a module can still come from anywhere |
+
+## The render image
+
+`render/` holds `defkit-render` and its Dockerfile. The image needs Go, since loading a module runs `go mod download` and `go run`.
+
+The `DefKit render image` workflow builds it for `linux/amd64` and `linux/arm64`. A pull request builds it without pushing; a push to `master` that changes `render/` publishes `ghcr.io/kubevela/defkit-render:sha-<short sha>`. To publish a version, push a tag named after it:
+
+```shell
+git tag defkit-render-v0.1.0
+git push upstream defkit-render-v0.1.0
+```
+
+which publishes `ghcr.io/kubevela/defkit-render:v0.1.0`. Then point the `image` parameter's default in `parameter.cue` at it and bump the addon's version in `metadata.yaml`.
+
+The render only outputs ComponentDefinitions, TraitDefinitions, PolicyDefinitions and WorkflowStepDefinitions. Any other object a module produces is dropped and reported in the render's errors, so the apply step applies nothing from that render.

@@ -1,0 +1,37 @@
+{
+ "name": "gateway-traits",
+ "latest": "0.0.1",
+ "description": "traits(HttpRoute, HttpsRoute, tcpRoute) for gateway",
+ "experimental": true,
+ "tags": [
+  "Gateway",
+  "Trait"
+ ],
+ "logo": "logo.png",
+ "category": "Networking",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-09-03",
+   "pages": [
+    "",
+    "definitions/config-tls-certificate",
+    "definitions/http-route",
+    "definitions/https-route",
+    "definitions/tcp-route",
+    "versions"
+   ]
+  }
+ ]
+}

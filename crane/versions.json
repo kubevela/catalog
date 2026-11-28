@@ -1,0 +1,40 @@
+{
+ "name": "crane",
+ "latest": "0.5.0",
+ "description": "Crane (FinOps Crane) is an open-source project which manages cloud resource on Kubernetes stack, it is inspired by FinOps concepts.",
+ "experimental": true,
+ "tags": [
+  "finops",
+  "monitoring",
+  "prediction",
+  "time-series",
+  "analytics",
+  "cost-optimization",
+  "autoscaling"
+ ],
+ "logo": "logo.jpg",
+ "category": "Scaling and Scheduling",
+ "versions": [
+  {
+   "version": "0.5.0",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-07-08",
+   "pages": [
+    "",
+    "definitions/effective-hpa",
+    "definitions/resource-analytics",
+    "versions"
+   ]
+  }
+ ]
+}

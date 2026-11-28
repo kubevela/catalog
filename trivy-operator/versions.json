@@ -1,0 +1,31 @@
+{
+ "name": "trivy-operator",
+ "latest": "3.1.2",
+ "description": "Kubernetes Operator based on the open-source container vulnerability scanner Trivy",
+ "experimental": false,
+ "tags": [
+  "trivy-operator"
+ ],
+ "logo": "logo.png",
+ "category": "Security",
+ "versions": [
+  {
+   "version": "3.1.2",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "definitions/aqua-trivy",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "name": "argocd",
+ "latest": "0.1.0",
+ "description": "Declarative continuous deployment for Kubernetes.",
+ "experimental": true,
+ "tags": [
+  "argocd",
+  "gitops",
+  "v2.3.3",
+  "helm_support"
+ ],
+ "logo": "logo.svg",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "0.1.0",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-04-19",
+   "pages": [
+    "",
+    "definitions/application",
+    "definitions/clusterCred",
+    "definitions/helm",
+    "definitions/project",
+    "definitions/repoCred",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

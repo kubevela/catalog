@@ -1,0 +1,34 @@
+{
+ "name": "crossplane-aws",
+ "latest": "0.0.1",
+ "description": "AWS Provider for Crossplane",
+ "experimental": true,
+ "tags": [
+  "Crossplane provider"
+ ],
+ "logo": "logo.svg",
+ "category": "Cloud Resources",
+ "versions": [
+  {
+   "version": "0.0.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-06-16",
+   "pages": [
+    "",
+    "definitions/aws-s3",
+    "definitions/crossplane-aws",
+    "versions"
+   ]
+  }
+ ]
+}

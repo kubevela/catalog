@@ -1,0 +1,44 @@
+{
+ "name": "flink-kubernetes-operator",
+ "latest": "1.4.0",
+ "description": "A Kubernetes operator for Apache Flink",
+ "experimental": false,
+ "tags": [
+  "apache/flink-kubernetes-operator"
+ ],
+ "logo": "logo.png",
+ "category": "AI and Big Data",
+ "versions": [
+  {
+   "version": "1.4.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2024-07-17",
+   "pages": [
+    "",
+    "definitions/flink-cluster",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "1.3.2",
+   "for": [
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "definitions/flink-cluster",
+    "parameters"
+   ]
+  }
+ ]
+}

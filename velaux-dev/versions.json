@@ -1,0 +1,32 @@
+{
+ "name": "velaux-dev",
+ "latest": "1.3.0-alpha.1",
+ "description": "KubeVela User Experience (UX). An extensible, application-oriented delivery and management Dashboard.",
+ "experimental": true,
+ "tags": [
+  "Official"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.3.0-alpha.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-03-11",
+   "pages": [
+    "",
+    "versions"
+   ]
+  }
+ ]
+}

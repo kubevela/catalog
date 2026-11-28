@@ -1,0 +1,32 @@
+{
+ "name": "canary-rollout-istio",
+ "latest": "1.0.2",
+ "description": "Enable service mash and managing triffic shiffting in workflow.",
+ "experimental": true,
+ "tags": [
+  "service-mesh",
+  "rollout"
+ ],
+ "logo": "logo.svg",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "1.0.2",
+   "for": [
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-12-27",
+   "pages": [
+    "",
+    "versions"
+   ]
+  }
+ ]
+}

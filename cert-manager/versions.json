@@ -1,0 +1,45 @@
+{
+ "name": "cert-manager",
+ "latest": "2.2.0",
+ "description": "Automatically provision and manage TLS certificates in Kubernetes",
+ "experimental": false,
+ "tags": [
+  "Let's Encrypt",
+  "TLS",
+  "Certificate",
+  "ACME"
+ ],
+ "logo": "logo.svg",
+ "category": "Security",
+ "versions": [
+  {
+   "version": "2.2.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-30",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "2.1.1",
+   "for": [
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "name": "rollout",
+ "latest": "1.3.3",
+ "description": "Provides basic batch publishing capability.",
+ "experimental": false,
+ "tags": [
+  "extended_workload",
+  "rollout",
+  "GA"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.3.3",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "definitions/rollout",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "name": "traefik",
+ "latest": "2.6.3",
+ "description": "The Cloud Native Application Proxy, Simplify networking complexity while designing, deploying, and operating applications.",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "Gateway"
+ ],
+ "logo": "logo.png",
+ "category": "Networking",
+ "versions": [
+  {
+   "version": "2.6.3",
+   "for": [],
+   "deprecated": false,
+   "released": "2022-04-28",
+   "pages": [
+    "",
+    "definitions/config-tls-certificate",
+    "definitions/http-route",
+    "definitions/https-route",
+    "definitions/tcp-route",
+    "versions"
+   ]
+  },
+  {
+   "version": "2.6.3-3",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-13",
+   "pages": [
+    "",
+    "definitions/http-route",
+    "definitions/https-route",
+    "definitions/tcp-route"
+   ]
+  }
+ ]
+}

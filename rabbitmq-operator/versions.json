@@ -1,0 +1,33 @@
+{
+ "name": "rabbitmq-operator",
+ "latest": "1.0.0",
+ "description": "This addon adds rabbitmq-operator to the kubevela to be used across the application installed in kubevela.",
+ "experimental": true,
+ "tags": [
+  "Middleware",
+  "Message Broker"
+ ],
+ "logo": "logo.png",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-03-10",
+   "pages": [
+    "",
+    "definitions/rabbitmq-cluster",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "name": "pyroscope",
+ "latest": "0.17.1",
+ "description": "Pyroscope is an open source platform, consisting of server and agent. It allows the user to collect, store, and query the profiling data in a CPU and disk efficient way.",
+ "experimental": true,
+ "tags": [
+  "profiling tool"
+ ],
+ "logo": "logo.jpg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.17.1",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-06-06",
+   "pages": [
+    "",
+    "definitions/pyroscope",
+    "versions"
+   ]
+  }
+ ]
+}

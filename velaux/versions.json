@@ -1,0 +1,91 @@
+{
+ "name": "velaux",
+ "latest": "1.9.5",
+ "description": "KubeVela User Experience (UX). An extensible, application-oriented delivery and management Platform.",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "Dashboard"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.9.5",
+   "for": [
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-05-26",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "1.9.4",
+   "for": [
+    "1.9",
+    "1.10"
+   ],
+   "deprecated": false,
+   "released": "2024-07-11",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  },
+  {
+   "version": "1.9.3",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-09-06",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  },
+  {
+   "version": "1.9.2",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-07-24",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  },
+  {
+   "version": "1.9.1",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-06-26",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  },
+  {
+   "version": "1.8.1",
+   "for": [
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-04-28",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

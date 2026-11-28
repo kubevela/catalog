@@ -1,0 +1,57 @@
+{
+ "name": "grafana",
+ "latest": "0.4.4",
+ "description": "Grafana is a multi-platform open source analytics and interactive visualization web application. It provides charts, graphs, and alerts for the web when connected to supported data sources.",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "Observability",
+  "Kubernetes",
+  "Grafana"
+ ],
+ "logo": "logo.jpg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.4.4",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-22",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.4.3",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11"
+   ],
+   "deprecated": false,
+   "released": "2023-06-27",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  },
+  {
+   "version": "0.4.2",
+   "for": [
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-03-13",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

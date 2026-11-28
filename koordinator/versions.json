@@ -1,0 +1,34 @@
+{
+ "name": "koordinator",
+ "latest": "1.1.1",
+ "description": "This addon adds koordinator to the kubevela to be used across the application installed in kubevela.",
+ "experimental": true,
+ "tags": [
+  "koordinator"
+ ],
+ "logo": "logo.svg",
+ "category": "Scaling and Scheduling",
+ "versions": [
+  {
+   "version": "1.1.1",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-03-10",
+   "pages": [
+    "",
+    "definitions/colocation-profile",
+    "definitions/pod-migration-job",
+    "definitions/reservation",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

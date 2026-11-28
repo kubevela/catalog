@@ -1,0 +1,42 @@
+{
+ "name": "chaosblade-operator",
+ "latest": "1.7.0",
+ "description": "A Chaos Engineering Tool for Cloud-native",
+ "experimental": true,
+ "tags": [
+  "chaosblade operator for kubernetes experiments"
+ ],
+ "logo": "logo.svg",
+ "category": "Workloads and Testing",
+ "versions": [
+  {
+   "version": "1.7.0",
+   "for": [
+    "1.5",
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-09-26",
+   "pages": [
+    "",
+    "definitions/delay-pod-network-by-names",
+    "definitions/delete-pod-by-labels",
+    "definitions/delete-pod-by-names",
+    "definitions/fail-pod-by-labels",
+    "definitions/increase-container-cpu-load-by-id",
+    "definitions/kill-container-process-by-id",
+    "definitions/pod-cpu-load-by-names",
+    "definitions/remove-container-by-id",
+    "definitions/tamper-container-dns-by-id",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

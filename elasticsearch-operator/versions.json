@@ -1,0 +1,33 @@
+{
+ "name": "elasticsearch-operator",
+ "latest": "1.0.0",
+ "description": "This addon adds elasticsearch-operator to the kubevela to be used across the application installed in kubevela.",
+ "experimental": true,
+ "tags": [
+  "elasticsearch-operator"
+ ],
+ "logo": "logo.png",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-06-30",
+   "pages": [
+    "",
+    "definitions/elasticsearch-apm-server",
+    "definitions/elasticsearch-cluster",
+    "definitions/elasticsearch-enterprise-search",
+    "definitions/kibana",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

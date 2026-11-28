@@ -1,0 +1,29 @@
+{
+ "name": "velaux-prerelease",
+ "latest": "1.12.0-alpha.1",
+ "description": "Prerelease of VelaUX, the KubeVela User Experience (UX). Replaces the velaux addon: disable velaux before enabling this one.",
+ "experimental": true,
+ "tags": [
+  "experimental",
+  "prerelease",
+  "Dashboard"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "1.12.0-alpha.1",
+   "for": [
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-05",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

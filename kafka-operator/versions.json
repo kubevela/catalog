@@ -1,0 +1,37 @@
+{
+ "name": "kafka-operator",
+ "latest": "1.0.0",
+ "description": "This addon adds kafka-operator to the kubevela to be used across the application installed in kubevela.",
+ "experimental": true,
+ "tags": [
+  "kafka-operator"
+ ],
+ "logo": "logo.svg",
+ "category": "Data and Messaging",
+ "versions": [
+  {
+   "version": "1.0.0",
+   "for": [
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-04-10",
+   "pages": [
+    "",
+    "definitions/kafka-bridge",
+    "definitions/kafka-cluster",
+    "definitions/kafka-connect",
+    "definitions/kafka-connector",
+    "definitions/kafka-rebalance",
+    "definitions/kafka-topic",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

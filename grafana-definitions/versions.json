@@ -1,0 +1,39 @@
+{
+ "name": "grafana-definitions",
+ "latest": "0.2.2",
+ "description": "Grafana definitions is an auxiliary addon that creates definitions for grafana installation and use.",
+ "experimental": false,
+ "tags": [
+  "Observability",
+  "Kubernetes",
+  "Grafana"
+ ],
+ "logo": "logo.jpg",
+ "category": "Observability",
+ "versions": [
+  {
+   "version": "0.2.2",
+   "for": [
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2022-10-18",
+   "pages": [
+    "",
+    "definitions/grafana-access",
+    "definitions/grafana-dashboard",
+    "definitions/grafana-datasource",
+    "definitions/import-grafana-dashboard",
+    "definitions/install-datasource-from-addon",
+    "definitions/install-kubernetes-api-datasource",
+    "versions"
+   ]
+  }
+ ]
+}

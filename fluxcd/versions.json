@@ -1,0 +1,182 @@
+{
+ "name": "fluxcd",
+ "latest": "3.0.2",
+ "description": "Extended workload to do continuous and progressive delivery",
+ "experimental": false,
+ "tags": [
+  "Official",
+  "Extended Workload",
+  "GitOps",
+  "Helm"
+ ],
+ "logo": "logo.svg",
+ "category": "Delivery and GitOps",
+ "versions": [
+  {
+   "version": "3.0.2",
+   "for": [
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-05-26",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "3.0.1",
+   "for": [
+    "1.9",
+    "1.10"
+   ],
+   "deprecated": false,
+   "released": "2024-12-04",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "3.0.0",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-08-28",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.4.0",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-12-05",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.3.9",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-10-18",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.3.8",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-10-17",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.3.7",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-09-06",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.3.6",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-07-04",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  },
+  {
+   "version": "2.3.5",
+   "for": [
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2023-05-05",
+   "pages": [
+    "",
+    "definitions/helm-labels",
+    "definitions/helm-release-def",
+    "definitions/json-patch",
+    "definitions/kustomize",
+    "definitions/kustomize-patch",
+    "definitions/strategy-merge",
+    "parameters"
+   ]
+  }
+ ]
+}

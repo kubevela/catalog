@@ -1,0 +1,42 @@
+{
+ "name": "vela-core-shard-manager",
+ "latest": "0.1.2",
+ "description": "The manager for vela-core.",
+ "experimental": false,
+ "tags": [
+  "Official"
+ ],
+ "logo": "logo.svg",
+ "category": "KubeVela",
+ "versions": [
+  {
+   "version": "0.1.2",
+   "for": [
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2025-03-13",
+   "pages": [
+    "",
+    "parameters",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.1.1",
+   "for": [
+    "1.8",
+    "1.9",
+    "1.10"
+   ],
+   "deprecated": false,
+   "released": "2023-03-01",
+   "pages": [
+    "",
+    "parameters"
+   ]
+  }
+ ]
+}

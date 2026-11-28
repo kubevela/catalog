@@ -1,0 +1,52 @@
+{
+ "name": "dex",
+ "latest": "2.30.0",
+ "description": "Enable dex for login",
+ "experimental": false,
+ "tags": [
+  "auth",
+  "alpha"
+ ],
+ "logo": "logo.svg",
+ "category": "Security",
+ "versions": [
+  {
+   "version": "2.30.0",
+   "for": [],
+   "deprecated": false,
+   "released": "2022-03-31",
+   "pages": [
+    "",
+    "versions"
+   ]
+  },
+  {
+   "version": "0.7.0",
+   "for": [
+    "1.9",
+    "1.10",
+    "1.11",
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2023-09-01",
+   "pages": [
+    ""
+   ]
+  },
+  {
+   "version": "0.6.6",
+   "for": [
+    "1.6",
+    "1.7",
+    "1.8",
+    "1.9"
+   ],
+   "deprecated": true,
+   "released": "2022-10-24",
+   "pages": [
+    ""
+   ]
+  }
+ ]
+}
