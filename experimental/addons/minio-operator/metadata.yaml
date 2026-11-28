@@ -1,6 +1,6 @@
 name: minio-operator
-version: 1.0.0
-description: MinIO is a High Performance Object Storage released under GNU AGPLv3 or later. It is API compatible with Amazon S3 cloud storage service. Use MinIO to build high performance infrastructure for machine learning, analytics and application data workloads.
+version: 1.0.1
+description: MinIO is a high-performance object store, API compatible with the Amazon S3 cloud storage service. This addon installs the MinIO Operator from MinIO's own Helm repository. See https://github.com/minio/operator for the operator and its licence.
 icon: "https://min.io/resources/img/logo/MINIO_wordmark.png"
 url: "https://min.io/"
 
