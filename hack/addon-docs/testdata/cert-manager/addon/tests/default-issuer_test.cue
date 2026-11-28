@@ -26,7 +26,7 @@ _policy: {
 	}
 }
 
-"a namespace's cluster-issuer annotation wins": test.#ApplicationPolicyRender & _policy & {
+"a namespace's cluster-issuer annotation names a ClusterIssuer": test.#ApplicationPolicyRender & _policy & {
 	spec: _withCert
 	mocks: "vela/kube": "#Get": [_ns & {$returns: metadata: annotations: "cert-manager.oam.dev/cluster-issuer": "team-acme"}]
 	expect: output: ctx: certManager: issuerRef: {kind: "ClusterIssuer", name: "team-acme"}
@@ -64,5 +64,17 @@ _policy: {
 "treats an empty annotation as none": test.#ApplicationPolicyRender & _policy & {
 	spec: _withCert
 	mocks: "vela/kube": "#Get": [_ns & {$returns: metadata: annotations: "cert-manager.oam.dev/issuer": ""}]
-	expect: output: ctx?: _|_
+	expect: {
+		enabled: true
+		output: ctx?: _|_
+	}
+}
+
+"an empty cluster-issuer annotation beside an issuer one leaves the Issuer": test.#ApplicationPolicyRender & _policy & {
+	spec: _withCert
+	mocks: "vela/kube": "#Get": [_ns & {$returns: metadata: annotations: {
+		"cert-manager.oam.dev/issuer":         "team-ca"
+		"cert-manager.oam.dev/cluster-issuer": ""
+	}}]
+	expect: output: ctx: certManager: issuerRef: {kind: "Issuer", name: "team-ca"}
 }

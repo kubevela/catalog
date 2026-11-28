@@ -35,7 +35,7 @@ Flux or Argo CD, have the addon hand cert-manager to them instead:
 | `installWith` | The addon creates | Needs |
 | --- | --- | --- |
 | `vela` (default) | the Helm release, through `helmchart` | nothing else |
-| `flux` | a HelmRepository and HelmRelease in `vela-system` | Flux |
+| `flux` | a HelmRepository and HelmRelease in `vela-system` | Flux 2.3 or later |
 | `argo` | an Argo CD Application in `argocd` | Argo CD |
 
 Flux adopts an existing release in place. Moving from Flux to Argo CD reinstalls cert-manager (a few seconds down; certificates and CRDs kept), and from Argo CD back to `vela` is not supported yet.
@@ -119,21 +119,23 @@ The policy runs for every Application on the cluster, which is why it is opt-in.
 with the Application in [`upgrade/from-2.x.yaml`](upgrade/from-2.x.yaml), then upgrade as usual:
 
 ```shell
+NS=cert-manager   # the 2.x namespace parameter, if you set one
 kubectl apply -f upgrade/from-2.x.yaml
 vela status cert-manager-upgrade-from-2x -n vela-system   # wait for it to be running
-vela addon upgrade cert-manager releaseName=cert-manager-cert-manager
+vela addon upgrade cert-manager releaseName=$NS-cert-manager
 kubectl delete -f upgrade/from-2.x.yaml
 ```
 
-It suspends the HelmRelease on every cluster 2.x deployed to. If you set the 2.x `namespace` parameter, change
-`cert-manager` in the file's `NAMESPACE` variables and in the Role and RoleBinding that live in that namespace, and use
-that namespace in the commands below; if you set `clusters`, list the same clusters in its `every-cluster` policy.
+It checks the namespace, then suspends the HelmRelease on every cluster 2.x deployed to. If you set the 2.x `namespace`
+parameter, change `cert-manager` in the file's `NAMESPACE` variables and in the Role and RoleBinding that live in that
+namespace; it refuses to run otherwise. If you set `clusters`, list the same clusters in its `every-cluster` policy.
 
-Or by hand, suspending on every cluster:
+Or by hand, suspending it on each cluster 2.x deployed to, with `--context` for each one's kubeconfig context:
 
 ```shell
-kubectl -n cert-manager patch helmrelease cert-manager --type=merge -p '{"spec":{"suspend":true}}'
-vela addon upgrade cert-manager releaseName=cert-manager-cert-manager
+NS=cert-manager   # the 2.x namespace parameter, if you set one
+kubectl --context <context> -n $NS patch helmrelease cert-manager --type=merge -p '{"spec":{"suspend":true}}'
+vela addon upgrade cert-manager releaseName=$NS-cert-manager
 ```
 
 By hand, suspend first: otherwise Flux uninstalls cert-manager when the upgrade removes its HelmRelease. The 2.x parameters are

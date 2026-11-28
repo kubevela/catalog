@@ -63,7 +63,7 @@ A cert-manager issuer: an ACME account (Let's Encrypt by default), a self-signed
 
 
 <details>
-<summary><code>route53</code> (7) Route53. Leave the key refs out to use the pod's ambient credentials (IRSA, Pod Identity)</summary>
+<summary><code>route53</code> (7) Route53. Set both key refs, or leave them out to use the pod's ambient credentials (IRSA, Pod Identity)</summary>
 
 <div className="addon-param"><div className="addon-param-head"><code>region</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc"></div></div>
 <div className="addon-param"><div className="addon-param-head"><code>hostedZoneID</code> <span className="addon-param-type">string</span></div><div className="addon-param-desc"></div></div>

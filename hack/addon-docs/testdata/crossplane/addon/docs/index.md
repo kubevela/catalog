@@ -55,7 +55,8 @@ vela addon enable crossplane --version 0.0.1
 | `args` | the chart's | Extra Crossplane flags, e.g. `args='{--debug}'`. |
 | `resources` | the chart's | CPU and memory `requests` and `limits` for the Crossplane pod. |
 | `nodeSelector`, `tolerations`, `affinity`, `priorityClassName` | the chart's | Where Crossplane and its RBAC manager run. |
-| `imageRegistry`, `imagePullSecrets` | `xpkg.crossplane.io` | A registry mirror for Crossplane's image, and Secrets with its credentials. |
+| `imageRegistry` | `xpkg.crossplane.io` | A registry mirror for Crossplane's image. |
+| `imagePullSecrets` | none | Secrets with the mirror's credentials. |
 | `packageCacheSize` | `20Mi` | Largest the package cache may grow. |
 | `registryCaBundle` | none | `name` and `key` of a ConfigMap with a private package registry's CA bundle. |
 

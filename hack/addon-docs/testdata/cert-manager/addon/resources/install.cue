@@ -35,7 +35,7 @@ _install: {
 	let R = [if parameter.releaseName != _|_ {parameter.releaseName}, N][0]
 	let NS = namespace
 
-	_with: [if parameter.installWith != _|_ {parameter.installWith}, "vela"][0]
+	_with: parameter.installWith
 	_chart: {
 		source: chart.source
 		repoURL: [if parameter.chart.repoURL != _|_ {parameter.chart.repoURL}, chart.repoURL][0]
@@ -63,7 +63,7 @@ _install: {
 	}
 
 	// Addon templates take no errs, so a refusal is a conflict whose path is the message.
-	if !parameter.chartInstall && parameter.installWith != _|_ {
+	if !parameter.chartInstall && parameter.installWith != "vela" {
 		_refuse: "installWith has no effect with chartInstall false, which installs no chart: set one": true & false
 	}
 

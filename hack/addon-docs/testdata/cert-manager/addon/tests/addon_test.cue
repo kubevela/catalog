@@ -308,9 +308,8 @@ _v2: {
 "refuses a release name Helm cannot use": test.#AddonRender & {
 	addon: ".."
 	parameter: releaseName: "Cert_Manager"
-	expect: error: =~#"invalid value "Cert_Manager""#
+	expect: error:          =~#"invalid value "Cert_Manager""#
 }
-
 
 "replicas sets every Deployment": test.#AddonRender & {
 	addon: ".."
@@ -323,7 +322,7 @@ _v2: {
 	parameter: {replicas: 2, highAvailability: true}
 	expect: components: "cert-manager": properties: values: {
 		podDisruptionBudget: enabled: true
-		webhook: podDisruptionBudget: enabled: true
+		webhook: podDisruptionBudget: enabled:    true
 		cainjector: podDisruptionBudget: enabled: true
 	}
 }
@@ -331,7 +330,7 @@ _v2: {
 "refuses highAvailability with one replica": test.#AddonRender & {
 	addon: ".."
 	parameter: highAvailability: true
-	expect: error: =~"highAvailability needs replicas of 2 or more"
+	expect: error:               =~"highAvailability needs replicas of 2 or more"
 }
 
 "monitoring adds a ServiceMonitor": test.#AddonRender & {
@@ -345,7 +344,9 @@ _v2: {
 	parameter: keepCRDs: false
 	expect: {
 		components: "cert-manager": properties: values: crds: keep: false
-		application: spec: policies: [{name: "cert-manager-keep-crds"}] @contains() @not()
+		application: spec: {
+			policies: [{name: "cert-manager-keep-crds"}] @contains() @not()
+		}
 	}
 }
 
@@ -377,7 +378,7 @@ _v2: {
 "refuses a toleration effect Kubernetes does not have": test.#AddonRender & {
 	addon: ".."
 	parameter: tolerations: [{key: "dedicated", effect: "NoRun"}]
-	expect: error: =~"effect"
+	expect: error: =~"parameter.tolerations.0.effect: .*empty disjunction"
 }
 
 "pulls images from a mirror with pull secrets": test.#AddonRender & {
@@ -419,4 +420,111 @@ _v2: {
 	addon: ".."
 	parameter: values: podDnsPolicy: "None"
 	expect: components: "cert-manager": properties: values: podDnsPolicy: "None"
+}
+
+"affinity is typed and reaches every pod": test.#AddonRender & {
+	addon: ".."
+	parameter: affinity: {
+		nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+			matchExpressions: [{key: "pool", operator: "In", values: ["system"]}]
+		}]
+		podAntiAffinity: preferredDuringSchedulingIgnoredDuringExecution: [{
+			weight: 100
+			podAffinityTerm: {topologyKey: "kubernetes.io/hostname", labelSelector: matchLabels: app: "cert-manager"}
+		}]
+	}
+	expect: components: "cert-manager": properties: values: {
+		affinity: {
+			nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+				matchExpressions: [{key: "pool", operator: "In", values: ["system"]}]
+			}]
+			podAntiAffinity: preferredDuringSchedulingIgnoredDuringExecution: [{
+				weight: 100
+				podAffinityTerm: {topologyKey: "kubernetes.io/hostname", labelSelector: matchLabels: app: "cert-manager"}
+			}]
+		}
+		webhook: affinity: {
+			nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+				matchExpressions: [{key: "pool", operator: "In", values: ["system"]}]
+			}]
+			podAntiAffinity: preferredDuringSchedulingIgnoredDuringExecution: [{
+				weight: 100
+				podAffinityTerm: {topologyKey: "kubernetes.io/hostname", labelSelector: matchLabels: app: "cert-manager"}
+			}]
+		}
+		cainjector: affinity: {
+			nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+				matchExpressions: [{key: "pool", operator: "In", values: ["system"]}]
+			}]
+			podAntiAffinity: preferredDuringSchedulingIgnoredDuringExecution: [{
+				weight: 100
+				podAffinityTerm: {topologyKey: "kubernetes.io/hostname", labelSelector: matchLabels: app: "cert-manager"}
+			}]
+		}
+		startupapicheck: affinity: {
+			nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+				matchExpressions: [{key: "pool", operator: "In", values: ["system"]}]
+			}]
+			podAntiAffinity: preferredDuringSchedulingIgnoredDuringExecution: [{
+				weight: 100
+				podAffinityTerm: {topologyKey: "kubernetes.io/hostname", labelSelector: matchLabels: app: "cert-manager"}
+			}]
+		}
+	}
+}
+
+"refuses an affinity operator Kubernetes does not have": test.#AddonRender & {
+	addon: ".."
+	parameter: affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
+		matchExpressions: [{key: "pool", operator: "Equals", values: ["system"]}]
+	}]
+	expect: error: =~"matchExpressions.0.operator: .*empty disjunction"
+}
+
+"accepts cpu and memory as Kubernetes quantities": test.#AddonRender & {
+	addon: ".."
+	parameter: resources: {requests: {cpu: 0.5, memory: "256Mi"}, limits: {cpu: "500m", memory: "1G"}}
+	expect: components: "cert-manager": type: "helmchart"
+}
+
+"refuses cpu that is not a quantity": test.#AddonRender & {
+	addon: ".."
+	parameter: resources: requests: cpu: "lots"
+	expect: error: =~"parameter.resources.requests.cpu: .*empty disjunction"
+}
+
+"refuses memory that is not a quantity": test.#AddonRender & {
+	addon: ".."
+	parameter: resources: limits: memory: "1 GB"
+	expect: error: =~"parameter.resources.limits.memory: invalid value \"1 GB\""
+}
+
+"installWith defaults to vela, and vela without chartInstall installs nothing": test.#AddonRender & {
+	addon: ".."
+	parameter: {chartInstall: false, installWith: "vela"}
+	expect: components: "cert-manager"?: _|_
+}
+
+"accepts a dotted releaseName": test.#AddonRender & {
+	addon: ".."
+	parameter: releaseName: "certs.team-a"
+	expect: components: "cert-manager": properties: release: name: "certs.team-a"
+}
+
+"refuses a releaseName with an empty label": test.#AddonRender & {
+	addon: ".."
+	parameter: releaseName: "a..b"
+	expect: error:          =~#"invalid value "a\.\.b""#
+}
+
+"refuses a releaseName with a label starting with a hyphen": test.#AddonRender & {
+	addon: ".."
+	parameter: releaseName: "a.-b"
+	expect: error:          =~#"invalid value "a\.-b""#
+}
+
+"refuses a releaseName longer than Helm's 53 characters": test.#AddonRender & {
+	addon: ".."
+	parameter: releaseName: "a234567890123456789012345678901234567890123456789012.b"
+	expect: error:          =~#"invalid value "a234567890123456789012345678901234567890123456789012\.b""#
 }

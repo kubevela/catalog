@@ -75,7 +75,17 @@ _issuer: {
 	expect: error: =~"http01 or dns01"
 }
 
-"ready once cert-manager reports Ready": test.#ComponentStatus & _issuer & {
+"refuses a Route53 access key ID without its secret key": test.#ComponentRender & _issuer & {
+	parameter: acme: {email: "ops@example.com", dns01: route53: {region: "eu-west-1", accessKeyIDSecretRef: {name: "aws", key: "id"}}}
+	expect: error: =~"route53 needs both accessKeyIDSecretRef and secretAccessKeySecretRef, or neither"
+}
+
+"refuses a Route53 secret key without its access key ID": test.#ComponentRender & _issuer & {
+	parameter: acme: {email: "ops@example.com", dns01: route53: {region: "eu-west-1", secretAccessKeySecretRef: {name: "aws", key: "secret"}}}
+	expect: error: =~"route53 needs both accessKeyIDSecretRef and secretAccessKeySecretRef, or neither"
+}
+
+"ready once cert-manager reports Ready":test.#ComponentStatus & _issuer & {
 	parameter: selfSigned: {}
 	observed: output: status: conditions: [{type: "Ready", status: "True", message: "Signing CA verified"}]
 	expect: {healthy: true, message: "Signing CA verified"}

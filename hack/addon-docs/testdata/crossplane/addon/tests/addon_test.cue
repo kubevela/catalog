@@ -109,7 +109,7 @@ _xrd: {
 "refuses a toleration operator Kubernetes does not have": test.#AddonRender & {
 	addon: ".."
 	parameter: tolerations: [{key: "dedicated", operator: "Equals"}]
-	expect: error: =~"operator"
+	expect: error: =~"parameter.tolerations.0.operator: .*empty disjunction"
 }
 
 "pulls from a mirror, with pull secrets and its CA bundle": test.#AddonRender & {
@@ -183,7 +183,7 @@ _xrd: {
 	parameter: affinity: nodeAffinity: requiredDuringSchedulingIgnoredDuringExecution: nodeSelectorTerms: [{
 		matchExpressions: [{key: "pool", operator: "Equals", values: ["system"]}]
 	}]
-	expect: error: =~"operator"
+	expect: error: =~"matchExpressions.0.operator: .*empty disjunction"
 }
 
 "accepts cpu and memory as Kubernetes quantities": test.#AddonRender & {
@@ -195,13 +195,13 @@ _xrd: {
 "refuses cpu that is not a quantity": test.#AddonRender & {
 	addon: ".."
 	parameter: resources: requests: cpu: "lots"
-	expect: error: =~"cpu"
+	expect: error: =~"parameter.resources.requests.cpu: .*empty disjunction"
 }
 
 "refuses memory that is not a quantity": test.#AddonRender & {
 	addon: ".."
 	parameter: resources: limits: memory: "1 GB"
-	expect: error: =~"memory"
+	expect: error: =~"parameter.resources.limits.memory: invalid value \"1 GB\""
 }
 
 "installWith defaults to vela, and vela without chartInstall installs nothing": test.#AddonRender & {

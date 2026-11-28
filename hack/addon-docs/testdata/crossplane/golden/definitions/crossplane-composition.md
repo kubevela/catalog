@@ -20,8 +20,8 @@ A Crossplane Composition: the pipeline of functions that builds a composite reso
 <details>
 <summary><code>compositeTypeRef</code> (2) The composite resource this Composition builds, as its XRD defines it</summary>
 
-<div className="addon-param"><div className="addon-param-head"><code>apiVersion</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc"></div></div>
-<div className="addon-param"><div className="addon-param-head"><code>kind</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc"></div></div>
+<div className="addon-param"><div className="addon-param-head"><code>apiVersion</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc">API group and version of the composite, e.g. example.org/v1</div></div>
+<div className="addon-param"><div className="addon-param-head"><code>kind</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc">Kind of the composite, e.g. XDatabase</div></div>
 
 </details>
 

@@ -27,8 +27,10 @@ template: {
 		// +usage=The composite resource this Composition builds, as its XRD defines it
 		// +ui:label=Composite Type
 		compositeTypeRef: {
+			// +usage=API group and version of the composite, e.g. example.org/v1
 			// +ui:label=API Version
 			apiVersion: string
+			// +usage=Kind of the composite, e.g. XDatabase
 			// +ui:label=Kind
 			kind: string
 		}

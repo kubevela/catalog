@@ -41,6 +41,9 @@ template: {
 		if parameter.acme != _|_ if parameter.acme.dns01 != _|_ if len([for k in ["cloudflare", "route53"] if parameter.acme.dns01[k] != _|_ {k}]) != 1 {
 			"dns01 solves through exactly one of cloudflare or route53"
 		},
+		if parameter.acme != _|_ if parameter.acme.dns01 != _|_ if parameter.acme.dns01.route53 != _|_ if len([for k in ["accessKeyIDSecretRef", "secretAccessKeySecretRef"] if parameter.acme.dns01.route53[k] != _|_ {k}]) == 1 {
+			"route53 needs both accessKeyIDSecretRef and secretAccessKeySecretRef, or neither"
+		},
 	]
 
 	output: {
@@ -123,7 +126,7 @@ template: {
 				// +usage=Cloudflare, with an API token that can edit the zone
 				// +ui:label=Cloudflare
 				cloudflare?: apiTokenSecretRef: #SecretKeyRef
-				// +usage=Route53. Leave the key refs out to use the pod's ambient credentials (IRSA, Pod Identity)
+				// +usage=Route53. Set both key refs, or leave them out to use the pod's ambient credentials (IRSA, Pod Identity)
 				// +ui:label=Route53
 				route53?: {
 					// +ui:label=Region

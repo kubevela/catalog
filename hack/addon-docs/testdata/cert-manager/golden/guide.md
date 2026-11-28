@@ -65,7 +65,8 @@ vela addon enable cert-manager --version 2.2.0
 | `keepCRDs` | `true` | Keep the CRDs, and every certificate and issuer, when the addon is disabled. |
 | `resources` | the chart's | CPU and memory `requests` and `limits` for each pod. |
 | `nodeSelector`, `tolerations`, `affinity`, `priorityClassName` | the chart's | Where cert-manager's pods run, applied to each of them. |
-| `imageRegistry`, `imagePullSecrets` | `quay.io` | A registry mirror to pull the images from, and Secrets with its credentials. |
+| `imageRegistry` | `quay.io` | A registry mirror to pull the images from. |
+| `imagePullSecrets` | none | Secrets with the mirror's credentials. |
 | `featureGates` | the chart's | cert-manager feature gates, e.g. `featureGates.ServerSideApply=true`. |
 | `dns01Nameservers` | the cluster's | DNS servers to check DNS01 challenges against, e.g. `dns01Nameservers='{1.1.1.1:53}'`. |
 | `certificateOwnerRef` | `false` | Delete a certificate's Secret when the certificate is deleted. |
@@ -93,8 +94,8 @@ dashboards:
 vela addon enable cert-manager installWith=flux
 ```
 
-The addon cannot depend on Flux or Argo CD only when you choose them, so install those first: with their own addons or
-however you run them. Every installer keeps the Helm release in the target namespace under the same name: `cert-manager`,
+The addon does not depend on Flux or Argo CD unless you choose them, so install the one you pick first: with its own
+addon or however you run it. Every installer keeps the Helm release in the target namespace under the same name: `cert-manager`,
 or `releaseName` if you set it.
 
 #### Switching installer
@@ -244,7 +245,9 @@ trait can point at it.
 ## The default issuer
 
 Most teams should not need to know which issuer the platform uses. A `certificate` trait without `issuerRef` uses the
-ClusterIssuer named `default`, so the platform team creates its default issuer under that name:
+ClusterIssuer named `default`, unless its namespace names another (see
+[A namespace chooses its issuer](#a-namespace-chooses-its-issuer)), so the platform team creates its default issuer
+under that name:
 
 ```yaml
 apiVersion: core.oam.dev/v1beta1
@@ -301,7 +304,7 @@ Setting `namespaceIssuers=false` later does not remove the policy. Delete it you
 ## Upgrading from 2.x
 
 Version 2.x installed cert-manager `v1.9.1` through the fluxcd addon, as a Flux `HelmRelease` whose Helm release is
-called `cert-manager-cert-manager`. 3.0.0 takes that release over and upgrades it in place to `v1.21.3`, so the CRDs,
+called `<namespace>-cert-manager`: `cert-manager-cert-manager`, unless you set its `namespace` parameter. 3.0.0 takes that release over and upgrades it in place to `v1.21.3`, so the CRDs,
 and every Issuer, Certificate and Secret in them, stay where they are throughout.
 
 Two things have to happen before the upgrade: the `HelmRelease` on every cluster 2.x deployed to is suspended, so that
@@ -318,16 +321,17 @@ Once it is `running`, upgrade the addon naming the release to take over, then de
 **Release Name** under the advanced install settings and choose **Upgrade**.
 
 ```shell
-vela addon upgrade cert-manager releaseName=cert-manager-cert-manager
+NS=cert-manager   # the 2.x namespace parameter, if you set one
+vela addon upgrade cert-manager releaseName=$NS-cert-manager
 kubectl delete -f https://raw.githubusercontent.com/kubevela/catalog/master/addons/cert-manager/upgrade/from-2.x.yaml
 ```
 
-The Application runs two Jobs, each as a ServiceAccount allowed only the objects it writes. First, on every cluster,
-`suspend` suspends the `cert-manager` HelmRelease, refusing one the addon did not create. Then, on the hub, `store`
-stores `releaseName` in the addon's parameters (the `addon-secret-cert-manager` Secret) and removes the 2.x ones,
-including the `dns01` API token. An addon enabled without parameters has none stored, so there is nothing to
-remove. It refuses an addon that is not 2.x, and running it again after the upgrade changes
-nothing. If a Job fails, its log says why:
+The Application runs two Jobs, each as a ServiceAccount allowed only the objects it writes. First, on the hub, `store`
+checks that `NAMESPACE` is the namespace 2.x installed into, then stores `releaseName` in the addon's parameters (the
+`addon-secret-cert-manager` Secret) and removes the 2.x ones, including the `dns01` API token. An addon enabled without
+parameters has none stored, so there is nothing to remove. It refuses an addon that is not 2.x, and running it again
+after the upgrade changes nothing. Then, on every cluster, `suspend` suspends the `cert-manager` HelmRelease, refusing
+one the addon did not create. If a Job fails, its log says why:
 
 ```shell
 kubectl -n vela-system logs job/cert-manager-upgrade-from-2x-suspend   # on the cluster it failed on
@@ -343,16 +347,18 @@ Download the file and edit it first if you set either 2.x parameter:
 
 ### Preparing by hand
 
-Without the Application, suspend the `HelmRelease` yourself, on every cluster 2.x deployed to:
+Without the Application, suspend the `HelmRelease` yourself, on every cluster 2.x deployed to (run it with `--context`
+for each one), in the namespace 2.x installed into:
 
 ```shell
-kubectl -n cert-manager patch helmrelease cert-manager --type=merge -p '{"spec":{"suspend":true}}'
+NS=cert-manager   # the 2.x namespace parameter, if you set one
+kubectl --context <context> -n $NS patch helmrelease cert-manager --type=merge -p '{"spec":{"suspend":true}}'
 ```
 
 Then upgrade, naming the release to take over:
 
 ```shell
-vela addon upgrade cert-manager releaseName=cert-manager-cert-manager
+vela addon upgrade cert-manager releaseName=$NS-cert-manager
 ```
 
 `vela addon upgrade` remembers `releaseName`, so you only pass it once.
@@ -387,10 +393,13 @@ The upgrade Application removes the 2.x parameters from the addon's stored param
 [jq](https://jqlang.org):
 
 ```shell
-kubectl -n vela-system patch secret addon-secret-cert-manager --type=merge -p "{\"data\":{\"addonParameterDataKey\":\"$(
-  kubectl -n vela-system get secret addon-secret-cert-manager -o jsonpath='{.data.addonParameterDataKey}' |
-    base64 -d | jq -c 'del(.dns01)' | base64 | tr -d '\n')\"}}"
+params=$(kubectl -n vela-system get secret addon-secret-cert-manager -o jsonpath='{.data.addonParameterDataKey}' |
+  base64 -d | jq -c 'del(.dns01)') && [ -n "$params" ] &&
+  kubectl -n vela-system patch secret addon-secret-cert-manager --type=merge \
+    -p "{\"data\":{\"addonParameterDataKey\":\"$(printf %s "$params" | base64 | tr -d '\n')\"}}"
 ```
+
+The patch runs only once the parameters are read and rewritten, so a failed read never empties them.
 
 ## Uninstall
 
