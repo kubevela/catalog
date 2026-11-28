@@ -8,11 +8,11 @@ require (
 	github.com/fatih/color v1.19.0
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/oam-dev/kubevela-core-api v1.7.8-0.20261009151243-363a484c3ea1
-	github.com/oam-dev/terraform-controller v0.8.1-0.20261007155713-6804e7b2e5b4
+	github.com/oam-dev/terraform-controller v0.9.1
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.43.0
+	github.com/onsi/gomega v1.44.0
 	github.com/pkg/errors v0.9.1
-	helm.sh/helm/v3 v3.22.0
+	helm.sh/helm/v3 v3.22.1
 	k8s.io/apimachinery v0.37.1
 	k8s.io/client-go v0.37.1
 	sigs.k8s.io/controller-runtime v0.25.2
