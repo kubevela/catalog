@@ -1,0 +1,28 @@
+# What hack/addon-values/sync.sh cannot work out for the chart values form. Each entry must
+# match a value, or the sync fails.
+#   words     a word inside any value's name: cainjector in cainjector.replicaCount
+#   titles    one value's title, by its path under values
+#   examples  one value's faded example, by its path under values
+words:
+  acmesolver: ACME solver
+  cainjector: CA injector
+  podmonitor: PodMonitor
+  servicemonitor: ServiceMonitor
+  startupapicheck: Startup API check
+examples:
+  clusterResourceNamespace: cert-manager
+  dns01RecursiveNameservers: 8.8.8.8:53,1.1.1.1:53
+  featureGates: ServerSideApply=true
+  fullnameOverride: cert-manager
+  nameOverride: cert-manager
+  http_proxy: http://proxy.example.com:3128
+  https_proxy: http://proxy.example.com:3128
+  no_proxy: 127.0.0.1,localhost,.svc,.cluster.local
+  namespace: cert-manager
+  runtimeClassName: gvisor
+  image.tag: v1.21.3
+  ingressShim.defaultIssuerName: letsencrypt
+  ingressShim.defaultIssuerKind: ClusterIssuer
+  ingressShim.defaultIssuerGroup: cert-manager.io
+  global.priorityClassName: system-cluster-critical
+  serviceAccount.name: cert-manager

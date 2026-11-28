@@ -1,0 +1,187 @@
+# Prepares a cert-manager addon 2.x install for 3.x. On the hub, checks NAMESPACE is the namespace 2.x installed
+# into, and stores the releaseName that 3.x takes over in the addon's parameters, dropping the 2.x ones (dns01 held
+# an API token); then, on every cluster 2.x deployed to, suspends the Flux HelmRelease it made, so Flux leaves the
+# release alone when the upgrade removes it.
+#
+#   kubectl apply -f from-2.x.yaml
+#   vela status cert-manager-upgrade-from-2x -n vela-system   # running once both Jobs have succeeded
+#   vela addon upgrade cert-manager releaseName=cert-manager-cert-manager   # <NAMESPACE>-cert-manager
+#   kubectl delete -f from-2.x.yaml
+#
+# Jobs do the writes, not the workflow: an Application's workflow takes ownership of what it writes, and these
+# objects belong to the addon. Each Job's permissions name the objects it writes and nothing else.
+#
+# If you set the 2.x namespace parameter, change cert-manager in NAMESPACE and in the Role and RoleBinding that live
+# in that namespace. If you set its clusters parameter, list the same clusters in the every-cluster policy.
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: cert-manager-upgrade-from-2x
+  namespace: vela-system
+spec:
+  components:
+    - name: suspend-access
+      type: k8s-objects
+      properties:
+        objects:
+          - apiVersion: v1
+            kind: ServiceAccount
+            metadata: {name: cert-manager-upgrade-from-2x, namespace: vela-system}
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: Role
+            metadata: {name: cert-manager-upgrade-from-2x, namespace: cert-manager}
+            rules:
+              - apiGroups: [helm.toolkit.fluxcd.io]
+                resources: [helmreleases]
+                resourceNames: [cert-manager]
+                verbs: [get, patch]
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: RoleBinding
+            metadata: {name: cert-manager-upgrade-from-2x, namespace: cert-manager}
+            roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: cert-manager-upgrade-from-2x}
+            subjects: [{kind: ServiceAccount, name: cert-manager-upgrade-from-2x, namespace: vela-system}]
+    - name: suspend
+      type: task
+      dependsOn: [suspend-access]
+      properties:
+        image: alpine/k8s:1.35.10
+        restart: Never
+        env:
+          - {name: NAMESPACE, value: cert-manager}
+        cmd:
+          - /bin/sh
+          - -c
+          - |
+            set -eu
+            fail() { echo "$*" >&2; exit 1; }
+            hr="helmreleases.helm.toolkit.fluxcd.io/cert-manager"
+            if ! kubectl -n "$NAMESPACE" get "$hr" -o json >/tmp/hr.json 2>/tmp/err; then
+              grep -q NotFound /tmp/err || fail "reading HelmRelease $NAMESPACE/cert-manager: $(cat /tmp/err)"
+              echo "Nothing to suspend: no HelmRelease cert-manager in namespace $NAMESPACE on this cluster"
+              exit 0
+            fi
+            owner=$(jq -r '.metadata.labels["app.oam.dev/name"] // ""' /tmp/hr.json)
+            [ "$owner" = addon-cert-manager ] ||
+              fail "HelmRelease $NAMESPACE/cert-manager was not made by the cert-manager addon (app.oam.dev/name is \"$owner\"): left alone"
+            kubectl -n "$NAMESPACE" patch "$hr" --type=merge -p '{"spec":{"suspend":true}}' >/dev/null
+            [ "$(kubectl -n "$NAMESPACE" get "$hr" -o jsonpath='{.spec.suspend}')" = true ] ||
+              fail "HelmRelease $NAMESPACE/cert-manager is not suspended after the patch"
+            echo "Suspended HelmRelease $NAMESPACE/cert-manager"
+      traits:
+        - type: service-account
+          properties: {name: cert-manager-upgrade-from-2x}
+    - name: store-access
+      type: k8s-objects
+      properties:
+        objects:
+          - apiVersion: v1
+            kind: ServiceAccount
+            metadata: {name: cert-manager-upgrade-from-2x-store, namespace: vela-system}
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: Role
+            metadata: {name: cert-manager-upgrade-from-2x-store, namespace: vela-system}
+            rules:
+              - apiGroups: [""]
+                resources: [secrets]
+                resourceNames: [addon-secret-cert-manager]
+                verbs: [get, patch]
+              - apiGroups: [core.oam.dev]
+                resources: [applications]
+                resourceNames: [addon-cert-manager]
+                verbs: [get]
+          - apiVersion: rbac.authorization.k8s.io/v1
+            kind: RoleBinding
+            metadata: {name: cert-manager-upgrade-from-2x-store, namespace: vela-system}
+            roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: cert-manager-upgrade-from-2x-store}
+            subjects: [{kind: ServiceAccount, name: cert-manager-upgrade-from-2x-store, namespace: vela-system}]
+    - name: store
+      type: task
+      dependsOn: [store-access]
+      properties:
+        image: alpine/k8s:1.35.10
+        restart: Never
+        env:
+          - {name: NAMESPACE, value: cert-manager}
+        cmd:
+          - /bin/sh
+          - -c
+          - |
+            set -eu
+            fail() { echo "$*" >&2; exit 1; }
+            secret="secret/addon-secret-cert-manager"
+            version=$(kubectl -n vela-system get applications.core.oam.dev/addon-cert-manager \
+              -o jsonpath='{.metadata.labels.addons\.oam\.dev/version}') || fail "no cert-manager addon in vela-system"
+            case $version in
+            2.*) ;;
+            *) fail "the cert-manager addon is $version, not 2.x: nothing to prepare" ;;
+            esac
+            if kubectl -n vela-system get "$secret" -o json >/tmp/secret.json 2>/tmp/err; then
+              # Parameters are JSON under addonParameterDataKey, or in a Secret from an older vela, one entry each.
+              params=$(jq -c '.data // {} | if has("addonParameterDataKey") then .addonParameterDataKey | @base64d | fromjson
+                else map_values(@base64d) end' /tmp/secret.json) || fail "reading the parameters in $secret"
+            else
+              grep -q NotFound /tmp/err || fail "reading $secret: $(cat /tmp/err)"
+              params=""
+            fi
+            installed=$(printf %s "${params:-null}" | jq -r '.namespace // "cert-manager"')
+            [ "$installed" = "$NAMESPACE" ] ||
+              fail "2.x installed cert-manager into $installed, not $NAMESPACE: set NAMESPACE, and the namespace of the Role and RoleBinding, to $installed in both places"
+            # 2.x set no releaseName, so Flux named the release <targetNamespace>-<name>.
+            release="$NAMESPACE-cert-manager"
+            if [ -z "$params" ]; then
+              # An addon enabled without parameters has no Secret, and this Job may not create one.
+              echo "No stored parameters to change. Once the Application is running, run: vela addon upgrade cert-manager releaseName=$release"
+              exit 0
+            fi
+            if [ -n "$(printf %s "$params" | jq -r '.releaseName // empty')" ]; then
+              echo "Nothing to store: releaseName is already set"
+              exit 0
+            fi
+            updated=$(printf %s "$params" |
+              jq -c --arg r "$release" 'del(.dns01, .staging, .installCRDs, .upgradeCRD) | .releaseName = $r') ||
+              fail "rewriting the parameters in $secret"
+            [ -n "$updated" ] || fail "rewriting the parameters in $secret gave nothing"
+            stored=$(printf %s "$updated" | base64 | tr -d '\n')
+            # Replacing all of data also drops an older Secret's one-entry-per-parameter form, dns01 token included.
+            kubectl -n vela-system patch "$secret" --type=json \
+              -p "[{\"op\":\"replace\",\"path\":\"/data\",\"value\":{\"addonParameterDataKey\":\"$stored\"}}]" >/dev/null
+            echo "Prepared: releaseName $release stored. Once the Application is running, after suspend, run: vela addon upgrade cert-manager releaseName=$release"
+      traits:
+        - type: service-account
+          properties: {name: cert-manager-upgrade-from-2x-store}
+  policies:
+    # Where 2.x deployed: every cluster, unless its clusters parameter named some.
+    - name: every-cluster
+      type: topology
+      properties:
+        clusterLabelSelector: {}
+    - name: hub
+      type: topology
+      properties:
+        clusters: [local]
+    - name: suspend-only
+      type: override
+      properties:
+        selector: [suspend-access, suspend]
+    - name: store-only
+      type: override
+      properties:
+        selector: [store-access, store]
+    # Deleting a Job orphans its pods unless told otherwise.
+    - name: clean-up
+      type: garbage-collect
+      properties:
+        rules:
+          - selector: {resourceTypes: [Job]}
+            propagation: cascading
+  workflow:
+    steps:
+      # Store checks NAMESPACE against the namespace 2.x installed into, so nothing is suspended in the wrong one.
+      - name: store
+        type: deploy
+        properties:
+          policies: [hub, store-only]
+      - name: suspend
+        type: deploy
+        properties:
+          policies: [every-cluster, suspend-only]
