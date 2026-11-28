@@ -2,7 +2,9 @@ package main
 
 import "list"
 
-_version: context.metadata.version
+// The VelaUX image tag. Pinned here rather than read from the addon version, so a
+// change to the addon alone can ship without a VelaUX release.
+_version: "v1.12.0-alpha.1"
 
 database: *[if parameter["database"] != _|_ {
 	"--datastore-database=" + parameter["database"]
