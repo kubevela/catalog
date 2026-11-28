@@ -58,3 +58,19 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  tag-releases:
+    # Tags each newly published addon version as release/<addon>/<version>, once the registry is live.
+    needs: build-and-publish
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Tag new addon versions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          hack/addon-release/tag.sh
