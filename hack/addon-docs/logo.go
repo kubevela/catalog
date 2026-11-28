@@ -4,19 +4,19 @@ import (
 	"bytes"
 	"image"
 	"image/color"
-	_ "image/gif"  // decodes GIF logos
-	_ "image/jpeg" // decodes JPEG logos
+	_ "image/gif" // decodes GIF logos
+	"image/jpeg"
 	"image/png"
 )
 
-// logoSize is the longest side of a raster logo on the site, which draws it at card and sidebar size.
-const logoSize = 256
+// logoSize is the longest side of a raster logo: the site draws logos at most 40px, so this is sharp at 3x.
+const logoSize = 128
 
 // maxLogoBytes is the largest logo the generator downloads.
 const maxLogoBytes = 4 << 20
 
-// shrinkLogo returns a raster logo as a PNG no larger than logoSize on its longest side, cropped to its centre
-// square first when square is set. Bytes that don't decode, or are already small and uncropped, come back as given.
+// shrinkLogo returns a raster logo no larger than logoSize on its longest side, cropped to its centre square first
+// when square is set: a JPEG when it is opaque, else a PNG. Bytes that don't decode, or are already small and uncropped, come back as given.
 func shrinkLogo(data []byte, kind string, square bool) ([]byte, string) {
 	src, _, err := image.Decode(bytes.NewReader(data))
 	if err != nil {
@@ -53,6 +53,12 @@ func shrinkLogo(data []byte, kind string, square bool) ([]byte, string) {
 		}
 	}
 	var out bytes.Buffer
+	if dst.Opaque() {
+		if err := jpeg.Encode(&out, dst, &jpeg.Options{Quality: 85}); err != nil {
+			return data, kind
+		}
+		return out.Bytes(), "jpg"
+	}
 	if err := png.Encode(&out, dst); err != nil {
 		return data, kind
 	}

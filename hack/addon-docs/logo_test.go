@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"image"
 	"image/color"
+	_ "image/jpeg"
 	"image/png"
 	"testing"
 )
@@ -32,8 +33,8 @@ func TestShrinkLogo(t *testing.T) {
 		}
 		return color.NRGBA{R: 255, A: 255}
 	}
-	size := func(data []byte) image.Image {
-		img, err := png.Decode(bytes.NewReader(data))
+	size := func(data []byte, _ string) image.Image {
+		img, _, err := image.Decode(bytes.NewReader(data))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -45,17 +46,18 @@ func TestShrinkLogo(t *testing.T) {
 		t.Errorf("a small logo should come back unchanged")
 	}
 
-	out, _ := shrinkLogo(encodePNG(t, 1000, 500, red), "png", false)
-	if b := size(out).Bounds(); b.Dx() != 256 || b.Dy() != 128 {
-		t.Errorf("1000x500 shrank to %dx%d, want 256x128", b.Dx(), b.Dy())
+	clear := func(int, int) color.Color { return color.NRGBA{R: 255, A: 128} }
+	out, kind := shrinkLogo(encodePNG(t, 1000, 500, clear), "png", false)
+	if b := size(out, kind).Bounds(); b.Dx() != 128 || b.Dy() != 64 || kind != "png" {
+		t.Errorf("translucent 1000x500 became a %dx%d %s, want a 128x64 png", b.Dx(), b.Dy(), kind)
 	}
 
-	out, _ = shrinkLogo(encodePNG(t, 1000, 400, banner), "png", true)
-	img := size(out)
-	if b := img.Bounds(); b.Dx() != 256 || b.Dy() != 256 {
-		t.Errorf("square crop of 1000x400 is %dx%d, want 256x256", b.Dx(), b.Dy())
+	out, kind = shrinkLogo(encodePNG(t, 1000, 400, banner), "png", true)
+	img := size(out, kind)
+	if b := img.Bounds(); b.Dx() != 128 || b.Dy() != 128 || kind != "jpg" {
+		t.Errorf("square crop of an opaque 1000x400 is a %dx%d %s, want a 128x128 jpg", b.Dx(), b.Dy(), kind)
 	}
-	if r, _, bl, _ := img.At(0, 128).RGBA(); r == 0 || bl != 0 {
+	if r, _, bl, _ := img.At(2, 64).RGBA(); r < 0xc000 || bl > 0x4000 {
 		t.Errorf("square crop should keep the banner's centre, got left edge r=%d b=%d", r, bl)
 	}
 
