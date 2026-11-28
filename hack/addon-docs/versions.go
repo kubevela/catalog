@@ -44,6 +44,9 @@ func (o Overrides) check() error {
 		if a.Category != "" && !known[a.Category] {
 			return fmt.Errorf("overrides.yaml: %s: category %q isn't one of categories", name, a.Category)
 		}
+		if a.LogoCrop != "" && a.LogoCrop != "square" {
+			return fmt.Errorf("overrides.yaml: %s: logoCrop %q isn't square", name, a.LogoCrop)
+		}
 	}
 	return nil
 }

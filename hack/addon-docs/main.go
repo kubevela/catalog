@@ -298,7 +298,10 @@ func fetchLogo(url, dir, name string, square bool) string {
 		return ""
 	}
 	if kind != "svg" {
-		data, kind = shrinkLogo(data, kind, square)
+		if data, kind, err = shrinkLogo(data, kind, square); err != nil {
+			fmt.Fprintf(os.Stderr, "%s: no logo, %s: %v\n", name, redact(url), err)
+			return ""
+		}
 	}
 	file := "logo." + kind
 	if err := writeFile(filepath.Join(dir, file), data); err != nil {
