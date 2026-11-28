@@ -1,7 +1,8 @@
 # Each addon's category, and a logo where its metadata.yaml has none or a stale one, until metadata.yaml carries
 # them. A logo here wins over the metadata's icon: CNCF artwork, or the project's GitHub organisation avatar, which
-# the project keeps current. An addon's category must be one of `categories`; the site lists KubeVela first, then the
-# rest by name, and an addon with none under Other.
+# the project keeps current; `logoCrop: square` takes the centre square of a project's banner. An addon's category
+# must be one of `categories`; the site lists KubeVela first, then the rest by name, and an addon with none under
+# Other.
 categories:
   - KubeVela
   - Delivery and GitOps
@@ -284,6 +285,8 @@ addons:
     logo: https://github.com/vectordotdev.png?size=200
   vegeta:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/tsenart/vegeta/master/assets/hero.png
+    logoCrop: square
   vela-core-shard-manager:
     category: KubeVela
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg

@@ -24,6 +24,8 @@ type Config struct {
 type Override struct {
 	Category string `json:"category"`
 	Logo     string `json:"logo"`
+	// LogoCrop "square" crops a raster logo to its centre square, for a project whose only image is a banner.
+	LogoCrop string `json:"logoCrop"`
 }
 
 // Overrides is overrides.yaml.
