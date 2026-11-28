@@ -76,6 +76,10 @@ jobs:
           hack/addon-release/tag.sh
 
   docs:
+    # One publish at a time, oldest first, so an older run never overwrites newer pages.
+    concurrency:
+      group: addon-docs-publish
+      cancel-in-progress: false
     # Generates the addon pages for the KubeVela docs site from every published version, once the new ones are
     # tagged, pushes them to the docs-site branch and asks the site to rebuild.
     needs: tag-releases

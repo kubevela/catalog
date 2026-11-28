@@ -32,7 +32,8 @@ To see the result on the site, build kubevela.github.io with `ADDON_CATALOG_DIR=
 | What the pages look like | `render.go`; then `UPDATE_GOLDEN=1 go test ./...` and review the goldens' diff |
 
 An addon's `docs/_intro.md` joins its overview; `docs/index.md` is its guide; any other `docs/*.md` is a page of its
-own. Links in `docs/` must be absolute site paths (`/docs/...`, `/addons/...`), which `hack/addon-check/check.sh` checks.
+own; a docs page can't share a name with a generated one (`parameters.md`, `versions.md`). Links in `docs/` should be
+absolute site paths (`/docs/...`, `/addons/...`); they're published as written.
 
 ## Tests
 

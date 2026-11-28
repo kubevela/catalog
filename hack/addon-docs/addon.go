@@ -11,7 +11,10 @@ import (
 	"strings"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/ast"
 	"cuelang.org/go/cue/cuecontext"
+	"cuelang.org/go/cue/format"
+	"cuelang.org/go/cue/token"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 
@@ -38,11 +41,13 @@ type Metadata struct {
 	} `json:"system"`
 }
 
-// readMetadata parses metadata.yaml leniently: an addon with a field this tool doesn't know still gets its pages.
-func readMetadata(data []byte) Metadata {
+// readMetadata parses metadata.yaml. A field this tool doesn't know is fine; YAML that doesn't parse is an error.
+func readMetadata(data []byte) (Metadata, error) {
 	var m Metadata
-	_ = yaml.Unmarshal(data, &m)
-	return m
+	if err := yaml.Unmarshal(data, &m); err != nil {
+		return m, fmt.Errorf("metadata.yaml: %w", err)
+	}
+	return m, nil
 }
 
 // Field is a parameter of an addon or a definition, with the fields nested in it.
@@ -86,7 +91,9 @@ func LoadAddon(dir string) (*Addon, error) {
 	if err != nil {
 		return nil, err
 	}
-	a.Meta = readMetadata(meta)
+	if a.Meta, err = readMetadata(meta); err != nil {
+		return nil, err
+	}
 
 	if src, err := os.ReadFile(filepath.Join(dir, "parameter.cue")); err == nil { // #nosec G304
 		// Compiled as pkg/addon compiles it, with a plain CUE context.
@@ -188,16 +195,60 @@ func fields(v cue.Value) []*Field {
 				f.Hidden = true
 			}
 		}
-		if d, ok := val.Default(); ok && d.IsConcrete() {
-			if s := scalar(d); s != "" {
-				f.Default = s
-				f.Required = false
+		// Any default makes a field optional. A scalar one is printed; one that depends on the context
+		// ("\(context.name)-tls") is printed as written.
+		if d, ok := val.Default(); ok {
+			f.Required = false
+			if d.IsConcrete() {
+				f.Default = scalar(d)
 			}
+		} else if expr, ok := markedDefault(val); ok {
+			f.Required = false
+			f.Default = expr
 		}
 		f.Type, f.Children, f.List = typeOf(val)
 		out = append(out, f)
 	}
 	return out
+}
+
+// markedDefault finds a default CUE can't evaluate on its own, because it reads the context, from the * that
+// marks it in the field's syntax.
+func markedDefault(v cue.Value) (string, bool) {
+	var find func(n ast.Expr) (string, bool)
+	find = func(n ast.Expr) (string, bool) {
+		switch e := n.(type) {
+		case *ast.BinaryExpr:
+			if e.Op != token.OR {
+				return "", false
+			}
+			if s, ok := find(e.X); ok {
+				return s, true
+			}
+			return find(e.Y)
+		case *ast.UnaryExpr:
+			if e.Op != token.MUL {
+				return "", false
+			}
+			b, err := format.Node(e.X)
+			if err != nil {
+				return "", false
+			}
+			s := string(b)
+			if u, err := strconv.Unquote(s); err == nil {
+				return u, true
+			}
+			return strings.Trim(s, `"`), true
+		case *ast.ParenExpr:
+			return find(e.X)
+		}
+		return "", false
+	}
+	expr, ok := v.Syntax(cue.Raw()).(ast.Expr)
+	if !ok {
+		return "", false
+	}
+	return find(expr)
 }
 
 // label is a field's name without CUE's optional or required marker and quotes.

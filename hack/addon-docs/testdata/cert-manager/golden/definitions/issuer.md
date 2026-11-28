@@ -23,7 +23,7 @@ A cert-manager issuer: an ACME account (Let's Encrypt by default), a self-signed
 
 <div className="addon-param"><div className="addon-param-head"><code>server</code> <span className="addon-param-type">string</span> <span className="addon-param-default">default <code>production</code></span></div><div className="addon-param-desc">Production or staging for Let's Encrypt, or the directory URL of another ACME server</div></div>
 <div className="addon-param"><div className="addon-param-head"><code>email</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc">Email for the ACME account, which the server uses for expiry notices</div></div>
-<div className="addon-param"><div className="addon-param-head"><code>privateKeySecretName</code> <span className="addon-param-type">string</span> <span className="addon-param-default">default <code>&lt;name&gt;-account-key</code></span></div><div className="addon-param-desc">Secret the ACME account's private key is stored in</div></div>
+<div className="addon-param"><div className="addon-param-head"><code>privateKeySecretName</code> <span className="addon-param-type">string</span> <span className="addon-param-default">default <code>&lt;name&gt;-account-key</code></span></div><div className="addon-param-desc">Secret the ACME account's private key is stored in.</div></div>
 
 <details>
 <summary><code>http01</code> (3) Solve HTTP-01 challenges through an ingress class or a Gateway</summary>

@@ -34,6 +34,8 @@ upstream=$(go mod download -json "$module@$latest" | sed -n 's/.*"GoMod": "\(.*\
 # release, and the release's replace block (its comments included). go mod tidy resolves the rest from KubeVela's own
 # requirements.
 goversion=$(sed -n 's/^go //p' go.mod)
+replaces=$(sed -n '/^replace (/,/^)/p' "$upstream")
+[ -n "$replaces" ] || { echo "pin-kubevela.sh: $module@$latest's go.mod has no replace block; check what it needs" >&2; exit 1; }
 {
   echo "module github.com/kubevela/catalog/hack/addon-docs"
   echo
@@ -42,7 +44,7 @@ goversion=$(sed -n 's/^go //p' go.mod)
   echo "// Set by pin-kubevela.sh: KubeVela's newest release, and its replace block."
   echo "require $module $latest"
   echo
-  sed -n '/^replace (/,/^)/p' "$upstream"
+  printf '%s\n' "$replaces"
 } > go.mod
 rm -f go.sum
 go mod tidy

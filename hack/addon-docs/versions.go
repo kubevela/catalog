@@ -149,18 +149,33 @@ func Releases(repo, name string) ([]*Release, error) {
 		if r.Path == "" {
 			return nil, fmt.Errorf("%s: %s holds no addons/%s or experimental/addons/%s", name, r.Tag, name, name)
 		}
-		if meta, err := git(repo, "show", r.Tag+":"+r.Path+"/metadata.yaml"); err == nil {
-			r.Vela = readMetadata([]byte(meta)).System.Vela
+		meta, err := git(repo, "show", r.Tag+":"+r.Path+"/metadata.yaml")
+		if err != nil {
+			return nil, err
 		}
+		m, err := readMetadata([]byte(meta))
+		if err != nil {
+			return nil, fmt.Errorf("%s: %w", r.Tag, err)
+		}
+		r.Vela = m.System.Vela
 		rels = append(rels, r)
 	}
 	sort.Slice(rels, func(i, j int) bool { return semverLess(rels[j].Version, rels[i].Version) })
 	return rels, nil
 }
 
-// semverLess orders versions by their numeric parts, a pre-release before its release.
+var numericCore = regexp.MustCompile(`^\d+(\.\d+)*$`)
+
+// semverLess orders versions by their numeric parts, a pre-release before its release. A version whose core isn't
+// numeric (v1beta2-1.3.8-3.1.1) sorts before every numeric one, and by its text among its kind.
 func semverLess(a, b string) bool {
 	pa, pb := strings.SplitN(a, "-", 2), strings.SplitN(b, "-", 2)
+	if na, nb := numericCore.MatchString(pa[0]), numericCore.MatchString(pb[0]); na != nb || !na {
+		if na != nb {
+			return nb
+		}
+		return a < b
+	}
 	na, nb := strings.Split(pa[0], "."), strings.Split(pb[0], ".")
 	for i := 0; i < len(na) || i < len(nb); i++ {
 		var x, y int
@@ -196,7 +211,9 @@ func Classify(cfg Config, rels []*Release, today string) []*Release {
 	for m, d := range cfg.Minors {
 		released[m] = d
 	}
-	released[cfg.Current] = today
+	if _, ok := released[cfg.Current]; !ok || !cfg.CurrentReleased {
+		released[cfg.Current] = today // unreleased, it counts as out today
+	}
 	var all []string
 	for m := range released {
 		all = append(all, m)

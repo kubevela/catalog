@@ -111,7 +111,10 @@ func TestGolden(t *testing.T) {
 				}
 			}
 			p := Page{Name: name, Release: rel, History: []*Release{rel}, Latest: true, Config: cfg, Category: "Test"}
-			got := Render(a, p)
+			got, err := Render(a, p)
+			if err != nil {
+				t.Fatal(err)
+			}
 			data, err := VersionsJSON(a, p, map[string][]string{rel.Version: PageKeys(got)})
 			if err != nil {
 				t.Fatal(err)

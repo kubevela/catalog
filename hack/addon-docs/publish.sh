@@ -33,6 +33,8 @@ git -C "$out/site" add -A
 git -C "$out/site" -c user.name="${GIT_AUTHOR_NAME:-github-actions[bot]}" \
   -c user.email="${GIT_AUTHOR_EMAIL:-41898282+github-actions[bot]@users.noreply.github.com}" \
   commit -q -m "Addon docs from $(git -C "$root" rev-parse --short HEAD)"
-url=$(git -C "$root" remote get-url "$remote")
-git -C "$out/site" push -q --force "$url" "HEAD:refs/heads/${branch}"
-echo "publish.sh: pushed $(git -C "$out/site" rev-parse --short HEAD) to ${branch}"
+commit=$(git -C "$out/site" rev-parse HEAD)
+# Pushed from the catalog's own checkout, which holds the credentials (actions/checkout keeps them in its config).
+git -C "$root" fetch -q "$out/site" "$commit"
+git -C "$root" push -q --force "$remote" "${commit}:refs/heads/${branch}"
+echo "publish.sh: pushed $(git -C "$root" rev-parse --short "$commit") to ${branch}"

@@ -15,8 +15,8 @@ Issues a TLS certificate for the component with cert-manager, into a Secret its 
 
 ## Parameters
 
-<div className="addon-param"><div className="addon-param-head"><code>dnsNames</code> <span className="addon-param-type">&#91;&#93;string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc">Host names the certificate covers</div></div>
-<div className="addon-param"><div className="addon-param-head"><code>secretName</code> <span className="addon-param-type">string</span> <span className="addon-param-req">required</span></div><div className="addon-param-desc">Secret the certificate and key are written to</div></div>
+<div className="addon-param"><div className="addon-param-head"><code>dnsNames</code> <span className="addon-param-type">&#91;&#93;string</span></div><div className="addon-param-desc">Host names the certificate covers</div></div>
+<div className="addon-param"><div className="addon-param-head"><code>secretName</code> <span className="addon-param-type">string</span> <span className="addon-param-default">default <code>\(context.name)-tls</code></span></div><div className="addon-param-desc">Secret the certificate and key are written to</div></div>
 <div className="addon-param"><div className="addon-param-head"><code>duration</code> <span className="addon-param-type">string</span></div><div className="addon-param-desc">Lifetime to request, e.g. 2160h. The issuer may grant less</div></div>
 <div className="addon-param"><div className="addon-param-head"><code>renewBefore</code> <span className="addon-param-type">string</span></div><div className="addon-param-desc">How long before expiry to renew, e.g. 360h</div></div>
 

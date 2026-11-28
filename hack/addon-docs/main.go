@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	neturl "net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -33,6 +34,10 @@ func main() {
 	strict := flag.Bool("strict", false, "exit non-zero when any addon fails, rather than leaving it out")
 	jobs := flag.Int("jobs", 6, "addons rendered at once")
 	flag.Parse()
+	if err := checkJobs(*jobs); err != nil {
+		fmt.Fprintln(os.Stderr, "addon-docs:", err)
+		os.Exit(2)
+	}
 	if *out == "" {
 		fmt.Fprintln(os.Stderr, "addon-docs: -out is required")
 		os.Exit(2)
@@ -100,6 +105,13 @@ func main() {
 	}
 }
 
+func checkJobs(n int) error {
+	if n < 1 {
+		return fmt.Errorf("-jobs is %d; it must be at least 1", n)
+	}
+	return nil
+}
+
 // offline keeps the tool off any cluster: kubevela's CUE compiler would otherwise read external packages from
 // whatever cluster the kubeconfig names, and its client singletons exit the process without a kubeconfig at all.
 func offline() error {
@@ -141,8 +153,8 @@ func (g *generator) addon(name string) (int, error) {
 		return 0, err
 	}
 	Classify(g.cfg, rels, g.today)
-	dir := filepath.Join(g.out, name)
-	if err := os.RemoveAll(dir); err != nil {
+	final := filepath.Join(g.out, name)
+	if err := os.RemoveAll(final); err != nil {
 		return 0, err
 	}
 	work, err := os.MkdirTemp("", "addon-docs-"+name+"-")
@@ -150,6 +162,16 @@ func (g *generator) addon(name string) (int, error) {
 		return 0, err
 	}
 	defer os.RemoveAll(work) // nolint:errcheck
+	// The pages are written beside the output and moved into place only once all of them are, so an addon that
+	// fails part way leaves nothing to publish.
+	if err := os.MkdirAll(g.out, 0o750); err != nil {
+		return 0, err
+	}
+	dir, err := os.MkdirTemp(g.out, "."+name+"-")
+	if err != nil {
+		return 0, err
+	}
+	defer os.RemoveAll(dir) // nolint:errcheck
 
 	ov := g.ov.Addons[name]
 	pages := map[string][]string{}
@@ -183,7 +205,10 @@ func (g *generator) addon(name string) (int, error) {
 		} else {
 			target = filepath.Join(dir, r.Version)
 		}
-		rendered := Render(a, p)
+		rendered, err := Render(a, p)
+		if err != nil {
+			return n, fmt.Errorf("%s: %w", r.Version, err)
+		}
 		for path, body := range rendered {
 			if err := writeFile(filepath.Join(target, path), []byte(body)); err != nil {
 				return n, err
@@ -200,7 +225,10 @@ func (g *generator) addon(name string) (int, error) {
 	if err != nil {
 		return n, err
 	}
-	return n + 1, writeFile(filepath.Join(dir, "versions.json"), data)
+	if err := writeFile(filepath.Join(dir, "versions.json"), data); err != nil {
+		return n, err
+	}
+	return n + 1, os.Rename(dir, final)
 }
 
 // extract checks the addon out of its release tag into dir and returns the addon's directory.
@@ -258,14 +286,14 @@ func fetchLogo(url, dir, name string) string {
 	req.Header.Set("User-Agent", "kubevela-addon-docs")
 	resp, err := (&http.Client{Timeout: 15 * time.Second}).Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %v\n", name, url, err)
+		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %v\n", name, redact(url), err)
 		return ""
 	}
 	defer resp.Body.Close() // nolint:errcheck
 	data, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20+1))
 	kind := imageKind(data)
 	if err != nil || resp.StatusCode != http.StatusOK || len(data) > 1<<20 || kind == "" {
-		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %s, not an image under 1 MB\n", name, url, resp.Status)
+		fmt.Fprintf(os.Stderr, "%s: no logo, %s: %s, not an image under 1 MB\n", name, redact(url), resp.Status)
 		return ""
 	}
 	file := "logo." + kind
@@ -273,6 +301,15 @@ func fetchLogo(url, dir, name string) string {
 		return ""
 	}
 	return file
+}
+
+// redact is a URL fit for a log: its host and path, without credentials, query or fragment.
+func redact(raw string) string {
+	u, err := neturl.Parse(raw)
+	if err != nil {
+		return "(a URL that doesn't parse)"
+	}
+	return u.Scheme + "://" + u.Host + u.Path
 }
 
 // imageKind is the image format of the bytes by their signature, or "" when they aren't an image: a URL to a web

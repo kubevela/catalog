@@ -42,7 +42,7 @@ func capitalise(s string) string {
 }
 
 // Render writes one version of an addon's pages, keyed by path under the addon's directory on the site.
-func Render(a *Addon, p Page) map[string]string {
+func Render(a *Addon, p Page) (map[string]string, error) {
 	out := map[string]string{}
 	out["index.md"] = overview(a, p)
 	if a.HasParams {
@@ -51,11 +51,18 @@ func Render(a *Addon, p Page) map[string]string {
 	for _, d := range a.Definitions {
 		out["definitions/"+d.File+".md"] = definitionPage(a, p, d)
 	}
-	for name, body := range guides(a, p) {
-		out[name] = body
-	}
 	if p.Latest {
 		out["versions.md"] = versionsPage(p)
+	}
+	gs, err := guides(a, p)
+	if err != nil {
+		return nil, err
+	}
+	for name, body := range gs {
+		if _, taken := out[name]; taken || name == "versions.md" {
+			return nil, fmt.Errorf("docs/%s: the generated %s page has that name; rename it", name, name)
+		}
+		out[name] = body
 	}
 	for path, s := range out {
 		if path == "guide.md" && a.Readme != "" && len(a.Docs) == 0 {
@@ -63,7 +70,7 @@ func Render(a *Addon, p Page) map[string]string {
 		}
 		out[path] = withPicker(s, p, strings.TrimSuffix(strings.TrimSuffix(path, ".md"), "index"))
 	}
-	return out
+	return out, nil
 }
 
 const experimentalNote = ":::caution Experimental\nThis addon is in the catalog's experimental registry: enable it with " +
@@ -232,7 +239,8 @@ func visible(fs []*Field) []*Field {
 	return out
 }
 
-var defaultInUsage = regexp.MustCompile(`(?i)[.,]?\s*(?:Default:|defaults? to)\s*(.+?)\.?$`)
+// defaultInUsage is a default stated in the usage's last sentence; a dot inside it (a version, a host) doesn't end it.
+var defaultInUsage = regexp.MustCompile(`(?i)[,]?\s*(?:Default:|defaults? to)\s*((?:[^.]|\.\S)+?)\.?$`)
 
 var typeEscaper = strings.NewReplacer("<", "&lt;", ">", "&gt;", "{", "&#123;", "}", "&#125;", "[", "&#91;", "]", "&#93;",
 	"~", "&#126;", "*", "&#42;", "_", "&#95;")
@@ -309,7 +317,7 @@ func countLeaves(fs []*Field) int {
 
 // guides are the addon's hand-written pages: each docs/*.md but _intro.md, with docs/index.md as the guide; an
 // addon without docs/ has its README as the guide.
-func guides(a *Addon, p Page) map[string]string {
+func guides(a *Addon, p Page) (map[string]string, error) {
 	out := map[string]string{}
 	sidebar := ""
 	if p.offSidebar() {
@@ -317,12 +325,17 @@ func guides(a *Addon, p Page) map[string]string {
 	}
 	if len(a.Docs) == 0 {
 		if a.Readme == "" {
-			return out
+			return out, nil
 		}
 		body := regexp.MustCompile(`^\s*#\s+[^\n]*\n`).ReplaceAllString(a.Readme, "")
 		out["guide.md"] = fmt.Sprintf("---\ntitle: Guide\nsidebar_position: 20\n%s---\n\n<!-- The addon's README at %s. -->\n\n%s\n",
 			sidebar, p.Release.Tag, mdxSafe(absolute(strings.TrimSpace(body), p)))
-		return out
+		return out, nil
+	}
+	if _, ok := a.Docs["index.md"]; ok {
+		if _, clash := a.Docs["guide.md"]; clash {
+			return nil, fmt.Errorf("docs/index.md and docs/guide.md are both the guide; keep one")
+		}
 	}
 	for name, src := range a.Docs {
 		if name == "_intro.md" {
@@ -343,7 +356,7 @@ func guides(a *Addon, p Page) map[string]string {
 		out[page] = fmt.Sprintf("---\n%s---\n\n<!-- From docs/%s in kubevela/catalog at %s. Edit it there. -->\n%s",
 			fm, name, p.Release.Tag, body)
 	}
-	return out
+	return out, nil
 }
 
 func guideLinks(a *Addon) []string {
