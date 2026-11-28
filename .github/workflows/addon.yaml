@@ -57,7 +57,7 @@ jobs:
           path: docs/
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   tag-releases:
     # Tags each newly published addon version as release/<addon>/<version>, once the registry is live.
