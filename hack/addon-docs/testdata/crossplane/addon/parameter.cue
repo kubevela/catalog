@@ -299,7 +299,7 @@ chartInstall: *true | bool
 // +ui:section=Install
 // +ui:label=Install With
 installWith: *"vela" | "flux" | "argo"
-// +usage=Helm release to install or take over, if not the addon's own name. Upgrading from an addon that installed through the fluxcd addon, name its release as the addon's namespace and name joined by a hyphen, e.g. cert-manager-cert-manager
+// +usage=Helm release to install or take over, if not the addon's own name. Upgrading from an addon that installed through the fluxcd addon, name its release <namespace>-<addon name>, such as cert-manager-cert-manager for cert-manager in its default namespace
 // +ui:advanced
 // +ui:section=Install
 // +ui:label=Release Name
