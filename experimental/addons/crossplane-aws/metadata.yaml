@@ -1,7 +1,7 @@
 name: crossplane-aws
-version: 0.0.1
+version: 0.0.2
 description: AWS Provider for Crossplane
-icon: https://static.kubevela.net/images/logos/aws.png
+icon: https://raw.githubusercontent.com/kubevela/velaux/main/packages/velaux-ui/src/assets/aws.svg
 url: https://crossplane.io/
 
 tags:

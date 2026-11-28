@@ -1,7 +1,7 @@
 name: sae-apiserver-proxy
-version: v0.1.0
+version: v0.1.1
 description: sae-apiserver-proxy is a proxy server that implements the Kubernetes aggregated APIServer and provide proxy access to SAE APIServer.
-icon: "https://static.kubevela.net/images/logos/KubeVela%20-03.png"
+icon: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.png
 url: "https://github.com/kubevela-contrib/sae-apiserver-proxy"
 
 tags:

@@ -3,7 +3,7 @@ output: {
 	properties: {
 		chart:      "traefik"
 		version:    "10.19.4"
-		url:        "https://charts.kubevela.net/community"
+		url:        "https://traefik.github.io/charts"
 		repoType:   "helm"
 		upgradeCRD: parameter.upgradeCRD
 		values: {

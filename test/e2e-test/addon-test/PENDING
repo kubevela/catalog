@@ -8,9 +8,6 @@ vela-core-shard-manager
 grafana
 loki
 prometheus-server
-# rollout and traefik both pull charts from charts.kubevela.net/{core,community},
-# whose SSL certificate has expired. Fluxcd source-controller correctly refuses
-# the fetch. Re-enable once the upstream KubeVela chart-host certificate is
-# renewed (or the charts are republished to a working registry).
+# rollout pulls the vela-rollout chart from charts.kubevela.net/core, which no
+# longer resolves, and the chart is not published anywhere else.
 rollout
-traefik
