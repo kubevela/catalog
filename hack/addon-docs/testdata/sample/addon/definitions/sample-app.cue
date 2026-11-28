@@ -13,7 +13,7 @@ template: {
 	output: {
 		apiVersion: "apps/v1"
 		kind:       "Deployment"
-		metadata: name: parameter.secretName
+		metadata: name: context.name
 		spec: replicas: parameter.replicas
 	}
 	parameter: {

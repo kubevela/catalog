@@ -245,7 +245,7 @@ var defaultInUsage = regexp.MustCompile(`(?i)[,]?\s*(?:Default:|defaults? to)\s*
 var typeEscaper = strings.NewReplacer("<", "&lt;", ">", "&gt;", "{", "&#123;", "}", "&#125;", "[", "&#91;", "]", "&#93;",
 	"~", "&#126;", "*", "&#42;", "_", "&#95;")
 
-const lockIcon = ` <span className="addon-param-lock" tabIndex="0" data-tip="Immutable: set it when the component is ` +
+const lockIcon = ` <span className="addon-param-lock" role="img" tabIndex="0" data-tip="Immutable: set it when the component is ` +
 	`first deployed. KubeVela refuses an update that changes it, unless the Application has the annotation ` +
 	`app.oam.dev/force-param-mutations: &quot;true&quot;." aria-label="Immutable"><svg viewBox="0 0 24 24" ` +
 	`width="14" height="14" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" ` +
