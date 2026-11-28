@@ -31,6 +31,8 @@ import (
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
 	"sigs.k8s.io/yaml"
+
+	"github.com/oam-dev/catalog/hack/addons/registry"
 )
 
 type Metadata struct {
@@ -83,6 +85,19 @@ func main() {
 				fmt.Println(err)
 			}
 		}
+	}
+
+	// An addon deleted from the catalog leaves the registry too: its entries are
+	// dropped here, before their packages would be fetched and published again.
+	// If the catalog cannot be read reliably, stop: publishing would drop the
+	// addons that could not be read.
+	present, err := registry.Present(dir)
+	if err != nil {
+		fmt.Println("cannot tell which addons the catalog holds, not publishing:", err)
+		os.Exit(1)
+	}
+	for _, name := range registry.Prune(originIndex, present) {
+		fmt.Println("no longer in the catalog, removed from the registry:", name)
 	}
 
 	for chartName, entry := range originIndex.Entries {
