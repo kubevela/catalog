@@ -179,7 +179,11 @@ func TestFields(t *testing.T) {
 		name?: string
 	}]
 	#Helper: {x: int}
-}`).LookupPath(cue.ParsePath("parameter"))
+}`)
+	if v.Err() != nil {
+		t.Fatal(v.Err())
+	}
+	v = v.LookupPath(cue.ParsePath("parameter"))
 	got := map[string]Field{}
 	for _, f := range fields(v) {
 		g := *f

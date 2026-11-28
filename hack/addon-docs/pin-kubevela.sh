@@ -14,7 +14,7 @@ check=false
 [ "${1:-}" = "--check" ] && check=true
 
 latest=$(git ls-remote --tags --refs https://github.com/kubevela/kubevela.git 'v*' |
-  sed 's#.*refs/tags/##' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+  sed 's#.*refs/tags/##' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)
 [ -n "$latest" ] || { echo "pin-kubevela.sh: no release tags found in kubevela/kubevela" >&2; exit 1; }
 current=$(go list -m -f '{{.Version}}' "$module")
 

@@ -148,3 +148,12 @@ func TestRedactURL(t *testing.T) {
 		t.Errorf("redact kept credentials or the query: %s", got)
 	}
 }
+
+func TestPageKey(t *testing.T) {
+	for path, want := range map[string]string{"index.md": "", "reindex.md": "reindex", "definitions/helm.md": "definitions/helm",
+		"parameters.md": "parameters"} {
+		if got := pageKey(path); got != want {
+			t.Errorf("pageKey(%q) = %q, want %q", path, got, want)
+		}
+	}
+}

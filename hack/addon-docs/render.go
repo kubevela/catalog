@@ -68,7 +68,7 @@ func Render(a *Addon, p Page) (map[string]string, error) {
 		if path == "guide.md" && a.Readme != "" && len(a.Docs) == 0 {
 			continue // the README is plain markdown, which the picker's MDX import would break
 		}
-		out[path] = withPicker(s, p, strings.TrimSuffix(strings.TrimSuffix(path, ".md"), "index"))
+		out[path] = withPicker(s, p, pageKey(path))
 	}
 	return out, nil
 }
@@ -164,7 +164,7 @@ func overview(a *Addon, p Page) string {
 func issueLink(text string, a *Addon, p Page, label, ask, prompt string) string {
 	body := fmt.Sprintf("**Addon:** %s %s\n\n### %s\n\n<!-- %s -->\n\n### Environment\n\n"+
 		"- KubeVela version:\n- Kubernetes version:\n", p.Name, p.Release.Version, ask, prompt)
-	q := url.Values{"title": {"[" + p.Name + "] "}, "body": {body}, "labels": {label}}
+	q := url.Values{"title": {"[" + p.Name + " " + p.Release.Version + "] "}, "body": {body}, "labels": {label}}
 	return fmt.Sprintf("[%s](https://github.com/kubevela/catalog/issues/new?%s)", text, q.Encode())
 }
 
@@ -540,7 +540,7 @@ func PageKeys(rendered map[string]string) []string {
 		if path == "guide.md" {
 			continue
 		}
-		keys = append(keys, strings.TrimSuffix(strings.TrimSuffix(strings.TrimSuffix(path, ".md"), "index"), "/"))
+		keys = append(keys, pageKey(path))
 	}
 	sort.Strings(keys)
 	return keys
@@ -558,4 +558,13 @@ func (l lines) String() string {
 		}
 	}
 	return strings.Join(keep, "\n") + "\n"
+}
+
+// pageKey is a page's path as the version picker names it: without .md, and "" for the overview.
+func pageKey(path string) string {
+	key := strings.TrimSuffix(path, ".md")
+	if key == "index" {
+		return ""
+	}
+	return key
 }
