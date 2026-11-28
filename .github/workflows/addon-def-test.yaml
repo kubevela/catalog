@@ -1,0 +1,50 @@
+name: Addon-def-test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # vela def test and the addon test helpers (test.#AddonRender and the rest) arrived in 1.12.
+  VELA_VERSION: v1.12.0-alpha.3
+
+jobs:
+  Addon-def-test:
+    name: Addon-def-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install vela cli
+        env:
+          # The release tarball's sha256, from the release's sha256sums.txt; change it with VELA_VERSION.
+          VELA_SHA256: 08cfbd49cf281a04f1b91123807bd01a711868651c8273bec57d690c1ce076e9
+        run: |
+          curl -fsSL -o /tmp/vela.tar.gz \
+            "https://github.com/kubevela/kubevela/releases/download/${VELA_VERSION}/vela-${VELA_VERSION}-linux-amd64.tar.gz"
+          echo "${VELA_SHA256}  /tmp/vela.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/vela.tar.gz -C /tmp linux-amd64/vela
+          sudo install /tmp/linux-amd64/vela /usr/local/bin/vela
+
+      - name: Test the changed addons
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          # A run by hand, or a push with no earlier commit to compare, tests every addon.
+          if [ "$EVENT" = workflow_dispatch ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            hack/addon-test/def-test.sh --all
+          else
+            # Written to a file first, so a failed diff fails the step.
+            git diff --name-only "$BASE" HEAD >"$RUNNER_TEMP/changed.txt"
+            hack/addon-test/def-test.sh <"$RUNNER_TEMP/changed.txt"
+          fi
