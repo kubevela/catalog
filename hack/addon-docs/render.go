@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"regexp"
 	"sort"
 	"strings"
@@ -145,7 +146,19 @@ func overview(a *Addon, p Page) string {
 	n := len(p.History)
 	b.add(fmt.Sprintf("- [Versions](/addons/catalog/%s/versions): %d release%s of the addon and what each needs.",
 		p.Name, n, map[bool]string{true: "", false: "s"}[n == 1]))
+	b.add("", "## Feedback\n", "Found something wrong, or missing something you need? Tell us in kubevela/catalog:\n",
+		"- "+issueLink("Report an issue", a, p, "type/bug", "Describe the issue", "What happened, and what you expected"),
+		"- "+issueLink("Request an enhancement", a, p, "type/feature", "What would help",
+			"What you'd like the addon to do, and what it would let you do"))
 	return b.String()
+}
+
+// issueLink opens a new kubevela/catalog issue, its title and body filled in with the addon and its version.
+func issueLink(text string, a *Addon, p Page, label, ask, prompt string) string {
+	body := fmt.Sprintf("**Addon:** %s %s\n\n### %s\n\n<!-- %s -->\n\n### Environment\n\n"+
+		"- KubeVela version:\n- Kubernetes version:\n", p.Name, p.Release.Version, ask, prompt)
+	q := url.Values{"title": {"[" + p.Name + "] "}, "body": {body}, "labels": {label}}
+	return fmt.Sprintf("[%s](https://github.com/kubevela/catalog/issues/new?%s)", text, q.Encode())
 }
 
 func link(text, url string) string {

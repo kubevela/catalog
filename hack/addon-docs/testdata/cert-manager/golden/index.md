@@ -102,3 +102,9 @@ spec:
 - [Parameters](./parameters): everything `vela addon enable` takes.
 - [Guide](./guide): how to use the addon.
 - [Versions](/addons/catalog/cert-manager/versions): 1 release of the addon and what each needs.
+## Feedback
+
+Found something wrong, or missing something you need? Tell us in kubevela/catalog:
+
+- [Report an issue](https://github.com/kubevela/catalog/issues/new?body=%2A%2AAddon%3A%2A%2A+cert-manager+3.0.0%0A%0A%23%23%23+Describe+the+issue%0A%0A%3C%21--+What+happened%2C+and+what+you+expected+--%3E%0A%0A%23%23%23+Environment%0A%0A-+KubeVela+version%3A%0A-+Kubernetes+version%3A%0A&labels=type%2Fbug&title=%5Bcert-manager%5D+)
+- [Request an enhancement](https://github.com/kubevela/catalog/issues/new?body=%2A%2AAddon%3A%2A%2A+cert-manager+3.0.0%0A%0A%23%23%23+What+would+help%0A%0A%3C%21--+What+you%27d+like+the+addon+to+do%2C+and+what+it+would+let+you+do+--%3E%0A%0A%23%23%23+Environment%0A%0A-+KubeVela+version%3A%0A-+Kubernetes+version%3A%0A&labels=type%2Ffeature&title=%5Bcert-manager%5D+)
