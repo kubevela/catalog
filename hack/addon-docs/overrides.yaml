@@ -50,6 +50,7 @@ addons:
     logo: https://github.com/gocrane.png?size=200
   cronhpa:
     category: Scaling and Scheduling
+    logo: https://github.com/AliyunContainerService.png
   crossplane:
     category: Cloud Resources
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/crossplane/icon/color/crossplane-icon-color.svg
@@ -79,8 +80,10 @@ addons:
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/envoy/icon/color/envoy-icon-color.svg
   example:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   example-cue:
     category: Workloads and Testing
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   flink-kubernetes-operator:
     category: AI and Big Data
     logo: https://github.com/apache.png?size=200
@@ -152,8 +155,10 @@ addons:
     logo: https://github.com/minio.png?size=200
   model-serving:
     category: AI and Big Data
+    logo: https://github.com/SeldonIO.png
   model-training:
     category: AI and Big Data
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubeflow/icon/color/kubeflow-icon.svg
   mongodb-operator:
     category: Data and Messaging
     logo: https://github.com/mongodb.png?size=200
@@ -177,8 +182,10 @@ addons:
     logo: https://github.com/grafana.png?size=200
   observability:
     category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   observability-assets:
     category: Observability
+    logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/kubevela/icon/color/kubevela-icon-color.svg
   ocm-cluster-manager:
     category: Multi-cluster
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/open-cluster-management/icon/color/ocm-icon-color.svg
@@ -193,6 +200,7 @@ addons:
     logo: https://raw.githubusercontent.com/cncf/artwork/main/projects/opentelemetry/icon/color/opentelemetry-icon-color.svg
   postgres-operator:
     category: Data and Messaging
+    logo: https://raw.githubusercontent.com/zalando/postgres-operator/master/docs/diagrams/logo.png
   postgrest:
     category: Data and Messaging
     logo: https://github.com/PostgREST.png?size=200
