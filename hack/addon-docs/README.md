@@ -6,8 +6,11 @@ itself: its overview from `metadata.yaml`, its parameters from `parameter.cue`, 
 docs cover. CI runs it after each publish and pushes the result to the `docs-site` branch, which the site fetches when
 it builds.
 
-It is a Go module of its own because it reads definitions with KubeVela's own parsers, at the KubeVela version in
-`go.mod`; the catalog's other tooling doesn't need KubeVela.
+It is a Go module of its own because it reads definitions with KubeVela's own parsers; the catalog's other tooling
+doesn't need KubeVela. It builds on KubeVela's newest release (no alphas, betas or release candidates):
+`pin-kubevela.sh` finds it from kubevela/kubevela's tags and rewrites `go.mod` with it and its replace block. The
+publish job runs it before every generation; run it here to move the checked-in pin, which the tests use, and
+`pin-kubevela.sh --check` to see whether it is behind.
 
 ## Run it
 

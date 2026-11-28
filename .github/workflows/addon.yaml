@@ -97,6 +97,10 @@ jobs:
           go-version: 1.27.1
           cache-dependency-path: hack/addon-docs/go.sum
 
+      - name: Build on KubeVela's newest release
+        # Detected from kubevela/kubevela's tags, so a KubeVela release reaches the pages without a commit here.
+        run: hack/addon-docs/pin-kubevela.sh
+
       - name: Generate and push the docs-site branch
         run: hack/addon-docs/publish.sh
 

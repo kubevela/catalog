@@ -2,14 +2,14 @@ package main
 
 import (
 	"os"
-
-	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/cuecontext"
 	"path/filepath"
 	"reflect"
 	"sort"
 	"strings"
 	"testing"
+
+	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/cuecontext"
 )
 
 func TestMain(m *testing.M) {
