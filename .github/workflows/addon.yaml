@@ -74,3 +74,41 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           hack/addon-release/tag.sh
+
+  docs:
+    # Generates the addon pages for the KubeVela docs site from every published version, once the new ones are
+    # tagged, pushes them to the docs-site branch and asks the site to rebuild.
+    needs: tag-releases
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch the release tags
+        run: git fetch --tags --force origin
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.27.1
+          cache-dependency-path: hack/addon-docs/go.sum
+
+      - name: Generate and push the docs-site branch
+        run: hack/addon-docs/publish.sh
+
+      - name: Ask the docs site to rebuild
+        env:
+          TOKEN: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+        run: |
+          # The site also rebuilds every 3 hours, so without the token the pages arrive then.
+          if [ -z "$TOKEN" ]; then
+            echo "No DOCS_DISPATCH_TOKEN; the docs site picks the pages up on its next build."
+            exit 0
+          fi
+          curl -fsS -X POST -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/kubevela/kubevela.github.io/dispatches \
+            -d '{"event_type":"addon-docs"}'

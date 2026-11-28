@@ -1,0 +1,29 @@
+{
+ "name": "cert-manager",
+ "latest": "3.0.0",
+ "description": "Automatically provision and manage TLS certificates in Kubernetes",
+ "experimental": false,
+ "tags": [
+  "Graduated",
+  "Security \u0026 Compliance"
+ ],
+ "logo": "",
+ "category": "Test",
+ "versions": [
+  {
+   "version": "3.0.0",
+   "for": [
+    "1.12"
+   ],
+   "deprecated": false,
+   "released": "2026-11-27",
+   "pages": [
+    "",
+    "definitions/certificate",
+    "definitions/issuer",
+    "parameters",
+    "versions"
+   ]
+  }
+ ]
+}

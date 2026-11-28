@@ -1,0 +1,17 @@
+# The KubeVela releases the addon docs cover. Update on every KubeVela minor release.
+#
+# current: the newest KubeVela minor the docs site documents. Every addon's latest version is for it.
+# currentReleased: whether current has its v1.X.0 tag; until then the pages call it Next, as the site does.
+# oldest: the oldest minor with addon pages; an addon version only for older ones gets none.
+# minors: each released minor and the date of its v1.X.0 tag, which decides which minors an addon version was for.
+current: "1.12"
+currentReleased: false
+oldest: "1.9"
+minors:
+  "1.5": "2022-08-03"
+  "1.6": "2022-11-01"
+  "1.7": "2023-01-13"
+  "1.8": "2023-04-14"
+  "1.9": "2023-06-15"
+  "1.10": "2025-02-03"
+  "1.11": "2026-07-17"

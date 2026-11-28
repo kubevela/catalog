@@ -1,0 +1,30 @@
+name: Addon docs generator
+on:
+  pull_request:
+    paths:
+      - hack/addon-docs/**
+      - .github/workflows/addon-docs.yaml
+  push:
+    branches:
+      - master
+    paths:
+      - hack/addon-docs/**
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.27.1
+          cache-dependency-path: hack/addon-docs/go.sum
+
+      - name: Test
+        working-directory: hack/addon-docs
+        run: |
+          go vet ./...
+          go test ./...
